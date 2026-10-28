@@ -1,0 +1,29 @@
+# Local instructions
+AGENTS.md
+
+# External source repositories
+/upstream/
+
+# Build outputs
+/build/
+/build-*/
+/cmake-build-*/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/CTestTestfile.cmake
+/Testing/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Editor-local files
+.vscode/*.local.json
+.vscode/
