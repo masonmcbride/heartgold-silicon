@@ -8,11 +8,11 @@ AGENTS.md
 /build/
 /build-*/
 /cmake-build-*/
-/CMakeFiles/
-/CMakeCache.txt
-/cmake_install.cmake
-/CTestTestfile.cmake
-/Testing/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
 
 # Python
 __pycache__/
@@ -27,3 +27,26 @@ __pycache__/
 # Editor-local files
 .vscode/*.local.json
 .vscode/
+
+# Local compiler, test and diagnostic outputs
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dSYM/
+*.exe
+*.profraw
+*.profdata
+*.gcda
+*.gcno
+*.log
+/CMakeUserPresets.json
+/heartgold
+/test_*
+/hg_*
+
+# Editor recovery files
+*.swp
+*.swo
+*~
