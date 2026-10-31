@@ -8,6 +8,11 @@ import argparse
 import hashlib
 from pathlib import Path
 import re
+import importlib.util
+
+_batch_spec = importlib.util.spec_from_file_location("native_coordinated", Path(__file__).with_name("native_coordinated.py"))
+coordinated = importlib.util.module_from_spec(_batch_spec)
+_batch_spec.loader.exec_module(coordinated)
 
 
 def replace(text, old, new, count=1):
@@ -48,7 +53,32 @@ def callbacks(text):
     return "#include <stdint.h>\n" + text
 
 
+LIBC_DECLARATIONS = {'src/lobby/lobby_char_vector_assign.cpp': ('void *memmove(void *, const void '
+                                            '*, u32);',),
+ 'src/lobby/lobby_vector_growth.cpp': ('void *memset(void *, int, unsigned);',
+                                       'void *memcpy(void *, const void *, '
+                                       'unsigned);'),
+ 'src/lobby/ppw_lobby.cpp': ('int printf(const char *, ...);',
+                             'extern "C" int strcmp(const char *, const char '
+                             '*);')}
+
+def native_libc(relative, text):
+    for declaration in LIBC_DECLARATIONS[relative]:
+        text = drop(text, declaration)
+    if relative == "src/lobby/ppw_lobby.cpp":
+        text = replace(text, "using std::va_list;", "using ::va_list;")
+    headers = '#include <stdio.h>\n#include <string.h>\n'
+    if relative == "src/lobby/ppw_lobby.cpp":
+        headers += '#include <cstring>\n'
+    return headers + text
+
+
 def adapt(relative, text, root):
+    if relative in coordinated.SOURCES:
+        text = coordinated.adapt(relative, text)
+        if relative in LIBC_DECLARATIONS:
+            text = native_libc(relative, text)
+        return text
     if relative == "lib/include/nnsys/g2d/g2d_CellTransferManager.h":
         return replace(text, "\nNNS_G2dInitCellTransferStateManager(", "\nint NNS_G2dInitCellTransferStateManager(")
     if relative == "src/party_menu_list_items.c":

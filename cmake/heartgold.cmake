@@ -41,7 +41,7 @@ function(native_generate kind input output)
             --root "${game_source}" --kind "${kind}"
             --input "${input}" --output "${output}"
         COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
-        DEPENDS "${native_script}" "${input}" ${ARGN}
+        DEPENDS "${native_script}" "${PROJECT_SOURCE_DIR}/cmake/native_coordinated.py" "${input}" ${ARGN}
         VERBATIM)
 endfunction()
 
@@ -67,6 +67,12 @@ foreach(relative IN LISTS native_sources)
 endforeach()
 
 set(native_headers
+    include/lobby_sort.h
+    include/lobby_tree.h
+    include/lobby_chat_manager.h
+    include/ppw_lobby_work.h
+    include/overlay45_string_search.h
+    include/lobby_vector.h
     src/comm_state_private.h include/orbit_cursor.h include/field/field_fog.h
     include/drawing_session_link_internal.h include/record_mixing/record_mixing_link_internal.h
     lib/include/nitro/wm/wm_internal.h lib/include/nitro/os/ownerInfo.h
@@ -84,6 +90,10 @@ foreach(relative IN LISTS native_headers)
     list(APPEND header_outputs "${output}")
 endforeach()
 add_custom_target(heartgold_native_headers DEPENDS ${header_outputs})
+add_test(NAME lobby_strings_native COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_lobby_strings_native.py"
+    --root "${PROJECT_SOURCE_DIR}" --build "${PROJECT_BINARY_DIR}"
+    --compiler "${CMAKE_CXX_COMPILER}")
 
 add_library(heartgold_main STATIC ${game_sources})
 target_link_libraries(heartgold_main PRIVATE nitro_sdk)
