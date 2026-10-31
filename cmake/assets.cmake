@@ -1,8 +1,22 @@
 # Original host tools and asset recipes. All generated data stays in build/.
-find_program(HG_ASSET_OBJCOPY NAMES llvm-objcopy
-    HINTS /opt/homebrew/opt/llvm/bin /usr/local/opt/llvm/bin REQUIRED)
-find_program(HG_ASSET_READELF NAMES llvm-readelf
-    HINTS /opt/homebrew/opt/llvm/bin /usr/local/opt/llvm/bin REQUIRED)
+find_program(HG_ASSET_OBJCOPY NAMES llvm-objcopy)
+find_program(HG_ASSET_READELF NAMES llvm-readelf)
+if(NOT HG_ASSET_OBJCOPY OR NOT HG_ASSET_READELF)
+    # Keg-only LLVM need not be on PATH. Query its installed prefix, never assume it.
+    find_program(HOMEBREW_EXECUTABLE NAMES brew)
+    if(HOMEBREW_EXECUTABLE)
+        execute_process(COMMAND "${HOMEBREW_EXECUTABLE}" --prefix llvm
+            OUTPUT_VARIABLE llvm_prefix OUTPUT_STRIP_TRAILING_WHITESPACE
+            RESULT_VARIABLE failed ERROR_QUIET)
+        if(NOT failed)
+            find_program(HG_ASSET_OBJCOPY NAMES llvm-objcopy HINTS "${llvm_prefix}/bin")
+            find_program(HG_ASSET_READELF NAMES llvm-readelf HINTS "${llvm_prefix}/bin")
+        endif()
+    endif()
+    if(NOT HG_ASSET_OBJCOPY OR NOT HG_ASSET_READELF)
+        message(FATAL_ERROR "Game assets require llvm-objcopy and llvm-readelf. Install LLVM and expose its bin directory through PATH or CMAKE_PROGRAM_PATH.")
+    endif()
+endif()
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
 set(hg_tools "${game_source}/tools")
@@ -33,7 +47,7 @@ target_compile_definitions(hg_nitrogfx PRIVATE PNG_SKIP_SETJMP_CHECK)
 target_link_libraries(hg_nitrogfx PRIVATE PNG::PNG ZLIB::ZLIB)
 set_target_properties(hg_nitrogfx PROPERTIES OUTPUT_NAME nitrogfx)
 
-set(elf_reader "${CMAKE_BINARY_DIR}/native-tools/o2narc/RelocElfReader.cpp")
+set(elf_reader "${PROJECT_BINARY_DIR}/native-tools/o2narc/RelocElfReader.cpp")
 native_generate(o2narc-reader "${hg_tools}/o2narc/RelocElfReader.cpp" "${elf_reader}")
 add_executable(hg_o2narc
     "${hg_tools}/o2narc/o2narc.cpp" "${hg_tools}/o2narc/Options.cpp" "${elf_reader}")
@@ -56,8 +70,8 @@ function(hg_narc target relative directory)
             list(APPEND metadata "${directory}/${name}")
         endif()
     endforeach()
-    set(archive "${CMAKE_BINARY_DIR}/generated/files/${relative}.narc")
-    set(index "${CMAKE_BINARY_DIR}/generated/files/${relative}.naix")
+    set(archive "${PROJECT_BINARY_DIR}/generated/files/${relative}.narc")
+    set(index "${PROJECT_BINARY_DIR}/generated/files/${relative}.naix")
     get_filename_component(parent "${archive}" DIRECTORY)
     add_custom_command(OUTPUT "${archive}" "${index}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${parent}"
@@ -80,14 +94,23 @@ include("${CMAKE_CURRENT_LIST_DIR}/heartgold_encounters.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/heartgold_item_data.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/heartgold_resdat.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/heartgold_zukan_data.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/heartgold_manifest_graphics.cmake")
 set(heartgold_asset_targets
     heartgold_mapmatrix_assets heartgold_msg_assets heartgold_otherpoke_assets
     heartgold_sbox_assets heartgold_camera_assets heartgold_preview_assets
     heartgold_record_assets heartgold_plist_assets heartgold_item_icon_assets
     heartgold_namein_assets heartgold_ppark_assets heartgold_zone_event_assets
     heartgold_script_assets heartgold_encounter_assets heartgold_item_data_assets
-    heartgold_resdat_assets heartgold_zukan_data_assets)
+    heartgold_resdat_assets heartgold_zukan_data_assets
+    heartgold_gs_opening_assets heartgold_titledemo_assets
+    heartgold_zukan_enc_assets ${heartgold_overlay_index_targets})
+add_custom_target(heartgold_overlay_index_assets
+    DEPENDS heartgold_zukan_enc_assets ${heartgold_overlay_index_targets})
 add_custom_target(assets DEPENDS ${heartgold_asset_targets})
 add_test(NAME elf_reader COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_elf_reader.py"
-    --tool $<TARGET_FILE:hg_o2narc> --work "${CMAKE_BINARY_DIR}")
+    --tool $<TARGET_FILE:hg_o2narc> --work "${PROJECT_BINARY_DIR}")
+add_test(NAME asset_indices COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_asset_indices.py"
+    --build "${PROJECT_BINARY_DIR}" --tool $<TARGET_FILE:hg_nitroarc>)
+set_tests_properties(asset_indices PROPERTIES TIMEOUT 300)

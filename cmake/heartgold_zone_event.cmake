@@ -5,11 +5,7 @@ set(hg_zone_source
 set(hg_zone_template
     "${game_source}/files/fielddata/eventdata/zone_event.json.txt")
 set(hg_zone_build
-    "${CMAKE_BINARY_DIR}/generated/zone_event")
-set(hg_zone_archive
-    "${CMAKE_BINARY_DIR}/generated/files/fielddata/eventdata/zone_event.narc")
-set(hg_zone_index
-    "${CMAKE_BINARY_DIR}/generated/files/fielddata/eventdata/zone_event.naix")
+    "${PROJECT_BINARY_DIR}/generated/zone_event")
 
 file(GLOB hg_zone_jsons CONFIGURE_DEPENDS
     "${hg_zone_source}/*.json")
@@ -58,7 +54,7 @@ foreach(json IN LISTS hg_zone_jsons)
             "${hg_zone_build}/${stem}.o"
 
         COMMAND "${Python3_EXECUTABLE}"
-            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_zone_event.py"
+            "${CMAKE_CURRENT_LIST_DIR}/build_zone_event.py"
             --source "${json}"
             --template "${hg_zone_template}"
             --output-dir "${hg_zone_build}"
@@ -73,7 +69,7 @@ foreach(json IN LISTS hg_zone_jsons)
             hg_jsonproc
             "${json}"
             "${hg_zone_template}"
-            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_zone_event.py"
+            "${CMAKE_CURRENT_LIST_DIR}/build_zone_event.py"
 
         DEPFILE "${dep}"
         VERBATIM
@@ -82,40 +78,8 @@ foreach(json IN LISTS hg_zone_jsons)
     list(APPEND hg_zone_binaries "${bin}")
 endforeach()
 
-# Preserve original Nitroarc directory exclusions.
-set(hg_zone_metadata)
-
-foreach(meta IN ITEMS .narcorder .narcignore)
-    if(EXISTS "${hg_zone_source}/${meta}")
-        configure_file(
-            "${hg_zone_source}/${meta}"
-            "${hg_zone_build}/${meta}"
-            COPYONLY)
-        list(APPEND hg_zone_metadata "${hg_zone_build}/${meta}")
-    endif()
-endforeach()
-
-add_custom_command(
-    OUTPUT "${hg_zone_archive}" "${hg_zone_index}"
-
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-        "${CMAKE_BINARY_DIR}/generated/files/fielddata/eventdata"
-
-    COMMAND $<TARGET_FILE:hg_nitroarc>
-        -cf "${hg_zone_archive}"
-        --index-namespace "${hg_zone_build}"
-
-    DEPENDS
-        hg_nitroarc
-        ${hg_zone_binaries}
-        ${hg_zone_metadata}
-
-    VERBATIM
-)
-
-add_custom_target(heartgold_zone_event_assets
-    DEPENDS "${hg_zone_archive}" "${hg_zone_index}")
-
+hg_narc(heartgold_zone_event_assets "fielddata/eventdata/zone_event"
+    "${hg_zone_build}" ${hg_zone_binaries})
 
 message(STATUS
     "HeartGold: ${hg_zone_count} original zone-event members configured")

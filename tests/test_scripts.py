@@ -1,6 +1,10 @@
-"""Regression tests for MWAS initializer conversion; no compiler required."""
+"""Regression tests for script conversion and portable dependency files."""
+import argparse
 import importlib.util
+import os
 from pathlib import Path
+import subprocess
+import tempfile
 import unittest
 
 spec = importlib.util.spec_from_file_location(
@@ -36,5 +40,38 @@ class InitializerConversion(unittest.TestCase):
                 converter.normalize_initializers("InitScriptEntry_OnResume " + arguments)
 
 
+class DepfilePaths(unittest.TestCase):
+    def test_make_tracks_paths_with_spaces_and_special_characters(self):
+        with tempfile.TemporaryDirectory(prefix="script paths ", dir=self.work) as directory:
+            root = Path(directory)
+            target = root / "output file.bin"
+            source = root / "source $cash #map.inc"
+            target.write_text("output")
+            source.write_text("input")
+            os.utime(source, (100, 100))
+            os.utime(target, (200, 200))
+            escaped_target = converter.depfile_escape(target)
+            escaped_source = converter.depfile_escape(source)
+            dep = root / "generated.d"
+            dep.write_text(f"{escaped_target}: {escaped_source}\n")
+            makefile = root / "Makefile"
+            makefile.write_text(
+                f"include {converter.depfile_escape(dep)}\n"
+                f"{escaped_target}:\n\t@echo REBUILT\n"
+            )
+            command = ["make", "--no-print-directory", "-f", str(makefile), "-n", str(target)]
+            unchanged = subprocess.run(command, text=True, capture_output=True)
+            self.assertEqual(unchanged.returncode, 0, unchanged.stderr)
+            self.assertNotIn("REBUILT", unchanged.stdout)
+            os.utime(source, (300, 300))
+            changed = subprocess.run(command, text=True, capture_output=True)
+            self.assertEqual(changed.returncode, 0, changed.stderr)
+            self.assertIn("REBUILT", changed.stdout)
+
+
 if __name__ == "__main__":
-    unittest.main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--work", type=Path, required=True)
+    arguments, remaining = parser.parse_known_args()
+    DepfilePaths.work = arguments.work.resolve()
+    unittest.main(argv=[__file__, *remaining])

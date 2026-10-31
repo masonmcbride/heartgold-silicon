@@ -1,8 +1,8 @@
 # Original sprite resource JSON/C data, compiled with its fixed DS record layout.
 set(hg_resdat_source "${game_source}/files/data/resdat")
 set(hg_resdat_template "${game_source}/files/data/resdat.json.txt")
-set(hg_resdat_work "${CMAKE_BINARY_DIR}/generated/resdat")
-set(hg_resdat_members "${CMAKE_BINARY_DIR}/generated/files/data/resdat")
+set(hg_resdat_work "${PROJECT_BINARY_DIR}/generated/resdat")
+set(hg_resdat_members "${PROJECT_BINARY_DIR}/generated/files/data/resdat")
 set(hg_resdat_types "${hg_resdat_work}/resdat_types.h")
 native_generate(resdat-types "${game_source}/include/sprite_resource.h" "${hg_resdat_types}"
     "${game_source}/include/sprite_resource_header.h")
@@ -39,7 +39,7 @@ foreach(json IN LISTS hg_resdat_jsons)
         COMMAND "${CMAKE_C_COMPILER}" --target=armv5te-none-eabi -std=gnu11 -fdata-sections
             -DPOKEHEARTGOLD_GLOBAL_H -DPOKEHEARTGOLD_SPRITE_RESOURCE_HEADER_H -DNITRO_FS_FILE_H_
             -include "${hg_resdat_types}" -I "${game_source}/include" -I "${game_source}/lib/include"
-            -MMD -MF "${dep}" -MT "${bin}" -c "${c}" -o "${obj}"
+            -MMD -MF "${dep}" -MQ "${bin}" -c "${c}" -o "${obj}"
         COMMAND "${HG_ASSET_OBJCOPY}" "--dump-section=.rodata.data=${bin}" "${obj}"
         DEPENDS hg_jsonproc "${json}" "${hg_resdat_template}" "${hg_resdat_types}"
         DEPFILE "${dep}"

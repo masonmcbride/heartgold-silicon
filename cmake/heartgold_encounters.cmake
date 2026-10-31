@@ -3,11 +3,11 @@
 set(hg_encounter_source "${game_source}/files/fielddata/encountdata")
 set(hg_encounter_json "${hg_encounter_source}/gs_enc_data.json")
 set(hg_encounter_template "${hg_encounter_source}/gs_enc_data.json.txt")
-set(hg_encounter_build "${CMAKE_BINARY_DIR}/generated/encountdata")
-set(hg_encounter_archive_dir "${CMAKE_BINARY_DIR}/generated/files/fielddata/encountdata")
+set(hg_encounter_build "${PROJECT_BINARY_DIR}/generated/encountdata")
+set(hg_encounter_archive_dir "${PROJECT_BINARY_DIR}/generated/files/fielddata/encountdata")
 set(hg_encounter_c "${hg_encounter_build}/gs_enc_data.c")
-set(hg_encounter_emitter "${CMAKE_CURRENT_SOURCE_DIR}/cmake/heartgold_encounters.c")
-set(hg_encounter_validator "${CMAKE_CURRENT_SOURCE_DIR}/cmake/validate_heartgold_encounters.py")
+set(hg_encounter_emitter "${CMAKE_CURRENT_LIST_DIR}/heartgold_encounters.c")
+set(hg_encounter_validator "${CMAKE_CURRENT_LIST_DIR}/validate_heartgold_encounters.py")
 
 add_custom_command(
     OUTPUT "${hg_encounter_c}"

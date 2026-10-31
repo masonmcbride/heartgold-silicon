@@ -3,13 +3,9 @@
 set(hg_script_source
     "${game_source}/files/fielddata/script/scr_seq")
 set(hg_script_stage
-    "${CMAKE_BINARY_DIR}/generated/scr_seq_archive")
+    "${PROJECT_BINARY_DIR}/generated/scr_seq_archive")
 set(hg_script_work
-    "${CMAKE_BINARY_DIR}/generated/scr_seq_work")
-set(hg_script_narc
-    "${CMAKE_BINARY_DIR}/generated/files/fielddata/script/scr_seq.narc")
-set(hg_script_naix
-    "${CMAKE_BINARY_DIR}/generated/files/fielddata/script/scr_seq.naix")
+    "${PROJECT_BINARY_DIR}/generated/scr_seq_work")
 
 file(GLOB hg_script_sources CONFIGURE_DEPENDS
     "${hg_script_source}/*.s")
@@ -57,7 +53,7 @@ foreach(source IN LISTS hg_script_sources)
             --work-dir "${hg_script_work}"
             --game "${game_source}"
             --libntr "${ntr_source}"
-            --generated-files "${CMAKE_BINARY_DIR}/generated/files"
+            --generated-files "${PROJECT_BINARY_DIR}/generated/files"
             --clang "${CMAKE_C_COMPILER}"
             --objcopy "${HG_ASSET_OBJCOPY}"
             --readelf "${HG_ASSET_READELF}"
@@ -73,35 +69,8 @@ foreach(source IN LISTS hg_script_sources)
     list(APPEND hg_script_bins "${bin}")
 endforeach()
 
-set(hg_script_metadata)
-
-foreach(meta IN ITEMS .narcorder .narcignore)
-    if(EXISTS "${hg_script_source}/${meta}")
-        configure_file(
-            "${hg_script_source}/${meta}"
-            "${hg_script_stage}/${meta}"
-            COPYONLY)
-        list(APPEND hg_script_metadata
-            "${hg_script_stage}/${meta}")
-    endif()
-endforeach()
-
-add_custom_command(
-    OUTPUT "${hg_script_narc}" "${hg_script_naix}"
-
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-        "${CMAKE_BINARY_DIR}/generated/files/fielddata/script"
-
-    COMMAND $<TARGET_FILE:hg_nitroarc>
-        -cf "${hg_script_narc}"
-        --index-namespace "${hg_script_stage}"
-
-    DEPENDS hg_nitroarc ${hg_script_bins} ${hg_script_metadata}
-    VERBATIM
-)
-
-add_custom_target(heartgold_script_assets
-    DEPENDS "${hg_script_narc}" "${hg_script_naix}")
+hg_narc(heartgold_script_assets "fielddata/script/scr_seq"
+    "${hg_script_stage}" ${hg_script_bins})
 
 add_dependencies(heartgold_script_assets heartgold_msg_assets)
 

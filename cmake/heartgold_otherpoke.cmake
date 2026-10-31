@@ -2,7 +2,7 @@
 set(hg_other_source "${game_source}/files/poketool/pokegra")
 set(hg_other_manifest "${hg_other_source}/otherpoke.txt")
 set(hg_other_build
-    "${CMAKE_BINARY_DIR}/generated/files/poketool/pokegra/build-otherpoke")
+    "${PROJECT_BINARY_DIR}/generated/files/poketool/pokegra/build-otherpoke")
 
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     "${hg_other_manifest}")

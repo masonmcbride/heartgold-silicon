@@ -1,6 +1,6 @@
 # Original message encoding rules from pinned pokeheartgold/msg.mk.
 set(hg_msg_source "${game_source}/files/msgdata/msg")
-set(hg_msg_dir "${CMAKE_BINARY_DIR}/generated/files/msgdata/msg")
+set(hg_msg_dir "${PROJECT_BINARY_DIR}/generated/files/msgdata/msg")
 set(hg_msg_mk "${game_source}/files/msgdata/msg.mk")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${hg_msg_mk}")
 
@@ -61,22 +61,23 @@ foreach(gmm IN LISTS hg_gmms)
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_msg_dir}"
         COMMAND $<TARGET_FILE:hg_msgenc>
             -e -c "${game_source}/charmap.txt"
-            --gmm -H "${header}" ${key_args}
+            --gmm -H "generated/files/msgdata/msg/${stem}.h" ${key_args}
             "${gmm}" "${bin}"
         DEPENDS hg_msgenc "${gmm}" "${game_source}/charmap.txt"
             "${hg_msg_mk}"
-        WORKING_DIRECTORY "${game_source}"
+        # MSGENC derives a C guard from -H; keep this path relative and stable.
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
         VERBATIM)
 
     list(APPEND hg_bins "${bin}")
     string(APPEND hg_archive_order "${stem}.bin\n")
 endforeach()
 
-set(hg_order "${CMAKE_BINARY_DIR}/generated/message-order.txt")
+set(hg_order "${PROJECT_BINARY_DIR}/generated/message-order.txt")
 file(GENERATE OUTPUT "${hg_order}" CONTENT "${hg_archive_order}")
 
-set(hg_narc "${CMAKE_BINARY_DIR}/generated/files/msgdata/msg.narc")
-set(hg_naix "${CMAKE_BINARY_DIR}/generated/files/msgdata/msg.naix")
+set(hg_narc "${PROJECT_BINARY_DIR}/generated/files/msgdata/msg.narc")
+set(hg_naix "${PROJECT_BINARY_DIR}/generated/files/msgdata/msg.naix")
 
 add_custom_command(
     OUTPUT "${hg_narc}" "${hg_naix}"

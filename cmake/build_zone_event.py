@@ -106,7 +106,7 @@ def main():
 
     cpp.extend([
         "-MMD", "-MF", str(dep),
-        "-MT", str(binary),
+        "-MQ", str(binary),
     ])
     cpp.append("-")
 

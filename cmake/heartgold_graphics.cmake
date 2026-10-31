@@ -1,7 +1,7 @@
 # Original Nitro graphics conversions. Each specification is input|output|flags.
 function(hg_graphics_archive target relative_archive)
     set(source "${game_source}/files/${relative_archive}")
-    set(output "${CMAKE_BINARY_DIR}/generated/files/${relative_archive}")
+    set(output "${PROJECT_BINARY_DIR}/generated/files/${relative_archive}")
     set(members)
     foreach(spec IN LISTS ARGN)
         string(REPLACE "|" ";" fields "${spec}")
@@ -95,7 +95,7 @@ hg_narc(heartgold_item_icon_assets "itemtool/itemdata/item_icon"
 
 # Original Name Entry assets: palettes are copied, other binary graphics compressed.
 set(hg_namein_source "${hg_graphics_root}/data/namein")
-set(hg_namein_output "${CMAKE_BINARY_DIR}/generated/files/data/namein")
+set(hg_namein_output "${PROJECT_BINARY_DIR}/generated/files/data/namein")
 file(GLOB hg_namein_sources CONFIGURE_DEPENDS "${hg_namein_source}/namein_*")
 list(LENGTH hg_namein_sources hg_namein_count)
 if(NOT hg_namein_count EQUAL 19)

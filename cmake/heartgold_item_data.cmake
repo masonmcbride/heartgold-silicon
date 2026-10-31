@@ -12,7 +12,7 @@ add_executable(hg_csv2bin ${hg_csv2bin_sources})
 target_compile_features(hg_csv2bin PRIVATE cxx_std_17)
 
 set(hg_item_source "${game_source}/files/itemtool/itemdata")
-set(hg_item_output "${CMAKE_BINARY_DIR}/generated/files/itemtool/itemdata")
+set(hg_item_output "${PROJECT_BINARY_DIR}/generated/files/itemtool/itemdata")
 
 set(hg_item_csv "${hg_item_source}/item_data.csv")
 set(hg_item_manifest "${hg_item_source}/item_data.txt")
@@ -40,7 +40,7 @@ add_custom_command(
         "${hg_item_csv}"
         "${hg_item_narc}"
         "${hg_item_manifest}"
-        -i "${CMAKE_BINARY_DIR}/include"
+        -i "${PROJECT_BINARY_DIR}/include"
         -i "${game_source}/include"
         --pad 0xFF
         --naix

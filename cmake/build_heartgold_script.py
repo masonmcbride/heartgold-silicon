@@ -57,6 +57,12 @@ def normalize_initializers(assembly):
     return pattern.sub(normalize, assembly)
 
 
+def depfile_escape(path):
+    """Quote a literal filename for Make/CMake depfiles."""
+    return (str(path).replace("\\", "\\\\").replace("$", "$$")
+            .replace("#", "\\#").replace(" ", "\\ ").replace("\t", "\\\t"))
+
+
 def main():
     p = argparse.ArgumentParser()
     for name in (
@@ -156,7 +162,7 @@ def main():
         "-x", "assembler-with-cpp",
         "-DPM_ASM", "-DSDK_ASM",
         "-MMD", "-MF", str(dep),
-        "-MT", str(binary),
+        "-MQ", str(binary),
     ]
 
     for directory in include_dirs:
@@ -207,7 +213,7 @@ def main():
     # Track original assembler includes in addition to the C header depfile.
     with dep.open("a") as f:
         for dependency in sorted(expanded_files):
-            f.write(f"\n{binary}: {dependency}\n")
+            f.write(f"\n{depfile_escape(binary)}: {depfile_escape(dependency)}\n")
 
     print(f"{source.name}: {size} bytes, no relocations")
 
