@@ -41,7 +41,7 @@ def image_groups(game):
         match = re.match(r"^(Static|Overlay|Autoload)\s+(\w+)", line)
         if match:
             group = " ".join(match.groups())
-        match = re.match(r"\s+Object\s+(\S+)\.o(?:\s|$)", line)
+        match = re.match(r"\s*Object\s+(\S+)\.o(?:\s|$)", line)
         if match and group not in groups[match[1]]:
             groups[match[1]].append(group)
     return groups

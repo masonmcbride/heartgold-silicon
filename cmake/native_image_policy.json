@@ -1,0 +1,25 @@
+{
+  "ds_protect": {
+    "reason": "authorized six native protection predicates",
+    "source": "hardware_drivers/os/dsprot_main_encrypted.c",
+    "membership_sha256": "9384f86a81d4ca7b1ce07bfb781622ab5f90f93e85de8a3506896d541adeed79"
+  },
+  "intro_title": {
+    "archive_target": "heartgold_intro_title",
+    "membership_sha256": "ea058e6bc179b3c177a3cb60a25844a20c5eab550968b4b417a323c61c4113f6"
+  },
+  "main": {
+    "membership_sha256": "4d4cf9d0d68ecf76bd4b8864d10106bf1bdca46de851b788b4d077a02fbb0dfc",
+    "c_source_prefixes": [
+      "src/",
+      "lib/NitroSystem/src/",
+      "lib/src/spl_"
+    ],
+    "c_sources": [
+      "lib/NitroDWC/src/dwc_account.c",
+      "lib/NitroWiFi/src/soc.c",
+      "lib/NitroWiFi/src/soc_inet.c",
+      "lib/NitroWiFi/src/soc_gethostbyname.c"
+    ]
+  }
+}

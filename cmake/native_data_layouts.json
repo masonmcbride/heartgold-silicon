@@ -1,0 +1,5796 @@
+{
+  "asm/vs_recorder_data.o": {
+    "inputs": {
+      "asm/vs_recorder_data.s": "2023231c73ec21743fa6a5dc64aac0a8a552831c14a4341449160032110a1c21",
+      "include/application/vs_recorder/vs_recorder_internal.h": "a88ca5b4cff96547e448e320154bd665940560999b71200032fb24e0e5e30701",
+      "include/application/vs_recorder/vs_recorder_screens.h": "0b2971f258ae7055e30dd1e5095e082213e1d94871dd08ef32efaaba6b54d577"
+    },
+    "layouts": {
+      "gVsRecorderBoxListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderBoxDataSendSubStates": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderBoxDataViewSubStates": {
+        "source_size": 56,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderRankingsThisWeekListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderRankingsLastWeekListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderRankingsSubStates": {
+        "source_size": 36,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderVideoListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderVideoListSubStates": {
+        "source_size": 84,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderSearchLocationListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderSearchFacilityListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderSearchFacilityListConfigLong": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderSearchResultListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderSearchSpeciesListConfig": {
+        "source_size": 44,
+        "pointers": [
+          0,
+          40
+        ],
+        "padding": {
+          "40": 4
+        },
+        "alignment": 8
+      },
+      "gVsRecorderSendVideoSubStates": {
+        "source_size": 20,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderNumberSearchSubStates": {
+        "source_size": 84,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderVideoSearchSubStates": {
+        "source_size": 128,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderNumberPadStates": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "alignment": 8
+      },
+      "gVsRecorderDeleteSubStates": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "alignment": 8
+      }
+    },
+    "categories": {
+      "gVsRecorderBoxListTitleWindows": "numeric",
+      "gVsRecorderBoxDataHitboxes": "numeric",
+      "sVsRecorderBoxListButtonWindows": "numeric",
+      "gVsRecorderBoxListHitboxes": "numeric",
+      "gVsRecorderBoxDataWindowFillColors": "numeric",
+      "gVsRecorderBoxDataWindows": "numeric",
+      "gVsRecorderBoxDataSendHitboxes": "numeric",
+      "sVsRecorderBoxDataCategoryButtonWindows": "numeric",
+      "sVsRecorderBoxDataCategoryHitboxes": "numeric",
+      "gVsRecorderBoxListConfig": "configs",
+      "gVsRecorderBoxDataSendSubStates": "callbacks",
+      "gVsRecorderBoxDataViewSubStates": "callbacks",
+      "gVsRecorderRankingTeamCounts": "numeric",
+      "gVsRecorderRankingsHitboxes": "numeric",
+      "gVsRecorderRankingsButtonLabelWindows": "numeric",
+      "gVsRecorderRankingsThisWeekWindows": "numeric",
+      "gVsRecorderRankingsLastWeekWindows": "numeric",
+      "gVsRecorderRankingsThisWeekListConfig": "configs",
+      "gVsRecorderRankingsLastWeekListConfig": "configs",
+      "gVsRecorderRankingsSubStates": "callbacks",
+      "gVsRecorderVideoListOpenHitbox": "numeric",
+      "gVsRecorderVideoListExitHitbox": "numeric",
+      "gVsRecorderOverwriteHitboxes": "numeric",
+      "gVsRecorderVideoListTitleMsgIds": "numeric",
+      "gVsRecorderSaveSlotHitboxes": "numeric",
+      "gVsRecorderSaveSlotMsgIds": "numeric",
+      "gVsRecorderSaveSlotAnims": "numeric",
+      "gVsRecorderVideoDetailHitboxes": "numeric",
+      "gVsRecorderVideoListConfig": "configs",
+      "gVsRecorderScrollIconOrder": "numeric",
+      "gVsRecorderListIconOrder": "numeric",
+      "gVsRecorderVideoListIconPositions": "numeric",
+      "gVsRecorderVideoListSubStates": "callbacks",
+      "sVsRecorderSearchLocationListHitboxes": "numeric",
+      "gVsRecorderSearchResultOpenHitbox": "numeric",
+      "gVsRecorderSearchBackHitbox": "numeric",
+      "gVsRecorderSearchOverwriteHitboxes": "numeric",
+      "gVsRecorderSearchButtonMsgIds": "numeric",
+      "sVsRecorderSearchFacilityListHitboxes": "numeric",
+      "gVsRecorderSearchSaveSlotHitboxes": "numeric",
+      "gVsRecorderSearchSlotMsgIds": "numeric",
+      "gVsRecorderSearchSlotAnims": "numeric",
+      "sVsRecorderSearchLocationListEntries": "numeric",
+      "gVsRecorderSearchDetailHitboxes": "numeric",
+      "gVsRecorderSearchConditionHitboxes": "numeric",
+      "sVsRecorderSearchSpeciesListHitboxes": "numeric",
+      "gVsRecorderSearchConditionMsgIds": "numeric",
+      "gVsRecorderSpeciesGroupHitboxes": "numeric",
+      "gVsRecorderSearchLocationListConfig": "configs",
+      "gVsRecorderSearchFacilityListConfig": "configs",
+      "gVsRecorderSearchFacilityListConfigLong": "configs",
+      "gVsRecorderSearchResultListConfig": "configs",
+      "gVsRecorderSearchSpeciesListConfig": "configs",
+      "gVsRecorderSearchListIconOrder": "numeric",
+      "gVsRecorderSearchScrollIconOrder": "numeric",
+      "gVsRecorderSearchButtonWindows": "numeric",
+      "sVsRecorderSearchFacilityListEntries": "numeric",
+      "gVsRecorderSearchConditionWindows": "numeric",
+      "gVsRecorderSearchResultIconPositions": "numeric",
+      "sVsRecorderSearchFacilityListEntriesLong": "numeric",
+      "gVsRecorderSendVideoSubStates": "callbacks",
+      "gVsRecorderNumberSearchSubStates": "callbacks",
+      "gVsRecorderVideoSearchSubStates": "callbacks",
+      "gVsRecorderNumberPadStates": "callbacks",
+      "gVsRecorderNumberPadStartX": "numeric",
+      "gVsRecorderNumberPadKeys": "numeric",
+      "gVsRecorderDeleteYesHitbox": "numeric",
+      "gVsRecorderDeleteNoHitbox": "numeric",
+      "gVsRecorderDeleteSubStates": "callbacks"
+    }
+  },
+  "asm/global_terminal_data.o": {
+    "inputs": {
+      "asm/global_terminal_data.s": "d22955241605118cc2ddafbd20b6dd7b7f4bfbc8f81d5b450e1174b7b21f31c4",
+      "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf",
+      "src/global_terminal/global_terminal_connect.c": "624d60c10dd7e868bdd7625ced0718fa175e31aa22313342755226f835f7b9c5"
+    },
+    "layouts": {
+      "sGlobalTerminalConnectSubBgTemplates": {
+        "segment": "__TEXT"
+      },
+      "sGlobalTerminalUnusedTable": {
+        "segment": "__TEXT"
+      }
+    }
+  },
+  "asm/global_terminal_socket_data.o": {
+    "inputs": {
+      "asm/global_terminal_socket_data.s": "5978b98fcbeb4072fbf1e1e0eaea8f69dcaffa2d976f603859a1f2f25fb4cecb",
+      "include/global_terminal/global_terminal_net.h": "9ccb242389aae0559296ddeb2fb25047005b0f1bf40abd8965efc0f7778a7ad6",
+      "src/global_terminal/global_terminal_socket.c": "ccb95e6265138c5f0a21a6c024117b3fbbc946233ad8b23253e40ab01be36f5f"
+    },
+    "layouts": {
+      "sGlobalTerminalSocketSettings": {
+        "source_size": 116,
+        "native_size": 128
+      },
+      "sGlobalTerminalSocketThread": {
+        "source_size": 192,
+        "native_size": 424
+      },
+      "sGlobalTerminalSocketMutex": {
+        "source_size": 2072,
+        "native_size": 2104
+      },
+      "sGlobalTerminalSocket": {
+        "alignment": 16,
+        "label_alignment": 16
+      },
+      "sGlobalTerminalServerCommandIds": {
+        "segment": "__TEXT"
+      },
+      "_0222A9AC": {
+        "segment": "__TEXT"
+      }
+    }
+  },
+  "asm/frontier_script_commands_data.o": {
+    "inputs": {
+      "asm/frontier_script_commands_data.s": "e8acf4159ccce8aae0f45daf906a85b25ff568781fb98e4a111f193ffa5012b3",
+      "include/frontier/battle_factory_setup.h": "3d9c4ec2f04e00b584358db80c0e006301628f7eb824fbeae19543455e55179b",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
+      "src/frontier/frontier_script_commands.c": "a2ff0297250c151a62040ac19d2fbc22c3598ae7bb5406c46f5ab12ea9608192"
+    },
+    "layouts": {
+      "gOverlayTemplate_BattleArcadeGameBoard": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "constants": {
+      "FS_OVERLAY_ID(OVY_84)": 84
+    },
+    "reviewed": true
+  },
+  "asm/battle_factory_setup_data.o": {
+    "inputs": {
+      "asm/battle_factory_setup_data.s": "581e003424b5574d4094c2987cb6945203bc5c14653586edc79b691be49f7dfc",
+      "include/frontier/battle_factory_setup.h": "3d9c4ec2f04e00b584358db80c0e006301628f7eb824fbeae19543455e55179b",
+      "src/frontier/battle_factory_setup.c": "5b0f91eb981f70359934024fa15c8f7b1517c9fd9dd8e2dcb04d82ae594c2fe1"
+    },
+    "layouts": {
+      "gBattleFactoryTrainerSetRanges": {
+        "source_size": 8,
+        "alignment": 8
+      }
+    },
+    "reviewed": true
+  },
+  "asm/touchscreen_menu_data.o": {
+    "inputs": {
+      "asm/touchscreen_menu_data.s": "eca395da1f416eba3281adcb226612a1fe25b82bf575a8615945811d3cf0a540",
+      "src/field/touchscreen_menu.c": "1df2195619df2ed087f9309c9b0eaf003a6c6a7eabaf4a256499ef9388323e3f",
+      "src/field/touchscreen_choice_menu.c": "d44235a6ee0f6576d1671557c18238490f55693a80f3e21e1a565f51da2bc03a"
+    },
+    "layouts": {
+      "gTouchscreenChoiceMenuListNeighbors": {
+        "source_size": 28,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "gTouchscreenChoiceMenuListHitboxes": {
+        "source_size": 28,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "gTouchscreenChoiceMenuListWindowTemplates": {
+        "source_size": 28,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "gTouchscreenChoiceMenuStateFuncs": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/dowsing_mchn_data.o": {
+    "inputs": {
+      "asm/dowsing_mchn_data.s": "e9adc835d80bec867b2d5e529f3ab921dcceab83e8428e610dc9a88d18178741",
+      "src/field/dowsing_mchn.c": "ee73a6c8ff1bfc7c741e76ede6149a3e910d8984957770c2d2849b0447c837b6"
+    },
+    "layouts": {
+      "gDowsingMchnStepAngleFuncs": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/unown_report_data.o": {
+    "inputs": {
+      "asm/unown_report_data.s": "d0f64d24ae32973092b40325fef83c4a564ce8c54f3d213ff2a6179c9a514de9",
+      "src/application/unown_report.c": "ca1c5ae6dc19c67d094009ccb36222511ad8522e2d591c45d5fe0f69335de4b4"
+    },
+    "layouts": {
+      "gUnownReportHitboxes": {
+        "source_size": 18,
+        "alignment": 4,
+        "public": true
+      }
+    },
+    "reviewed": true
+  },
+  "asm/hall_of_fame_showcase_data.o": {
+    "inputs": {
+      "asm/hall_of_fame_showcase_data.s": "32fe31e6adcef82827cc8e0a70f1481b11d60a6c6cd29bb1b169c064c3bc7f1a",
+      "src/hall_of_fame_showcase.c": "f2de260c3466e414157eb1a88562634a326c60271a1e19759cc5bbf749a7b3e8",
+      "include/hall_of_fame_showcase_internal.h": "1da86d55e39bf00375fd4f5733f82f5fe97db4579836285168506f20e683ebb4"
+    },
+    "layouts": {
+      "gHallOfFameShowcaseGridCallbacks": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_record_data.o": {
+    "inputs": {
+      "asm/pokeathlon_record_data.s": "43880aefe82d1627e59b5303373ad35cef1288767ea60c682bc7d3d89eb486d0",
+      "src/pokeathlon/pokeathlon_medals.c": "ef02cc3b18031c9eeb8cd325297ec072603dfe4750debdf9e0b9f0c65769f3be",
+      "src/pokeathlon/pokeathlon_event_record.c": "8583949fdb1ab0a0ae213ac85aecfd619e7d03c5c0f787fb11f4092f609568a6"
+    },
+    "layouts": {
+      "gPokeathlonMedalsGridCallbacks": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "sStr_SeqError_3": {
+        "source_size": 12,
+        "alignment": 4,
+        "label_alignment": 4,
+        "edits": [
+          {
+            "offset": 11,
+            "expected": [
+              0
+            ],
+            "replacement": []
+          }
+        ]
+      },
+      "sStr_SeqError_4": {
+        "source_size": 11,
+        "alignment": 4,
+        "label_alignment": 4
+      }
+    },
+    "reviewed": true
+  },
+  "asm/dress_up_rodata.o": {
+    "inputs": {
+      "asm/dress_up_rodata.s": "75bed28fc944c293db3dc62c0b8148ab5f9bc00cf512c5d4343b8a3bcbab77b7",
+      "src/application/dress_up/dress_up.c": "b5cb45d6043fdeef81067d1cc3b5f7c0dc6d35cb274a06be823b449f90e350bc"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/easy_chat_app_data.o": {
+    "inputs": {
+      "asm/easy_chat_app_data.s": "7492fd4de1460cc2ceb5a23fd39b9a91f01a6b441bae635764cb17dcda9d2d36",
+      "src/application/easy_chat_app_view.c": "53940fe52986310bc42362ac5bc4037ab7c17a72496ce0637b4393a3bd37ccc8"
+    },
+    "layouts": {
+      "gEasyChatViewCommandFuncs": {
+        "source_size": 128,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/field_effect_renderers_data.o": {
+    "inputs": {
+      "asm/field_effect_renderers_data.s": "e5f0b08284c5001ae1efaf9dfbff8ebe1faf4d857bebb070e11e36b6a6dabf1e",
+      "src/field/field_effect_manager.c": "08938d1dd7f9b2febafec0dfb5b0e433ebd1ec4395bb496c18249058e7772760",
+      "include/field/field_effect_manager_internal.h": "9d648d9198d7fe221adae9e304a36b870ff65213864f14ff13ebacf64ffc1c03"
+    },
+    "layouts": {
+      "gFieldEffectRenderers": {
+        "source_size": 288,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          16,
+          20,
+          28,
+          32,
+          40,
+          44,
+          52,
+          56,
+          64,
+          68,
+          76,
+          80,
+          88,
+          92,
+          100,
+          104,
+          112,
+          116,
+          124,
+          128,
+          136,
+          140,
+          148,
+          152,
+          160,
+          164,
+          172,
+          176,
+          184,
+          188,
+          196,
+          200,
+          208,
+          212,
+          220,
+          224,
+          232,
+          236,
+          244,
+          248,
+          256,
+          260,
+          268,
+          272
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 25,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 40,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 49,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 64,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 73,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 88,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 97,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 112,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 121,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 136,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 145,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 160,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 169,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 184,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 193,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 208,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 217,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 232,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 241,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 256,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 265,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 288,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/encounter_effect_data.o": {
+    "inputs": {
+      "asm/encounter_effect_data.s": "9a633ef41ac7c0c7077285f58e1476d7f936371f0ec61c7a0e327f0571f41b6c",
+      "include/field/encounter_effect.h": "fcacb1694732382f11a731b35426faad23a0b46b889ba01ae4d3e9e418f02807",
+      "src/field/encounter_effect.c": "480631162b8d1a2d1b2378b16047c40fec17521d0da014eca3c9fa8dda9be235"
+    },
+    "layouts": {
+      "gEncounterEffectFuncs": {
+        "source_size": 188,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184
+        ]
+      },
+      "gEncounterEffectState": {
+        "source_size": 12,
+        "alignment": 8,
+        "edits": [
+          {
+            "offset": 12,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/overlay_01_sprite_data.o": {
+    "inputs": {
+      "asm/overlay_01_sprite_data.s": "a49232aa697e3c3056969bfe37c71f840a4bed61f7f81d005176ab7a4bec573f",
+      "include/constants/sprites.h": "f794bad6114be6671f03fc3a80ba9d743e8b7106e1f2678c4f7f3514d75b10ed",
+      "include/constants/mmodel.h": "a4a623a5b248fdd1fdd713785a6b1e8658d99614b506fdb3fda143f422eb8cba",
+      "include/field/map_object_models.h": "4a3dbcfa4fc84ea2b35fdfa2c4fbbbac34820ed4945d53b83a229bd9cf071f41",
+      "src/field/map_object_models.c": "9d5aa2fd52d92e8483a841d92d0624e77a7f5d21c9490afdf57f4bc8075b1fcd",
+      "src/field/map_object_render.c": "0b317751f5c035e9ce183cac2c0701bb22a3d0e39237ea06f802b68961490d4f"
+    },
+    "layouts": {
+      "gLargeFollowMonDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gNpcDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gLegendaryBirdDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPcWomanDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerPoketchDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerUseHmOrSavingDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerApricornShakeDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerLadderDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gUnanimatedObjectDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gLoopingObjectDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerWateringDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gApricornTreeDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gModelObjectDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerFishingDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "ov01_02206E2C": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerWalkingDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerSurfingDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerHealDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gPlayerCyclingDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gFollowMonDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gCameraFocusObjectDrawCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gSpriteBillboardInfos": {
+        "source_size": 192,
+        "alignment": 8,
+        "pointers": [
+          4,
+          12,
+          20,
+          28,
+          36,
+          44,
+          52,
+          60,
+          68,
+          76,
+          84,
+          92,
+          100,
+          108,
+          116,
+          124,
+          132,
+          140,
+          148,
+          156,
+          164,
+          172,
+          180,
+          188
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 12,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 19,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 28,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 35,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 44,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 52,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 60,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 68,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 76,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 84,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 92,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 100,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 108,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 116,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 124,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 132,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 140,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 148,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 156,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 164,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 172,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 179,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 188,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gMapObjectDrawCallbacks": {
+        "source_size": 80,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76
+        ]
+      }
+    },
+    "cpp_headers": [
+      "constants/sprites.h",
+      "constants/mmodel.h"
+    ],
+    "reviewed": true
+  },
+  "asm/field_tall_grass_data.o": {
+    "inputs": {
+      "asm/field_tall_grass_data.s": "3b927d8fbd54af5ad1b94942305188634931a19d351029b78c974490d1beb78e",
+      "src/field/field_tall_grass.c": "0de6fad682d8eb2126c0e19795bcfff76df240b194be4622918192337b65e1c2",
+      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+    },
+    "layouts": {
+      "gTallGrassEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              64
+            ],
+            "replacement": [
+              88,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gTallGrassUnusedEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              40
+            ],
+            "replacement": [
+              56,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/field_very_tall_grass_data.o": {
+    "inputs": {
+      "asm/field_very_tall_grass_data.s": "725f2fbf675649ccba084002493f52be4bf934bc18c6b72458ba36c5a9111192",
+      "src/field/field_unused_billboard_effect.c": "e6bcc60d53ab14ff1067988760ea0312bac6142c129e6cc8e2c4ec98d64e2bc5",
+      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+    },
+    "layouts": {
+      "sUnusedBillboardEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              64
+            ],
+            "replacement": [
+              88,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/field_emote_mark_data.o": {
+    "inputs": {
+      "asm/field_emote_mark_data.s": "dd289e48feecd365bb98fee653824e02c1404946e8caedac871f32330ba89200",
+      "src/field/field_emote_mark.c": "cc53799b1f6a0aca6bb38d0d8354539ce2c691d28e0ff6245950b91d7d133ac2",
+      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+    },
+    "layouts": {
+      "sEmoteMarkTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              68
+            ],
+            "replacement": [
+              88,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gMapObjectEmoteMarkTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              68
+            ],
+            "replacement": [
+              88,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/field_move_effects_data.o": {
+    "inputs": {
+      "asm/field_move_effects_data.s": "b870f81cb3228dea38ae5574fb54e56caa34eff6ecac66858d78529840fcc5a5",
+      "src/field/fly_landing_effect.c": "eda6e281a8f65a6954eec26c6beb324673db105702b24308b7a2b3cb9fc39100",
+      "include/field/fly_landing_effect.h": "fd3d4a65ecc64565ef2a510ea059dc1c729a02f7a080416b091145cdf883d162",
+      "src/field/field_move_cut_in_effects.c": "acc41895ebb33120f7aff8f524078e00f7e960a73ec32ff7e1023c4a0c546982",
+      "src/field/field_move_effects.c": "c8fef95efe851c921ee81280efab287dee31d3dd02eb0153bce738b5ae1fd576",
+      "include/field/field_3d_object_task.h": "81d1a0415f24ee9df82f55b58605c1769b5513e4ca06214fb3864f68b0fd1624",
+      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+    },
+    "layouts": {
+      "sFlyLandingIdleSteps": {
+        "source_size": 4,
+        "alignment": 8,
+        "pointers": [
+          0
+        ]
+      },
+      "sCutInFlyerHideSteps": {
+        "source_size": 4,
+        "alignment": 8,
+        "pointers": [
+          0
+        ]
+      },
+      "gFlyLandingPhases": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "sCutInFlyerTakeOffSteps": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gCutInFlyerModeSteps": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "sCutInFlyerPickUpSteps": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gTrainerClipEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              8
+            ],
+            "replacement": [
+              16,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gFlyLandingEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              116
+            ],
+            "replacement": [
+              144,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gCutInScrollSpriteEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              36
+            ],
+            "replacement": [
+              48,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gCutInFlyerEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              104
+            ],
+            "replacement": [
+              120,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gCutInModelEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              12
+            ],
+            "replacement": [
+              16,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gTrainerJumpEffectTemplate": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [
+              36
+            ],
+            "replacement": [
+              48,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gFlyLandingTaskSteps": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "sFlyLandingSteps": {
+        "source_size": 32,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28
+        ]
+      },
+      "gFieldMoveCutInFlyWithObjectSteps": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      },
+      "gFieldMoveCutInSteps": {
+        "source_size": 56,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52
+        ]
+      },
+      "gFieldMoveCutInFlySteps": {
+        "source_size": 92,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88
+        ]
+      },
+      "gFieldMoveArrivalSteps": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gEscapeRopeSteps": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gDigWithFollowMonSteps": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gTeleportSteps": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gTeleportWithFollowMonSteps": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gDigSteps": {
+        "source_size": 28,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "gRockSmashEffectAtPlayerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              240,
+              0
+            ],
+            "replacement": [
+              128,
+              1
+            ]
+          }
+        ]
+      },
+      "gWhirlpoolEffectTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              240,
+              0
+            ],
+            "replacement": [
+              128,
+              1
+            ]
+          }
+        ]
+      },
+      "gHeadbuttEffectAtFollowerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              20
+            ],
+            "replacement": [
+              160
+            ]
+          }
+        ]
+      },
+      "gWaterfallEffectTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              204,
+              1
+            ],
+            "replacement": [
+              224,
+              2
+            ]
+          }
+        ]
+      },
+      "gRockClimbDebrisTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              16,
+              13
+            ],
+            "replacement": [
+              128,
+              20
+            ]
+          }
+        ]
+      },
+      "gCutEffectAtPlayerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              240,
+              0
+            ],
+            "replacement": [
+              128,
+              1
+            ]
+          }
+        ]
+      },
+      "gRockSmashEffectAtFollowerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              240,
+              0
+            ],
+            "replacement": [
+              128,
+              1
+            ]
+          }
+        ]
+      },
+      "gHeadbuttEffectAtPlayerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              20
+            ],
+            "replacement": [
+              160
+            ]
+          }
+        ]
+      },
+      "gCutEffectAtFollowerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              240,
+              0
+            ],
+            "replacement": [
+              128,
+              1
+            ]
+          }
+        ]
+      },
+      "gRockDebrisTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              156,
+              14
+            ],
+            "replacement": [
+              248,
+              22
+            ]
+          }
+        ]
+      },
+      "gRockDebrisWithFollowerTemplate": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          8,
+          12,
+          16,
+          20
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [
+              156,
+              14
+            ],
+            "replacement": [
+              248,
+              22
+            ]
+          }
+        ]
+      },
+      "gScriptFieldMoveEffectDeleteFuncs": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gScriptFieldMoveEffectCreateFuncs": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gScriptFieldMoveEffectIsFinishedFuncs": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/battle_castle_data.o": {
+    "inputs": {
+      "asm/battle_castle_data.s": "0b186c5c4593814f5e427460061fdfb0f980abce3c3a42fe2467af6ebabfabc7",
+      "src/frontier/battle_castle_opponent_app.c": "2c3fe5936adc284676e7a3c7dc08f21d0aa35e14177d8316c1696531af7aa0c0",
+      "src/frontier/battle_castle_party_app.c": "9be3f9a6e20423684f3ada6fcf2876213e837c656f9e17d772b2282042a2d24f"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/battle_arcade_game_board_data.o": {
+    "inputs": {
+      "asm/battle_arcade_game_board_data.s": "2ef422cf062e46ea4c62c60d9071fc8816de39d69a2494c482b2344a60b36ee6",
+      "src/frontier/battle_arcade_game_board.c": "967eda94dbb9e5e2c6171b93b11a1db35167aed93dd6e10ff0cee8823fc88d1b"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/encounter_effect_wild_data.o": {
+    "inputs": {
+      "asm/encounter_effect_wild_data.s": "f639b7e169688608c3e7d99b63dd0cb0b0c2c0e8489ed586faf9f21363048be4",
+      "src/field/encounter_effect_wild.c": "959fb3fa56d8b51b567b10ce38850e8fdc80ab70978f2497377c44854519d313"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/pokemon_summary_data.o": {
+    "inputs": {
+      "asm/pokemon_summary_data.s": "20f72bafddefacfbecdfed3cb04078acd6f778f947cb45643f59228fe6a28f4f",
+      "src/pokemon_summary.c": "d414746e96de85bb025cd5ab5df03eb8fd0c5b8e29dcc9fbc06f722214138498",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
+    },
+    "layouts": {
+      "gOverlayTemplate_PokemonSummary": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/apricorn_box_screens_data.o": {
+    "inputs": {
+      "asm/apricorn_box_screens_data.s": "5602c1e8db3e224dc8731258e497cf77287f51a0015c28b88232fe7109380671",
+      "include/application/apricorn_box/apricorn_box_screen_internal.h": "228603c87b8e46b2c9a73cdb3db74650d57058b1fca586e73c31bf2b162aaefb",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "include/touchscreen_list_menu.h": "877d7ef51287bc5d83d7b5aef42b68f703466c404d791c8fc8c79058dbcf72a2",
+      "src/application/apricorn_box/apricorn_box_screens.c": "8d919080886298f0d4c30179c1afd5e0ae9e49404955cd9ff1c9be54c9581823"
+    },
+    "layouts": {
+      "gApricornBoxListMenus": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          4,
+          12
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 12,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/bag_app_data.o": {
+    "inputs": {
+      "asm/bag_app_data.s": "8dc4ba880a4c9f28a1ee44ad7a06eb18bf50b0236d3ca18856d37871c73dc6e3",
+      "include/application/bag/bag_app.h": "1989e9a2a6ec23ea74e14aa01a45502bac52515107d1051cc01a8a4fa7abf225",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "src/application/bag/bag_app.c": "d3e9678393868729eecc3e7a21749b8ac638c0c9472b7245486af56fae4b4ad5",
+      "src/application/bag/bag_app_display.c": "2c7c0dfa4afb7a42983d4fff086ab1eb601159e26d6e114158b7f108c97f03d5"
+    },
+    "layouts": {
+      "gOverlayTemplate_Bag": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gTouchHitboxTables": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gItemActionFuncs": {
+        "source_size": 64,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          48,
+          56,
+          60
+        ],
+        "edits": [
+          {
+            "offset": 48,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 52,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/safari_area_customizer_data.o": {
+    "inputs": {
+      "asm/safari_area_customizer_data.s": "a699b9385d32321d4fd3f59d56b7bb0e3a2da568047997f94f059b4e04dd72d9",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "src/application/safari_area_customizer.c": "6be301976e534501a42b8f31768304952a1457ac6dd8604682f0e87a0aff0657"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/safari_decoration_data.o": {
+    "inputs": {
+      "asm/safari_decoration_data.s": "58c2e7b7e5367ca34d668cfebedfec2e5057d4cbaceef7f977222ff362f0c0f2",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "src/application/safari_decoration.c": "021a3f8b12b527c7ea8c524f7fedbb8f00b5074a2cf700b342145c54a62dde86"
+    },
+    "layouts": {
+      "gSafariDecorationObjectGroup0": {
+        "source_size": 8,
+        "alignment": 4,
+        "label_alignment": 4,
+        "edits": [
+          {
+            "offset": 6,
+            "expected": [
+              0,
+              0
+            ],
+            "replacement": []
+          }
+        ]
+      },
+      "gSafariDecorationObjectGroup3": {
+        "source_size": 8,
+        "alignment": 4,
+        "label_alignment": 4,
+        "edits": [
+          {
+            "offset": 6,
+            "expected": [
+              0,
+              0
+            ],
+            "replacement": []
+          }
+        ]
+      },
+      "gSafariDecorationObjectGroup2": {
+        "source_size": 8,
+        "alignment": 4,
+        "label_alignment": 4,
+        "edits": [
+          {
+            "offset": 6,
+            "expected": [
+              0,
+              0
+            ],
+            "replacement": []
+          }
+        ]
+      },
+      "gSafariDecorationObjectGroup1": {
+        "source_size": 8,
+        "alignment": 4,
+        "label_alignment": 4,
+        "edits": [
+          {
+            "offset": 6,
+            "expected": [
+              0,
+              0
+            ],
+            "replacement": []
+          }
+        ]
+      },
+      "gSafariDecorationObjectGroups": {
+        "source_size": 32,
+        "alignment": 8,
+        "label_alignment": 4,
+        "pointers": [
+          4,
+          12,
+          20,
+          28
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 12,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 17,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 28,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/scratch_off_cards_data.o": {
+    "inputs": {
+      "asm/scratch_off_cards_data.s": "7e4b622f8988c44332301547027fd78b5b7cbbabdc7af2e7349dcfc631ad6057",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "src/application/scratch_off_cards.c": "20cdc93b61e088e2a19a10ebd8afae4a1a965df9a447359cf7daa9785c2942d6"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/wireless_trade_select_mon_data.o": {
+    "inputs": {
+      "asm/wireless_trade_select_mon_data.s": "aec579c67c2a21da819115bed243b9818af3bb62c8b4e988bf4843cd3756a5ac",
+      "include/touchscreen_list_menu.h": "877d7ef51287bc5d83d7b5aef42b68f703466c404d791c8fc8c79058dbcf72a2",
+      "include/wireless_trade_select_mon_internal.h": "743206c80dab7b3c2180b69d3a5e0cf0f56ebda43d11c13c4a0c9086708f147f",
+      "src/wireless_trade_select_mon.c": "56347bd9e5fe43fec9d50fd258a0de6538c579f24a7e6df74d0d789e719d6126"
+    },
+    "layouts": {},
+    "reviewed": true
+  },
+  "asm/map_object_behavior_data.o": {
+    "inputs": {
+      "asm/map_object_behavior_data.s": "a992173dd0f1795a1eee0a31c30e62521ca2b6639daa3bf0822e71ea3d2a319b",
+      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object_behavior_internal.h": "8994789d666ec0bfa53e7c08d9c19108f3d30e5f22b7d534dc6c4f3adc4171cf",
+      "src/map_object_behavior.c": "caf395113517422eb592690a66e8c399e686878a8d050f07684c7a64de60c3e8"
+    },
+    "layouts": {
+      "gMapObjectTypeBehaviorInits": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      },
+      "gMapObjectTypeBehaviorChecks": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      },
+      "gMapObjectTypeBehaviorUpdates": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/map_object_movement_commands_data.o": {
+    "inputs": {
+      "asm/map_object_movement_commands_data.s": "fde32dfc259d4c45f1610d88b81de39b679de09837d5a33ca2d1855f28155f8f",
+      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
+      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+    },
+    "layouts": {
+      "gJumpHeightTables": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementScriptMachineStateFuncs": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/map_object_movement_tables.o": {
+    "inputs": {
+      "asm/map_object_movement_tables.s": "a51540580d07eebbbea1c2df1bb9998e214bc50c4b7533ddca2e96cf6ae51bae",
+      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object_movement.h": "e8e2a69c3e637cd51e0f15f5339fb8547646e56b978c33455eb25ea382948941",
+      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
+      "src/map_object.c": "6a89eb180683cac262b136588bcc4f13a5700742282a2f5718bcca528aa98d37"
+    },
+    "layouts": {
+      "sHiddenObjectCover1MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable15MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sHiddenObjectCover3MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFollowPlayer55MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable14MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sHiddenObjectCover2MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sSpinClockwiseMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sHiddenObjectCover0MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable19MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFollowPlayer56MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable20MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable21MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable22MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable23MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable25MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable26MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable27MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable28MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable29MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable30MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sNoMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPlayerMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable31MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable24MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable32MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomWalkLeftRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable33MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable34MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookDownLeftMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable18MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable17MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable16MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookDownRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable35MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sBackAndForthMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sAlternatingSpinMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable36MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sSpinCounterclockwiseMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFaceDirectionRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFaceDirectionLeftMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookDownLeftRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sPathTable37MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpDownMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookLeftRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFollowPlayer48MovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpLeftRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpDownRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpDownLeftMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFaceDirectionUpMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFaceDirectionDownMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpRightMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookUpLeftMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sFollowPartnerMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomWalkUpDownMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomWalkAnyDirectionMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "sRandomLookAnyDirectionMovementCallbacks": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          4,
+          8,
+          12,
+          16
+        ],
+        "edits": [
+          {
+            "offset": 1,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gMovementsByDirection": {
+        "source_size": 92,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84
+        ],
+        "edits": [
+          {
+            "offset": 92,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gMapObjectMovementCallbacks": {
+        "source_size": 228,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224
+        ]
+      },
+      "gMovementCmdTable": {
+        "source_size": 452,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224,
+          228,
+          232,
+          236,
+          240,
+          244,
+          248,
+          252,
+          256,
+          260,
+          264,
+          268,
+          272,
+          276,
+          280,
+          284,
+          288,
+          292,
+          296,
+          300,
+          304,
+          308,
+          312,
+          316,
+          320,
+          324,
+          328,
+          332,
+          336,
+          340,
+          344,
+          348,
+          352,
+          356,
+          360,
+          364,
+          368,
+          372,
+          376,
+          380,
+          384,
+          388,
+          392,
+          396,
+          400,
+          404,
+          408,
+          412,
+          416,
+          420,
+          424,
+          428,
+          432,
+          436,
+          440,
+          444,
+          448
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/palpad_data.o": {
+    "inputs": {
+      "asm/palpad_data.s": "8df1898361f6af2dd684fbe1a90f2139b214889dccc86d7ba35acfb8c3df255a",
+      "include/application/palpad/palpad_internal.h": "3a1722cdda93d2b80646801806f32adba5bb7fb91f1065fa7c1fd57ad0ee2f9a",
+      "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
+      "include/touchscreen_list_menu.h": "877d7ef51287bc5d83d7b5aef42b68f703466c404d791c8fc8c79058dbcf72a2",
+      "src/application/palpad/palpad.c": "fa9e673038a8a2364e082e3fc27e5fdb701f4dc325adfa9e741609af88f1c866",
+      "src/application/palpad/palpad_details.c": "e610ad9d4ed86670ea2553cad2d2cb4c464b14f8a02564e0fbd3afa596396bf9",
+      "src/application/palpad/palpad_details_text.c": "13a6cb7d3e4079073bf37175453dbe199bedf8ceb0d32c24cae316c01f8f2181",
+      "src/application/palpad/palpad_friend_code.c": "e1a12b52f9838951d2242ddd28d506d07385111dc04fd276674800b5560d878a",
+      "src/application/palpad/palpad_menu.c": "b3d88e9d93e0d10593417852a3d672be9d6668767b86440593fd9793f7b6ee66",
+      "src/application/palpad/palpad_roster.c": "05a339a8cdbdb00a54cfb406be383992fe578bb27615d79708dc59c9d8eb88d7"
+    },
+    "layouts": {
+      "gPalPadDeleteEffectSpriteTemplate": {
+        "source_size": 48,
+        "alignment": 8,
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gPalPadDetailsPagePrinters": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gPalPadRosterScrollCallbacks": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 4,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gPalPadDetailsPageWindowSpecs": {
+        "source_size": 32,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28
+        ]
+      },
+      "gPalPadDetailsFrontierPagePrinters": {
+        "source_size": 32,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28
+        ]
+      },
+      "gPalPadArrowSpriteTemplates": {
+        "source_size": 20,
+        "alignment": 8,
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gPalPadArrowTemplateScale": {
+        "source_size": 76,
+        "alignment": 4,
+        "edits": [
+          {
+            "offset": 21,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gPalPadCursorSpriteTemplate": {
+        "source_size": 52,
+        "alignment": 8,
+        "edits": [
+          {
+            "offset": 0,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/map_object_movement_command_steps.o": {
+    "inputs": {
+      "asm/map_object_movement_command_steps.s": "bf440498bed47b826b7a12c14d901a166f4692ebcd850f847ad2315ea23a4b00",
+      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
+      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+    },
+    "layouts": {
+      "gMovementCmdSteps_098": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_099": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_097": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_096": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_064": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_090": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_060": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_088": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_092": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_082": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_056": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_080": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_055": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_007": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_100": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_075": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_103": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_101": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_040": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_038": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_036": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_034": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_032": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_030": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_068": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_067": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_066": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_065": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_084": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_063": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_062": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_061": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_016": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_095": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_094": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_093": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_008": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_059": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_058": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_057": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_081": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_054": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_053": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_076": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_047": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_048": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_077": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_102": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_049": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_046": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_045": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_044": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_043": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_042": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_041": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_050": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_039": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_078": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_037": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_051": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_035": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_052": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_033": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_079": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_031": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_104": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_029": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_028": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_027": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_026": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_025": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_024": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_087": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_086": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_085": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_005": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_023": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_022": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_021": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_020": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_019": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_018": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_017": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_009": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_015": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_014": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_013": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_012": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_108": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gMovementCmdSteps_110": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gMovementCmdSteps_112": {
+        "source_size": 28,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "gMovementCmdSteps_106": {
+        "source_size": 36,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32
+        ]
+      },
+      "gMovementCmdSteps_105": {
+        "source_size": 44,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40
+        ]
+      },
+      "gMovementCmdSteps_107": {
+        "source_size": 60,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56
+        ]
+      },
+      "gMovementCmdSteps_109": {
+        "source_size": 60,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56
+        ]
+      },
+      "gMovementCmdSteps_111": {
+        "source_size": 84,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/unk_data_020FD978.o": {
+    "inputs": {
+      "asm/unk_data_020FD978.s": "316cb21414cf9a876c1c3753bbd70181f98d0f66c511ca251c0dbb914b7a79e1",
+      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
+      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+    },
+    "layouts": {
+      "gMovementCmdSteps_001": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_003": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_073": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_074": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_072": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_070": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_069": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_000": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_002": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_071": {
+        "source_size": 8,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gMovementCmdSteps_010": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_089": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_083": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_006": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_091": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_004": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gMovementCmdSteps_011": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      }
+    },
+    "reviewed": true
+  },
+  "asm/trainer_ai_data.o": {
+    "inputs": {
+      "asm/trainer_ai_data.s": "27545ae40eb1c9285ea915bb85abce1e5dff8da1f38f1b870c82f8dee8fe4766",
+      "src/battle/trainer_ai.c": "e607ce4441d53e4ab351829057677465943379dbd5b308523caf66a8f1b204fd",
+      "src/battle/battle_controller_player.c": "f7af28b3c492876a56c8a9621c463de71e27d2f04665253bd5abd77b63a7888b"
+    },
+    "layouts": {
+      "ov10_02220AAC": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gTrainerAITable": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "sWeightToPower": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "sAltPowerMoveEffects": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "sNoDamageCalcMoveEffects": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "sAICommandTable": {
+        "segment": "__DATA",
+        "public": true,
+        "source_size": 436,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224,
+          228,
+          232,
+          236,
+          240,
+          244,
+          248,
+          252,
+          256,
+          260,
+          264,
+          268,
+          272,
+          276,
+          280,
+          284,
+          288,
+          292,
+          296,
+          300,
+          304,
+          308,
+          312,
+          316,
+          320,
+          324,
+          328,
+          332,
+          336,
+          340,
+          344,
+          348,
+          352,
+          356,
+          360,
+          364,
+          368,
+          372,
+          376,
+          380,
+          384,
+          388,
+          392,
+          396,
+          400,
+          404,
+          408,
+          412,
+          416,
+          420,
+          424,
+          428,
+          432
+        ],
+        "alignment": 8
+      }
+    }
+  },
+  "asm/field_follow_mon_data.o": {
+    "inputs": {
+      "asm/field_follow_mon_data.s": "1913c68641aa70b7f2775846593ac9e9d1c18f2e6a62e0d7a25278b4e6b3edb0",
+      "src/field/field_follow_mon.c": "d7121990a23783ee23dc165db2caabe939ab59764b5b33187b04159d09982cc7",
+      "include/field/field_follow_mon.h": "566da9f6495708ec35a052fedb91990afae0bf8c1d010cfff6b8c869636032e9",
+      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406"
+    },
+    "layouts": {
+      "gFollowMonHopIntoBallZOffsets": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonRecallScale": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonHopIntoBallScale": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonFastMovements": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonSlowMovements": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonStepMovements": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonRunMovements": {
+        "segment": "__TEXT",
+        "public": true
+      },
+      "gFollowMonHopHeights": {
+        "segment": "__TEXT",
+        "public": true
+      }
+    }
+  },
+  "lib/NitroDWC/asm/dwc_lib_bss.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_lib_bss.s": "6ec148c5de3da8815fd912b7019e4f31c527079335fae5beebbd6c4503a0a11b",
+      "lib/include/dwc/match_internal.h": "53c1782168fde470d81ed461e2936567318b278e38aafdd449b3fff61479815f",
+      "lib/NitroDWC/src/match_browse.c": "5928e112673fdb47871aae59eb68534e6c0f55f177f6e68eabb7fcc30e9ee10e",
+      "lib/NitroDWC/src/dwc_login.c": "de2b057f9411f05d4a3a807b9036e018902e3b1de73124da4ccda30a8e404085"
+    },
+    "layouts": {},
+    "blocker": "gDwcMatchKeys spans 154 ARM32 MatchKeyEntry records through aliases ov00_0221A949..ov00_0221A950; match_browse.c clears 1848 literal bytes and indexes the array as bytes. Native entries are 24 bytes. dwc_login.c writes ((int *)&gDwcControl)[1], which overlaps the native pointer. A data-only resize cannot preserve these consumer accesses."
+  },
+  "lib/NitroDWC/asm/dwc_gamespy_bss.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_gamespy_bss.s": "7366dfffe95f3a16b8b48c06042db72e2384be748c3775caff0c50b5f71f90e6",
+      "lib/include/dwc/persist_internal.h": "250f8f2807f879797499e0d1ba32623ee9c8b8f09a3de274d82fa08e25c395c5",
+      "lib/NitroDWC/src/persist_data.c": "ea3ee0f933f44015ba3d7a7ba1c906cdcf389fc1bb5545f4c8b6ffe8b2447213"
+    },
+    "layouts": {},
+    "blocker": "gPersistWork has a 0x30 original extent and pointer-bearing PersistWork consumers; nnNegotiatorList and other GameSpy runtime globals also require reviewed native structure extents. Original extents cannot be declared native-safe without consumer ABI validation."
+  },
+  "lib/NitroDWC/asm/dwc_lib_rodata.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_lib_rodata.s": "005b06c27607825c74e17a436136ed908881b3de9f96142503f92ed2662fd75c",
+      "lib/include/dwc/auth_internal.h": "0d632f161059b2558b9902a59e60b06daf0bc8164d9acdde94fe3be88f09e1f1",
+      "lib/NitroDWC/src/net_common.c": "631147aedf6251e31f534556d38d916b8e2c04bf11a2f7caefe65aedd6823942"
+    },
+    "layouts": {},
+    "blocker": "Mixed constant data and 216 bytes of runtime BSS require verified AuthState, NetAllocator and NetConnectionState layouts. ov00_022160F0 combines a symbolic address and packed bytes with no reviewed native declaration; its pointer/offset interpretation remains unproven."
+  },
+  "lib/NitroDWC/asm/dwc_lib_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_lib_data.s": "e0c88d06b1d65fce3ded518163146af0699bbe74fa6480930ba3a17b7dcec810",
+      "lib/NitroDWC/src/auth_http.c": "3538ce8a29467af7c13ddea6542805b2396bc2907173244e0f84e07e38a3100a"
+    },
+    "layouts": {},
+    "blocker": "gDwcRootCaList contains twelve addresses consumed as a byte-typed root-CA table by auth_http.c/CPS_SetRootCa. CA records mix pointer and integer words. Widening all words would change scalar modulus/exponent lengths; native record layout and CPS consumer ABI need validation before conversion."
+  }
+}

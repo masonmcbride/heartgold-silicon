@@ -75,7 +75,9 @@ function(dependency name url revision)
     if(NOT actual STREQUAL revision)
         message(FATAL_ERROR "${name}: expected ${revision}, found ${actual}")
     endif()
-    if(name STREQUAL "pokeheartgold" OR name STREQUAL "libntr")
+    # The libntr development fork may contain authorized local changes.
+    # Its HEAD must still match the pin; never discard or publish those edits.
+    if(name STREQUAL "pokeheartgold")
         execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${source}" status --porcelain --untracked-files=all
             OUTPUT_VARIABLE dirty COMMAND_ERROR_IS_FATAL ANY)
         if(dirty)
@@ -91,6 +93,17 @@ dependency(libntr "${LIBNTR_URL}" "${LIBNTR_COMMIT}")
 # --- 4. Source roots ---------------------------------------------------------
 set(game_source "${PROJECT_SOURCE_DIR}/upstream/pokeheartgold")
 set(ntr_source "${PROJECT_SOURCE_DIR}/upstream/libntr")
+# Explicit local fork review, without changing either managed checkout or pin.
+set(HEARTGOLD_LIBNTR_REVIEW_SOURCE "" CACHE PATH "Local libntr fork checkout for uncommitted native review")
+if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+    get_filename_component(ntr_source "${HEARTGOLD_LIBNTR_REVIEW_SOURCE}" ABSOLUTE)
+    execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${ntr_source}" rev-parse HEAD
+        OUTPUT_VARIABLE review_head OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
+    if(NOT review_head STREQUAL LIBNTR_COMMIT)
+        message(FATAL_ERROR "The review checkout must start at the pinned libntr commit")
+    endif()
+    message(STATUS "Using explicitly selected local libntr review checkout: ${ntr_source}")
+endif()
 
 # --- 5. Fixed-point constants: original C generator, libntr's pinned CSV --------
 set(fx_tool "${game_source}/tools/gen_fx_consts")
@@ -108,18 +121,42 @@ add_custom_command(OUTPUT "${fx_header}"
 add_custom_target(fx_constants DEPENDS "${fx_header}")
 
 # --- 6. Native host services --------------------------------------------------
-add_library(native_host STATIC hardware_drivers/os.c)
+add_library(native_host STATIC hardware_drivers/os/os.c hardware_drivers/wireless/mb_native.c)
+target_include_directories(native_host PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless")
 target_include_directories(native_host PUBLIC "${ntr_source}/include")
 target_link_libraries(native_host PUBLIC "${COREFOUNDATION}")
+if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+    target_sources(native_host PRIVATE hardware_drivers/os/overlay_native.c hardware_drivers/os/resources.c)
+    target_compile_definitions(native_host PRIVATE
+        HG_GENERATED_RESOURCE_ROOT="${PROJECT_BINARY_DIR}/generated/files"
+        HG_ORIGINAL_RESOURCE_ROOT="${game_source}/files")
+endif()
 
 add_library(nitro_config INTERFACE)
 target_compile_features(nitro_config INTERFACE c_std_11)
 target_compile_definitions(nitro_config INTERFACE
-    SDK_PORT SDK_AARCH64 SDK_BUILD_MACOS SDK_64BIT SDK_VERSION_MAJOR=4
+    SDK_PORT SDK_AARCH64 SDK_BUILD_MACOS SDK_64BIT SDK_NATIVE_G3 SDK_VERSION_MAJOR=4
     HG_LIBNTR_REVISION="${LIBNTR_COMMIT}"
     SDK_CW_FORCE_EXPORT_SUPPORT SDK_TS SDK_4M SDK_FINALROM NNS_FINALROM _NITRO)
 target_compile_options(nitro_config INTERFACE -fno-common)
 target_include_directories(nitro_config INTERFACE "${ntr_source}/include" "${PROJECT_BINARY_DIR}/include")
+
+# Native Metal raster target: an actual offscreen GPU pipeline, not a simulator
+# G3SIM symbol shim. DS command/state translation is integrated separately.
+enable_language(OBJCXX)
+find_library(HG_METAL_FRAMEWORK Metal REQUIRED)
+find_library(HG_FOUNDATION_FRAMEWORK Foundation REQUIRED)
+add_library(hg_metal_raster STATIC hardware_drivers/metal/metal_raster.mm)
+target_include_directories(hg_metal_raster PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/metal")
+target_compile_options(hg_metal_raster PRIVATE -fobjc-arc)
+target_link_libraries(hg_metal_raster PUBLIC
+    "${HG_METAL_FRAMEWORK}" "${HG_FOUNDATION_FRAMEWORK}")
+
+add_library(hg_g3_metal STATIC hardware_drivers/metal/g3_metal.mm)
+target_include_directories(hg_g3_metal PUBLIC "${ntr_source}/include")
+target_compile_features(hg_g3_metal PRIVATE cxx_std_17)
+target_compile_options(hg_g3_metal PRIVATE -fobjc-arc)
+target_link_libraries(hg_g3_metal PUBLIC "${HG_METAL_FRAMEWORK}" "${HG_FOUNDATION_FRAMEWORK}")
 
 # --- 7. Native SDK components (reuse pinned source manifests, not Meson) -------
 function(ntr_library target)
@@ -149,7 +186,7 @@ foreach(component os mi pxi ctrdg spi std card cp fx fs math dgt rtc gx snd)
     endforeach()
     ntr_library(ntr_${component} ${sources})
     if(component STREQUAL "mi")
-        target_sources(ntr_mi PRIVATE hardware_drivers/mi.c)
+        target_sources(ntr_mi PRIVATE hardware_drivers/os/mi.c)
     endif()
     target_include_directories(ntr_${component} PRIVATE "${directory}/include")
     target_link_libraries(nitro_sdk INTERFACE ntr_${component})
@@ -158,16 +195,26 @@ ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/sim_vars.c"
     "${ntr_source}/libraries/sim/src/sim_assert.c"
     "${ntr_source}/libraries/sim/src/queue.c"
-    # Existing command decoding compiles without SDL; drawing remains unresolved.
+    "${ntr_source}/libraries/sim/src/native/g3_math.c"
+    "${ntr_source}/libraries/sim/src/native/g3_state.cpp"
+    "${ntr_source}/libraries/sim/src/native/g3_commands.cpp"
+    "${ntr_source}/libraries/sim/src/native/sim_frame.cpp"
+    # Preserve the command processor ABI and original strip assembly.
     "${ntr_source}/libraries/sim/src/sim_g3_CommandProcessor.cpp"
     "${ntr_source}/libraries/sim7/src/pxi.c")
 target_compile_features(ntr_sim_state PRIVATE cxx_std_17)
 target_include_directories(ntr_sim_state PRIVATE "${ntr_source}/libraries/sim7/include")
+target_link_libraries(ntr_sim_state PUBLIC hg_g3_metal)
 target_link_libraries(nitro_sdk INTERFACE ntr_sim_state)
 target_link_options(nitro_sdk INTERFACE -Wl,-dead_strip)
 
 # --- 8. SDK correctness tests ------------------------------------------------
 enable_testing()
+add_executable(test_metal_raster tests/test_metal_raster.c)
+target_link_libraries(test_metal_raster PRIVATE hg_metal_raster)
+set_target_properties(test_metal_raster PROPERTIES LINKER_LANGUAGE OBJCXX)
+target_compile_options(test_metal_raster PRIVATE -UNDEBUG)
+add_test(NAME real_metal_raster COMMAND test_metal_raster)
 add_executable(test_sdk_interfaces tests/test_sdk_interfaces.c)
 target_link_libraries(test_sdk_interfaces PRIVATE nitro_sdk)
 target_compile_options(test_sdk_interfaces PRIVATE -UNDEBUG)
@@ -199,9 +246,9 @@ add_dependencies(test_heap fx_constants)
 add_test(NAME nitrosystem_heap COMMAND test_heap)
 # Unmodified Nintendo heap metadata truncates native pointers. Keep the test,
 # but do not execute it or claim support until that upstream-only constraint is resolved.
-set_tests_properties(nitrosystem_heap PROPERTIES DISABLED TRUE)
+set_tests_properties(nitrosystem_heap PROPERTIES TIMEOUT 30)
 add_executable(uncompress_reference "${game_source}/tools/asmdiff/ntruncompbw.c")
-add_executable(test_uncompress tests/test_uncompress.c hardware_drivers/mi.c)
+add_executable(test_uncompress tests/test_uncompress.c hardware_drivers/os/mi.c)
 target_link_libraries(test_uncompress PRIVATE nitro_sdk)
 target_compile_options(test_uncompress PRIVATE -O2 -fsanitize=address,undefined -fno-sanitize-recover=all)
 target_link_options(test_uncompress PRIVATE -fsanitize=address,undefined)
@@ -228,3 +275,16 @@ option(HEARTGOLD_BUILD_MEMORY_RESEARCH "Build opt-in host memory observers" OFF)
 if(HEARTGOLD_BUILD_MEMORY_RESEARCH)
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/memory_research.cmake")
 endif()
+
+# Geometry arithmetic is independently sanitizer-tested without the renderer.
+add_executable(test_g3_native_math tests/test_g3_native_math.c
+    "${ntr_source}/libraries/sim/src/native/g3_math.c")
+target_include_directories(test_g3_native_math PRIVATE "${ntr_source}/include")
+target_compile_options(test_g3_native_math PRIVATE -UNDEBUG -fsanitize=address,undefined -fno-sanitize-recover=all)
+target_link_options(test_g3_native_math PRIVATE -fsanitize=address,undefined)
+add_test(NAME native_g3_math COMMAND test_g3_native_math)
+add_executable(test_g3_native tests/test_g3_native.cpp)
+target_link_libraries(test_g3_native PRIVATE nitro_sdk)
+target_compile_options(test_g3_native PRIVATE -UNDEBUG)
+add_test(NAME native_g3_commands_metal COMMAND test_g3_native)
+set_tests_properties(native_g3_commands_metal PROPERTIES TIMEOUT 30)

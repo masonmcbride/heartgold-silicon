@@ -13,20 +13,13 @@ import subprocess
 
 
 def sources(game):
-    overlays, current = {}, None
-    for line in (game / 'main.lsf').read_text().splitlines():
-        match = re.match(r'^(Static|Autoload|Overlay)\s+(\w+)', line)
-        if match:
-            current = match[2] if match[1] == 'Overlay' else None
-            if current:
-                overlays[current] = []
-        match = re.match(r'\s*Object\s+(\S+)\.o(?:\s|$)', line)
-        if match and current:
-            for suffix in ('.c', '.cpp'):
-                source = game / (match[1] + suffix)
-                if source.exists():
-                    overlays[current].append(source)
-    return overlays
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'cmake'))
+    from native_image_graph import graph
+    model=graph(game)
+    return {name:[game/model['members'][obj]['source'] for obj in image['objects']
+                  if model['members'][obj]['kind'] in ('C','C++')]
+            for name,image in model['images'].items() if image['kind']=='Overlay'}
 
 
 def arguments(entry):

@@ -85,6 +85,7 @@ function(hg_manifest_graphics_archive
                 COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
                 COMMAND "${CMAKE_COMMAND}" -E copy_if_different
                     "${input}" "${output}"
+                COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
                 DEPENDS "${input}"
                 VERBATIM)
 
@@ -210,6 +211,7 @@ foreach(a RANGE ${hg_archive_last})
             add_custom_command(OUTPUT "${output}"
                 COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
                 COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${input}" "${output}"
+                COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
                 DEPENDS "${input}" ${recipe_deps} VERBATIM)
         elseif(kind STREQUAL "gfx")
             set(key)

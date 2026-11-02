@@ -18,13 +18,13 @@ Install missing prerequisites using Xcode and Homebrew. Do not reinstall tools a
     cd heartgold-silicon
     cmake -S . -B build
 
-CMake fetches pinned original HeartGold and libntr revisions into the ignored upstream directory. Both dependency checkouts must remain clean.
+CMake fetches pinned original HeartGold and libntr revisions into the ignored upstream directory. HeartGold must remain clean at its pin. Existing authorized libntr fork edits are preserved; unpublished review changes are not part of a clean published checkout.
 
 ## Verify
 
     cmake --build build --target test_coordinated -j8
     ctest --test-dir build --output-on-failure
 
-The most recent local checkpoint passed 20 enabled tests. The heap test remains disabled. The original C/C++ syntax audit previously reached 800/805 sources and 127/129 overlays. The complete game does not yet link.
+The current local review checkpoint compiles all 805/805 original C/C++ overlay units and validates 87 native image dylibs. CTest passes 42/46 entries; three Metal-device failures and one genuine DWC image-link failure remain. The original heap remains unsupported, and the complete game does not yet link.
 
-See docs/BUILD.md and docs/NATIVE_805_LEDGER.md for details.
+See [build commands](docs/BUILD.md), the [current architecture](docs/ARCHITECTURE.md), and the [repository tree, cleanup results and linker blockers](docs/SMALLEST_MACHINE.md). Historical phase drivers and conversion prototypes live in [museum/](museum/README.md); production does not depend on them.

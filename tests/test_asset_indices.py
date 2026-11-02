@@ -13,7 +13,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / 'upstream/pokeheartgold'
-spec = importlib.util.spec_from_file_location('manifest', ROOT / 'cmake/asset_manifest.py')
+spec = importlib.util.spec_from_file_location('manifest', ROOT / 'cmake/assets/asset_manifest.py')
 manifest = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(manifest)
 BUILD = None

@@ -1,0 +1,175 @@
+# Explicitly selected local-fork integration; preserve original image membership.
+enable_language(ASM)
+# The same declared-output generator handles static and overlay data members.
+include("${PROJECT_BINARY_DIR}/native-graph/main-data.cmake")
+target_sources(heartgold_main PRIVATE ${hg_main_data_sources})
+find_program(HG_NATIVE_OTOOL NAMES otool REQUIRED)
+set(HEARTGOLD_NATIVE_EXTRA_OVERLAYS "" CACHE STRING "Explicit additional original overlay names")
+set(hg_overlay_manifest "${CMAKE_CURRENT_LIST_DIR}/native_overlay_manifest.py")
+set(overlay_link_dir "${PROJECT_BINARY_DIR}/native-overlays")
+set(hg_overlay_select --supported --select OVY_36 --select intro_title --select OVY_62 --select ds_protect --select OVY_39 --select OVY_40 --select OVY_41)
+target_sources(heartgold_main PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers/graphics/nsbta_callback.c")
+foreach(name IN LISTS HEARTGOLD_NATIVE_EXTRA_OVERLAYS)
+    list(APPEND hg_overlay_select --select "${name}")
+endforeach()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${hg_overlay_manifest}" "${CMAKE_CURRENT_LIST_DIR}/native_assembly_data.py"
+    "${CMAKE_CURRENT_LIST_DIR}/native_image_graph.py" "${CMAKE_CURRENT_LIST_DIR}/native_data_ir.py"
+    "${CMAKE_CURRENT_LIST_DIR}/native_data_layouts.py" "${CMAKE_CURRENT_LIST_DIR}/native_data_layouts.json"
+    "${CMAKE_CURRENT_LIST_DIR}/native_image_policy.json")
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_overlay_manifest}"
+    --game "${game_source}" --adapted-dir "${native_root}" --out "${overlay_link_dir}" ${hg_overlay_select}
+    COMMAND_ERROR_IS_FATAL ANY)
+include("${overlay_link_dir}/selection.cmake")
+set(overlay_archives)
+foreach(id IN LISTS hg_selected_overlay_ids)
+    set(target ${hg_overlay_${id}_target})
+    if(TARGET ${target})
+        set_property(TARGET ${target} PROPERTY SOURCES "${hg_overlay_${id}_sources}")
+    else()
+        add_library(${target} STATIC ${hg_overlay_${id}_sources})
+        target_compile_definitions(${target} PRIVATE "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
+        target_include_directories(${target} PRIVATE "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+        target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
+        target_link_libraries(${target} PRIVATE nitro_config)
+        add_dependencies(${target} heartgold_overlay_native_sources heartgold_native_headers fx_constants ${heartgold_asset_targets})
+    endif()
+    list(APPEND overlay_archives ${target})
+    set(hg_overlay_${id}_archive ${target})
+endforeach()
+
+get_target_property(overlay_sdk_targets nitro_sdk INTERFACE_LINK_LIBRARIES)
+set(overlay_main_targets heartgold_main heartgold_runtime heartgold_sound_storage native_host ${overlay_sdk_targets})
+set(overlay_link_args)
+set(overlay_link_dependencies)
+foreach(target IN LISTS overlay_main_targets)
+    list(APPEND overlay_link_args --main "$<TARGET_FILE:${target}>")
+    list(APPEND overlay_link_dependencies ${target} "$<TARGET_FILE:${target}>")
+endforeach()
+foreach(id IN LISTS hg_selected_overlay_ids)
+    set(target ${hg_overlay_${id}_archive})
+    list(APPEND overlay_link_args --overlay "${id}=$<TARGET_FILE:${target}>")
+    list(APPEND overlay_link_dependencies ${target} "$<TARGET_FILE:${target}>")
+endforeach()
+set(overlay_link_dir "${PROJECT_BINARY_DIR}/native-overlays")
+set(overlay_imports "${overlay_link_dir}/imports.rsp")
+set(overlay_exports "${overlay_link_dir}/main-exports.txt")
+set(overlay_contracts "${overlay_link_dir}/providers.json")
+set(hg_interface_outputs "${overlay_link_dir}/interfaces/main.tbd")
+foreach(id IN LISTS hg_selected_overlay_ids)
+    list(APPEND hg_interface_outputs "${overlay_link_dir}/interfaces/image_${id}.tbd"
+        "${overlay_link_dir}/image_${id}.rsp")
+endforeach()
+add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}"
+    COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
+        --nm "${CMAKE_NM}" ${overlay_link_args}
+        --imports "${overlay_imports}" --exports "${overlay_exports}" --contracts "${overlay_contracts}"
+    COMMAND "${CMAKE_COMMAND}" -E touch ${hg_interface_outputs}
+        "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}"
+    DEPENDS ${overlay_link_dependencies} "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
+    VERBATIM)
+add_custom_target(heartgold_overlay_link_contract DEPENDS ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}")
+set(hg_native_image_targets)
+set(hg_native_binding_args)
+set(hg_native_binding_dependencies)
+foreach(id IN LISTS hg_selected_overlay_ids)
+    list(APPEND hg_native_image_targets heartgold_image_${id})
+    set(archive ${hg_overlay_${id}_archive})
+    set(anchor "${overlay_link_dir}/image_${id}.c")
+    file(GENERATE OUTPUT "${anchor}" CONTENT "const unsigned HG_NativeOverlay${id}_ID = ${id};\n")
+    add_library(heartgold_image_${id} SHARED "${anchor}")
+    target_link_options(heartgold_image_${id} PRIVATE
+        "LINKER:-force_load,$<TARGET_FILE:${archive}>" "@${overlay_link_dir}/image_${id}.rsp" "LINKER:-rpath,@loader_path")
+    set_target_properties(heartgold_image_${id} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
+        INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE
+        LINK_DEPENDS "${hg_interface_outputs};$<TARGET_FILE:${archive}>")
+    add_dependencies(heartgold_image_${id} heartgold_overlay_link_contract)
+    add_custom_command(TARGET heartgold_image_${id} POST_BUILD
+        COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_preflight.py"
+            --otool "${HG_NATIVE_OTOOL}" $<TARGET_FILE:heartgold_image_${id}>
+        VERBATIM)
+    target_link_libraries(heartgold PRIVATE heartgold_image_${id})
+    list(APPEND hg_native_binding_args --image "${id}=$<TARGET_FILE:heartgold_image_${id}>")
+    list(APPEND hg_native_binding_dependencies heartgold_image_${id} "$<TARGET_FILE:heartgold_image_${id}>")
+endforeach()
+add_custom_command(OUTPUT "${overlay_link_dir}/bindings.inc" "${overlay_link_dir}/bindings.json"
+    COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_bindings.py"
+        --contracts "${overlay_contracts}" ${hg_native_binding_args}
+        --output "${overlay_link_dir}/bindings.inc" --report "${overlay_link_dir}/bindings.json"
+    COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${overlay_link_dir}/bindings.inc"
+    DEPENDS ${hg_native_binding_dependencies} "${overlay_contracts}"
+        "${CMAKE_CURRENT_LIST_DIR}/native_overlay_bindings.py"
+    VERBATIM)
+add_custom_target(heartgold_overlay_bindings DEPENDS "${overlay_link_dir}/bindings.inc")
+add_dependencies(heartgold heartgold_overlay_bindings)
+set_property(TARGET heartgold APPEND PROPERTY LINK_DEPENDS "${overlay_exports}")
+target_link_options(heartgold PRIVATE "LINKER:-export_dynamic" "LINKER:-exported_symbols_list,${overlay_exports}")
+target_sources(heartgold PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers/os/game_overlays.c")
+target_compile_definitions(heartgold PRIVATE HG_NATIVE_OVERLAYS)
+target_include_directories(heartgold PRIVATE "${overlay_link_dir}")
+add_test(NAME native_overlay_manifest COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
+    -s "${PROJECT_SOURCE_DIR}/tests" -p "test_native_overlay_manifest.py")
+
+add_custom_target(heartgold_native_images DEPENDS ${hg_native_image_targets} heartgold_overlay_bindings)
+
+add_test(NAME native_overlay_bindings COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_overlay_bindings.py"
+    --build "${PROJECT_BINARY_DIR}" --sdk "${ntr_source}" --compiler "${CMAKE_C_COMPILER}")
+add_test(NAME native_field_effect_abi COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_field_effect_abi.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME native_overlay_data COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
+    -s "${PROJECT_SOURCE_DIR}/tests" -p "test_native_assembly*.py")
+
+add_test(NAME native_dsprot_nsbta COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_dsprot_nsbta.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME native_nnsys_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_nnsys_native_data.py" --build "${PROJECT_BINARY_DIR}")
+
+# OVY_39 private runtime views are checked against their actual source, not
+# duplicated host declarations. Link only the real data member and SDK services.
+add_custom_target(heartgold_global_terminal_data DEPENDS
+    "${overlay_link_dir}/data/asm/global_terminal_data.S"
+    "${overlay_link_dir}/data/asm/global_terminal_socket_data.S")
+add_dependencies(heartgold_overlay_39 heartgold_global_terminal_data)
+add_executable(test_global_terminal_layout "${PROJECT_SOURCE_DIR}/tests/test_global_terminal_layout.c"
+    "${overlay_link_dir}/data/asm/global_terminal_socket_data.S")
+add_dependencies(test_global_terminal_layout heartgold_global_terminal_data heartgold_overlay_native_sources heartgold_native_headers)
+target_link_libraries(test_global_terminal_layout PRIVATE nitro_sdk)
+target_include_directories(test_global_terminal_layout PRIVATE "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+target_compile_definitions(test_global_terminal_layout PRIVATE "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>"
+    HG_GLOBAL_TERMINAL_SOCKET_SOURCE="${native_root}/src/global_terminal/global_terminal_socket.c")
+target_compile_options(test_global_terminal_layout PRIVATE
+    "$<$<COMPILE_LANGUAGE:C>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>"
+    "$<$<COMPILE_LANGUAGE:C>:-UNDEBUG;-fsanitize=address,undefined;-fno-sanitize-recover=all>")
+target_link_options(test_global_terminal_layout PRIVATE -fsanitize=address,undefined -Wl,-dead_strip)
+add_test(NAME global_terminal_native_layout COMMAND test_global_terminal_layout)
+add_test(NAME global_terminal_native_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_global_terminal_native.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME global_terminal_native_images COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_global_terminal_native.py" --build "${PROJECT_BINARY_DIR}" --images)
+set_tests_properties(global_terminal_native_images PROPERTIES TIMEOUT 120)
+
+add_test(NAME global_terminal_native_image40 COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_global_terminal_native.py" --build "${PROJECT_BINARY_DIR}" --image 40)
+set_tests_properties(global_terminal_native_layout PROPERTIES TIMEOUT 15)
+
+add_custom_target(heartgold_image_report
+    COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_graph_report.py"
+        --game "${game_source}" --build "${PROJECT_BINARY_DIR}"
+        --out "${PROJECT_BINARY_DIR}/native-graph/report" --nm "${CMAKE_NM}"
+    COMMENT "Inspect current native artifacts across the entire original image graph"
+    VERBATIM)
+add_test(NAME native_data_ir COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_data_ir.py")
+add_test(NAME native_image_graph COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_image_graph.py")
+set_tests_properties(native_data_ir native_image_graph PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+
+add_test(NAME native_link_evidence COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_link_evidence.py")
+add_test(NAME native_follow_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_follow_data.py")
+set_tests_properties(native_overlay_manifest native_overlay_data native_link_evidence native_follow_data
+    PROPERTIES ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")

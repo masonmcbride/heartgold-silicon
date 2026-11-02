@@ -287,9 +287,10 @@ COMPILER_NATIVE_SOURCES = tuple(SINIT_CALLBACKS) + (
     "src/application/pokedex/pokedex_main_seq.c", "src/field/weather_manager.c")
 
 
-OVERLAY_NATIVE_SOURCES = tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
+OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
 
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
 
 def native_libc(relative, text):
     for declaration in LIBC_DECLARATIONS[relative]:
@@ -302,7 +303,44 @@ def native_libc(relative, text):
     return headers + text
 
 
-def adapt(relative, text, root):
+def _adapt(relative, text, root):
+    if relative == 'src/global_terminal/global_terminal_socket.c':
+        if hashlib.sha256(text.encode()).hexdigest() != 'ccb95e6265138c5f0a21a6c024117b3fbbc946233ad8b23253e40ab01be36f5f':
+            raise ValueError('Global Terminal socket ABI source drift')
+        anchor = '} GlobalTerminalSocketSettings;'
+        checks = r"""
+#include <stddef.h>
+_Static_assert(sizeof(GlobalTerminalSocket) == 0x280 && _Alignof(GlobalTerminalSocket) == 8, "native socket backing extent");
+_Static_assert(offsetof(GlobalTerminalSocket, host) == 0x140, "hostname alias");
+_Static_assert(offsetof(GlobalTerminalSocket, unk_200) == 0x200, "settings alias");
+_Static_assert(offsetof(GlobalTerminalSocket, port) == 0x240 && offsetof(GlobalTerminalSocketSettings, port) == 0x40, "shared port alias");
+_Static_assert(sizeof(GlobalTerminalSocketSettings) == 0x42, "settings is a view, not its assembly reservation");
+_Static_assert(sizeof(OSThread) == 0x1a8 && _Alignof(OSThread) == 8, "socket thread native ABI");
+_Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex native ABI");
+"""
+        text = replace(text, anchor, anchor + checks)
+        # The original four-byte opaque host-entry field represents addrType +
+        # length, not a native pointer. Use the genuine SDK's canonical ABI.
+        for name, native in [('GlobalTerminalSocketAddress', 'SocAddress'),
+                             ('GlobalTerminalSocketInAddr', 'SocInAddr'),
+                             ('GlobalTerminalSocketHostEntry', 'SocHostEnt')]:
+            block = span(text, 'typedef struct ' + name + ' {', '} ' + name + ';')
+            text = replace(text, block, 'typedef ' + native + ' ' + name + ';')
+        text = replace(text, 'typedef SocHostEnt GlobalTerminalSocketHostEntry;',
+            'typedef SocHostEnt GlobalTerminalSocketHostEntry;\n'
+            '_Static_assert(sizeof(SocHostEnt) == 32 && offsetof(SocHostEnt, addrList) == 24, "native SDK host-entry ABI");\n'
+            '_Static_assert(sizeof(SocAddress) == 8 && offsetof(SocAddress, ip) == 4, "fixed IPv4 address ABI");\n'
+            '_Static_assert(sizeof(SocInAddr) == 4, "fixed IPv4 scalar ABI");')
+        prototypes = span(text, 'GlobalTerminalSocketHostEntry *SOC_GetHostByName(char *name);',
+                          'int SOC_Close(int socket);')
+        text = drop(text, prototypes)
+        text = replace(text, '**entry->addresses', '*(const u32 *)entry->addrList[0]')
+        text = replace(text, 'address.address = sGlobalTerminalSocket.address;',
+                       'address.ip = sGlobalTerminalSocket.address;')
+        text = replace(text, 'SOC_Connect(sGlobalTerminalSocket.socket, &address)',
+                       'SOC_Connect(sGlobalTerminalSocket.socket, &address, sizeof(address))')
+        return '#include <nitrowifi/socl_internal.h>\n' + text
+
     if relative in coordinated.SOURCES:
         text = coordinated.adapt(relative, text)
         if relative in LIBC_DECLARATIONS:
@@ -382,9 +420,132 @@ def adapt(relative, text, root):
     return adapt_original(relative, text, root)
 
 
+def adapt(relative, text, root):
+    record = coordinated.HEADER_ROUTES.get(relative)
+    if record and hashlib.sha256(text.encode()).hexdigest() != record['sha256']:
+        raise ValueError('Native header routing source drift: ' + relative)
+    try:
+        result = _adapt(relative, text, root)
+    except ValueError as error:
+        if not record or str(error) != 'No native adaptation is registered for ' + relative:
+            raise
+        result = text
+    if record:
+        for old, new in record['edits']:
+            if old in result:
+                result = result.replace(old, new)
+            elif new not in result:
+                raise ValueError('Native header routing fragment changed: ' + relative + ': ' + old)
+    return result
+
+
 def adapt_original(relative, text, root):
     if relative == "lib/include/nnsys/g2d/g2d_CellTransferManager.h":
         return replace(text, "\nNNS_G2dInitCellTransferStateManager(", "\nint NNS_G2dInitCellTransferStateManager(")
+    if relative == "lib/NitroSystem/src/fnd_expheap.c":
+        # Host-address adaptation of the unchanged original allocator.
+        # Fail if any expected original expression changes.
+        changes = [
+            ("return (u8 *)(size + (u32)start);",
+             "return start + size;"),
+            ("region->end = (u8 *)(block->blockSize + (u32)(block + 1));",
+             "region->end = (u8 *)(block + 1) + block->blockSize;"),
+            ("freeRgnB.start = (u8 *)(size + (u32)address);",
+             "freeRgnB.start = address + size;"),
+            ("(u8 *)((alignment + (u32)start) & ~alignment)",
+             "(u8 *)(((uintptr_t)start + (uintptr_t)alignment) & ~(uintptr_t)alignment)"),
+            ("(u8 *)(block->blockSize + (u32)start)",
+             "(start + block->blockSize)"),
+            ("(u8 *)((u32)(end - size) & ~(alignment - 1))",
+             "(u8 *)((uintptr_t)(end - size) & ~(uintptr_t)(alignment - 1))"),
+            ("(u32)block < (u32)region->start",
+             "(uintptr_t)block < (uintptr_t)region->start"),
+            ("(u8 *)(oldSize + ((u32)block + sizeof(ExpHeapBlock)))",
+             "((u8 *)(block + 1) + oldSize)"),
+            ("(u8 *)(size + (u32)data)",
+             "(data + size)"),
+            ("(u8 *)(block->blockSize + ((u32)block + sizeof(ExpHeapBlock)))",
+             "((u8 *)(block + 1) + block->blockSize)"),
+        ]
+        for before, after in changes:
+            expected = 2 if before == "(u8 *)(size + (u32)data)" else 1
+            if text.count(before) != expected:
+                raise ValueError("Original ExpHeap expression changed: " + before)
+            text = text.replace(before, after, expected)
+
+        # Native metadata contains pointers and requires 8-byte alignment.
+        # Preserve requested alignment when it is stricter.
+        before_alloc = """    if (size == 0) {
+        size = 1;
+    }
+    size = (size + 3) & ~3;
+    if (alignment >= 0) {
+        return AllocFromHead__ExpHeap((ExpHeap *)heap, size, alignment);
+    }
+    return AllocFromTail__ExpHeap((ExpHeap *)heap, size, -alignment);"""
+        after_alloc = """    const u32 mask = _Alignof(ExpHeapBlock) - 1;
+    if (size == 0) {
+        size = 1;
+    }
+    if (size > UINT32_MAX - mask) {
+        return NULL;
+    }
+    size = (size + mask) & ~mask;
+    if (alignment >= 0) {
+        if (alignment < (int)_Alignof(ExpHeapBlock)) {
+            alignment = _Alignof(ExpHeapBlock);
+        }
+        return AllocFromHead__ExpHeap((ExpHeap *)heap, size, alignment);
+    }
+    if (alignment > -(int)_Alignof(ExpHeapBlock)) {
+        alignment = -(int)_Alignof(ExpHeapBlock);
+    }
+    return AllocFromTail__ExpHeap((ExpHeap *)heap, size, -alignment);"""
+        if text.count(before_alloc) != 1:
+            raise ValueError("Original ExpHeap allocation entry changed")
+        text = text.replace(before_alloc, after_alloc, 1)
+
+        before_resize = """    oldSize = block->blockSize;
+    size = (size + 3) & ~3;
+    if (size == oldSize) {"""
+        after_resize = """    oldSize = block->blockSize;
+    const u32 mask = _Alignof(ExpHeapBlock) - 1;
+    if (size > UINT32_MAX - mask) {
+        return 0;
+    }
+    size = (size + mask) & ~mask;
+    if (size == oldSize) {"""
+        if text.count(before_resize) != 1:
+            raise ValueError("Original ExpHeap resize entry changed")
+        text = text.replace(before_resize, after_resize, 1)
+
+        before = """    u8 *end = (u8 *)((size + (u32)startAddress) & ~3);
+    startAddress = (void *)(((u32)startAddress + 3) & ~3);
+    if ((u32)startAddress > (u32)end || (u32)(end - (u8 *)startAddress) < sizeof(ExpHeap) + sizeof(ExpHeapBlock) + 4) {
+        return NULL;
+    }
+    return (NNSFndHeapHandle)InitExpHeap(startAddress, end, optFlag);"""
+        after = """    uintptr_t begin = (uintptr_t)startAddress;
+    uintptr_t alignment = _Alignof(ExpHeap);
+    if (_Alignof(ExpHeapBlock) > alignment) {
+        alignment = _Alignof(ExpHeapBlock);
+    }
+    uintptr_t mask = alignment - 1;
+    if (begin > UINTPTR_MAX - size || begin > UINTPTR_MAX - mask) {
+        return NULL;
+    }
+    uintptr_t end = (begin + size) & ~mask;
+    uintptr_t aligned = (begin + mask) & ~mask;
+    if (aligned > end ||
+        end - aligned < sizeof(ExpHeap) + sizeof(ExpHeapBlock) + 4) {
+        return NULL;
+    }
+    return (NNSFndHeapHandle)InitExpHeap((void *)aligned, (void *)end, optFlag);"""
+        if text.count(before) != 1:
+            raise ValueError("Original ExpHeap constructor changed")
+        text = text.replace(before, after, 1)
+
+        return "#include <stdint.h>\\n" + text
     if relative == "lib/NitroSystem/src/fnd_heapcommon.c":
         # Original assembly provides these BSS globals, but its 32-bit
         # storage sizes cannot represent the native pointer-bearing list.
@@ -413,7 +574,7 @@ def adapt_original(relative, text, root):
             f"NNS_FndInitList(&gFndRootHeapList, {offset});",
         )
 
-        return "#include <stddef.h>\\n" + text
+        return "#include <stddef.h>\n" + text
     if relative == "include/wifi_setup/wifi_setup_ui.h":
         declaration = span(text, "typedef struct WifiSetupArchiveState {", "} WifiSetupArchiveState;")
         if hashlib.sha256(declaration.encode()).hexdigest() != 'a99d3caacb38b136f9e1c8d51500b6e04fb362c10ee2087335cc0f61e90a1f58':
@@ -507,13 +668,24 @@ def adapt_original(relative, text, root):
     if relative == "lib/include/nnsys/g3d_render_internal.h":
         for name in ("G3X_GetClipMtx", "G3X_GetVectorMtx"):
             text = drop(text, f"u32 {name}(void *dst);")
-        return text
+        return replace(text,
+            'void NNSi_G3dFuncSbc_SHP_InternalDefault(G3dRS *pRS, u32 opt, const G3dResShpData *pShpData);',
+            'void NNSi_G3dFuncSbc_SHP_InternalDefault(G3dRS *pRS, u32 opt, const G3dResShpData *pShpData, u32 unusedShpID);')
     if relative in ("lib/NitroSystem/src/gfd_vram_transfer_manager.c", "lib/NitroSystem/src/g3d_kernel.c"):
         names = ["GX_LoadTex", "GX_LoadTexPltt"]
         if relative.endswith("gfd_vram_transfer_manager.c"):
             names += ["GX_LoadClearImageColor", "GX_LoadClearImageDepth"]
         for name in names:
             text = replace(text, f"void {name}(void *src,", f"void {name}(const void *src,")
+        if relative.endswith('g3d_kernel.c'):
+            # Original allocation formula rounds the fixed header plus node/
+            # material u16 map entries. Only the native header/align change;
+            # serialized resources and the count/dispatch algorithm do not.
+            text = '#include <stddef.h>\n' + text
+            for count in ('numMat','numNode'):
+                text = replace(text, f'(pResMdl->info.{count} * 2 + 0x1C) & ~3',
+                    f'(offsetof(NNSG3dAnmObj,mapData) + pResMdl->info.{count} * sizeof(u16) + '
+                    '(_Alignof(NNSG3dAnmObj)-1)) & ~(_Alignof(NNSG3dAnmObj)-1)')
         return text
     if relative in ("lib/NitroSystem/src/g2d_char_canvas.c", "lib/NitroSystem/src/g2d_char_canvas_util.c", "lib/NitroSystem/src/g2d_canvas_arrange.c"):
         return replace(text, "asm { clz x, x }", "x = x ? __builtin_clz((unsigned int)x) : 32;")
@@ -573,6 +745,7 @@ def adapt_original(relative, text, root):
                 text = replace(text, f"}} SndPlayerInfo{view}View;",
                                f"}} __attribute__((may_alias)) SndPlayerInfo{view}View;")
             for name, (owner, ctype, member) in STORAGE_ALIASES.items():
+                if not owner.startswith('gSnd'): continue
                 if owner == "gSndPlayerInfo":
                     view = {"playerList.numObjects": "U16", "volume": "U8"}.get(member, "U32")
                     expression = f"((SndPlayerInfo{view}View *)((unsigned char *){owner} + offsetof({ctype}, {member})))"
@@ -646,6 +819,7 @@ SOUND_FILES = {
 # This mechanism also supports future typed assembly BSS objects/member labels.
 STORAGE = {
     "nnsys_g3d_snd_bss.s": (
+        "gCurrentRenderState gGeBufferState gMatAnmResultBuffer gScaleCache gEvpMtxCache "
         "gSndMainState gSndDriverInfo gSndResourceMgr gSndWaveOuts "
         "gSndFreeSeqPlayerList gSndSeqPlayerPrioList gSndSeqPlayers gSndPlayerInfo "
         "gSndStrmListInitialized gSndStrmList gSndStrmCallbackBuffers "
@@ -653,8 +827,37 @@ STORAGE = {
     "nnsys_snd_arc_strm_bss.s": (
         "_021E0950 gSndArcStrmFreeCommandList gSndArcStrmMutex "
         "gSndArcStrmCommandList gSndArcStrmPlayers"),
+    "nnsys_g2d_bss.s": (
+        "gOamManagerNextId gOamBuffers gRendererWork gCellTransferStateManager "
+        "gOamSoftEmuState gCurrentRndCore"),
 }
 STORAGE_ALIASES = {
+    "gGeBufferStateIsLocked": ("gGeBufferState", "G3dGeBufferState", "isLocked"),
+    "gScaleCacheScaleY": ("gScaleCache", "G3dScaleCacheEntry", "scale.y"),
+    "gScaleCacheScaleZ": ("gScaleCache", "G3dScaleCacheEntry", "scale.z"),
+    "gScaleCacheInvScale": ("gScaleCache", "G3dScaleCacheEntry", "invScale"),
+    "gScaleCacheInvScaleY": ("gScaleCache", "G3dScaleCacheEntry", "invScale.y"),
+    "gScaleCacheInvScaleZ": ("gScaleCache", "G3dScaleCacheEntry", "invScale.z"),
+    "gEvpMtxCacheFirstDirMtx": ("gEvpMtxCache", "G3dEvpMtxCache", "dirMtx"),
+    "gOamBufferMainOam": ("gOamBuffers", "OamManagerBuffer", "oamBuffer"),
+    "gOamBufferMainAffineOwners": ("gOamBuffers", "OamManagerBuffer", "affineOwners"),
+    "gOamBufferSubOamOwners": ("gOamBuffers", "OamManagerBuffer[3]", "[1].oamOwners"),
+    "gOamBufferSubOam": ("gOamBuffers", "OamManagerBuffer[3]", "[1].oamBuffer"),
+    "gOamBufferSubAffineOwners": ("gOamBuffers", "OamManagerBuffer[3]", "[1].affineOwners"),
+    "gOamBufferSoftOamOwners": ("gOamBuffers", "OamManagerBuffer[3]", "[2].oamOwners"),
+    "gOamBufferSoftOam": ("gOamBuffers", "OamManagerBuffer[3]", "[2].oamBuffer"),
+    "gOamBufferSoftAffineOwners": ("gOamBuffers", "OamManagerBuffer[3]", "[2].affineOwners"),
+    "gRendererZStack": ("gRendererWork", "G2dRendererWork", "zStack"),
+    "gRendererMtxCacheRecords": ("gRendererWork", "G2dRendererWork", "mtxCacheRecords"),
+    "_021D956C": ("gRendererWork", "G2dRendererWork", "mtxCacheRecords[0].state"),
+    "gRendererMtxStack": ("gRendererWork", "G2dRendererWork", "mtxStack"),
+    "gRendererMtxStackTransX": ("gRendererWork", "G2dRendererWork", "mtxStack[0]._20"),
+    "gRendererMtxStackTransY": ("gRendererWork", "G2dRendererWork", "mtxStack[0]._21"),
+    "gRendererAffineMtxStack": ("gRendererWork", "G2dRendererWork", "affineMtxStack"),
+    "gRendererMtxCaches": ("gRendererWork", "G2dRendererWork", "mtxCaches"),
+    "gRendererWorkB00": ("gRendererWork", "G2dRendererWork", "cellAnimMtxCaches"),
+    "gRendererCellAnimMtxCaches": ("gRendererWork", "G2dRendererWork", "cellAnimMtxCaches"),
+    "gRendererCellAnimMtxCacheTable": ("gRendererWork", "G2dRendererWork", "cellAnimMtxCaches.pCaches"),
     "gSndMainPreSleepCallback": ("gSndMainState", "SndMainState", "preSleep"),
     "gSndMainPostSleepCallback": ("gSndMainState", "SndMainState", "postSleep"),
     "gSndPlayerInfoNumPlaying": ("gSndPlayerInfo", "SndPlayerInfo", "playerList.numObjects"),
@@ -668,6 +871,7 @@ STORAGE_ALIASES = {
 
 def native_storage(text, source):
     expected = {'nnsys_g3d_snd_bss.s': '9bbefd083d3f43888cea3a587035ae172a3244c5d68a9008717760fe4d69d86a', 'nnsys_snd_arc_strm_bss.s': '0dd6ff53f387e0ef77d942879f24ddbcf75e42ac4ad04d5e6bb5b0c809b58539'}
+    expected['nnsys_g2d_bss.s'] = 'e7965b6eb25e8b0ac43c0e31a1f5f3b863cbb04a02696ebefc333f5c6c3388be'
     if hashlib.sha256(text.encode()).hexdigest() != expected[source.name]:
         raise ValueError("Original BSS ownership changed: " + source.name)
     manifest = (source.parent.parent.parent / "main.lsf").read_text()
@@ -685,13 +889,17 @@ def native_storage(text, source):
     labels = dict(re.findall(r"^(\w+):\n\s*\.space (0x[0-9A-Fa-f]+)", text, re.M))
     headers = source.parent.parent / "include/nnsys"
     declarations = "\n".join((headers / name).read_text() for name in
-        ("snd_internal.h", "snd_arc_internal.h", "snd_arc_strm_internal.h"))
-    result = '#include <stddef.h>\n#include <nnsys/snd_arc_strm_internal.h>\n'
+        ("snd_internal.h", "snd_arc_internal.h", "snd_arc_strm_internal.h",
+         "g2d_internal.h", "g2d_renderer_internal.h", "g3d_render_internal.h", "g3d_util_internal.h",
+         "g3d_anm_mat_internal.h"))
+    result = ('#include <stddef.h>\n#include <nnsys/snd_arc_strm_internal.h>\n'
+              '#include <nnsys/g2d_renderer_internal.h>\n#include <nnsys/g3d_anm_mat_internal.h>\n')
     for name in owners:
         if name not in labels:
             raise ValueError("Missing original storage label: " + name)
         matches = re.findall(r"^extern ([^;\n]*\b" + re.escape(name)
                              + r"(?:\[[^\]]*\])?);", declarations, re.M)
+        if name == 'gRendererWork': matches = ['G2dRendererWork gRendererWork']
         if len(matches) != 1:
             raise ValueError("Ambiguous original storage declaration: " + name)
         result += matches[0] + ";\n"
@@ -702,8 +910,11 @@ def native_storage(text, source):
     for name, (owner, ctype, member) in aliases:
         if name not in labels:
             raise ValueError("Missing original member label: " + name)
+        offset = (f'offsetof({ctype}, {member})' if not member.startswith('[') else
+                  f'(sizeof(OamManagerBuffer) * {member[1]} + offsetof(OamManagerBuffer, {member[4:]}))')
+        if name=='gRendererWorkB00': offset += ' - offsetof(G2dRendererWorkB00, cellAnimIndex)'
         result += (f'    __asm__ volatile(".globl _{name}\\n.set _{name}, _{owner} + %c0"'
-                   f' : : "i"(offsetof({ctype}, {member})));\n')
+                   f' : : "i"({offset}));\n')
     result += '}\n'
     for view in ("U16", "U32", "U8"):
         result += (f'_Static_assert(sizeof(SndPlayerInfo{view}View) == sizeof(SndPlayerInfo), '
@@ -711,7 +922,132 @@ def native_storage(text, source):
     return result
 
 
+def nnsys_remaining_data(text):
+    """Original main-owned scalar bytes and typed native dispatch/state records."""
+    if hashlib.sha256(text.encode()).hexdigest() != '3976c18c03c1220c664dfc2a8ee353cbf9966252ef82efe76e9a7cc28c9983f7':
+        raise ValueError('Original NitroSystem initializer data changed')
+    blocks = {}
+    current = None
+    for line in text.splitlines():
+        label = re.fullmatch(r'(\w+):', line)
+        if label:
+            current = label[1]; blocks[current] = []
+        elif current and re.match(r'\s*\.(byte|word) ', line):
+            blocks[current].append(line.strip())
+    def words(name):
+        return [v.strip() for line in blocks[name] for v in line.removeprefix('.word ').split(',')
+                if line.startswith('.word ')]
+    result = ('#include <stddef.h>\n#include <nnsys/fnd_internal.h>\n'
+              '#include <nnsys/g2d_renderer_internal.h>\n#include <nnsys/g3d_internal.h>\n'
+              '#include <nnsys/g3d_anm_internal.h>\n')
+    def table(name, declaration, entries=None):
+        nonlocal result
+        values = words(name) if entries is None else entries
+        result += declaration + ' = {' + ','.join('NULL' if v in ('0','0x00000000') else v for v in values) + '};\n'
+    # All of these records contain only fixed-width numeric values. Preserve
+    # their entire original bytes and member-label adjacency, including unused
+    # tails and the billboard command blocks spanning labelled submatrices.
+    numeric = '''gLnkTexVramSlotTable gG2dSoftSpriteCameraUp gG2dSoftSpriteCameraTarget
+gObjHeights gObjWidths gCellTransferDstTypes gObjColorModeTexFmts gTexSizeInChars
+gObjTexSizeS gObjTexSizeT gRndCoreIdentityMtx gCharShiftTable gObjShapeSizeAttrs
+gMatColorMasks gPivotMtxIndices gJntAnmPivotMtxIndices gFrmTexVramRegions
+gFrmTexVramRegion1 gFrmTexVramRegion2 _02110998 _021109B0
+gRendererContext gRendererTranslationMtx gOamSoftEmuAutoZOffsetStep gAnmObjInitFuncCount
+gTexGenTexImageCmds gPrjMapTexImageParam gEnvMapTexImageParam gPrjMapTexMtx
+gBillboardCmd gBillboardCmdParams gBillboardMtx gBillboardTrans gBillboardScale
+gBillboardYCmd gBillboardYCmdParams gBillboardYMtx gBillboardYTrans gBillboardYScale'''.split()
+    public = set(re.findall(r'\.public\s+(\w+)', text))
+    assembly = ['.section __DATA,__const', '.p2align 2']
+    member_labels = set('''gFrmTexVramRegion1 gFrmTexVramRegion2 _02110998 _021109B0
+gRendererTranslationMtx gPrjMapTexImageParam gEnvMapTexImageParam
+gBillboardCmdParams gBillboardMtx gBillboardTrans gBillboardScale
+gBillboardYCmdParams gBillboardYMtx gBillboardYTrans gBillboardYScale'''.split())
+    for name in numeric:
+        if any(not line.startswith('.byte ') for line in blocks[name]):
+            raise ValueError('Numeric record gained a pointer: '+name)
+        if name in {'gFrmTexVramRegions','gRendererContext','gTexGenTexImageCmds','gBillboardCmd','gBillboardYCmd'}:
+            assembly += ['.section __DATA,__data', '.p2align 2']
+        if name in public: assembly.append('.globl _'+name)
+        if name in member_labels: assembly.append('.alt_entry _'+name)
+        assembly += ['_'+name+':',*blocks[name]]
+    import json
+    result += '__asm__('+json.dumps('\n'.join(assembly)+'\n')+');\n'
+    result += 'u16 gFrmTexVramSlotCount;\nFrmPlttVramManager gFrmPlttVramManager;\n'
+    # Original four callbacks are two consecutive allocator records.
+    allocators = words('gFndExpHeapAllocatorFunc')
+    if len(allocators)!=4: raise ValueError('Allocator records changed')
+    result += ('const NNSFndAllocatorFunc gFndExpHeapAllocatorFunc[2] = {{'+
+               ','.join(allocators[:2])+'},{'+','.join(allocators[2:])+'}};\n')
+    table('gVramTransferFuncTable', 'void (*const gVramTransferFuncTable[NNS_GFD_DST_MAX])(void *,u32,u32)')
+    table('gOamLoadFuncs', 'OamLoadFunc gOamLoadFuncs[5]')
+    for name,ctype in [('gAnmCalcFuncNsBva','G3dFuncAnmVis'),('gAnmCalcFuncNsBca','G3dFuncAnmJnt'),
+                       ('gAnmCalcFuncNsBtp','G3dFuncAnmMat'),('gAnmCalcFuncNsBma','G3dFuncAnmMat'),
+                       ('gAnmBlendVisDefault','NNSG3dFuncAnmBlendVis'),
+                       ('gAnmBlendJntDefault','NNSG3dFuncAnmBlendJnt'),
+                       ('gAnmBlendMatDefault','NNSG3dFuncAnmBlendMat')]:
+        result += ctype+' '+name+' = '+words(name)[0]+';\n'
+    for name,decl in [('gSendJointSRTFuncs','G3dFuncSendJointSRT gSendJointSRTFuncs[3]'),
+                       ('gGetJointScaleFuncs','G3dFuncGetJointScale gGetJointScaleFuncs[3]'),
+                       ('gSbcFuncs','void (*gSbcFuncs[32])(G3dRS *,u32)'),
+                       ('gSbcMatFuncs','void (*gSbcMatFuncs[4])(G3dRS *,u32,const G3dResMatData *,u32)'),
+                       ('gSbcShpFuncs','void (*gSbcShpFuncs[4])(G3dRS *,u32,const G3dResShpData *,u32)')]:
+        if name in {'gSbcMatFuncs','gSbcShpFuncs'}:
+            if blocks[name][1] != '.byte '+', '.join(['0x00']*12):
+                raise ValueError('SBC NULL callbacks changed')
+            table(name,decl,words(name)+['0']*3)
+        else: table(name,decl)
+    entries = []
+    # The first category label and first-function label alias one table. Recover
+    # all category bytes and authentic callbacks; ten original slots, five used.
+    category = blocks['gAnmObjInitFuncs'][0]
+    lines = blocks['gAnmObjInitFuncsFirstFunc']
+    for i in range(5):
+        raw = [int(v.strip(),0) for v in category.removeprefix('.byte ').split(',')]
+        target = lines[i*2].removeprefix('.word ')
+        entries.append('{%d,%d,%d,%s}' % (raw[0],raw[1],raw[2]|raw[3]<<8,target))
+        if i<4: category = lines[i*2+1]
+    result += 'G3dAnmObjInitEntry gAnmObjInitFuncs[10] = {'+','.join(entries)+'};\n'
+    # SearchNormal aliases the final five elements of one seven-pointer array.
+    # The original setter intentionally indexes through Search4x4[2..6].
+    result += ('extern FrmTexVramRegion gFrmTexVramRegions[5];\n'
+               'extern FrmTexVramRegion gFrmTexVramRegion1,gFrmTexVramRegion2;\n'
+               'FrmTexVramRegion *gFrmTexVramSearch4x4[7] = {\n')
+    indices = {'gFrmTexVramRegions':0,'gFrmTexVramRegion1':1,'gFrmTexVramRegion2':2,'_02110998':3,'_021109B0':4}
+    result += ','.join('&gFrmTexVramRegions[%d]' % indices[n] for n in
+                       words('gFrmTexVramSearch4x4')+words('gFrmTexVramSearchNormal'))+'};\n'
+    result += '''__attribute__((used)) static void hg_nnsys_data_aliases(void) {
+    __asm__ volatile(".globl _gAnmObjInitFuncsFirstFunc\\n.set _gAnmObjInitFuncsFirstFunc,_gAnmObjInitFuncs+%c0" : : "i"(offsetof(G3dAnmObjInitEntry,func)));
+    __asm__ volatile(".globl _gFrmTexVramSearchNormal\\n.set _gFrmTexVramSearchNormal,_gFrmTexVramSearch4x4+%c0" : : "i"(2*sizeof(void *)));
+}
+_Static_assert(sizeof(G3dAnmObjInitEntry)==16,"native animation init stride");
+_Static_assert(sizeof(FrmTexVramRegion)==24,"fixed VRAM numeric record");
+_Static_assert(sizeof(G2dRendererContext)==32,"numeric renderer context and matrix");
+'''
+    return result
+
+
 def asset_types(kind, text, source):
+    if kind == "native-mi-clear-fast":
+        if (source.name != "mi_memory.c" or hashlib.sha256(text.encode()).hexdigest()
+                != "7bfc34240ca43ec5c45773a7dad14547b0bb38fe7638c055a0f735e0aa0eb592"):
+            raise ValueError("Original MI clear algorithm changed")
+        # MIi_CpuClearFast: eight ascending word stores per 32-byte block,
+        # then individual word stores while the cursor is below the end.
+        # Valid SDK inputs are word aligned and a multiple of four bytes.
+        # Keep the original final full-word write for a partial trailing word.
+        return '''#include <stdint.h>
+void MIi_CpuClearFast(uint32_t data, void *destp, uint32_t size) {
+    uint32_t *dest = destp;
+    uint32_t blocks = size >> 5;
+    while (blocks--) {
+        dest[0] = data; dest[1] = data; dest[2] = data; dest[3] = data;
+        dest[4] = data; dest[5] = data; dest[6] = data; dest[7] = data;
+        dest += 8;
+    }
+    for (uint32_t tail = 0; tail < (size & 31); tail += 4)
+        *dest++ = data;
+}
+'''
     if kind == "native-storage":
         return native_storage(text, source)
     if kind == "g3-probe-tables":
@@ -724,7 +1060,20 @@ def asset_types(kind, text, source):
             "gTexMtxCalcFuncs3dsMax": "99d53c421528208c37ef65047a3e027b089f34d2f186fe256963a731f6da9803",
             "gTexMtxCalcFuncsXsi": "ad2a7a3edc79bed31c808428e684825cc3c83e43b11d01c66b2a49a7893f1ad6",
         }
-        result = '#include <nnsys/g3d_anm_mat_internal.h>\n'
+        result = '#include <nnsys/g3d_anm_mat_internal.h>\n#include <nnsys/gfd_internal.h>\n'
+        # Original main-owned runtime callback storage. Preserve Nintendo's
+        # initial failure providers until an original VRAM manager installs its
+        # own callbacks; these are native pointers, not serialized DS words.
+        for name, ctype, provider in (
+            ("NNS_GfdDefaultFuncAllocTexVram", "NNSGfdFuncAllocTexVram", "AllocTexVram_"),
+            ("NNS_GfdDefaultFuncFreeTexVram", "NNSGfdFuncFreeTexVram", "FreeTexVram_"),
+            ("NNS_GfdDefaultFuncAllocPlttVram", "NNSGfdFuncAllocPlttVram", "AllocPlttVram_"),
+            ("NNS_GfdDefaultFuncFreePlttVram", "NNSGfdFuncFreePlttVram", "FreePlttVram_"),
+        ):
+            original = name + ':\n\t.word ' + provider + '\n'
+            if text.count(original) != 1:
+                raise ValueError("Original GFD callback initializer changed: " + name)
+            result += f'{ctype} {name} = {provider};\n'
         # The original table declares const input, but XSI fills unused fields.
         # Its caller supplies mutable stack storage. Keep that behavior through
         # a type-correct native thunk rather than an incompatible indirect call.
@@ -739,7 +1088,7 @@ def asset_types(kind, text, source):
             result += f'{ctype} {name}[{len(entries)}] = {{\n'
             result += ''.join('    ' + ('send_xsi' if e == 'NNSi_G3dSendTexSRTXsi' else e) + ',\n' for e in entries)
             result += '};\n'
-        return result
+        return result + '\n#ifdef HG_NATIVE_NNSYS_DATA\n' + nnsys_remaining_data(text) + '\n#endif\n'
     if kind == "zukan-enc-template":
         if (hashlib.sha256(text.encode()).hexdigest() != 'be5676e32c49f5c6a8a6e0bec069dc27fd0c2bcea00d8841bd69211ce35c139f'
                 or hashlib.sha256(source.with_name("zukan_enc.mk").read_bytes()).hexdigest() != '9afc2fbd6ef49abbc21133674cf71a451565c1273bb4f9762e7efd86b5e34988'):

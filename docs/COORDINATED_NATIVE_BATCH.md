@@ -260,8 +260,8 @@ Parent:
 - `cmake/heartgold.cmake`
 - `cmake/native_sources.py`
 - `cmake/native_coordinated.py`
-- `hardware_drivers/ntr_native.h`
-- `hardware_drivers/ntr_native_internal.h`
+- `hardware_drivers/os/ntr_native.h`
+- `hardware_drivers/os/ntr_native_internal.h`
 - `tests/audit_overlays.py`
 - `tests/test_native_sources.py`
 - `tests/test_coordinated.c`

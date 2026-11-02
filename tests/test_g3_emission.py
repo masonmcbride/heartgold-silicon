@@ -125,6 +125,12 @@ def main():
         assert f"{name}[{count}]" in tables
     assert native.asset_types("g3-probe-tables", text, assembly) == tables
     try:
+        native.asset_types("g3-probe-tables", text.replace("\t.word AllocTexVram_\n", "\t.word 0\n"), assembly)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("GFD initializer source drift accepted")
+    try:
         native.asset_types("g3-probe-tables", text.replace("\t.word NNSi_G3dSendTexSRTMaya\n", "\t.word 0\n"), assembly)
     except ValueError:
         pass

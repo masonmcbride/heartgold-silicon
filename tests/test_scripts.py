@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 spec = importlib.util.spec_from_file_location(
-    "converter", Path(__file__).resolve().parents[1] / "cmake/build_heartgold_script.py"
+    "converter", Path(__file__).resolve().parents[1] / "cmake/assets/build_heartgold_script.py"
 )
 converter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(converter)

@@ -17,12 +17,19 @@ native = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(native)
 
 
+def semantic_adapt(relative, original):
+    result = native.adapt(relative, original, GAME)
+    for quoted, angled in native.coordinated.HEADER_ROUTES.get(relative, {}).get('edits', []):
+        result = result.replace(angled, quoted)
+    return result
+
+
 class NativeSourceAdaptations(unittest.TestCase):
     def test_eight_case_adaptations(self):
         relative = 'src/application/pokedex/pokedex_main_seq.c'
         original = (GAME / relative).read_text()
         old = '\nPokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {'
-        self.assertEqual(native.adapt(relative, original, GAME), original.replace(old, '\nstatic int PokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {'))
+        self.assertEqual(semantic_adapt(relative, original), original.replace(old, '\nstatic int PokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {'))
         for changed in (original.replace(old, old.replace('PokedexAppData', 'void')),
                         original.replace('static int PokedexApp_MainSeq_62(', 'static void PokedexApp_MainSeq_62('),
                         original.replace('[POKEDEXAPP_MAINSEQ_62] = PokedexApp_MainSeq_62,', '/* drift */')):
@@ -35,7 +42,7 @@ class NativeSourceAdaptations(unittest.TestCase):
             expected = expected.replace('static const ' + table + '[]', 'static const int ' + table + '[]')
         for local, table in (('table0', 'sSnowSlowdownIntervals'), ('table1', 'sSnowFallSpeeds')):
             expected = expected.replace(local + ' = ' + table + ';', 'memcpy(' + local + ', ' + table + ', sizeof(' + local + '));')
-        self.assertEqual(native.adapt(relative, original, GAME), '#include <string.h>\n' + expected)
+        self.assertEqual(semantic_adapt(relative, original), '#include <string.h>\n' + expected)
         for fragment in ('2, 2, 2, 2', '16, 32, 16, 10', 'int table0[4]', 'table1[index]', 'table0[index]'):
             with self.assertRaises(ValueError):
                 native.adapt(relative, original.replace(fragment, fragment + ' /* drift */'), GAME)
@@ -45,7 +52,7 @@ class NativeSourceAdaptations(unittest.TestCase):
                       'SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) = { ' + callback + ' };\n#pragma section SINIT end')
             after = ('SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) '
                      '__attribute__((section("__DATA,__ntr_sinit"))) = { ' + callback + ' };')
-            self.assertEqual(native.adapt(relative, original, GAME), original.replace(before, after))
+            self.assertEqual(semantic_adapt(relative, original), original.replace(before, after))
             for changed in (original.replace('{ ' + callback + ' };', '{ OtherCallback };'),
                             original.replace('".sinit"', '".changed"'), original + '\n' + before):
                 with self.assertRaises(ValueError):
@@ -84,7 +91,7 @@ class NativeSourceAdaptations(unittest.TestCase):
         self.assertEqual(sum(len(entries) for _, entries in native.PRIVATE_FUNCTIONS.values()), 103)
         for relative, (header, declarations) in native.PRIVATE_FUNCTIONS.items():
             original = (GAME / relative).read_text()
-            result = native.adapt(relative, original, GAME)
+            result = semantic_adapt(relative, original)
             include = '#include "' + header.removeprefix('include/') + '"'
             forwards = ['static ' + prototype for prototype, state in declarations if state == 'needed']
             expected = original.replace(include, include + '\n\n' + '\n'.join(forwards)) if forwards else original
@@ -123,7 +130,7 @@ class NativeSourceAdaptations(unittest.TestCase):
                                     original + '\n' + prototype):
                         with self.assertRaises(ValueError):
                             native.adapt(header, changed, GAME)
-            self.assertEqual(native.adapt(header, original, GAME), expected)
+            self.assertEqual(semantic_adapt(header, original), expected)
 
     def test_three_source_interfaces(self):
         relative = 'lib/NitroDWC/src/http_engine_request.c'
@@ -313,7 +320,7 @@ int main(void) {
 
     def test_every_party_action_and_cancel_value(self):
         original = (GAME / "src/party_menu_list_items.c").read_text()
-        result = native.adapt("src/party_menu_list_items.c", original, GAME)
+        result = semantic_adapt("src/party_menu_list_items.c", original)
         entries, expected = native.party_actions(original)
         self.assertEqual(len(entries), 30)
         actual = native.span(result, "static const u32 _02101CB8[] = {", "\n};")

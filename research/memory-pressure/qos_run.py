@@ -43,9 +43,9 @@ def main():
         "timer":command([str(helper),"--timer"]),"helper_qos":"initiated",
         "qos_note":"pthread getters verify requested class; overrides and P/E residency are not observable here",
         "source_provenance":{}}
-    for path in [Path(__file__),Path(__file__).parents[2]/"hardware_drivers/memory_observer.c",
-                 Path(__file__).parents[2]/"hardware_drivers/memory_metrics.h",
-                 Path(__file__).parents[2]/"hardware_drivers/memory_demand.c"]:
+    for path in [Path(__file__),Path(__file__).with_name("memory_observer.c"),
+                 Path(__file__).with_name("memory_metrics.h"),
+                 Path(__file__).with_name("memory_demand.c")]:
         metadata["source_provenance"][str(path.resolve())]=sha(path)
     (out/"metadata.json").write_text(json.dumps(metadata,indent=2)+"\n")
     def system():

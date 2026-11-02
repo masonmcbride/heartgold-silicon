@@ -1,5 +1,11 @@
 # Building HeartGold-Silicon
 
+The current local review configuration, full image counts and validation results
+are documented in [NATIVE_BUILD_REFACTOR.md](NATIVE_BUILD_REFACTOR.md) and
+[SMALLEST_MACHINE.md](SMALLEST_MACHINE.md). The review checkout contains unpublished
+libntr changes. Historical checkpoint numbers below do not describe that checkout.
+Obsolete phase drivers are archived in `museum/`; no build target uses them.
+
 Use native Apple Clang on Apple Silicon, CMake 3.30 or later, and Git. Game assets
 also require Python 3.9+, PNG, ZLIB, `llvm-objcopy`, and `llvm-readelf`. Expose LLVM
 through `PATH` or `CMAKE_PROGRAM_PATH`; configuration can also discover an installed
@@ -12,10 +18,13 @@ cmake --build build -j8
 ctest --test-dir build --output-on-failure
 ```
 
-Game compilation is enabled by default. The current main archive compiles, but the
-game has 111 unresolved ARM64 linker symbols. The default build reports that
-failure; `NitroMain()` has not executed. A failed link is not a successful game
-build. To build original resource archives independently:
+Game compilation is enabled by default and remains incomplete. The native review
+pipeline now discovers all supported original overlays and reports the entire
+image graph; missing image implementations still fail the build. Do not substitute
+an older executable-only unresolved count for current whole-game coverage.
+See [the native build refactor report](NATIVE_BUILD_REFACTOR.md) for exact commands,
+measured scopes and ABI blockers. `NitroMain()` has not executed. To build original
+resource archives independently:
 
 ```sh
 cmake --build build --target assets -j8
@@ -33,9 +42,11 @@ reuse existing checkouts without network access, even in a fresh binary director
 Changing a pin fetches only an absent commit and refuses to switch a dirty tree.
 Existing checkouts are never reset, stashed, deleted, or recloned automatically.
 
-HeartGold remains unchanged at its pin. `main.lsf` selects main-image C sources;
-`arm9-sources.tsv` records other image, overlay, and assembly membership.
-`cmake/heartgold.cmake` owns the selected sources and existing native adaptations.
+HeartGold remains unchanged at its pin. `cmake/native_image_graph.py` parses
+`main.lsf` for main, autoload and overlay membership. Its generated graph drives
+main/overlay source selection and `arm9-sources.tsv`; After is placement metadata,
+not a native symbol dependency. `cmake/heartgold.cmake` declares the existing
+native adaptations.
 `cmake/native_sources.py` validates expected source fragments and emits each
 adaptation once, preserving original source locations and unchanged output files.
 It is not a general patch mechanism or permission to replace original algorithms.
@@ -79,15 +90,14 @@ and `OS_LoadContext` still need a faithful native scheduling strategy. Other kno
 runtime boundaries include sound wave-offset pointer storage and DWC tagged
 pointers. These require separate design and validation, not build workarounds.
 
-The next phase owns original ARM32 implementations/global data, overlay lifecycle,
-sound ABI, wireless/network services, and native runtime bring-up. A future Metal
-implementation must consume genuine GX/G3 state and command semantics; first
-establish state/command handling and present a frame, then reproduce DS rendering
-features. Do not link the SDL/OpenGL simulator or add placeholder graphics symbols.
+Remaining closure work includes original ARM32 implementations/global data, overlay lifecycle,
+sound ABI, wireless/network services, and native runtime bring-up. The existing native Metal implementation must continue to consume genuine GX/G3
+state and command semantics; further rendering work remains separate from build
+cleanup. Do not link the SDL/OpenGL simulator or add placeholder graphics symbols.
 
 
 ## Published reproducibility checkpoint
 
-The native ARM64 libntr corrections are published at commit `4cfdd66fdca9a1f8f8e6688799f927c7fe3c3700` and pinned in the root CMakeLists.txt. Both dependency repositories must be clean at their pins. Native Hash1 is generated from the original pinned HeartGold source and assembly tables; no copied Hash1 implementation is committed to libntr.
+The native ARM64 libntr corrections are published at commit `4cfdd66fdca9a1f8f8e6688799f927c7fe3c3700` and pinned in the root CMakeLists.txt. HeartGold must be clean at its pin; authorized local libntr changes are preserved and are not supplied by a clean checkout. Native Hash1 is generated from the original pinned HeartGold source and assembly tables; no copied Hash1 implementation is committed to libntr.
 
 The last local regression run passed 20 enabled CTests. Full-game linking and original-engine gameplay execution remain incomplete.

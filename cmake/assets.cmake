@@ -84,18 +84,37 @@ endfunction()
 set(matrix "${game_source}/files/fielddata/mapmatrix/map_matrix")
 file(GLOB matrix_members CONFIGURE_DEPENDS "${matrix}/map_matrix_*.bin")
 hg_narc(heartgold_mapmatrix_assets "fielddata/mapmatrix/map_matrix" "${matrix}" ${matrix_members})
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_messages.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_otherpoke.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_graphics.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_ppark.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_zone_event.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_scripts.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_encounters.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_item_data.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_resdat.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_zukan_data.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/heartgold_manifest_graphics.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_messages.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_otherpoke.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_graphics.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_ppark.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_zone_event.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_scripts.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_encounters.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_item_data.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_resdat.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_zukan_data.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/heartgold_manifest_graphics.cmake")
+# The original sound manifest identifies an existing SDAT; it is not generated
+# from playback code or dependent on the historical DS linker.
+set(sound_manifest "${game_source}/files/data/sound/sound_data.mk")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${sound_manifest}")
+file(STRINGS "${sound_manifest}" sound_declaration REGEX "^SDAT := files/[^ ]+\\.sdat$")
+if(NOT sound_declaration)
+    message(FATAL_ERROR "Original sound archive manifest changed")
+endif()
+string(REGEX REPLACE "^SDAT := files/" "" sound_relative "${sound_declaration}")
+set(sound_output "${PROJECT_BINARY_DIR}/generated/files/${sound_relative}")
+get_filename_component(sound_parent "${sound_output}" DIRECTORY)
+add_custom_command(OUTPUT "${sound_output}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${sound_parent}"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${game_source}/files/${sound_relative}" "${sound_output}"
+    COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${sound_output}"
+    DEPENDS "${game_source}/files/${sound_relative}" "${sound_manifest}"
+    VERBATIM)
+add_custom_target(heartgold_sound_archive_assets DEPENDS "${sound_output}")
 set(heartgold_asset_targets
+    heartgold_sound_archive_assets
     heartgold_mapmatrix_assets heartgold_msg_assets heartgold_otherpoke_assets
     heartgold_sbox_assets heartgold_camera_assets heartgold_preview_assets
     heartgold_record_assets heartgold_plist_assets heartgold_item_icon_assets
