@@ -8,12 +8,25 @@ import os
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'cmake'))
 from native_image_graph import graph,ownership,configure,parse_manifest
-from native_graph_report import report
+from native_graph_report import report, executable_diagnostic
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 class GraphTests(unittest.TestCase):
+    def test_executable_diagnostic_does_not_count_overlay_failures(self):
+        undefined='Undefined symbols for architecture arm64:\n  "_missing", referenced from:\n'
+        self.assertEqual(executable_diagnostic(undefined,Path('heartgold'))[0],['_missing'])
+        self.assertIsNone(executable_diagnostic(
+            '[ 99%] Linking C shared library native-overlays/libheartgold_image_93.dylib\n'+undefined,
+            Path('heartgold'))[0])
+        self.assertIsNone(executable_diagnostic(
+            '[ 99%] Linking CXX executable heartgold\n'+undefined+
+            '[ 99%] Linking C shared library native-overlays/libheartgold_image_93.dylib\n'+undefined,
+            Path('heartgold'))[0])
+        self.assertEqual(executable_diagnostic(
+            '[100%] Linking CXX executable heartgold\n'+undefined,Path('heartgold'))[0],['_missing'])
+
     def test_original_images_and_placement_are_not_import_edges(self):
         model=graph(ROOT/'upstream/pokeheartgold')
         self.assertEqual(len(model['images']),132)
@@ -42,11 +55,18 @@ class GraphTests(unittest.TestCase):
             (build/'compile_commands.json').write_text(json.dumps(commands))
             link=build/'CMakeFiles/heartgold.dir/link.txt';link.parent.mkdir(parents=True)
             link.write_text('clang -o heartgold\n')
+            old=build/'native-graph/link-failures/image_1.log';old.parent.mkdir(parents=True)
+            old.write_text('Undefined symbols for architecture arm64:\n  "_old", referenced from:\n')
+            image=build/'native-overlays/libheartgold_image_1.dylib';image.parent.mkdir()
+            subprocess.run(['clang','-arch','arm64','-dynamiclib',str(build/'b.o'),'-o',str(image)],
+                           check=True,capture_output=True)
             report(game,build,build/'report')
             first=json.loads((build/'report/graph.json').read_text())
             self.assertEqual(first['images']['OVY_0']['providers']['_provider'],['OVY_1'])
             self.assertEqual(first['summary']['observed_full_graph_unknown_symbols'],0)
             self.assertIsNone(first['summary']['default_executable_unresolved'])
+            self.assertEqual(first['images']['OVY_1']['actual_link_undefined_symbols'],[])
+            self.assertEqual(first['images']['OVY_1']['superseded_link_diagnostic'],str(old))
             (build/'b.o').unlink()
             report(game,build,build/'report')
             second=json.loads((build/'report/graph.json').read_text())

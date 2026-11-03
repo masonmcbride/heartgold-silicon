@@ -105,7 +105,10 @@ Metal, audio, OS and gameplay implementations were not changed.
 
 ## Validation and evidence
 
-Commands and complete logs are under `build/layout-cleanup/`.
+Commands and complete layout-cleanup logs are under `build/layout-cleanup/`.
+The subsequent removal of the generic compatibility directory and target is
+validated under `build/remove-compat/`, including fresh 805-unit audit/object
+inventories and the current whole-image report.
 
 | Check | Result |
 | --- | --- |
@@ -136,7 +139,7 @@ There are no museum references in production CMake or Python dependencies.
 ## Whole-image closure inventory
 
 The authoritative artifact inventory is
-`build/layout-cleanup/report/graph.json`, with a readable `report.md` beside it.
+`build/remove-compat/report/graph.json`, with a readable `report.md` beside it.
 It lists every image/member, missing representation, observed definition/import,
 known provider, individual actual linker undefined set and actual binding result.
 The reviewed ABI blockers remain in `cmake/native_data_layouts.json`.

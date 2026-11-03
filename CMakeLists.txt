@@ -262,6 +262,10 @@ option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
 if(HEARTGOLD_BUILD_GAME)
     find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/heartgold.cmake")
+    set(HEARTGOLD_GUEST32_LLVM_DIR "" CACHE PATH "Opt-in LLVM 23 configuration for original OVY_0 guest compilation")
+    if(HEARTGOLD_GUEST32_LLVM_DIR)
+        include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
+    endif()
 endif()
 
 # Standalone emission observation only; never linked into heartgold.

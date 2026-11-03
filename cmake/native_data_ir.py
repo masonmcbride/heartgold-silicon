@@ -103,6 +103,14 @@ def parse(source, text=None, constants=None):
             if not blocks or blocks[-1].section != section:
                 raise ValueError('storage/alignment before data label')
             block = blocks[-1]
+            if op == 'size':
+                parts = args.split(',')
+                if (len(parts)!=2 or parts[0].strip()!=block.symbol or
+                        re.sub(r'\s+', '', parts[1])!='.-'+block.symbol):
+                    raise ValueError('unsupported symbol size annotation')
+                # ELF symbol extent metadata has no Mach-O storage effect. The
+                # reviewed source_size contract still guards the original bytes.
+                continue
             if op in widths:
                 for arg in args.split(','):
                     arg = arg.strip()
@@ -182,22 +190,32 @@ def native_blocks(source, layouts=None, text=None, constants=None):
         end = next((labels[r.symbol][1] for r in records[index+1:] if r.section==section),len(sections[section]))
         data = bytes(sections[section][start:end])
         layout = layouts.get(record.symbol,{})
-        unknown = layout.keys()-{'source_size','pointers','padding','native_size','alignment','edits','public','section','label_alignment','segment'}
+        unknown = layout.keys()-{'source_size','pointers','member_pointers','pointer_addends','padding','native_size','alignment','edits','public','section','label_alignment','segment'}
         align = layout.get('alignment',record.before_alignment)
         if unknown or not isinstance(align,int) or align<=0 or align & (align-1):
             raise ValueError(f'{source}:{record.line}: {record.symbol}: invalid ABI layout metadata')
         if 'source_size' in layout and len(data)!=layout['source_size']:
             raise ValueError(f'{source}:{record.line}: {record.symbol}: source extent changed')
         pointers = set(layout.get('pointers',[]))
+        members = set(layout.get('member_pointers',[]))
+        if (len(members)!=len(layout.get('member_pointers',[])) or pointers & members or
+                any(type(o) is not int or o<0 or o+8>len(data) for o in members)):
+            raise ValueError(f'{source}:{record.line}: {record.symbol}: invalid member pointer fields')
+        if members and 'alignment' in layout and align<8:
+            raise ValueError(f'{source}:{record.line}: {record.symbol}: native member pointer requires eight-byte alignment')
+        addends = {int(k): v for k, v in layout.get('pointer_addends', {}).items()}
+        if any(o not in pointers or type(v) is not int for o, v in addends.items()):
+            raise ValueError(f'{source}:{record.line}: {record.symbol}: invalid pointer addend contract')
         padding = layout.get('padding',{})
         context=f'{source}:{record.line}: {record.symbol}: '
         if len(pointers)!=len(layout.get('pointers',[])):
             raise ValueError(context+'duplicate pointer field')
+        pointers |= members
         label_align=layout.get('label_alignment',1)
         if not isinstance(label_align,int) or label_align<=0 or label_align & (label_align-1):
             raise ValueError(context+'invalid label alignment')
         if any(not isinstance(o,int) or not 0<=o<=len(data) or
-               not isinstance(n,int) or n<0 or any(p<o<p+4 for p in pointers)
+               not isinstance(n,int) or n<0 or any(p<o<p+(8 if p in members else 4) for p in pointers)
                for o,n in padding.items()):
             raise ValueError(context+'invalid padding offset/extent')
         if layout.get('segment','__DATA') not in ('__TEXT','__DATA'):
@@ -212,26 +230,45 @@ def native_blocks(source, layouts=None, text=None, constants=None):
             previous=max(begin,begin+len(expected)-1)
         relocations = {offset-start:(value,width) for (sec,offset),(value,width) in refs.items()
                        if sec==section and start<=offset<end}
+        if not addends.keys() <= relocations.keys():
+            raise ValueError(context+'pointer addend lacks relocation')
         if any(width!=4 or offset not in pointers for offset,(value,width) in relocations.items()):
             raise ValueError(f'{source}:{record.line}: {record.symbol}: symbolic field lacks reviewed pointer/offset ABI')
         if any(offset<0 or offset+4>len(data) for offset in pointers) or any(
-                a<b<a+4 for a in pointers for b in pointers):
+                a<b<a+(8 if a in members else 4) for a in pointers for b in pointers):
             raise ValueError(f'{source}:{record.line}: {record.symbol}: invalid/overlapping pointer fields')
+        for member in members:
+            # Original direct member constants contain a code relocation and a
+            # zero this adjustment. Apple ARM64 uses a native code pointer and
+            # an eight-byte encoded adjustment. Nonzero/virtual encodings need
+            # separate call-ABI lowering and must never be guessed from words.
+            if data[member+4:member+8]!=bytes(4) or member+4 in relocations:
+                raise ValueError(context+'nonzero/virtual member pointer requires call-ABI lowering')
+            if member in relocations and not re.fullmatch(r'[A-Za-z_.$][\w.$]*',relocations[member][0]):
+                raise ValueError(context+'member code address requires an unmodified function relocation')
         native, numeric, targets = [], [], []
         offset = 0
         while offset<len(data):
             if offset in padding:
                 native.append(('bytes',[0]*padding[offset]))
+            if offset in members and sum(8 if k=='pointer' else len(v) for k,v in native)%8:
+                raise ValueError(context+'native member pointer field must be eight-byte aligned')
             if offset in pointers:
                 if data[offset:offset+4]!=bytes(4):
                     raise ValueError(f'{source}:{record.line}: {record.symbol}: nonzero pointer initializer requires relocation')
                 if offset in relocations:
                     target = relocations[offset][0]
-                    if not re.fullmatch(r'[A-Za-z_.$][\w.$]*',target):
+                    match = re.fullmatch(r'([A-Za-z_.$][\w.$]*)(?:\s*([+-])\s*(0x[0-9A-Fa-f]+|[0-9]+))?', target)
+                    addend = (int(match[3], 0) * (-1 if match[2]=='-' else 1)) if match and match[3] else 0
+                    if not match or (match[3] and addends.get(offset) != addend) or (offset in addends and addends[offset] != addend):
                         raise ValueError(f'{source}:{record.line}: {record.symbol}: pointer addend requires ABI review: {target}')
                     native.append(('pointer',target));targets.append(target)
                 else: native.append(('bytes',[0]*8))
-                offset += 4
+                if offset in members:
+                    native.append(('bytes',[0]*8))
+                    offset += 8
+                else:
+                    offset += 4
             else:
                 native.append(('bytes',[data[offset]]));numeric.append(data[offset]);offset+=1
         if len(data) in padding: native.append(('bytes',[0]*padding[len(data)]))
@@ -257,7 +294,7 @@ def native_blocks(source, layouts=None, text=None, constants=None):
                     section_start=labels[record.symbol][1]
                     for _ in range((-(section_start+cursor))%item.value): locations.append(cursor);original_tokens.append(('byte',0));cursor+=1
             locations.append(cursor)
-            if pointers != {offset for offset in relocations} or padding or 'native_size' in layout:
+            if members or pointers != {offset for offset in relocations} or padding or 'native_size' in layout:
                 raise ValueError(f'{source}:{record.line}: {record.symbol}: edits cannot mix implicit layout operations')
             for edit in sorted(layout['edits'],key=lambda e:e['offset'],reverse=True):
                 begin=edit['offset'];stop=begin+len(edit['expected'])

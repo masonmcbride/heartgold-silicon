@@ -19,8 +19,10 @@ class DataTests(unittest.TestCase):
         self.assertEqual(len(blocks),6)
         self.assertEqual(len(blocks[-1]['pointers']),109)
         self.assertFalse(blocks[0]['bytes'])  # Original alias, no copied storage.
+        battle=assembly.recipe(GAME,'asm/battle_anim_data.o')
+        self.assertEqual(sum(len(b['pointers']) for b in battle),205)
         with self.assertRaisesRegex(ValueError,'No verified complete'):
-            assembly.recipe(GAME,'asm/battle_anim_data.o')
+            assembly.recipe(GAME,'asm/main_menu_data.o')
 
     def test_manifest_owns_generated_output_and_dependencies(self):
         with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR', ROOT/'build')) as directory:

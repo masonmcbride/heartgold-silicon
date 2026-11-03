@@ -283,7 +283,27 @@ SINIT_CALLBACKS = {
     "src/application/ball_capsule_editor.c": "BallCapsuleEditor_LoadBattleOverlays",
     "src/battle/battle_main.c": "Battle_StaticInit",
 }
-COMPILER_NATIVE_SOURCES = tuple(SINIT_CALLBACKS) + (
+# Explicit calls to ARM compiler arithmetic helpers become native compiler operations.
+# Both signed divisors are positive constants; no divide-by-zero/overflow ABI changes.
+COMPILER_OPERATIONS = {
+    'src/pokeathlon/pokeathlon_hurdle_dash_race.c': ('a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590', 's32 _s32_div_f(s32 num, s32 den);', '_s32_div_f((u8)(frames % 30) * 100, 30)', '(((u8)(frames % 30) * 100) / 30)'),
+    'src/pokeathlon/pokeathlon_disc_catch.c': ('9c0908e9995aa5ac37ca4080449397e6e5d80eeba68ac01e3c3a4ec2e6650571', 's32 _s32_div_f(s32 dividend, s32 divisor);', '_s32_div_f(38 * (progress * (path - 7)), 1000)', '((38 * (progress * (path - 7))) / 1000)'),
+    'src/pokeathlon/pokeathlon_relay_run.c': ('67b56bd002b5b409d950d7a4d43954710847425a5b067e7b923eb4c0a42400cd', 'f32 _fflt(int value);', '_fflt(VEC_Mag(&work.flick) / FX32_ONE)', '((f32)(VEC_Mag(&work.flick) / FX32_ONE))'),
+}
+
+# Direct native representations of original ARM register operations.
+ARM_INLINE_OPERATIONS = {
+    'lib/libCPS/src/cps_bignum.c': ('32e9d64dce1461277bab736ae11b05790907d49af90d8ac71d8cf7e118ddebb8', [('asm u64 get48bits_2(const u16 *top) {\n    ldrh r1, [r0]\n    ldrh r0, [r0, #-2]\n    mov r0, r0, lsl #0x10\n    bx lr\n}', 'u64 get48bits_2(const u16 *top) {\n    return ((u64)top[0] << 32) | ((u64)top[-1] << 16);\n}'), ('asm u64 get48bits_3(const u16 *top) {\n    ldrh r1, [r0]\n    ldrh r2, [r0, #-2]\n    ldrh r3, [r0, #-4]\n    orr r0, r3, r2, lsl #16\n    bx lr\n}', 'u64 get48bits_3(const u16 *top) {\n    return ((u64)top[0] << 32) | ((u64)top[-1] << 16) | top[-2];\n}'), ('asm u64 get64bits(const u16 *top) {\n    ldrh r2, [r0]\n    ldrh r3, [r0, #-2]\n    orr r1, r3, r2, lsl #16\n    ldrh r2, [r0, #-4]\n    ldrh r3, [r0, #-6]\n    orr r0, r3, r2, lsl #16\n    bx lr\n}', 'u64 get64bits(const u16 *top) {\n    return ((u64)top[0] << 48) | ((u64)top[-1] << 32) | ((u64)top[-2] << 16) | top[-3];\n}'), ('u32 product = b * a[i] + carry;', 'u32 product = (u32)b * a[i] + carry;'), ('square = a[i] * a[i];', 'square = (u32)a[i] * a[i];')]),
+    'lib/NitroWiFi/src/wcm_control.c': ('764aadf1be3bda8a676dd66980180f6cfb016a759e7627a25525c29b85ae0b80', [('asm u32 WcmCountBits(u32 value) {\n    mov r1, r0\n    mov r0, #0\n    mov r3, #1\n@loop:\n    clz r2, r1\n    rsbs r2, r2, #0x1f\n    bcc @done\n    b @clear\n@done:\n    bx lr\n@clear:\n    bic r1, r1, r3, lsl r2\n    add r0, r0, #1\n    b @loop\n}', 'u32 WcmCountBits(u32 value) {\n    return (u32)__builtin_popcount(value);\n}'), ('asm u32 WcmCountLeadingZero(u32 value) {\n    clz r0, r0\n    bx lr\n}', 'u32 WcmCountLeadingZero(u32 value) {\n    return value ? (u32)__builtin_clz(value) : 32;\n}')]),
+}
+
+# Bounded explicit soft-float calls: positive exact integers plus 0.5, then truncation.
+# Both long-multiply operands originate as s32, so their product fits s64.
+COMPILER_BOUNDED_OPERATIONS = {
+    'src/wifi_plaza/wifi_plaza_instrument.c': ('a76f3608ced824d35d9e7492edf5f19be44d8577e362ebb505f160beeae9e507', [('s64 _ll_mul(s64 a, s64 b);', '', 1), ('u32 _fflt(s32 value);', '', 1), ('u32 _fadd(u32 a, u32 b);', '', 1), ('s32 _ffix(u32 value);', '', 1), ('_ll_mul((s64)(s32)(frame > 0 ? (float)(frame << 12) + 0.5f : (float)(frame << 12) - 0.5f), (s64)delta)', '(((s64)(s32)(frame > 0 ? (float)((s32)((u32)frame << 12)) + 0.5f : (float)((s32)((u32)frame << 12)) - 0.5f)) * (s64)delta)', 3), ('    u32 y;\n    u32 x;', '    f32 y;\n    f32 x;', 2), ('_fadd(0x3F000000, _fflt(11 << 14))', '(0.5f + (f32)(11 << 14))', 4), ('_fadd(0x3F000000, _fflt(14 << 12))', '(0.5f + (f32)(14 << 12))', 4), ('_fadd(0x3F000000, _fflt(14 << 14))', '(0.5f + (f32)(14 << 14))', 4), ('_fadd(0x3F000000, _fflt(15 << 14))', '(0.5f + (f32)(15 << 14))', 2), ('_fadd(0x3F000000, _fflt(2 << 12))', '(0.5f + (f32)(2 << 12))', 4), ('_fadd(0x3F000000, _fflt(2 << 14))', '(0.5f + (f32)(2 << 14))', 4), ('_fadd(0x3F000000, _fflt(3 << 16))', '(0.5f + (f32)(3 << 16))', 2), ('_ffix(x)', '((s32)x)', 12), ('_ffix(y)', '((s32)y)', 12), ('tween->duration << 12', '(s32)((u32)tween->duration << 12)', 6)]),
+}
+
+COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLBACKS) + tuple(COMPILER_OPERATIONS) + tuple(ARM_INLINE_OPERATIONS) + (
     "src/application/pokedex/pokedex_main_seq.c", "src/field/weather_manager.c")
 
 
@@ -424,12 +444,30 @@ def adapt(relative, text, root):
     record = coordinated.HEADER_ROUTES.get(relative)
     if record and hashlib.sha256(text.encode()).hexdigest() != record['sha256']:
         raise ValueError('Native header routing source drift: ' + relative)
+    bounded = COMPILER_BOUNDED_OPERATIONS.get(relative)
+    if bounded and hashlib.sha256(text.encode()).hexdigest() != bounded[0]:
+        raise ValueError("Bounded compiler source drift: " + relative)
+    arm = ARM_INLINE_OPERATIONS.get(relative)
+    if arm and hashlib.sha256(text.encode()).hexdigest() != arm[0]:
+        raise ValueError("ARM inline source drift: " + relative)
+    operation = COMPILER_OPERATIONS.get(relative)
+    if operation and hashlib.sha256(text.encode()).hexdigest() != operation[0]:
+        raise ValueError("Compiler arithmetic source drift: " + relative)
     try:
         result = _adapt(relative, text, root)
     except ValueError as error:
-        if not record or str(error) != 'No native adaptation is registered for ' + relative:
+        if not (record or operation or arm or bounded) or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
+    if bounded:
+        for old, new, count in bounded[1]:
+            result = replace(result, old, new, count=count)
+    if arm:
+        for old, new in arm[1]:
+            result = replace(result, old, new)
+    if operation:
+        _, declaration, old, new = operation
+        result = replace(drop(result, declaration), old, new)
     if record:
         for old, new in record['edits']:
             if old in result:
@@ -1027,6 +1065,19 @@ _Static_assert(sizeof(G2dRendererContext)==32,"numeric renderer context and matr
 
 
 def asset_types(kind, text, source):
+    if kind == "native-mi-clear32":
+        if (source.name != "mi_memory.c" or hashlib.sha256(text.encode()).hexdigest()
+                != "7bfc34240ca43ec5c45773a7dad14547b0bb38fe7638c055a0f735e0aa0eb592"):
+            raise ValueError("Original MI clear algorithm changed")
+        # Direct translation of MIi_CpuClear32's ascending full-word stores.
+        # This isolated boundary object does not override the SDK archive.
+        return '''#include <stdint.h>
+void MIi_CpuClear32(uint32_t data, void *destp, uint32_t size) {
+    uint32_t *dest = destp;
+    for (uint32_t offset = 0; offset < size; offset += 4)
+        *dest++ = data;
+}
+'''
     if kind == "native-mi-clear-fast":
         if (source.name != "mi_memory.c" or hashlib.sha256(text.encode()).hexdigest()
                 != "7bfc34240ca43ec5c45773a7dad14547b0bb38fe7638c055a0f735e0aa0eb592"):

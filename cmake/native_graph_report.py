@@ -11,6 +11,19 @@ from native_image_graph import graph, write
 from native_overlay_link import symbols
 
 
+def executable_diagnostic(text, executable):
+    """A parallel build's last undefined block need not belong to the game."""
+    import re
+    links=re.findall(r'^.*\bLinking (?:C|CXX) (executable|shared library) (.+)$', text, re.M)
+    if links and (len(links)!=1 or links[0][0]!='executable' or
+                  Path(links[0][1]).name!=executable.name):
+        return None, 'failed before isolated executable-link inventory'
+    chunks=text.split('Undefined symbols for architecture arm64:')
+    if len(chunks)!=2:
+        return None, 'failed before undefined-symbol inventory'
+    return sorted(set(re.findall(r'^\s+"([^"]+)", referenced from:',chunks[1],re.M))), 'actual undefined-symbol diagnostic'
+
+
 def collect(build, model, supplemental=()):
     candidates = defaultdict(set)
     original_sources = {v.get('source'):k for k,v in model['members'].items() if 'source' in v}
@@ -124,20 +137,19 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm'):
                 'missing exports' if missing_exports else 'linked')
             image['linked_artifact'] = str(path)
             image['missing_exports'] = missing_exports
+            if (image['link_status']=='linked' and diagnostic_path.exists() and
+                    path.stat().st_mtime_ns>=diagnostic_path.stat().st_mtime_ns):
+                image['superseded_link_diagnostic']=image.pop('link_diagnostic',None)
+                image['actual_link_undefined_symbols']=[]
     full_unknown = sorted({s for image in images.values() for s in image['unknown_imports']})
     default = None
     default_link_status='not measured'
     default_link_error=None
     if diagnostic:
         text = diagnostic.read_text()
-        # Only the last real linker diagnostic has current scope.
-        chunks = text.split('Undefined symbols for architecture arm64:')
-        if len(chunks)<2:
-            default_link_status='failed before undefined-symbol inventory'
+        default,default_link_status=executable_diagnostic(text,executable)
+        if default is None:
             default_link_error=next((line for line in text.splitlines() if line.startswith('ld:')),'See '+str(diagnostic))
-        else:
-            default_link_status='actual undefined-symbol diagnostic'
-            default = sorted(set(re.findall(r'^\s+"([^"]+)", referenced from:',chunks[-1],re.M)))
     contracts_path=build/'native-overlays/providers.json'
     invalid=[]
     if contracts_path.exists():

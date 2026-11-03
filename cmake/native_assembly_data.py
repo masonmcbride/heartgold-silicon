@@ -66,7 +66,7 @@ REVIEWED_INPUTS = {obj:c['inputs'] for obj,c in contracts().items() if c.get('re
 
 
 def recipe_script_dependencies(original):
-    shared = [str(Path(__file__).with_name(p)) for p in ('native_data_ir.py','native_data_layouts.py','native_data_layouts.json')]
+    shared = [str(Path(__file__).with_name(p)) for p in ('native_data_ir.py','native_data_layouts.py','native_data_layouts.json','native_abi.py')]
     return shared
 
 
@@ -182,8 +182,11 @@ def reviewed_layout(blocks):
         labels['_'+b['symbol']] = (key,len(section['data']))
         for kind,value in b['native_items']:
             if kind=='pointer':
-                section['relocations'][len(section['data'])]='_'+value
-                section['data'].extend(bytes(8))
+                match=re.fullmatch(r'([A-Za-z_.$][\w.$]*)(?:\s*([+-])\s*(0x[0-9A-Fa-f]+|[0-9]+))?',value)
+                if not match: raise ValueError('Invalid reviewed pointer expression: '+value)
+                addend=int(match[3],0)*(-1 if match[2]=='-' else 1) if match[3] else 0
+                section['relocations'][len(section['data'])]='_'+match[1]
+                section['data'].extend((addend % (1<<64)).to_bytes(8,'little'))
             else: section['data'].extend(value)
     return sections,labels
 
@@ -239,7 +242,8 @@ def validate_reviewed(data, sections, symbols, blocks):
                 target_section=section_by_key[target_key]
                 if bits&0xffffff != sections.index(target_section)+1:
                     raise ValueError('Original local relocation section changed')
-                expected_bytes[offset:offset+8]=(target_section['address']+target_offset).to_bytes(8,'little')
+                addend=int.from_bytes(want['data'][offset:offset+8],'little',signed=True)
+                expected_bytes[offset:offset+8]=((target_section['address']+target_offset+addend) % (1<<64)).to_bytes(8,'little')
                 relocs[offset]=name
             else: raise ValueError('Expected 64-bit ARM64_RELOC_UNSIGNED')
         if key!='__bss' and data[section['offset']:section['offset']+section['size']]!=expected_bytes:

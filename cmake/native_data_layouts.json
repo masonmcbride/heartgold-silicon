@@ -5765,16 +5765,131 @@
       "lib/NitroDWC/src/dwc_login.c": "de2b057f9411f05d4a3a807b9036e018902e3b1de73124da4ccda30a8e404085"
     },
     "layouts": {},
-    "blocker": "gDwcMatchKeys spans 154 ARM32 MatchKeyEntry records through aliases ov00_0221A949..ov00_0221A950; match_browse.c clears 1848 literal bytes and indexes the array as bytes. Native entries are 24 bytes. dwc_login.c writes ((int *)&gDwcControl)[1], which overlaps the native pointer. A data-only resize cannot preserve these consumer accesses."
+    "blocker": "gDwcMatchKeys spans 154 ARM32 MatchKeyEntry records through aliases ov00_0221A949..ov00_0221A950; match_browse.c clears 1848 literal bytes and indexes the array as bytes. Native entries are 24 bytes. dwc_login.c writes ((int *)&gDwcControl)[1], which overlaps the native pointer. A data-only resize cannot preserve these consumer accesses.",
+    "abi_views": [
+      {
+        "object": "gDwcMatchKeys",
+        "consumer": "match_internal.h typed MatchKeyEntry array",
+        "fields": [
+          {
+            "guest": [
+              8,
+              4
+            ],
+            "native": [
+              16,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ],
+        "stride": [
+          12,
+          24
+        ]
+      },
+      {
+        "object": "gDwcMatchKeys",
+        "consumer": "match_browse.c raw index *= 12",
+        "fields": [
+          {
+            "guest": [
+              8,
+              4
+            ],
+            "native": [
+              8,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ],
+        "stride": [
+          12,
+          12
+        ]
+      },
+      {
+        "object": "gDwcControl aggregate",
+        "consumer": "native pointer followed by original socket-error word",
+        "fields": [
+          {
+            "guest": [
+              4,
+              4
+            ],
+            "native": [
+              8,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      },
+      {
+        "object": "gDwcControl aggregate",
+        "consumer": "dwc_login.c ((int *)&gDwcControl)[1]",
+        "fields": [
+          {
+            "guest": [
+              4,
+              4
+            ],
+            "native": [
+              4,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      }
+    ]
   },
   "lib/NitroDWC/asm/dwc_gamespy_bss.o": {
     "inputs": {
       "lib/NitroDWC/asm/dwc_gamespy_bss.s": "7366dfffe95f3a16b8b48c06042db72e2384be748c3775caff0c50b5f71f90e6",
       "lib/include/dwc/persist_internal.h": "250f8f2807f879797499e0d1ba32623ee9c8b8f09a3de274d82fa08e25c395c5",
-      "lib/NitroDWC/src/persist_data.c": "ea3ee0f933f44015ba3d7a7ba1c906cdcf389fc1bb5545f4c8b6ffe8b2447213"
+      "lib/NitroDWC/src/persist_data.c": "ea3ee0f933f44015ba3d7a7ba1c906cdcf389fc1bb5545f4c8b6ffe8b2447213",
+      "lib/NitroDWC/src/gs_platform.c": "380ce8098851c077edb9f0d16b802f24b3a62188eb138d953bb89d86574fc124"
     },
     "layouts": {},
-    "blocker": "gPersistWork has a 0x30 original extent and pointer-bearing PersistWork consumers; nnNegotiatorList and other GameSpy runtime globals also require reviewed native structure extents. Original extents cannot be declared native-safe without consumer ABI validation."
+    "blocker": "gPersistWork has a 0x30 original extent and pointer-bearing PersistWork consumers; nnNegotiatorList and other GameSpy runtime globals also require reviewed native structure extents. Original extents cannot be declared native-safe without consumer ABI validation.",
+    "abi_views": [
+      {
+        "object": "ov00_0221B1AC",
+        "consumer": "gs_platform.c Ov00SocketState.unk0",
+        "fields": [
+          {
+            "guest": [
+              0,
+              4
+            ],
+            "native": [
+              0,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      },
+      {
+        "object": "ov00_0221B1AC",
+        "consumer": "gs_platform.c hAliases[0] via (ov00_0221B1B4 - 8)",
+        "fields": [
+          {
+            "guest": [
+              0,
+              4
+            ],
+            "native": [
+              0,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ]
+      }
+    ]
   },
   "lib/NitroDWC/asm/dwc_lib_rodata.o": {
     "inputs": {
@@ -5788,9 +5903,3923 @@
   "lib/NitroDWC/asm/dwc_lib_data.o": {
     "inputs": {
       "lib/NitroDWC/asm/dwc_lib_data.s": "e0c88d06b1d65fce3ded518163146af0699bbe74fa6480930ba3a17b7dcec810",
-      "lib/NitroDWC/src/auth_http.c": "3538ce8a29467af7c13ddea6542805b2396bc2907173244e0f84e07e38a3100a"
+      "lib/NitroDWC/src/auth_http.c": "3538ce8a29467af7c13ddea6542805b2396bc2907173244e0f84e07e38a3100a",
+      "lib/include/cps/cps_ssl_internal.h": "9c435e124dd52c26414be3e7343d3a5cb4e9c98860a99f30a5791b70de56aaf4",
+      "lib/libCPS/src/cps_ssl_util.c": "3b451b62aafe3235829a3bca94ffc4ba1b56acbafb01b9a84270cc192b42ff54",
+      "lib/NitroDWC/src/query_report_init.c": "63832e01d4dee426da7e6ed1776c736cb842bef7c73c6869ed14e90beb9c0744",
+      "lib/NitroDWC/src/server_report.c": "1f724d2f91dac6aed5fc0c5670ddf650779db1b6b00775fd338a84eeb879c92c"
     },
     "layouts": {},
-    "blocker": "gDwcRootCaList contains twelve addresses consumed as a byte-typed root-CA table by auth_http.c/CPS_SetRootCa. CA records mix pointer and integer words. Widening all words would change scalar modulus/exponent lengths; native record layout and CPS consumer ABI need validation before conversion."
+    "blocker": "CA pointer/scalar records have a typed CpsRootCa consumer (40 native bytes), validated independently in test_shared_provider_native.py. The complete member remains blocked: static_qr2_rec is shared by QueryReport with u32 callbacks/userData and QRRecord with native callback/param pointers; their native extents and field offsets disagree. Blind widening cannot repair the query_report_init.c call ABI or callback stores.",
+    "abi_views": [
+      {
+        "object": "static_qr2_rec",
+        "consumer": "query_report_init.c QueryReport",
+        "fields": [
+          {
+            "guest": [
+              136,
+              4
+            ],
+            "native": [
+              136,
+              4
+            ],
+            "kind": "integer"
+          },
+          {
+            "guest": [
+              172,
+              4
+            ],
+            "native": [
+              172,
+              4
+            ],
+            "kind": "integer"
+          },
+          {
+            "guest": [
+              268,
+              4
+            ],
+            "native": [
+              268,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      },
+      {
+        "object": "static_qr2_rec",
+        "consumer": "server_report.c QRRecord",
+        "fields": [
+          {
+            "guest": [
+              136,
+              4
+            ],
+            "native": [
+              136,
+              8
+            ],
+            "kind": "pointer"
+          },
+          {
+            "guest": [
+              172,
+              4
+            ],
+            "native": [
+              208,
+              4
+            ],
+            "kind": "integer"
+          },
+          {
+            "guest": [
+              268,
+              4
+            ],
+            "native": [
+              312,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ]
+      }
+    ]
+  },
+  "asm/nintendo_wfc_connect_unused_data.o": {
+    "inputs": {
+      "asm/nintendo_wfc_connect_unused_data.s": "7f6452f17c9ef8981c0d2e5fb07f541560aa844b34ea1c92a04bcf03a44c9d03",
+      "src/nintendo_wfc_connect_unused.c": "62b6feba01e42ffded4a81683557811eb172182e442b73f3b04bc0ea0d740d9c"
+    },
+    "layouts": {
+      "gNintendoWfcUnusedArrowPositions": {
+        "source_size": 8
+      },
+      "ov73_021EA67C": {
+        "source_size": 8
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_course_data.o": {
+    "constants": {
+      "FS_OVERLAY_ID(OVY_97)": 97
+    },
+    "inputs": {
+      "asm/pokeathlon_course_data.s": "c485619ddd4d7c78cfc20f12d0117c2b4eb91d2940ead9bbc5b839a291ab5ad6",
+      "include/pokeathlon/pokeathlon_course_internal.h": "1baca4325d1bc3bc25149b4addb7cd5a095cd87120420f282cc7f98b991f46a6",
+      "include/pokeathlon/pokeathlon_course_types_def.h": "c6a7b9fa6769dc12bb0c7fd2d46d3bb5101badd8bde7a02e7675c82dc3be1081",
+      "src/pokeathlon/pokeathlon_course.c": "8751ea8c8993d4a78fc8cc83839fd0e527aa21ea1e90641e9c0bfedd24def5bc",
+      "src/pokeathlon/pokeathlon_course_flow.c": "9093543b7cd1131496a86bb325e35c2e8a15c6fe9bd7b5aad8a52e60f74b1c07",
+      "asm/pokeathlon_event_data.s": "da15691507250fc2ca39332efae8fa8995cc8c4d1e741185402388976b3edb3e",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
+    },
+    "layouts": {
+      "gPokeathlonBlockSmashEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCirclePushEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourse10EventSets": {
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonCourseCmds": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140
+        ],
+        "source_size": 144,
+        "public": true
+      },
+      "gPokeathlonCourseEventIds": {
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonCourseEventSteps": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonCourseEvent_Closing": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourseEvent_EventIntro": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourseEvent_Opening": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourseEvent_ResultsAnnouncement": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourseEvent_Wait": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonCourseEvents": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonDiscCatchEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonEventScoreOrders": {
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonEventTargetScores": {
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonGoalRollEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonHurdleDashEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonLampJumpEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonNpcTeamSpriteIds": {
+        "source_size": 200,
+        "public": true
+      },
+      "gPokeathlonPennantCaptureEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonPerformanceFileIds": {
+        "source_size": 988,
+        "public": true
+      },
+      "gPokeathlonRelayRunEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonRingDropEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "gPokeathlonSnowThrowEvent": {
+        "padding": {
+          "20": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "source_size": 20,
+        "public": true
+      },
+      "sPokeathlonStateInfoFuncTable": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152
+        ],
+        "source_size": 156,
+        "public": true
+      },
+      "subOverlayTemplate": {
+        "padding": {
+          "16": 4
+        },
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 16,
+        "public": true
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_disc_catch_cpu_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_disc_catch_cpu_rodata.s": "210ea3bd4dc22a75199ec8b39c4e9685d3b979bfd06116b8eea2b7a6448cc46a",
+      "include/pokeathlon/pokeathlon_disc_catch.h": "c8c7f77478f1db703c7062c3876ed94c104c87893a1fbf218a91de0ad042360d",
+      "src/pokeathlon/pokeathlon_disc_catch_cpu.c": "7772d4784c4cae086bdc4fc9c1ed2cfe5114a7a4823f2cfad032406feef25b73"
+    },
+    "layouts": {
+      "gPokeathlonDiscCatchCpuHomePositions": {
+        "source_size": 48
+      },
+      "gPokeathlonDiscCatchCpuHomeRowCounts": {
+        "source_size": 7
+      },
+      "gPokeathlonDiscCatchCpuHomeRowStarts": {
+        "source_size": 1
+      },
+      "gPokeathlonDiscCatchCpuJumpChances": {
+        "source_size": 12
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_disc_catch_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_disc_catch_rodata.s": "cc2ed29f06e86ec740fe5c679a59cf370cdc964092300a9298b47f6321252d9d",
+      "include/pokeathlon/pokeathlon_disc_catch.h": "c8c7f77478f1db703c7062c3876ed94c104c87893a1fbf218a91de0ad042360d",
+      "src/pokeathlon/pokeathlon_disc_catch.c": "9c0908e9995aa5ac37ca4080449397e6e5d80eeba68ac01e3c3a4ec2e6650571",
+      "src/pokeathlon/pokeathlon_disc_catch_field.c": "763ea48b037ab9097d18d56e1ffd68ae17d0b7c5457ec669cde4db58de996d39"
+    },
+    "layouts": {
+      "gPokeathlonDiscCatchBgLayers": {
+        "source_size": 28
+      },
+      "gPokeathlonDiscCatchBgTemplates": {
+        "source_size": 196
+      },
+      "gPokeathlonDiscCatchDiscTopSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokeathlonDiscCatchDiscTouchSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokeathlonDiscCatchEffectSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokeathlonDiscCatchFacingReference": {
+        "source_size": 12
+      },
+      "gPokeathlonDiscCatchGraphicsBanks": {
+        "source_size": 40
+      },
+      "gPokeathlonDiscCatchGraphicsModes": {
+        "source_size": 16
+      },
+      "gPokeathlonDiscCatchMonStartPositions": {
+        "source_size": 48
+      },
+      "gPokeathlonDiscCatchOamCharTransferParam": {
+        "source_size": 20
+      },
+      "gPokeathlonDiscCatchOamManagerParam": {
+        "source_size": 32
+      },
+      "gPokeathlonDiscCatchPhaseSeconds": {
+        "source_size": 16
+      },
+      "gPokeathlonDiscCatchScoreWindowTemplate": {
+        "source_size": 8
+      },
+      "gPokeathlonDiscCatchSpriteResourceCounts": {
+        "source_size": 24
+      },
+      "gPokeathlonDiscCatchTouchDistances": {
+        "source_size": 12
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_event_data.o": {
+    "inputs": {
+      "asm/pokeathlon_event_data.s": "da15691507250fc2ca39332efae8fa8995cc8c4d1e741185402388976b3edb3e",
+      "include/pokeathlon/pokeathlon_block_smash.h": "4547af8d32d808948e5e011dc7005afb8637a449a511bea604d5a852d8aecdf1",
+      "include/pokeathlon/pokeathlon_circle_push.h": "db5dd94de6bfd1dd44746b1bad2d8f03fb1092b6276be2a315b0dfcb9687c2b3",
+      "include/pokeathlon/pokeathlon_course_internal.h": "1baca4325d1bc3bc25149b4addb7cd5a095cd87120420f282cc7f98b991f46a6",
+      "include/pokeathlon/pokeathlon_event_points.h": "1020b97d8eb682cfda032989f5d84f48f9ef51b0ba3bd60099fa5b8ac2072c6b",
+      "include/pokeathlon/pokeathlon_hurdle_dash_race.h": "9fa91ec6074860470041cfc3cc713786ef36dc0aeded2a1cc334146d0ab51f71",
+      "include/pokeathlon/pokeathlon_lamp_jump.h": "619d1809811b466f4b2629dcfa3fcee8898b6686ef1fa2ca726cb094b1b1ec07",
+      "src/pokeathlon/pokeathlon_block_smash_blocks.c": "920c261e8b89c1dbe025ed5935cea98959ca4a951e013180bcbbb7ad89503fb8",
+      "src/pokeathlon/pokeathlon_circle_push.c": "b4339016667b08ff67715d07caab969527a3448f76a7e9b81f34be8cda5fcc35",
+      "src/pokeathlon/pokeathlon_course_flow.c": "9093543b7cd1131496a86bb325e35c2e8a15c6fe9bd7b5aad8a52e60f74b1c07",
+      "src/pokeathlon/pokeathlon_data.c": "097d3b85691fe8040cdbc67c9263e782bfc0ae94a07f65d6706639604d60c175",
+      "src/pokeathlon/pokeathlon_event_points.c": "f9f71511440f40f3f405ba7fa74776992ea104eefaabcc144e24c66f341b14ee",
+      "src/pokeathlon/pokeathlon_event_rank_points.c": "0dd17d3663be1a3b61789584d234964d21cc8ce1d223e0c7283b08f14422d8b4",
+      "src/pokeathlon/pokeathlon_hurdle_dash_race.c": "a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590",
+      "src/pokeathlon/pokeathlon_lamp_jump.c": "e17fde730fc73ea50f3fe39c24023a18da9097f97ba61b2064a40a405ea6a020",
+      "asm/pokeathlon_course_data.s": "c485619ddd4d7c78cfc20f12d0117c2b4eb91d2940ead9bbc5b839a291ab5ad6"
+    },
+    "layouts": {
+      "gPokeathlonBlockSmashSpotHitboxes": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonBlockSmashStates": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonCirclePushContacts": {
+        "alignment": 8,
+        "native_size": 3456,
+        "source_size": 2304,
+        "public": true
+      },
+      "gPokeathlonDiscCatchStates": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonEventPointsCalcFuncs": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonEventRankPoints": {
+        "source_size": 4,
+        "public": true
+      },
+      "gPokeathlonEventScorePointsFuncs": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "source_size": 40,
+        "public": true
+      },
+      "gPokeathlonHurdleDashLanePans": {
+        "source_size": 4,
+        "public": true
+      },
+      "gPokeathlonHurdleDashLaneSoundPlayers": {
+        "source_size": 4,
+        "public": true
+      },
+      "gPokeathlonHurdleDashStates": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonLampJumpSoundPlayers": {
+        "source_size": 4,
+        "public": true
+      },
+      "gPokeathlonLampJumpStates": {
+        "pointers": [
+          0,
+          4
+        ],
+        "source_size": 8,
+        "public": true
+      },
+      "gPokeathlonPennantCaptureStates": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonRelayRunStates": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 12,
+        "public": true
+      },
+      "gPokeathlonResultsAnnouncementSteps": {
+        "pointers": [
+          0
+        ],
+        "source_size": 4,
+        "public": true
+      },
+      "gPokeathlonSnowThrowStates": {
+        "pointers": [
+          0,
+          4
+        ],
+        "source_size": 8,
+        "public": true
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_goal_roll_cpu_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_goal_roll_cpu_rodata.s": "8df2d714f71b67f762504726192f1386cdc37e716dd5e6d3699e5f22ab60d1c1",
+      "include/pokeathlon/pokeathlon_goal_roll.h": "aeea7d75f5b3e06da22d8f55d9377b897fac1e914b7edb1cf5d83be6757a5326",
+      "src/pokeathlon/pokeathlon_goal_roll_cpu.c": "842cfe27508c3014f3d88a5bb5c9f70876f5589a0bff62a7fbc89c2474dcc584"
+    },
+    "layouts": {
+      "gPokeathlonGoalRollCpuGuardPoints": {
+        "source_size": 2
+      },
+      "gPokeathlonGoalRollCpuGuardPoints1": {
+        "source_size": 4
+      },
+      "gPokeathlonGoalRollCpuGuardPoints2": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollCpuGuardPointsY": {
+        "source_size": 2
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_goal_roll_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_goal_roll_rodata.s": "783907eb902a527636e2cc976c5de679969b7110e190194c966c64cfd3282b1f",
+      "include/pokeathlon/pokeathlon_goal_roll.h": "aeea7d75f5b3e06da22d8f55d9377b897fac1e914b7edb1cf5d83be6757a5326",
+      "src/pokeathlon/pokeathlon_goal_roll.c": "cafea42efd5ff2e920ce809c33951786bdade488d02cd43baacdb86a1b16f4b6",
+      "src/pokeathlon/pokeathlon_goal_roll_display.c": "bf70fea4df20024b4c5df114edc9d1935a65d621d86267b5b3870546e9716964",
+      "src/pokeathlon/pokeathlon_goal_roll_field.c": "5a01c751bad1a4c7476e3983aee07059e6a367173fdc4f9b81fba8554a14e5a3"
+    },
+    "layouts": {
+      "gPokeathlonGoalRollBallSpawnPoints": {
+        "source_size": 60
+      },
+      "gPokeathlonGoalRollBallSpeedsA": {
+        "source_size": 150
+      },
+      "gPokeathlonGoalRollBallSpeedsB": {
+        "source_size": 150
+      },
+      "gPokeathlonGoalRollBgTemplate_Main0": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Main1": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Main2": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Main3": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Sub0": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Sub1": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollBgTemplate_Sub2": {
+        "source_size": 28
+      },
+      "gPokeathlonGoalRollFrameLeft": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollFrameRight": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollGoalLines": {
+        "source_size": 64
+      },
+      "gPokeathlonGoalRollGoalPositions": {
+        "source_size": 48
+      },
+      "gPokeathlonGoalRollGoalPosts": {
+        "source_size": 96
+      },
+      "gPokeathlonGoalRollGraphicsBanks": {
+        "source_size": 40
+      },
+      "gPokeathlonGoalRollGraphicsModes": {
+        "source_size": 16
+      },
+      "gPokeathlonGoalRollKickSpeeds": {
+        "source_size": 8
+      },
+      "gPokeathlonGoalRollLabelPositions": {
+        "source_size": 48
+      },
+      "gPokeathlonGoalRollMonStartPositions": {
+        "source_size": 48
+      },
+      "gPokeathlonGoalRollNameWindowTemplates": {
+        "source_size": 32
+      },
+      "gPokeathlonGoalRollNormalBottomLeft": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollNormalBottomRight": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollNormalTopLeft": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollNormalTopRight": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollPaletteData": {
+        "source_size": 4
+      },
+      "gPokeathlonGoalRollSpritePoolConfig": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollUp": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollWallCorner": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollWallNormal": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollWallPost": {
+        "source_size": 12
+      },
+      "gPokeathlonGoalRollWindowData": {
+        "source_size": 16
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_hurdle_dash_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_hurdle_dash_rodata.s": "f41978aa89022e5c1f454b386e7354558cadda1ec4beacb335797f4b0431cb60",
+      "include/pokeathlon/pokeathlon_hurdle_dash.h": "6721f79b8de92cdf31405fa4267ec394ef3404d794ba10c3dfc1d8c9f93eaf58",
+      "include/pokeathlon/pokeathlon_hurdle_dash_race.h": "9fa91ec6074860470041cfc3cc713786ef36dc0aeded2a1cc334146d0ab51f71",
+      "src/pokeathlon/pokeathlon_hurdle_dash.c": "945465520a81174d84e135a2b057acfafb1d58533550aa7b8ca6412505d6c2bb",
+      "src/pokeathlon/pokeathlon_hurdle_dash_race.c": "a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590"
+    },
+    "layouts": {
+      "gHurdleDashBgTemplate_Main0": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Main1": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Main2": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Main3": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Sub0": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Sub1": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Sub2": {
+        "source_size": 28
+      },
+      "gHurdleDashBgTemplate_Sub3": {
+        "source_size": 28
+      },
+      "gHurdleDashBoostSpeeds": {
+        "source_size": 16
+      },
+      "gHurdleDashDustLaneX": {
+        "source_size": 12
+      },
+      "gHurdleDashFallingJumpHeights": {
+        "source_size": 47
+      },
+      "gHurdleDashGraphicsBanks": {
+        "source_size": 40
+      },
+      "gHurdleDashGraphicsModes": {
+        "source_size": 16
+      },
+      "gHurdleDashNumberX": {
+        "source_size": 12
+      },
+      "gHurdleDashRisingJumpHeights": {
+        "source_size": 45
+      },
+      "gHurdleDashSceneConfig": {
+        "source_size": 12
+      },
+      "gHurdleDashTimeWindowTemplate": {
+        "source_size": 8
+      },
+      "gHurdleDashTimerDigitAnims": {
+        "source_size": 8
+      },
+      "gHurdleDashTimerDigitX": {
+        "source_size": 8
+      },
+      "gHurdleDashTouchLaneX": {
+        "source_size": 12
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_pennant_capture_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_pennant_capture_rodata.s": "adb592822e8a383d4d2e9e1af57e25204e1608c937c4ba79dcbf973597ca301b",
+      "include/pokeathlon/pokeathlon_pennant_capture.h": "d6ae5d1bef1049caf4fd89b385dcb1cf4786706ff036a09b82e3cbf9d8a6ec13",
+      "src/pokeathlon/pokeathlon_pennant_capture.c": "5d123262db7ce8f395a0ec17a49865133b762a95ff4361d5709a84a28f533af9",
+      "src/pokeathlon/pokeathlon_pennant_capture_display.c": "96cb1c7c2e0737add0f0dfb42c96b946367bde8a19989967cac6c8145ab602a2",
+      "src/pokeathlon/pokeathlon_pennant_capture_field.c": "ff20c3bf2002c583ed20446638f55516a371d263a8d8c5e776c3e8b6c2a7d1e9",
+      "src/pokeathlon/pokeathlon_pennant_capture_play.c": "63883cd1bf4571a767c3fc9221bf27e78be14eeb37644cd3de9968399936dc06"
+    },
+    "layouts": {
+      "gPennantCaptureBgTemplate_Main0": {
+        "source_size": 28
+      },
+      "gPennantCaptureBgTemplate_Main3": {
+        "source_size": 28
+      },
+      "gPennantCaptureBgTemplate_Sub0": {
+        "source_size": 28
+      },
+      "gPennantCaptureBgTemplate_Sub1": {
+        "source_size": 28
+      },
+      "gPennantCaptureBgTemplate_Sub2": {
+        "source_size": 28
+      },
+      "gPennantCaptureCornerHits": {
+        "source_size": 16
+      },
+      "gPennantCaptureEdgeHits": {
+        "source_size": 16
+      },
+      "gPennantCaptureGraphicsBanks": {
+        "source_size": 40
+      },
+      "gPennantCaptureGraphicsModes": {
+        "source_size": 16
+      },
+      "gPennantCaptureReferenceVector": {
+        "source_size": 12
+      },
+      "gPennantCaptureScoreWindowTemplate": {
+        "source_size": 8
+      },
+      "gPennantCaptureSpritePoolTemplate": {
+        "source_size": 12
+      },
+      "gPennantCaptureTimerDigitAnims": {
+        "source_size": 4
+      },
+      "gPennantCaptureTimerDigitX": {
+        "source_size": 4
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_relay_run_map_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_relay_run_map_rodata.s": "a791924644867c4235923b87c46a55b2c5693ae1e6f601034f43425692bbfa81",
+      "include/pokeathlon/pokeathlon_relay_run.h": "2294ff79558fac04a735a10f518608f54505f1ad4a45be15c6e9395168c40efe",
+      "src/pokeathlon/pokeathlon_relay_run_hud.c": "b2f4a2399aa90e3a6311c0b4f27f6b2d8bb7356fd501dace6da601b67ecb61c0"
+    },
+    "layouts": {
+      "gRelayRunMapCenter": {
+        "source_size": 12
+      },
+      "gRelayRunMapStartOffset": {
+        "source_size": 12
+      }
+    },
+    "reviewed": true
+  },
+  "asm/pokeathlon_ring_drop_rodata.o": {
+    "inputs": {
+      "asm/pokeathlon_ring_drop_rodata.s": "36b972eea6b88aae49186e15ab5653e0e8c426614bfaae1ef91155f7b5226917",
+      "include/pokeathlon/pokeathlon_ring_drop.h": "fc76fda3fd5298e32b481a5db794df58ae9e821ba8be49e3ce41cdab1372b2e9",
+      "src/pokeathlon/pokeathlon_ring_drop.c": "a1b630fb3c3cd4296b5ccc9db209651bed74cd3833983c276d4dbca3f0b3834d",
+      "src/pokeathlon/pokeathlon_ring_drop_display.c": "8ecbe0f16106937371f84b89de3a16a6d7dd7e5a11e24e61c431d925eccda607",
+      "src/pokeathlon/pokeathlon_ring_drop_field.c": "a853ab974a12cb4c45a33c2be48e3bdc5974d52841b3d2dd363d2bd6deaa8bfe",
+      "src/pokeathlon/pokeathlon_ring_drop_mon.c": "d3b41f46ad50665db1240939fe2593b70754de2c7ab73188c5b9daa6a2ab6dd3"
+    },
+    "layouts": {
+      "gPokeathlonRingDropBgLayers": {
+        "source_size": 28
+      },
+      "gPokeathlonRingDropBgTemplates": {
+        "source_size": 196
+      },
+      "gPokeathlonRingDropDirectionReference": {
+        "source_size": 12
+      },
+      "gPokeathlonRingDropFallSpeeds": {
+        "source_size": 8
+      },
+      "gPokeathlonRingDropGraphicsBanks": {
+        "source_size": 40
+      },
+      "gPokeathlonRingDropGraphicsModes": {
+        "source_size": 16
+      },
+      "gPokeathlonRingDropJumpHeights": {
+        "source_size": 100
+      },
+      "gPokeathlonRingDropMonStartPositions": {
+        "source_size": 16
+      },
+      "gPokeathlonRingDropOamCharTransferParam": {
+        "source_size": 20
+      },
+      "gPokeathlonRingDropOamManagerParam": {
+        "source_size": 32
+      },
+      "gPokeathlonRingDropRingEdge": {
+        "source_size": 16
+      },
+      "gPokeathlonRingDropScoreWindowTemplate": {
+        "source_size": 20
+      },
+      "gPokeathlonRingDropSpriteResourceCounts": {
+        "source_size": 24
+      },
+      "gPokeathlonRingDropSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokeathlonRingDropSwitchSpots": {
+        "source_size": 24
+      }
+    },
+    "reviewed": true
+  },
+  "asm/record_mixing_data.o": {
+    "inputs": {
+      "asm/record_mixing_data.s": "fcd98dfe9afb936190c75bbaa6ae975196fb26e78c325cf8f148fe9d0b45643b",
+      "include/record_mixing/record_mixing_exchange.h": "bbc38dc22fb80e2d58111b1c20410a997894345d9ce5487a75b3267b60cfb5d9",
+      "src/record_mixing/record_mixing_exchange.c": "40d6716981e75900fa21b1e37fb2da87c64dbe6eab927255fc14059fe69cd473"
+    },
+    "layouts": {
+      "sRecordMixingHandlers": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116
+        ],
+        "source_size": 120
+      }
+    },
+    "reviewed": true
+  },
+  "asm/wifi_plaza_lobby_data.o": {
+    "inputs": {
+      "asm/wifi_plaza_lobby_data.s": "022c003040402aa16ecf0ef4d139908657a43884edaffefd38b0c52f6798b465",
+      "src/wifi_plaza/wifi_plaza_lobby_events.c": "12193a9651d7ad1e759ad79c9073783c4ed5020599638963a435de565e042407"
+    },
+    "layouts": {
+      "gWiFiPlazaPlayerObjectActions": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ],
+        "source_size": 48
+      }
+    },
+    "reviewed": true
+  },
+  "asm/wobbuffet_pop_balloon_mesh_data.o": {
+    "inputs": {
+      "asm/wobbuffet_pop_balloon_mesh_data.s": "42b1f2e1640af68007643854008b784aa21f292f8d502758eec2a5739568a3f1",
+      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
+      "src/application/wobbuffet_pop_balloon_mesh.c": "6897ad9ed6a0bd3c8990be46741565bef19076eaa29d56c7db8e19e802ea22d2"
+    },
+    "layouts": {
+      "_02262C04": {
+        "source_size": 1
+      },
+      "gWobbuffetPopBalloonTouchAreas": {
+        "source_size": 51
+      },
+      "gWobbuffetPopHandleSpriteTemplate": {
+        "source_size": 52
+      }
+    },
+    "reviewed": true
+  },
+  "asm/wobbuffet_pop_data.o": {
+    "inputs": {
+      "asm/wobbuffet_pop_data.s": "b894cf9e3df910083f5eccbaed9cb925be369fe2b454038f02508a0ebc2bb663",
+      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
+      "src/application/wobbuffet_pop.c": "ca4d000e3570abfc48154120e2252f529959e15302ab23fff24e1db7851e4e72"
+    },
+    "layouts": {
+      "gWobbuffetPopBanks": {
+        "source_size": 40
+      },
+      "gWobbuffetPopCameraAngle": {
+        "source_size": 8
+      },
+      "gWobbuffetPopCameraTarget": {
+        "source_size": 12
+      },
+      "gWobbuffetPopGraphicsModes": {
+        "source_size": 16
+      },
+      "gWobbuffetPopHostSteps": {
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "source_size": 24
+      },
+      "gWobbuffetPopLocalModelFiles": {
+        "source_size": 4
+      },
+      "gWobbuffetPopMainBgTemplates": {
+        "source_size": 84
+      },
+      "gWobbuffetPopNameWindowIndices": {
+        "source_size": 20
+      },
+      "gWobbuffetPopOamCharTransfer": {
+        "source_size": 20
+      },
+      "gWobbuffetPopOamManagerParam": {
+        "source_size": 32
+      },
+      "gWobbuffetPopSeatOrders": {
+        "source_size": 20
+      },
+      "gWobbuffetPopSlotModelFiles0": {
+        "source_size": 4
+      },
+      "gWobbuffetPopSlotModelFiles1": {
+        "source_size": 4
+      },
+      "gWobbuffetPopSlotModelFiles2": {
+        "source_size": 4
+      },
+      "gWobbuffetPopSlotModelFiles3": {
+        "source_size": 64
+      },
+      "gWobbuffetPopSpriteResourceCounts": {
+        "source_size": 24
+      },
+      "gWobbuffetPopSubBgTemplates": {
+        "source_size": 112
+      }
+    },
+    "reviewed": true
+  },
+  "asm/wobbuffet_pop_scene_data.o": {
+    "inputs": {
+      "asm/wobbuffet_pop_scene_data.s": "18eb82bb628107f5a60650d7b3d65c10e417ab9a1373dba5967f87b0477cfa62",
+      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
+      "src/application/wobbuffet_pop.c": "ca4d000e3570abfc48154120e2252f529959e15302ab23fff24e1db7851e4e72",
+      "src/application/wobbuffet_pop_scene.c": "b5255566ebb454e58c31a304c7bdc0dc634cff4511fbdd7779e4ecfe7a80f138",
+      "include/communication_command.h": "c0f930112bf91a10e13ff12c95bb4c16ea2691698992274d1af492297f047c04",
+      "src/communication_command.c": "2983247831d50cdcfb4023780fb9ee23e665e5a69057fea75fc1b71a3861b03b"
+    },
+    "layouts": {
+      "gWobbuffetPopBalloonAirRates": {
+        "source_size": 12,
+        "public": true
+      },
+      "gWobbuffetPopCommands": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ],
+        "source_size": 48,
+        "public": true
+      },
+      "gWobbuffetPopEventFuncs": {
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28
+        ],
+        "source_size": 32,
+        "public": true
+      }
+    },
+    "reviewed": true
+  },
+  "asm/plaza_game_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/plaza_game_data.s": "2db307d75366c9646ebb2f0ed2f111cb2a3e8a9feca4354f3c9797954d10c8b0",
+      "include/application/plaza_game.h": "40089279ffc8d88364f48537c14ff25018d60d248e62e623281b7ffdf1888c67",
+      "include/communication_command.h": "c0f930112bf91a10e13ff12c95bb4c16ea2691698992274d1af492297f047c04",
+      "src/communication_command.c": "2983247831d50cdcfb4023780fb9ee23e665e5a69057fea75fc1b71a3861b03b",
+      "src/application/plaza_game.c": "649fb17f69399ccc12141fb1773d2d33fbda6fd107cb2637b36e2eb873e63583"
+    },
+    "layouts": {
+      "gPlazaGameMimeJrTopSelectionWeights": {
+        "source_size": 4
+      },
+      "gPlazaGameWobbuffetPopSelectionWeights": {
+        "source_size": 4
+      },
+      "gPlazaGameSwalotPlopSelectionWeights": {
+        "source_size": 4
+      },
+      "gPlazaGameResultsFlashSlots": {
+        "source_size": 4
+      },
+      "gPlazaGameResultsRankOffsets": {
+        "source_size": 8
+      },
+      "gPlazaGameTitleSlideOutEndX": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleSlideOutVelocity": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleColors": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleSlideInVelocity": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleRestX": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleBounceX": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleBounceOutVelocity": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleBounceBackVelocity": {
+        "source_size": 12
+      },
+      "gPlazaGameTitleSlideInStartX": {
+        "source_size": 12
+      },
+      "gPlazaGameResultsGraphicsModes": {
+        "source_size": 16
+      },
+      "gPlazaGamePlayerSpritePositions": {
+        "source_size": 2
+      },
+      "gPlazaGamePlayerSpriteY": {
+        "source_size": 14
+      },
+      "gPlazaGameSeatOrders": {
+        "source_size": 16
+      },
+      "gPlazaGameObjCharTransfer": {
+        "source_size": 16
+      },
+      "gPlazaGameEntryGraphicsModes": {
+        "source_size": 16
+      },
+      "gPlazaGameSignWindowSpritePositions": {
+        "source_size": 24
+      },
+      "gPlazaGameEntryBanks": {
+        "source_size": 40
+      },
+      "gPlazaGameResultsBanks": {
+        "source_size": 28
+      },
+      "gPlazaGameSeatRowsByCount": {
+        "source_size": 4
+      },
+      "gPlazaGameScreenRowsByCount": {
+        "source_size": 4
+      },
+      "gPlazaGameSeatAnimsByCount": {
+        "source_size": 4
+      },
+      "gPlazaGameSeatRows": {
+        "source_size": 8
+      },
+      "gPlazaGameSeatAnims": {
+        "source_size": 40
+      },
+      "gPlazaGameAltMessages": {
+        "source_size": 80
+      },
+      "gPlazaGameEntryBgTemplates": {
+        "source_size": 160
+      },
+      "gPlazaGameResultsBgTemplates": {
+        "source_size": 192
+      },
+      "gPlazaGameCommands": {
+        "source_size": 60,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56
+        ]
+      }
+    }
+  },
+  "asm/battle_main_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/battle_main_data.s": "ba1db809da44b3fe1d886cda1d724eb4cd051d583bc93229411ce8c6141f6e6d",
+      "src/battle/battle_main.c": "aaf11b0d6ca2965c6a106b2816967bc122565e860d65967b9b61d6a723697a63",
+      "include/battle/battle_main.h": "fcbdad20aca182fc245e3a6a2ea643dac7dd41e9b7e9d0f89748d3fe4f91c550",
+      "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf"
+    },
+    "layouts": {
+      "gBattleBgTemplates": {
+        "source_size": 84
+      },
+      "gBattleBgFillColors": {
+        "source_size": 276
+      },
+      "gDoublesBattlerTypes": {
+        "source_size": 4
+      }
+    }
+  },
+  "asm/battle_controller_opponent_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/battle_controller_opponent_data.s": "d64cf0fcbadd2d3fbeba51d5e3bf82239cd412ccfa4fcb23d635e7745cffcf6b",
+      "include/constants/pokemon.h": "64d5d0cee8001830298ec7175c1863165ffccdf037685a51ea27037273187c74",
+      "include/constants/sndseq.h": "8d6b246a5eca81b8711a410aa260cf5d87f4c33286955f6d0d0155ef3f28dca1",
+      "src/battle/battle_controller_opponent.c": "c5550b36e7db24296301cd54f2e4de9c51059ac02216ef9dc05edb538824cba9"
+    },
+    "layouts": {
+      "gOpponentBallKinds": {
+        "source_size": 8
+      },
+      "gOpponentRecallBallKinds": {
+        "source_size": 24
+      },
+      "gSafariFleeRates": {
+        "source_size": 26
+      },
+      "gBallColors": {
+        "source_size": 50
+      },
+      "gBattleEncounterFadeColors": {
+        "source_size": 92
+      },
+      "gBallThrowOffsets": {
+        "source_size": 360
+      },
+      "gBattleEncounterTerrains": {
+        "source_size": 24
+      }
+    },
+    "cpp_headers": [
+      "constants/pokemon.h",
+      "constants/sndseq.h"
+    ]
+  },
+  "asm/overlay_12_battle_command.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/overlay_12_battle_command.s": "aa4c6d072fa8e37c8f09176e4038b8a573ca5cd22812fc3038d3d9cf219ce530",
+      "include/constants/pokemon.h": "64d5d0cee8001830298ec7175c1863165ffccdf037685a51ea27037273187c74",
+      "include/constants/sndseq.h": "8d6b246a5eca81b8711a410aa260cf5d87f4c33286955f6d0d0155ef3f28dca1",
+      "include/constants/items.h": "20576a5dc04bd40cb1d212f1dad2de8e0083cf966e9535e3c10baac36cbd7193",
+      "include/constants/moves.h": "72c58ed137cd5737e5c5fb8f43dfe70904f6f09618c75ab7b92b97062444b6d9",
+      "include/constants/species.h": "a72ce01027d83aabd9ff61dc8f3afbbf43eee30b25c39b6e23ed42c5ac587732",
+      "include/constants/trainer_class.h": "311fdbde1f643a41a67f887f179bb0b5abfe7e1e212f3d669397ecb033f71622",
+      "src/battle/battle_command.c": "a114933389c816dacd8e8e000a890fef03c0de7a0f313b109f9d0581a23e7899"
+    },
+    "layouts": {
+      "sStandardBallCatchRates": {
+        "source_size": 4
+      },
+      "sTrumpCardPowerTable": {
+        "source_size": 8
+      },
+      "sProtectSuccessChance": {
+        "source_size": 8
+      },
+      "sFlailDamageTable": {
+        "source_size": 12
+      },
+      "sPickupTable2": {
+        "source_size": 24
+      },
+      "ov12_0226C324": {
+        "source_size": 24
+      },
+      "sLevelUpNewStatParams": {
+        "source_size": 24
+      },
+      "sLevelUpOldStatParams": {
+        "source_size": 24
+      },
+      "sLevelUpStatNameParams": {
+        "source_size": 24
+      },
+      "sLevelUpDiffStatParams": {
+        "source_size": 24
+      },
+      "sLowKickDamageTable": {
+        "source_size": 24
+      },
+      "sNaturePowerMoveTable": {
+        "source_size": 26
+      },
+      "sSafariCatchRateStages": {
+        "source_size": 26
+      },
+      "sMoonBallPokemon": {
+        "source_size": 28
+      },
+      "sPickupTable1": {
+        "source_size": 36
+      },
+      "sLevelUpNameplateTemplate": {
+        "source_size": 52
+      },
+      "sPokeIconTemplate": {
+        "source_size": 52
+      },
+      "sSecretPowerEffectTable": {
+        "source_size": 52
+      },
+      "sPrizeMoneyTbl": {
+        "source_size": 516
+      },
+      "sBattleScriptCommandTable": {
+        "source_size": 900,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224,
+          228,
+          232,
+          236,
+          240,
+          244,
+          248,
+          252,
+          256,
+          260,
+          264,
+          268,
+          272,
+          276,
+          280,
+          284,
+          288,
+          292,
+          296,
+          300,
+          304,
+          308,
+          312,
+          316,
+          320,
+          324,
+          328,
+          332,
+          336,
+          340,
+          344,
+          348,
+          352,
+          356,
+          360,
+          364,
+          368,
+          372,
+          376,
+          380,
+          384,
+          388,
+          392,
+          396,
+          400,
+          404,
+          408,
+          412,
+          416,
+          420,
+          424,
+          428,
+          432,
+          436,
+          440,
+          444,
+          448,
+          452,
+          456,
+          460,
+          464,
+          468,
+          472,
+          476,
+          480,
+          484,
+          488,
+          492,
+          496,
+          500,
+          504,
+          508,
+          512,
+          516,
+          520,
+          524,
+          528,
+          532,
+          536,
+          540,
+          544,
+          548,
+          552,
+          556,
+          560,
+          564,
+          568,
+          572,
+          576,
+          580,
+          584,
+          588,
+          592,
+          596,
+          600,
+          604,
+          608,
+          612,
+          616,
+          620,
+          624,
+          628,
+          632,
+          636,
+          640,
+          644,
+          648,
+          652,
+          656,
+          660,
+          664,
+          668,
+          672,
+          676,
+          680,
+          684,
+          688,
+          692,
+          696,
+          700,
+          704,
+          708,
+          712,
+          716,
+          720,
+          724,
+          728,
+          732,
+          736,
+          740,
+          744,
+          748,
+          752,
+          756,
+          760,
+          764,
+          768,
+          772,
+          776,
+          780,
+          784,
+          788,
+          792,
+          796,
+          800,
+          804,
+          808,
+          812,
+          816,
+          820,
+          824,
+          828,
+          832,
+          836,
+          840,
+          844,
+          848,
+          852,
+          856,
+          860,
+          864,
+          868,
+          872,
+          876,
+          880,
+          884,
+          888,
+          892,
+          896
+        ]
+      },
+      "sPickupWeightTable": {
+        "source_size": 12
+      },
+      "sHoneyGatherChanceTable": {
+        "source_size": 12
+      },
+      "sCamouflageTypeTable": {
+        "source_size": 13
+      }
+    },
+    "cpp_headers": [
+      "constants/pokemon.h",
+      "constants/sndseq.h",
+      "constants/items.h",
+      "constants/moves.h",
+      "constants/species.h",
+      "constants/trainer_class.h"
+    ]
+  },
+  "asm/battle_anim_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/battle_anim_data.s": "9219e36f27058a1531de263f8d21701f8cea86f8996183cbefd710b5d7ccdb7f",
+      "src/battle/battle_anim_effects.c": "a0da16074268f7d99898471d5b616fc37980981eb8413715fbe165704f2fb022",
+      "src/battle/battle_anim_funcs.c": "6253e915a349e9cd8a4de68718aa958f217f613f16eda91be7f54f460cffc925",
+      "src/battle/battle_controller_opponent.c": "c5550b36e7db24296301cd54f2e4de9c51059ac02216ef9dc05edb538824cba9",
+      "src/battle/battle_anim_ball.c": "1206595a2aaa78de22c8aaa6d0c44c9ab087603edfdfe17fd2610351a5af0113",
+      "src/battle/battle_command.c": "a114933389c816dacd8e8e000a890fef03c0de7a0f313b109f9d0581a23e7899",
+      "src/battle/battle_controller_player.c": "f7af28b3c492876a56c8a9621c463de71e27d2f04665253bd5abd77b63a7888b",
+      "src/battle/battle_022378C0.c": "03d03bb20391a23ab608b2d2e043ed35e4f31f8a595952d4dc0359ac6b955735",
+      "src/battle/battle_anim_emitter.c": "c8537ae6e93162bfae0d693c5a0589fd15d741f673c97a5deaf282dc01a05ea1",
+      "src/battle/battle_anim_util.c": "0cfd9277e25425a2e29517ebb54b9d80b587638489b7db4e6849d03fc6e17004",
+      "src/battle/battle_anim_battler_util.c": "4b3fb465af113528f94c0009323e9010479c23e2954acf1fcaa36fc382f4341d",
+      "src/battle/battle_system.c": "b769b5d6b1bff31fcb0b57df32372b86f3f5602fa165feac228614039eff835a",
+      "src/battle/battle_main.c": "aaf11b0d6ca2965c6a106b2816967bc122565e860d65967b9b61d6a723697a63",
+      "src/battle/battle_anim_system.c": "4283a7e9f24df715009d3f8438ed7a621f17432a594546babd20e899bf01db29",
+      "src/battle/battle_anim_move_effects.c": "d95cb1e9f196a6b2d53505d80e5a1f4ca811cf0f350819edf1671a1cb0fdc195",
+      "include/battle/battle_anim_battler_util.h": "cd3e7060dc76be1d0ab5fbf0dbd21ae68c22fbba9fd7aec20e7ab4a77ae5972f",
+      "include/battle/battle_anim_util.h": "bd56e665702d184883467f3e97b408020dd6804516f925eea05351c3bc0b46c7",
+      "include/battle/battle_anim_emitter.h": "a75be44ae73e593a827d278f2006a9e036bf4abf51466aa62abdd450f4642f71",
+      "include/battle/battle_022378C0.h": "588b2304520c86a74a7631b0d1c8b5480237921c8beda8dc39aeed427ec6f771",
+      "include/battle/battle_anim_move_effects.h": "d8f945789d52a0740ea49c47cd336d98adb55a65281596cb5f11ddc2aab6df11",
+      "include/battle/battle_anim_effects.h": "db6bc322a6252ec6eb0353c46029d278e0c811e1e6f503489ccc9e5c1660bd44",
+      "include/battle/battle_anim_funcs.h": "045f9af8a56306ab88655254cb16e5f25430c090603ee77784dd608b7307e314",
+      "include/battle/battle_anim_internal.h": "9605b01a101b20e1656f3d3d83abece18bd566568325fc754a7419f47a8261e5",
+      "include/battle/battle_anim_ball.h": "603abf2ab7c1ea1845dfa9b0229147f461706af1f6d137791facb924974df3d8"
+    },
+    "layouts": {
+      "gBattleAnimEmitterCallbackTable": {
+        "source_size": 92,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88
+        ],
+        "public": true
+      },
+      "gBattleAnimEmitterOffsetsX": {
+        "source_size": 72,
+        "public": true
+      },
+      "gBattleAnimEmitterOffsetsY": {
+        "source_size": 72,
+        "public": true
+      },
+      "gBattleAnimEmitterAxisBase": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattleAnimEmitterPositions_Mode31": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleAnimEmitterAxisPositions": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleAnimEmitterPositions_Mode32": {
+        "source_size": 56,
+        "public": true
+      },
+      "gBattleAnimEmitterPositions_Mode30": {
+        "source_size": 56,
+        "public": true
+      },
+      "gBattleAnimEmitterAxisRows": {
+        "source_size": 112,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode8": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode10": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode16": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode12": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode1": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode14": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode18": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterAxes_Mode20": {
+        "source_size": 432,
+        "public": true
+      },
+      "gBattleAnimEmitterFlagCallbacks": {
+        "source_size": 56,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52
+        ],
+        "public": true
+      },
+      "gBattleAnimEmitterFlagMasks": {
+        "source_size": 60,
+        "public": true
+      },
+      "gBattleAnimEmitterCameraAngles": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleAnimEmitterCameraCallbacks": {
+        "source_size": 36,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "public": true
+      },
+      "gBattleAnimBattlerScreenPositions": {
+        "source_size": 52,
+        "public": true
+      },
+      "gBattleAnimSpriteFuncTable": {
+        "source_size": 132,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128
+        ],
+        "public": true
+      },
+      "gBattleAnimFuncTable": {
+        "source_size": 336,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224,
+          228,
+          232,
+          236,
+          240,
+          244,
+          248,
+          252,
+          256,
+          260,
+          264,
+          268,
+          272,
+          276,
+          280,
+          284,
+          288,
+          292,
+          296,
+          300,
+          304,
+          308,
+          312,
+          316,
+          320,
+          324,
+          328,
+          332
+        ],
+        "public": true
+      },
+      "gBattleAnimSpriteOrbitStepX": {
+        "source_size": 88,
+        "public": true
+      },
+      "gBattleAnimSquashAfterimageDelays": {
+        "source_size": 4,
+        "public": true
+      },
+      "gBattleAnimPulseWhiteSteps": {
+        "source_size": 6,
+        "public": true
+      },
+      "gBattleAnimBlinkScaleFadeTimings": {
+        "source_size": 6,
+        "public": true
+      },
+      "gBattleAnimAttackerHopOffsets": {
+        "source_size": 9,
+        "public": true
+      },
+      "gBattleAnimCrossingSpritesArcSigns": {
+        "source_size": 10,
+        "public": true
+      },
+      "gBattleAnimLeapOffscreenSteps": {
+        "source_size": 10,
+        "public": true
+      },
+      "gBattleAnimAttackerHopScales": {
+        "source_size": 15,
+        "public": true
+      },
+      "gBattleAnimCrossingSpritesScales": {
+        "source_size": 15,
+        "public": true
+      },
+      "gBattleAnimAttackerStretchSteps": {
+        "source_size": 15,
+        "public": true
+      },
+      "gBattleAnimShakeBattlefieldAmplitudes": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattleAnimAttackerAfterimagePasses": {
+        "source_size": 26,
+        "public": true
+      },
+      "gBattleAnimRockAttackerSteps": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBattleAnimSlidingSpritePairDurations": {
+        "source_size": 4,
+        "public": true
+      },
+      "gBattleAnimBlinkCenterTimings": {
+        "source_size": 6,
+        "public": true
+      },
+      "gBattleAnimScatterTargets": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattleAnimSlidingSpritePairPositions": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattleAnimSlidingSpritePairTargets": {
+        "source_size": 32,
+        "public": true
+      },
+      "gBattleAnimScatterAreas": {
+        "source_size": 50,
+        "public": true
+      },
+      "gBattleAnimDarkSpriteDrawFlags": {
+        "source_size": 12,
+        "public": true
+      },
+      "gBattleAnimObjWindowBgFiles": {
+        "source_size": 76,
+        "public": true
+      },
+      "gBattleAnimFlippedCameraUp": {
+        "source_size": 12,
+        "public": true
+      },
+      "gBattleAnimBattlerTypePositions": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattleAnimEmitterPositions": {
+        "source_size": 2304,
+        "public": true
+      },
+      "gBallThrowStaticSpriteKinds": {
+        "source_size": 12,
+        "public": true
+      },
+      "gBallThrowFlashingKinds": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBallThrowModeFuncs": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ],
+        "public": true
+      },
+      "gBallThrowBallAnimFuncs": {
+        "source_size": 72,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28
+        ],
+        "public": true
+      },
+      "gBallThrowBounceSounds": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBallThrowSpinningKinds": {
+        "source_size": 44,
+        "public": true
+      },
+      "gBallThrowShakeOffsets": {
+        "source_size": 72,
+        "public": true
+      },
+      "gBallThrowCaptureStateFuncs": {
+        "source_size": 112,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108
+        ],
+        "public": true
+      },
+      "ov07_0223730C": {
+        "source_size": 2
+      },
+      "gBallThrowBounceSteps": {
+        "source_size": 126,
+        "public": true
+      },
+      "gBallAnimSealParticles": {
+        "source_size": 224,
+        "public": true
+      },
+      "gBallAnimBurstParticles": {
+        "source_size": 336,
+        "public": true
+      },
+      "gBallSpriteResources": {
+        "source_size": 448,
+        "public": true
+      },
+      "gBallSealEmitDelays": {
+        "source_size": 8,
+        "public": true
+      },
+      "gBattleAnimEmitterCounts": {
+        "source_size": 88,
+        "public": true
+      },
+      "gBattlerSlideInTargetX": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattlerPokepicPositions": {
+        "source_size": 72,
+        "public": true
+      },
+      "gStr_HaikeiSubSystemLaunchLimit": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleAnimNoBgPaletteAnimMsg": {
+        "source_size": 44,
+        "public": true
+      },
+      "gBattleAnimInvalidExFlagMsg": {
+        "source_size": 20,
+        "public": true
+      },
+      "gBattleAnimSpriteDrawPriorities": {
+        "source_size": 16,
+        "public": true
+      },
+      "_022378C0": {
+        "source_size": 0
+      }
+    }
+  },
+  "asm/battle_menu_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/battle_menu_data.s": "060b206005ddc0bfab4fc9e8b47cedad423dd3db630948de43110f84e5e1ba9c",
+      "src/battle/battle_party_menu.c": "9353b39744a536413e8cb2123e70a4d241927eb0552fafe1a0ae13c55d5773c1",
+      "src/battle/battle_bag_menu.c": "6813266206e5e47c0fa0bd72e23f71d1442e87482fa73337b6a05f93edc4dee9",
+      "include/battle/battle_bag_menu.h": "621ed3e33767adb952f6a7089be062faf8534714354df22a3bd8c24324b4c66b",
+      "include/battle/battle_party_menu.h": "57a2b63636e43757782a629e5a4d742ac26144cbe25912278156b2f720f262fc"
+    },
+    "layouts": {
+      "gBattlePartyWindowTemplates": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartyMoveNameMsgIds": {
+        "source_size": 20,
+        "public": true
+      },
+      "gBattlePartyMonNameMsgIds": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattlePartyMonMenuWindows": {
+        "source_size": 32,
+        "public": true
+      },
+      "gBattlePartyRestorePPWindows": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBattlePartyLearnMoveWindows": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattlePartyPartyListWindows": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattlePartyContestForgetMoveWindows": {
+        "source_size": 56,
+        "public": true
+      },
+      "gBattlePartyCheckMovesWindows": {
+        "source_size": 88,
+        "public": true
+      },
+      "gBattlePartyForgetMoveWindows": {
+        "source_size": 96,
+        "public": true
+      },
+      "gBattlePartyMoveDetailWindows": {
+        "source_size": 136,
+        "public": true
+      },
+      "gBattlePartySummaryWindows": {
+        "source_size": 392,
+        "public": true
+      },
+      "gBattlePartyForgetMoveTypeIconPos": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartyLearnMoveTypeIconPos": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartyCheckMovesTypeIconPos": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartyMoveDetailTypeIconPos": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartySummaryTypeIconPos": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattlePartyPage7CursorBoxes": {
+        "source_size": 24
+      },
+      "gBattlePartySpriteCapacities": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattlePartyPage2CursorBoxes": {
+        "source_size": 32
+      },
+      "gBattlePartyCheckMovesMoveIconPos": {
+        "source_size": 32,
+        "public": true
+      },
+      "gBattlePartyPage1CursorBoxes": {
+        "source_size": 32
+      },
+      "gBattlePartyPage4CursorBoxes": {
+        "source_size": 40
+      },
+      "gBattlePartyPageCursorBoxes": {
+        "source_size": 40,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "public": true
+      },
+      "gBattlePartyPage5CursorBoxes": {
+        "source_size": 40
+      },
+      "gBattlePartyLearnMoveMoveIconPos": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBattlePartyListIconPos": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattlePartyListStatusIconPos": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattlePartyPage0CursorBoxes": {
+        "source_size": 56
+      },
+      "gBattlePartyPage6CursorBoxes": {
+        "source_size": 56
+      },
+      "gBattlePartyPage3CursorBoxes": {
+        "source_size": 64
+      },
+      "gBattlePartySpriteTemplates": {
+        "source_size": 780,
+        "public": true
+      },
+      "gBattlePartyButton8Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton10Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton4Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton23Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton1Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton28Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton0Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton3Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton5Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton24Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton29Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton22Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton21Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton20Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton27Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton19Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton26Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton2Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton25Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton9Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton11Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton7Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton14Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButtonScrollAmounts": {
+        "source_size": 4,
+        "public": true
+      },
+      "gBattlePartyButton15Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton16Windows": {
+        "source_size": 4
+      },
+      "gBattlePartyButton17Windows": {
+        "source_size": 4
+      },
+      "gBattlePartySlotButtonScrollAmounts": {
+        "source_size": 4,
+        "public": true
+      },
+      "gBattlePartyButtonSpriteOffsets": {
+        "source_size": 6,
+        "public": true
+      },
+      "gBattlePartySlotButtonSpriteOffsets": {
+        "source_size": 6,
+        "public": true
+      },
+      "gBattlePartyButtonWindowLists": {
+        "source_size": 136,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132
+        ],
+        "public": true
+      },
+      "gBattlePartyButtonRects": {
+        "source_size": 136,
+        "public": true
+      },
+      "gBattleBagUseItemHitboxes": {
+        "source_size": 12,
+        "public": true
+      },
+      "gBattleBagGraphicsModes": {
+        "source_size": 16,
+        "public": true
+      },
+      "gBattleBagBgTemplateSub0": {
+        "source_size": 28,
+        "public": true
+      },
+      "gBattleBagBgTemplateSub1": {
+        "source_size": 28,
+        "public": true
+      },
+      "gBattleBagBgTemplateSub2": {
+        "source_size": 28,
+        "public": true
+      },
+      "gBattleBagPocketMenuHitboxes": {
+        "source_size": 28,
+        "public": true
+      },
+      "gBattleBagItemListHitboxes": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBattleBagMessageWindowTemplate": {
+        "source_size": 8,
+        "public": true
+      },
+      "gBattleBagUseItemWindows": {
+        "source_size": 32,
+        "public": true
+      },
+      "gBattleBagPocketMenuWindows": {
+        "source_size": 40,
+        "public": true
+      },
+      "gBattleBagItemEntryMsgIds": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleBagItemListWindows": {
+        "source_size": 208,
+        "public": true
+      },
+      "gBattleBagPocketOrder": {
+        "source_size": 8,
+        "public": true
+      },
+      "ov08_02225CE8": {
+        "source_size": 16
+      },
+      "gBattleBagPageCursorBoxes": {
+        "source_size": 12,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "public": true
+      },
+      "gBattleBagPage2CursorBoxes": {
+        "source_size": 16
+      },
+      "gBattleBagSpriteCapacities": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattleBagTutorialFingerPos": {
+        "source_size": 24,
+        "public": true
+      },
+      "gBattleBagPage0CursorBoxes": {
+        "source_size": 48
+      },
+      "gBattleBagItemListIconPos": {
+        "source_size": 48,
+        "public": true
+      },
+      "gBattleBagPage1CursorBoxes": {
+        "source_size": 56
+      },
+      "gBattleBagSpriteTemplates": {
+        "source_size": 120,
+        "public": true
+      },
+      "gBattleBagButton3Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton15Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton1Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton4Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton2Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton0Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton18Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton19Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton22Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton9Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton8Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton7Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton6Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton10Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton20Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton11Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton17Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButton21Windows": {
+        "source_size": 4
+      },
+      "gBattleBagButtonRects": {
+        "source_size": 68,
+        "public": true
+      },
+      "gBattleBagButtonWindowLists": {
+        "source_size": 92,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88
+        ],
+        "public": true
+      }
+    }
+  },
+  "asm/wifi_plaza_map_rodata.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/wifi_plaza_map_rodata.s": "dc4fe188bd9071f8caebfb1421e3647845d6ae933fb1189e9ec03c15346957dd",
+      "src/wifi_plaza/wifi_plaza_event.c": "1f9033c61ec9c0e4fc75900afe658e61bf45a1c5ea5a57043718a653092e1404",
+      "src/wifi_plaza/wifi_plaza_instrument.c": "a76f3608ced824d35d9e7492edf5f19be44d8577e362ebb505f160beeae9e507",
+      "include/wifi_plaza/wifi_plaza_event.h": "437c3bf15b025693b45339dc698b9133ac4e2237e492bdd8e296a0a5492226cc",
+      "include/wifi_plaza/wifi_plaza_light.h": "202158d758aea0a66de83c4b7f9b2c8e0dde22c3a196e3dfbafc14488a7a947d",
+      "include/wifi_plaza/wifi_plaza_instrument.h": "114afddad23b59d157a5f6df13f576be9f0892fc0bb532787ec79bc3ed2e0db6"
+    },
+    "layouts": {
+      "gWiFiPlazaInstrumentBalloonHeights": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Bell01": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Cymbal02": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Drum01": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Bell02": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Cymbal03": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Cymbal01": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBurstUpdateFuncs": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Drum02": {
+        "source_size": 24,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Bell03": {
+        "source_size": 12,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBursts_Drum03": {
+        "source_size": 12,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBurstStartFuncs": {
+        "source_size": 12,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "public": true
+      },
+      "gWiFiPlazaInstrumentSparkleStarts": {
+        "source_size": 48,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentSparkleFalls": {
+        "source_size": 48,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentUpdateFuncs": {
+        "source_size": 108,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104
+        ],
+        "public": true
+      },
+      "gWiFiPlazaInstrumentInitFuncs": {
+        "source_size": 108,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104
+        ],
+        "public": true
+      },
+      "gWiFiPlazaInstrumentStartSEs": {
+        "source_size": 104,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentSignalSteps": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentSignalNextSteps": {
+        "source_size": 144,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentModelDescs": {
+        "source_size": 36,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentPopModel1": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentPopModel2": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentPopModel3": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentPopModel0": {
+        "source_size": 16,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBalloonModel0": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBalloonModel1": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBalloonModel2": {
+        "source_size": 84,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBurstModels01": {
+        "source_size": 16,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBurstModels02": {
+        "source_size": 16,
+        "public": true
+      },
+      "gWiFiPlazaInstrumentBurstModels03": {
+        "source_size": 16,
+        "public": true
+      },
+      "gWiFiPlazaLight1Colors": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaLightColorSets": {
+        "source_size": 60,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds3": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds4": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds2": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds5": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds1": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds6": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventModelIds0": {
+        "source_size": 8,
+        "public": true
+      },
+      "gWiFiPlazaEventPhase4Steps": {
+        "source_size": 1,
+        "public": true
+      },
+      "gWiFiPlazaEventPhase4HideSteps": {
+        "source_size": 15,
+        "public": true
+      },
+      "gWiFiPlazaEventEffectPhaseUpdates": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ],
+        "public": true
+      },
+      "gWiFiPlazaEventPhase5Thresholds": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventPhase5AnimSpeeds": {
+        "source_size": 20,
+        "public": true
+      },
+      "gWiFiPlazaEventEffectPhaseStarts": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ],
+        "public": true
+      },
+      "gWiFiPlazaEventPhase3PropGroups": {
+        "source_size": 32,
+        "public": true
+      },
+      "gWiFiPlazaEventPhase3PropIds": {
+        "source_size": 20,
+        "public": true
+      },
+      "gWiFiPlazaMoverMarkerTags": {
+        "source_size": 4,
+        "public": true
+      },
+      "gWiFiPlazaEventWobbleSteps": {
+        "source_size": 8,
+        "pointers": [
+          0,
+          4
+        ],
+        "public": true
+      },
+      "gWiFiPlazaEventWobbleInits": {
+        "source_size": 8,
+        "pointers": [
+          0,
+          4
+        ],
+        "public": true
+      },
+      "gWiFiPlazaMoverSounds": {
+        "source_size": 60,
+        "public": true
+      }
+    }
+  },
+  "asm/lock_capsule_card_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/lock_capsule_card_data.s": "ceae9c1bac2db56784710faf70f5b82ee3634cbddebebcf13d09e117520acee0",
+      "include/application/main_menu/wonder_card_album.h": "d436a931493fb08dc4c546d9ba364d9aafa0e76e96751bf57c7b2fb8d2f6b2af",
+      "include/application/main_menu/lock_capsule_card.h": "7d1e150b4bff235a1439e1ec1ab0943e9120e75a14391c17456ffcf1f5854795",
+      "src/application/main_menu/lock_capsule_card.c": "46d990982e87f0ed232a3719fcd1ed2e12ff429c6dc4c6fa57fbc8f56836a09d"
+    },
+    "layouts": {
+      "gLockCapsuleCardTextBoxes": {
+        "source_size": 544,
+        "pointers": [
+          36,
+          84,
+          132,
+          180,
+          228,
+          276,
+          324,
+          372,
+          420,
+          468,
+          516
+        ],
+        "padding": {
+          "36": 4,
+          "84": 4,
+          "132": 4,
+          "180": 4,
+          "228": 4,
+          "276": 4,
+          "324": 4,
+          "372": 4,
+          "420": 4,
+          "468": 4,
+          "516": 4
+        }
+      }
+    }
+  },
+  "asm/nitrocrypto_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/nitrocrypto_data.s": "0398958b8b20e33eb0588db420f06012f8700c9b36f768812a2e894b41f426cf",
+      "include/library/nitrocrypto_bn.h": "34d0541a5278b5fab52baac0719b2a87cb9e8453fa837a02acc41ee251bb92c8",
+      "lib/src/nitrocrypto_bn_exp.c": "b4f1cd897114efc271ff9e326d446d1c19650c6812b62d3e9e7093ab1a0c8715",
+      "lib/src/nitrocrypto_bn_num_bits.c": "9c348fc396bbf531743590375562a789d48f3fea1366a6da81328fe1fab3f330"
+    },
+    "layouts": {
+      "TEMPNAME__$p16": {
+        "source_size": 0
+      },
+      "gNitroCryptoExpP16": {
+        "source_size": 12
+      },
+      "TEMPNAME__$p2": {
+        "source_size": 0
+      },
+      "gNitroCryptoExpP2": {
+        "source_size": 12
+      },
+      "TEMPNAME__$p4": {
+        "source_size": 0
+      },
+      "gNitroCryptoExpP4": {
+        "source_size": 12
+      },
+      "bits$7808": {
+        "source_size": 16
+      },
+      "shift": {
+        "source_size": 64
+      },
+      "shift_val": {
+        "source_size": 0
+      },
+      "gNitroCryptoShiftVal": {
+        "source_size": 28,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24
+        ],
+        "pointer_addends": {
+          "0": 63,
+          "4": 62,
+          "8": 60,
+          "12": 56,
+          "16": 48,
+          "20": 32
+        }
+      }
+    }
+  },
+  "asm/pokedex_rodata.o": {
+    "reviewed": true,
+    "inputs": {
+      "asm/pokedex_rodata.s": "ded88f38f29a2a0d568d91783abe560770f7e3c2ca7c7b07ab0b7bd797320489",
+      "include/application/pokedex/pokedex_internal.h": "b9ae4715a0be0903067823275f1c61fc30f5b1cff6afdef6b17ccf5dce6c89e3",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
+      "include/obj_char_transfer.h": "f13e3242b90e1f91fff50a2840636ca3c338baa467e863b8b981edeaed4f5e14",
+      "src/application/pokedex/pokedex_forms.c": "4159bd2fe33eb935a5a54280157566cc6893360ca05119b7f43cd1dc6a8a0b5c",
+      "src/application/pokedex/pokedex_area_sprites.c": "708d084cf4be1666c01f902922d574c07c3b8d06c5f29b6cfd21f8c85f670295",
+      "src/application/pokedex/pokedex_sprites.c": "a6ee92ec1b9628db6a0b9e5976470c73e91aec88b0e1feb06df2d36310c61bb3",
+      "src/application/pokedex/pokedex_size_check.c": "37e12f3f2165aabe64a4edc3501f522bc1a138aa7ceb2d8a5221d09bc8ecc891"
+    },
+    "layouts": {
+      "gPokedexAreaScrollbarLengths": {
+        "source_size": 12
+      },
+      "gPokedexScrollbarLengths": {
+        "source_size": 24
+      },
+      "gPokedexMonPicSpriteRect": {
+        "source_size": 16
+      },
+      "gPokedexMonPicBgRect": {
+        "source_size": 16
+      },
+      "gPokedexFormScrollbarSizeSteps": {
+        "source_size": 18
+      },
+      "gPokedexAreaScrollbarSizeSteps": {
+        "source_size": 18
+      },
+      "gPokedexOamCharTransferParam": {
+        "source_size": 20
+      },
+      "gSpriteResourceCapacities": {
+        "source_size": 24
+      },
+      "gListScrollbarSizeThresholds": {
+        "source_size": 24
+      },
+      "gPokedexAreaMarkerSizes": {
+        "source_size": 24
+      },
+      "gPokedexOamManagerParam": {
+        "source_size": 32
+      },
+      "gMonIconSpriteTemplate": {
+        "source_size": 52
+      },
+      "gTypeIconSpriteTemplate": {
+        "source_size": 52
+      },
+      "gFootprintSpriteTemplate": {
+        "source_size": 52
+      },
+      "gLanguageIconSpriteTemplate": {
+        "source_size": 52
+      },
+      "gAreaMarkerSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokedexBodyTypeIconSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokedexSearchSprite43Template": {
+        "source_size": 52
+      },
+      "gPokedexEntryTabCursorSpriteTemplate": {
+        "source_size": 52
+      },
+      "gWeightCheckAnimFuncs": {
+        "source_size": 68,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64
+        ]
+      },
+      "gWeightCheckDiffRanges": {
+        "source_size": 68
+      },
+      "gPokedexAreaSpriteTemplates": {
+        "source_size": 416
+      },
+      "gPokedexSizeCheckSpriteTemplates": {
+        "source_size": 468
+      },
+      "gPokedexListSpriteTemplates": {
+        "source_size": 416
+      },
+      "gPokedexLanguageIconSpriteTemplate": {
+        "source_size": 52
+      },
+      "gPokedexListSprite9Template": {
+        "source_size": 52
+      },
+      "gPokedexListSprite10Template": {
+        "source_size": 52
+      },
+      "gPokedexMonPicSpriteTemplate0": {
+        "source_size": 52
+      },
+      "gPokedexMonPicSpriteTemplate1": {
+        "source_size": 52
+      },
+      "gPokedexFormsSpriteTemplates": {
+        "source_size": 988
+      },
+      "gPokedexSearchSpriteTemplates": {
+        "source_size": 1352
+      },
+      "gPokedexSearchSprite26Template": {
+        "source_size": 52
+      },
+      "gPokedexSearchSprite27Template": {
+        "source_size": 52
+      },
+      "gPokedexMonPicBgTilemap": {
+        "source_size": 100
+      }
+    }
+  },
+  "lib/NitroDWC/asm/dwc_lobby_data.o": {
+    "reviewed": true,
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_lobby_data.s": "2f2a15327bb3b8c0b4c2bb73bf8e9652cd860597c466067ed8114278f852de13",
+      "include/lobby_chat_internal.h": "f2a2b89dd52162f599faa399c7b8222656c749c04223db9ee2887f5cb6397e2e",
+      "include/ppw_lobby_work.h": "d38ef4ba397cf48da63633d5fc17c362386251ec6c24581515a534c4fe0c3106",
+      "lib/include/dwc/chat_internal.h": "f5fe7a323beabe9efe48773dde3df5b04af24373550ecae336a20b358745a521",
+      "lib/include/dwc/chat_connection.h": "18dcdb54b8d7888feb34a51cfeed81cd269e2134cd5e8fa463073e85b349a4ac",
+      "src/chat/chat_main.c": "e7c16d32ddd652d70321496df8f96e4d1e3b014efd54d53c865f16102194f3d8",
+      "src/chat/chat_socket.c": "6465735595eb9b8c718fecd0087a28678c6cbd37405e567454191be824cebc62",
+      "src/lobby/lobby_chat_on_enum_users.cpp": "be05941ecf5f3bf3558bb529762c7cdb76d07c928289d53c63b1c37352300da6",
+      "src/lobby/lobby_chat_timer_connect_timeout.c": "a050ba9e7ad3e0a8bcd948854e5e407ab82fb3b4db21b73b68c44722859bd459",
+      "src/lobby/ppw_lobby_get_channel_data.cpp": "94c4f90c6a7d19ceafe62dc4729490e20b3c2547ec5763feebff644e83604273",
+      "src/lobby/ppw_lobby_update_my_profile.cpp": "71bc8e8c473ba97b7a8f5d49a3d50e9f8236867f090aaea38f4e7cfcd4f4b1f2",
+      "src/lobby/lobby_chat_channel_queries.cpp": "29977108a43aab2cf36144544c684dd94eb950d50c06a516922267942cff1bec",
+      "src/lobby/lobby_chat_initialize.cpp": "a3fca559c390cbf69efd4d0c2734cf0b2589385cf51b706d867be696a82b10fe",
+      "src/lobby/ppw_lobby_recruit.c": "b753a8d9bd8c7e0796a684b628fd3305ef6b092bb8a0fcad13a18b85bb4a8bb0",
+      "src/lobby/lobby_chat_get_channel_mode_async.cpp": "210b37ba1261e57b32a432c72491f4b40e24fa12bf84acd317fd933a865c3bad",
+      "src/lobby/ppw_lobby_initialize.cpp": "bdb0dad679622f8b7ed8a272d683ebd43eb9713992baf7e07329c479bee01969",
+      "src/lobby/lobby_event_deque_map_allocate.c": "4d66ead59f24be4cf62b21d9938fe805b408f0ca4b8192b725c91dae701f1250",
+      "src/lobby/ppw_lobby_join_sub_channel_async.cpp": "374798a8a978f9b541d289b94dcf9995d82fa8f114d01d4f27552b1e48490d16",
+      "src/lobby/lobby_chat_callbacks.c": "24c0dc3c70c42819b2e5e852d75aff1ed6dd59da1df748f80d837a58a9db7055",
+      "src/lobby/lobby_chat_on_disconnected.c": "fc7e9993897054efa63a6774a0de066a0e97deeb4221c780ee5303f7cfe6caef",
+      "src/lobby/ppw_lobby_schedule_progress.c": "eda2705a4f89094160a426f29dcfea4c813dd9a194efd3f1552fa5fbe240a61e",
+      "src/lobby/lobby_chat_manager_init.cpp": "8b6ea8dce71386fe46954ca8cf1f237fc17978ccc818b4cf1d2d8227b0a5156d",
+      "src/lobby/lobby_event_deque_map_buffer.c": "e4debdb7af975a6cbcaab34ce0c7475bbb653e35fa1536a39d1bf45023383282",
+      "src/lobby/lobby_event_deque_add_back_capacity.cpp": "14f61c2b56a6d0c4603b5470b44a1ca13de85159bb40ff6034825f804983a436",
+      "src/lobby/ppw_lobby.cpp": "ad8de6c54db36fd14766440891b9eade0b7af4ad4e11e1e1c8481461af750fa2",
+      "src/lobby/lobby_chat_enter_channel.cpp": "70f60f3c3c2950a868065d7424a08f33466ce7c3ac0c0dd09a767757c34d64a4",
+      "src/lobby/lobby_chat_set_channel_mode.c": "6c79a40deb21bd51e8c597e98552e7e5ff3d51a6be86cfcfb1fe3556444f081a",
+      "src/lobby/lobby_event_deque_capacity.cpp": "b16831a601be7c81d2766ef9193aedc287bae4bff02ca4ad22f1c660626d5580",
+      "src/lobby/ppw_lobby_get_time_info.c": "465f0a0deb9b69369c30f364c2df2ab21b8e27a89aaf87cec8ef220cdf7f79a9",
+      "src/lobby/ppw_lobby_leave_sub_channel.cpp": "a305151efb45547b52a8a0ce74fa646d17c7af3a20355f2342f21aec4c2336d8",
+      "src/lobby/ppw_lobby_shutdown.c": "434bb79295b86e6496cb6581027cd01f57fc9718b9190bffef1b2cb5c6077b7f",
+      "src/lobby/lobby_chat_is_in_channel.c": "a69f5220de39261957f51d797b47c550833363d0ff81f2768566944ffd8fb397",
+      "src/lobby/ppw_lobby_get_channel_name.c": "fe53f396773ee38a5bc333f4c240abb6e992de192b75af374f4435f56402efb3",
+      "src/lobby/lobby_chat_process.cpp": "13a3ffbf15e607b7ebadcf87c24eca9d668919a98103050c41a156deabaf1846",
+      "src/lobby/lobby_mem.c": "f5265783de611e16bac49850cb48eee714779be7d51c0a4bb7749113f1159392",
+      "src/lobby/ppw_lobby_start_recruit.cpp": "042517909adeb7bd516b023cc5b4d193345a332f15b0807a8087f9ee6f2a8392",
+      "src/lobby/ppw_lobby_process.cpp": "0c0d35203050cedfa47015cd2769c21d94a97c86eda12234538422bce41332fe",
+      "src/lobby/ppw_lobby_set_channel_data.c": "07ada790c4bd4405e29956084f3e211a594f1518088abd5f67552c3a76cc8432",
+      "src/lobby/ppw_lobby_get_work.c": "bd04e1ce8bfdb8ffe66ec420d1381114e736192bea91a2ca118638efbf4564d8",
+      "src/lobby/lobby_chat_channel_commands.c": "d5e7c1767eb6da66bddb0d9545033156747cf105c6653c99a6aaef0540b7aee4",
+      "src/lobby/lobby_chat_on_private_message.c": "632e0918ae621f36f49b201e2f1422a999975568f3346297ae5e70cd30d005e8",
+      "src/lobby/lobby_chat_shutdown.c": "f5c162bca4d54bf93ea2a83eab0efc0ac8cb078ec8ae38852c59d1c06bcaac98",
+      "src/lobby/lobby_chat_on_enum_channels.cpp": "3241d6001687120fa5792ad653e333ce18d2ffbe863a25b2fac2f6798a88ce8d",
+      "src/lobby/ppw_lobby_get_sub_channel_state.c": "2367444595857c189e9bf7c23078ed94a36d879f7860b7c93094627a37038ae3",
+      "src/lobby/lobby_chat_channel_callbacks.cpp": "bc73895f360e9f602fb58375c7560c49a2075ac1919ce585a894dfb23fdf953f"
+    },
+    "layouts": {
+      "gPPWLobbyChannelNamePrefixes": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gPPWLobbyClockChannelMode": {
+        "source_size": 32
+      },
+      "gPPWLobbyNewsChannelMode": {
+        "source_size": 32
+      },
+      "gPPWLobbyFootChannelMode": {
+        "source_size": 32
+      },
+      "gPPWLobbyMainChannelMode": {
+        "source_size": 32
+      },
+      "gPPWLobbyMainChannelSecretMode": {
+        "source_size": 32
+      },
+      "gLobbyStr_GSP": {
+        "source_size": 8
+      },
+      "gLobbyChatPrefixNames": {
+        "source_size": 48,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ]
+      },
+      "gStatsUploadStr_0123456789abcdef": {
+        "source_size": 17
+      },
+      "gStatsUploadStr_0123456789abcdef_2": {
+        "source_size": 17
+      },
+      "gPPWLobbyWork": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gLobbyDequeMaxSizeInit": {
+        "source_size": 4
+      },
+      "gLobbyEventDequeMapBufferMaxSizeSet": {
+        "source_size": 4
+      },
+      "gLobbyEventDequeMapMaxSizeSet": {
+        "source_size": 4
+      },
+      "gPPWLobbyCurrentRequest": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gPPWLobbyFinishedRequest": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gLobbyChatManager": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gLobbyChatNextRequestId": {
+        "source_size": 4
+      },
+      "gLobbyMemOutOfMemoryHandler": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gLobbyMemReserve": {
+        "source_size": 8,
+        "native_size": 16,
+        "alignment": 8
+      },
+      "ciCookieBuffer": {
+        "source_size": 4
+      },
+      "ciCookieCounter": {
+        "source_size": 4
+      },
+      "ciSendfBuffer": {
+        "source_size": 4096
+      },
+      "gStatsUploadRandomState": {
+        "source_size": 8,
+        "alignment": 8
+      }
+    }
+  },
+  "lib/NitroDWC/asm/dwc_lobby_chat_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_lobby_chat_data.s": "08075ead2bf28dca9086cfe113f6053731865c9f13e89498fa6ecce8873c3355",
+      "src/lobby/ppw_lobby_players_all_have_profiles.cpp": "f8e17e033aa2466ee4b415a08c3e71bef5cef96283e2d3e3d78a29182bd2306e",
+      "src/lobby/lobby_chat_remove_channel.cpp": "008cf358b0a00e92c198d5135ce6e3d68a1077688d69e3708ef3169f9dab227f",
+      "include/lobby_chat_manager.h": "e8e377caf80b3956e183cd2052d789babb446335210ef6748e9407f315ddcad7",
+      "include/lobby_tree.h": "abb7c22c25e4f41ccd18c5879b032b0bff767d8f1a24c5402baabeed82132647",
+      "include/ppw_lobby_work.h": "d38ef4ba397cf48da63633d5fc17c362386251ec6c24581515a534c4fe0c3106",
+      "src/lobby/ppw_lobby_player_has_profiles.c": "1208b1fcde209e75858bb1015d37a3094247557558b2537f37263a831e22b970"
+    },
+    "layouts": {
+      "ov45_02255200": {
+        "source_size": 12,
+        "member_pointers": [
+          4
+        ],
+        "padding": {
+          "4": 4
+        }
+      },
+      "ov45_02255358": {
+        "source_size": 16,
+        "member_pointers": [
+          8
+        ]
+      }
+    },
+    "blocker": "Direct zero-adjustment member constants have a reusable native ARM64 encoding, with original scalar prefixes preserved. The complete chat member remains blocked: private MapNode count/root/first coordinates are 28/32/40 versus native canonical 48/56/64; Root.channels is 128 versus canonical channelMap 184. Data-only member-pointer conversion cannot repair these compiled consumer views.",
+    "abi_views": [
+      {
+        "object": "LobbyChannelMapNode",
+        "consumer": "native canonical entry.channel.users.count",
+        "fields": [
+          {
+            "guest": [
+              28,
+              4
+            ],
+            "native": [
+              48,
+              4
+            ],
+            "kind": "integer"
+          },
+          {
+            "guest": [
+              32,
+              4
+            ],
+            "native": [
+              56,
+              8
+            ],
+            "kind": "pointer"
+          },
+          {
+            "guest": [
+              36,
+              4
+            ],
+            "native": [
+              64,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ]
+      },
+      {
+        "object": "LobbyChannelMapNode",
+        "consumer": "lobby_chat_remove_channel.cpp MapNode.isize",
+        "fields": [
+          {
+            "guest": [
+              28,
+              4
+            ],
+            "native": [
+              28,
+              4
+            ],
+            "kind": "integer"
+          },
+          {
+            "guest": [
+              32,
+              4
+            ],
+            "native": [
+              32,
+              8
+            ],
+            "kind": "pointer"
+          },
+          {
+            "guest": [
+              36,
+              4
+            ],
+            "native": [
+              40,
+              8
+            ],
+            "kind": "pointer"
+          }
+        ]
+      },
+      {
+        "object": "LobbyChatManager",
+        "consumer": "canonical LobbyChatManager.channelMap",
+        "fields": [
+          {
+            "guest": [
+              128,
+              4
+            ],
+            "native": [
+              184,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      },
+      {
+        "object": "LobbyChatManager",
+        "consumer": "lobby_chat_remove_channel.cpp Root.channels",
+        "fields": [
+          {
+            "guest": [
+              128,
+              4
+            ],
+            "native": [
+              128,
+              4
+            ],
+            "kind": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "lib/NitroDWC/asm/dwc_bm_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_bm_data.s": "5a43ceeeb99f6bd6b0ea2056c1d1feccdd866155e66d90cf87d546c2f1c1be26",
+      "lib/include/dwc/dwc_bm_internal.h": "4d1ffce45a34cddb385d28c76b5854afffedd7b30357eff6ede6ff8169226787",
+      "lib/NitroDWC/src/dwc_bm.c": "f1f9989acb1a9ffbdbe4f9771e75aaa11c7aa1bfc176900b9b08cc19cb0d2129",
+      "lib/NitroDWC/src/dwc_bm_init.c": "b04aff56c542c54c825350d230a5a4341ab271107e582200c0c8bd97cd74191c",
+      "lib/NitroDWC/src/dwc_nvram.c": "5f48e26a2ce2c2af068b1cfb22514cf54399413b6ffd891bd82fad068b40fad1",
+      "lib/NitroDWC/src/dwc_auth_wifi_id.c": "59a2fe514ca0599829f0153310fbb1ff5c30cf12c780760967e90f1f40109d57"
+    },
+    "layouts": {
+      "gDwcBmNvramState": {
+        "source_size": 12,
+        "alignment": 4
+      },
+      "Wifi": {
+        "source_size": 44,
+        "alignment": 4
+      },
+      "Work": {
+        "source_size": 32,
+        "alignment": 4
+      },
+      "DWCi_SETTING_NONE": {
+        "source_size": 4,
+        "alignment": 4
+      },
+      "DWCi_util_wifiid_exctable": {
+        "source_size": 8,
+        "alignment": 4
+      },
+      "DWCi_util_wifiid_ttable": {
+        "source_size": 16,
+        "alignment": 4
+      }
+    }
+  },
+  "lib/NitroDWC/asm/dwc_account_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/dwc_account_data.s": "48f02cb377f3cbedeff143cbb73ab358782be0de8d67436e6ce18393114ec920",
+      "lib/NitroDWC/src/dwc_account.c": "28f0b35ba8b0dce4f95f3cb2d1da10bd0d34298cd44879ffddf73b2ab39e1ff1",
+      "lib/include/dwc/dwc_account_internal.h": "8ccf3af256a21446b9aa8097adeffca9a16b9bdd379eb4bede1cd2eb3f66e2cb"
+    },
+    "layouts": {
+      "gDwcAccBase32Digits": {
+        "source_size": 36,
+        "alignment": 4
+      },
+      "gDwcAccUserNameFormat": {
+        "source_size": 13,
+        "alignment": 4
+      }
+    }
+  },
+  "asm/spin_trade_flow_data.o": {
+    "inputs": {
+      "asm/spin_trade_flow_data.s": "206627c68c5057beb8ad98de692afa9863235aef1036447bd393d8ba83902a1b",
+      "src/spin_trade_flow.c": "78122df08d47aef4d3e79df22bd4ffee846ce9f9de9760b7c9bb03b7c154ef87",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
+    },
+    "layouts": {
+      "gOverlayTemplate_SpinTradeGroup": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gOverlayTemplate_SpinTrade": {
+        "source_size": 16,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "edits": [
+          {
+            "offset": 16,
+            "expected": [],
+            "replacement": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "gSpinTradeFlowStates": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      }
+    },
+    "constants": {
+      "FS_OVERLAY_ID(OVY_85)": 85
+    }
+  },
+  "asm/spin_trade_data.o": {
+    "inputs": {
+      "asm/spin_trade_data.s": "8e1211b6f09e96d45922dd0b6a2ac8756fef6ff523843ea18d47c5eb6205f109",
+      "src/application/spin_trade/spin_trade_app.c": "3a7167d21045752aa7c2b1dcc16d409faae6ba90dde61b8376493db7133c2fd4",
+      "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf",
+      "include/gf_gfx_planes.h": "84fd426ae4d02ef8902859102ce70f42a8de07a5df66adb968d3f1ffe6440ddd",
+      "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0"
+    },
+    "layouts": {
+      "gSpinTradeBonusRanges2P": {
+        "source_size": 4,
+        "alignment": 4
+      },
+      "gSpinTradeBonusRanges3P": {
+        "source_size": 8,
+        "alignment": 4
+      },
+      "gSpinTradeMsgWindowTemplate": {
+        "source_size": 8,
+        "alignment": 4
+      },
+      "gSpinTradeBonusRanges5P": {
+        "source_size": 16,
+        "alignment": 4
+      },
+      "gSpinTradeBonusRanges4P": {
+        "source_size": 8,
+        "alignment": 4
+      },
+      "gSpinTradeEggDropStateFuncs": {
+        "source_size": 12,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8
+        ]
+      },
+      "gSpinTradeCountdownSounds": {
+        "source_size": 16,
+        "alignment": 4
+      },
+      "gSpinTradeGraphicsModes": {
+        "source_size": 16,
+        "alignment": 4
+      },
+      "gSpinTradeNameWindowTemplates2P": {
+        "source_size": 16,
+        "alignment": 4
+      },
+      "gSpinTradeMarkerModelIds": {
+        "source_size": 20,
+        "alignment": 4
+      },
+      "gSpinTradeOamCharTransferParam": {
+        "source_size": 20,
+        "alignment": 4
+      },
+      "gSpinTradeMarkerAnimIds": {
+        "source_size": 20,
+        "alignment": 4
+      },
+      "gSpinTradeResObjCounts": {
+        "source_size": 24,
+        "alignment": 4
+      },
+      "gSpinTradeNameWindowTemplates": {
+        "source_size": 24,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "gSpinTradeMachineModelIds": {
+        "source_size": 24,
+        "alignment": 4
+      },
+      "gSpinTradeMachineAngleOffsets": {
+        "source_size": 24,
+        "alignment": 4
+      },
+      "gSpinTradeNameWindowTemplates3P": {
+        "source_size": 24,
+        "alignment": 4
+      },
+      "gSpinTradeBg1Template": {
+        "source_size": 28,
+        "alignment": 4
+      },
+      "gSpinTradeBg2Template": {
+        "source_size": 28,
+        "alignment": 4
+      },
+      "gSpinTradeBg3Template": {
+        "source_size": 28,
+        "alignment": 4
+      },
+      "gSpinTradeSubBg2Template": {
+        "source_size": 28,
+        "alignment": 4
+      },
+      "gSpinTradeSubBg3Template": {
+        "source_size": 28,
+        "alignment": 4
+      },
+      "gSpinTradeNameWindowTemplates4P": {
+        "source_size": 32,
+        "alignment": 4
+      },
+      "gSpinTradeOamManagerParam": {
+        "source_size": 32,
+        "alignment": 4
+      },
+      "gSpinTradeNameWindowTemplates5P": {
+        "source_size": 40,
+        "alignment": 4
+      },
+      "gSpinTradeGraphicsBanks": {
+        "source_size": 40,
+        "alignment": 4
+      },
+      "gSpinTradeBonusBerryRanges": {
+        "source_size": 4,
+        "alignment": 4
+      },
+      "gSpinTradeBonusBerryRangeEnds": {
+        "source_size": 44,
+        "alignment": 4
+      },
+      "gSpinTradeBonusAreas": {
+        "source_size": 48,
+        "alignment": 8,
+        "pointers": [
+          4,
+          12,
+          20,
+          28,
+          36,
+          44
+        ],
+        "padding": {
+          "4": 4,
+          "12": 4,
+          "20": 4,
+          "28": 4,
+          "36": 4,
+          "44": 4
+        }
+      },
+      "gSpinTradeSlotAngles": {
+        "source_size": 60,
+        "alignment": 4
+      },
+      "gSpinTradeDropTargetAngles": {
+        "source_size": 60,
+        "alignment": 4
+      },
+      "gSpinTradeStateFuncs": {
+        "source_size": 216,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212
+        ]
+      },
+      "gSpinTradeHoverOffsets": {
+        "source_size": 64,
+        "alignment": 4
+      }
+    }
   }
 }

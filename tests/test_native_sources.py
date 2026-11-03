@@ -25,6 +25,21 @@ def semantic_adapt(relative, original):
 
 
 class NativeSourceAdaptations(unittest.TestCase):
+    def test_explicit_compiler_arithmetic_operations(self):
+        for relative, (_, declaration, old, new) in native.COMPILER_OPERATIONS.items():
+            original = (GAME / relative).read_text()
+            adapted = semantic_adapt(relative, original)
+            self.assertNotIn(declaration, adapted)
+            self.assertNotIn(old, adapted)
+            self.assertEqual(adapted.count(new), 1)
+            # The only additional edit in disc catch is its existing qsort declaration.
+            expected = original.replace(declaration, "").replace(old, new)
+            if relative in native.QSORT_DECLARATIONS:
+                expected = expected.replace(native.QSORT_DECLARATIONS[relative], "#include <nitro/math/qsort.h>")
+            self.assertEqual(adapted, expected)
+            with self.assertRaisesRegex(ValueError, 'Compiler arithmetic source drift'):
+                native.adapt(relative, original + "\n", GAME)
+
     def test_eight_case_adaptations(self):
         relative = 'src/application/pokedex/pokedex_main_seq.c'
         original = (GAME / relative).read_text()

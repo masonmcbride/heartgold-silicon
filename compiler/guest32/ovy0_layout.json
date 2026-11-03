@@ -1,0 +1,36 @@
+{
+  "inputs": {
+    "lib/NitroDWC/src/available_check_poll.c": "2f7c00b54a64e3c44d0c85a8bf48e44133b78e7cd1ad19a0acb25f803f584046",
+    "lib/NitroDWC/src/available_check_poll.alias-map.json": "4394cae37160ff84d9a20e42629fcdf278eae1ddf516c11d8436b74431d01716",
+    "lib/NitroDWC/src/ap_connect.c": "c18173889587609b14cc993dc51c4982b4abf0a8a4693b0b068f29112e9d4601"
+  },
+  "groups": [
+    {
+      "extent": 92,
+      "members": [
+        {
+          "name": "ov00_0221B0D0",
+          "offset": 0,
+          "view_size": 92
+        },
+        {
+          "name": "sNatSock",
+          "unit": "lib/NitroDWC/src/available_check_poll.c",
+          "offset": 4,
+          "view_size": 4
+        },
+        {
+          "name": "ov00_0221B0D8",
+          "offset": 8,
+          "view_size": 84
+        }
+      ],
+      "aliases": {
+        "ov00_0221B0DC": 12,
+        "ov00_0221B0E0": 16,
+        "ov00_0221B0E5": 21
+      },
+      "evidence": "Original sidecar puts ov00_0221B0D8 at section+8; original IState and poll source agree on state+0, socket+4, and work+8."
+    }
+  ]
+}

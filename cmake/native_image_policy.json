@@ -13,13 +13,31 @@
     "c_source_prefixes": [
       "src/",
       "lib/NitroSystem/src/",
-      "lib/src/spl_"
+      "lib/src/spl_",
+      "lib/libCPS/src/"
     ],
     "c_sources": [
       "lib/NitroDWC/src/dwc_account.c",
       "lib/NitroWiFi/src/soc.c",
       "lib/NitroWiFi/src/soc_inet.c",
-      "lib/NitroWiFi/src/soc_gethostbyname.c"
+      "lib/NitroWiFi/src/soc_gethostbyname.c",
+      "lib/NitroWiFi/src/socl_close.c",
+      "lib/NitroWiFi/src/socl_command.c",
+      "lib/NitroWiFi/src/socl_list.c",
+      "lib/NitroWiFi/src/socl_read.c",
+      "lib/NitroWiFi/src/socl_resolver.c",
+      "lib/NitroWiFi/src/socl_socket.c",
+      "lib/NitroWiFi/src/socl_ssl.c",
+      "lib/NitroWiFi/src/socl_startup.c",
+      "lib/NitroWiFi/src/socl_status.c",
+      "lib/NitroWiFi/src/socl_write.c",
+      "lib/NitroWiFi/src/wcm.c",
+      "lib/NitroWiFi/src/wcm_aplist.c",
+      "lib/NitroWiFi/src/wcm_callback.c",
+      "lib/NitroWiFi/src/wcm_control.c",
+      "lib/NitroWiFi/src/wcm_cpsif.c",
+      "lib/NitroDWC/src/dwc_bm.c",
+      "lib/NitroDWC/src/dwc_bm_init.c"
     ]
   }
 }

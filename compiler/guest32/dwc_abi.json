@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "globals": {"gDwcMatchKeys": {"offset": 4096, "size": 1848}},
+  "calls": {
+    "DWC_AllocEx": {
+      "native": "g32_dwc_alloc",
+      "args": [{"type":"i32"}, {"type":"i32"}, {"type":"i32"}],
+      "result": {"type":"ptr", "role":"owned", "bytes":0, "nullable":true}
+    },
+    "DWC_Free": {
+      "native": "g32_dwc_free",
+      "args": [{"type":"i32"}, {"type":"ptr", "role":"consume", "bytes":0, "nullable":true}, {"type":"i32"}],
+      "result": {"type":"void"}
+    },
+    "MIi_CpuClear32": {
+      "native": "g32_mi_clear32",
+      "args": [{"type":"i32"}, {"type":"ptr", "role":"borrow", "bytes_arg":2, "nullable":false}, {"type":"i32"}],
+      "result": {"type":"void"}
+    }
+  },
+  "exports": {}
+}

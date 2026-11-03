@@ -22,6 +22,12 @@ def recipe(game, original, digest=None):
     layouts = contract['layouts']
     for layout in layouts.values():
         if 'padding' in layout: layout['padding']={int(k):v for k,v in layout['padding'].items()}
+    if contract.get('abi_views'):
+        from native_abi import require_consistent
+        try:
+            require_consistent(contract['abi_views'])
+        except ValueError as error:
+            raise ValueError(contract.get('blocker','')+'\n'+str(error)) from error
     if 'blocker' in contract:
         raise ValueError(contract['blocker'])
     source=game/(original[:-2]+'.s')
@@ -30,6 +36,6 @@ def recipe(game, original, digest=None):
         import subprocess
         text='\n'.join(line for line in source.read_text().splitlines() if not line.startswith('#include'))
         text=''.join('#include "'+header+'"\n' for header in contract['cpp_headers'])+text
-        text=subprocess.run(['clang','-E','-P','-x','assembler-with-cpp','-I',str(game/'include'),'-'],
+        text=subprocess.run(['clang','-E','-P','-DPM_ASM','-x','assembler-with-cpp','-I',str(game/'include'),'-'],
                             input=text,text=True,capture_output=True,check=True).stdout
     return native_blocks(source,layouts,text,contract.get('constants'))

@@ -15,6 +15,7 @@ endforeach()
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     "${hg_overlay_manifest}" "${CMAKE_CURRENT_LIST_DIR}/native_assembly_data.py"
     "${CMAKE_CURRENT_LIST_DIR}/native_image_graph.py" "${CMAKE_CURRENT_LIST_DIR}/native_data_ir.py"
+    "${CMAKE_CURRENT_LIST_DIR}/native_abi.py"
     "${CMAKE_CURRENT_LIST_DIR}/native_data_layouts.py" "${CMAKE_CURRENT_LIST_DIR}/native_data_layouts.json"
     "${CMAKE_CURRENT_LIST_DIR}/native_image_policy.json")
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_overlay_manifest}"
@@ -169,6 +170,22 @@ set_tests_properties(native_data_ir native_image_graph PROPERTIES
 
 add_test(NAME native_link_evidence COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_link_evidence.py")
+add_test(NAME shared_provider_native COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_shared_provider_native.py")
+set_tests_properties(shared_provider_native PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME native_abi COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_abi.py")
+set_tests_properties(native_abi PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME dwc_backup_native COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_dwc_backup_native.py")
+set_tests_properties(dwc_backup_native PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME spin_trade_native_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_spin_trade_data.py")
+set_tests_properties(spin_trade_native_data PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
 add_test(NAME native_follow_data COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_follow_data.py")
 set_tests_properties(native_overlay_manifest native_overlay_data native_link_evidence native_follow_data
