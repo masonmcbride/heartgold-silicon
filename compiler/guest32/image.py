@@ -12,6 +12,8 @@ import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_image_graph import parse_manifest,source_record
+from incremental import run as cached_run
+from original_layout import anchored_sections,verified_sections
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -21,9 +23,11 @@ def main():
     p.add_argument('--llvm-bin',type=Path,required=True)
     p.add_argument('--lowerer',type=Path,required=True)
     p.add_argument('--report-only',action='store_true')
+    p.add_argument('--image',default='OVY_0',help='Original overlay name from main.lsf')
     a=p.parse_args();a.game=a.game.resolve();a.build=a.build.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     a.lowerer=a.lowerer.resolve();a.llvm_bin=a.llvm_bin.resolve()
-    image=parse_manifest(a.game/'main.lsf')['OVY_0']
+    image=parse_manifest(a.game/'main.lsf')[a.image]
+    if image['kind']!='Overlay':p.error('--image must name an original overlay')
     records=[source_record(a.game,m) for m in image['objects']]
     def member(record):
         r=dict(record);source=a.game/r['source'];r['sha256']=hashlib.sha256(source.read_bytes()).hexdigest()
@@ -42,30 +46,39 @@ def main():
               '-DSDK_ARM9','-DSDK_CODE_ARM','-DSDK_FINALROM','-DHEARTGOLD','-DENGLISH','-Wno-error=incompatible-pointer-types',
               '-I'+str(a.build/'include'),'-I'+str(a.game/'include'),'-I'+str(a.game/'include/library'),
               '-I'+str(a.game/'lib/include'),'-I'+str(a.game/'lib/NitroSDK/include'),'-I'+str(a.build/'generated/files'),
-              '-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes','-S','-emit-llvm',str(source),'-o',str(ir)]
-        run=subprocess.run(args,capture_output=True,text=True)
+              '-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes','-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
+        run=cached_run(args,[ir],inputs=[source],depfile=str(ir)+'.d')
         (work/'frontend.log').write_text(run.stdout+run.stderr);r.update(frontend=run.returncode==0,command=args)
         if run.returncode:
             r.update(compiled=False,issues=[dict(kind='frontend',source=str(source),line=0,llvm='',reason=run.stderr)]);return r
         diag=work/'operations.json'
-        run=subprocess.run([str(a.lowerer),str(ir),str(work/'native.ll'),'--diagnose',str(diag)],capture_output=True,text=True)
+        run=cached_run([str(a.lowerer),str(ir),str(work/'native.ll'),'--diagnose',str(diag)], [diag], inputs=[ir])
         if run.returncode:raise RuntimeError(run.stderr)
         r['issues']=json.loads(diag.read_text())['issues']
         r['description']=json.loads(diag.read_text());r['compiled']=False
         return r
     with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(member,records))
     from native_data_ir import parse,raw_layout,integer
-    position=4096;placements={};sections=[];functions={};data_names=set()
+    position=4096;placements={};original_placements={};sections=[];functions={};data_names=set()
+    historical_layouts=json.loads(Path(__file__).with_name('original_data_layouts.json').read_text())
     for r in members:
         if r['kind']!='assembly' or not r.get('parsed'):continue
         raw,labels,refs=raw_layout(parse(a.game/r['source']))
+        original_sections=anchored_sections(raw,labels,image['id'])
+        if r['source'] in historical_layouts:
+            proof=historical_layouts[r['source']]
+            assert r['sha256']==proof['source_sha256'],('original data source changed',r['source'])
+            original_sections.update(verified_sections(raw,labels,refs,proof))
         for section,data in raw.items():
             position=(position+15)&~15;base=position;position+=len(data)
             for name,(s,off) in labels.items():
                 if s==section:
                     if name in placements:raise ValueError('duplicate original data definition: '+name)
                     placements[name]=dict(offset=base+off,size=len(data)-off);data_names.add(name)
+                    if section in original_sections:
+                        original_placements[name]=dict(offset=original_sections[section]['address']+off,size=len(data)-off)
             sections.append(dict(object=r['object'],section=section,offset=base,data=data,
+                original_placement=original_sections.get(section),
                 references=[dict(offset=off,expression=expr,width=width) for (s,off),(expr,width) in refs.items() if s==section]))
         r['public_labels']=[b.symbol for b in parse(a.game/r['source']) if b.public]
     definitions={}
@@ -115,6 +128,8 @@ def main():
         return x==y or (isinstance(x,str) and isinstance(y,str) and x.startswith('i') and y.startswith('i') and int(x[1:])<=32 and int(y[1:])<=32)
     # Original ARM register contracts are data, not function-name rules in the compiler.
     register_spec=json.loads((Path(__file__).with_name('ovy0_registers.json')).read_text())
+    if image['name']=='OVY_38':
+        register_spec=json.loads((Path(__file__).with_name('ovy38_registers.json')).read_text())
     for relative,digest in register_spec['source_hashes'].items():
         assert hashlib.sha256((a.game/relative).read_bytes()).hexdigest()==digest,('register contract source changed',relative)
     register_edges=[]
@@ -125,6 +140,11 @@ def main():
             proof=register_spec['original_functions']['gti2Listen']
             instructions=[x.strip() for x in proof.splitlines() if x.startswith('\t') and not x.startswith('\tarm_func_')]
             assert instructions==['str r1, [r0, #0x20]','bx lr'],instructions
+        if edge['mode']=='branch-value':
+            assert '\tldr r1, [sb, #0xc]\n\tldr r5, [sb, #4]\n\tstr r1, [sp, #4]' in proof
+            wrapper=register_spec['original_functions'][edge['target']]
+            assert '\tmov r1, #0\n\tmov r2, r1\n\tbx ip' in wrapper
+            assert 'ldr r0,' not in wrapper
         assert edge['evidence'] in proof,('register evidence mismatch',edge)
         edge['source']=str(a.game/edge['source']);register_edges.append(edge)
     for f in codes:
@@ -169,14 +189,14 @@ def main():
     contract=json.loads((ROOT/'compiler/guest32/ovy0_layout.json').read_text())
     for relative,expected in contract['inputs'].items():
         assert hashlib.sha256((a.game/relative).read_bytes()).hexdigest()==expected,relative
-    for group in contract['groups']:
+    for group in contract['groups'] if image['name']=='OVY_0' else []:
         keys=[str(a.game/m['unit'])+'|'+m['name'] if 'unit' in m else m['name'] for m in group['members']]
         base=min(own_globals[k]['offset'] for k in keys)
         assert sum(own_globals[k]['size'] for k in keys)==group['extent']
         assert max(own_globals[k]['offset']+own_globals[k]['size'] for k in keys)==base+group['extent']
         for k,m in zip(keys,group['members']):own_globals[k]=dict(offset=base+m['offset'],size=m['view_size'])
         for name,off in group['aliases'].items():placements[name]=dict(offset=base+off,size=group['extent']-off)
-    catalog=a.out/'image.json';catalog.write_text(json.dumps(dict(codes=codes,register_edges=register_edges,static_end=position,assembly_globals=placements,c_globals=own_globals),indent=2)+'\n')
+    catalog=a.out/'image.json';catalog.write_text(json.dumps(dict(codes=codes,register_edges=register_edges,static_end=position,assembly_globals=placements,c_globals=own_globals,original_assembly_globals=original_placements),indent=2)+'\n')
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
     def lower(r):
         if not r.get('frontend'):return r
@@ -185,14 +205,14 @@ def main():
             if g['key'] in own_globals:globals[g['name']]=own_globals[g['key']]
             elif g['name'] in own_globals:globals[g['name']]=own_globals[g['name']]
         abi=work/'abi.json';abi.write_text(json.dumps(dict(version=1,globals=globals,calls={},exports={})))
-        run=subprocess.run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--abi',str(abi),'--native-ir',str(native),
-                            '--image',str(catalog),'--guest-externals','--prefix','guest32_'],capture_output=True,text=True)
+        run=cached_run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--abi',str(abi),'--native-ir',str(native),
+                            '--image',str(catalog),'--guest-externals','--prefix','guest32_'],[work/'native.ll'],inputs=[work/'guest.ll',abi,native,catalog])
         (work/'lower.log').write_text(run.stdout+run.stderr)
         r['blocking_diagnostic']=run.stderr
         if not run.returncode:
             verify=subprocess.run([str(a.llvm_bin/'opt'),'-passes=verify','-disable-output',str(work/'native.ll')],capture_output=True,text=True)
             if verify.returncode:raise RuntimeError(verify.stderr)
-            run=subprocess.run([str(a.llvm_bin/'clang'),'-O2','-c',str(work/'native.ll'),'-o',str(work/'native.o')],capture_output=True,text=True)
+            run=cached_run([str(a.llvm_bin/'clang'),'-O2','-c',str(work/'native.ll'),'-o',str(work/'native.o')],[work/'native.o'],inputs=[work/'native.ll'])
             (work/'object.log').write_text(run.stdout+run.stderr);r['compiled']=run.returncode==0
             r['blocking_diagnostic']=run.stderr if run.returncode else ''
         return r
@@ -204,7 +224,8 @@ def main():
             data_sources[r['object']].append('const uint32_t guest32_address_'+name+'='+str(placements[name]['offset'])+';')
     unresolved=set()
     for idx,s in enumerate(sections):
-        lines=data_sources[s['object']];name='guest32_data_'+str(idx)
+        lines=data_sources[s['object']]
+        name=('guest32_data_' if image['id']==0 else 'guest32_image_'+str(image['id'])+'_data_')+str(idx)
         (a.out/s['object']/(s['section'].lstrip('.')+'.bin')).write_bytes(s['data'])
         lines.append('static const unsigned char '+name+'[]={'+','.join(map(str,s['data']))+'};')
         body=['void '+name+'_load(void *ram){unsigned char *p=g32_resolve(ram,'+str(s['offset'])+','+str(len(s['data']))+',0);memcpy(p,'+name+','+str(len(s['data']))+');']
@@ -221,7 +242,7 @@ def main():
         if r['kind']!='assembly' or not r.get('parsed'):continue
         work=a.out/r['object'];source=work/'data.c'
         source.write_text('#include <stdint.h>\n#include <string.h>\nextern void *g32_resolve(void*,uint32_t,uint32_t,uint32_t);\n'+'\n'.join(data_sources[r['object']])+'\n')
-        run=subprocess.run([str(a.llvm_bin/'clang'),'-arch','arm64','-O2','-c',str(source),'-o',str(work/'native.o')],capture_output=True,text=True)
+        run=cached_run([str(a.llvm_bin/'clang'),'-arch','arm64','-O2','-c',str(source),'-o',str(work/'native.o'),'-MD','-MF',str(work/'data.d')],[work/'native.o'],inputs=[source],depfile=work/'data.d')
         (work/'object.log').write_text(run.stdout+run.stderr);r['represented']=run.returncode==0
         r['issues']=[] if r['represented'] else r['issues']
     (a.out/'data-relocations.json').write_text(json.dumps(dict(external_guest_coordinates=sorted(unresolved),sections=[{k:v for k,v in s.items() if k!='data'} for s in sections]),indent=2)+'\n')
@@ -231,6 +252,19 @@ def main():
                  issues=dict(Counter(i['kind'] for r in members for i in r['issues'])))
     summary['complete_compilation']=summary['compiled']==summary['c_total'] and summary['data_represented']==summary['data_total'] and not constraints
     (a.out/'coverage.json').write_text(json.dumps(dict(image=image,summary=summary,members=members),indent=2)+'\n')
+    # Root CMake must observe transitive frontend headers too; receipts only
+    # help once this driver has actually been scheduled.
+    dependencies = {Path(__file__).resolve(), Path(__file__).with_name('incremental.py').resolve()}
+    dependencies.add(Path(__file__).with_name('original_layout.py').resolve())
+    dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
+    dependencies.add(Path(__file__).with_name('ovy38_registers.json' if image['name']=='OVY_38' else 'ovy0_registers.json').resolve())
+    for receipt in a.out.rglob('*.receipt.json'):
+        dependencies.update(Path(p) for p in json.loads(receipt.read_text())['inputs']
+                            if not Path(p).is_relative_to(a.out))
+    def dep_escape(path):
+        return str(path).replace('\\', '\\\\').replace(' ', '\\ ').replace('#', '\\#').replace('$', '$$')
+    (a.out/'image.d').write_text(dep_escape(a.out/'complete.stamp')+': '+
+                               ' '.join(dep_escape(p) for p in sorted(dependencies))+'\n')
     print(json.dumps(summary))
     if summary['complete_compilation']:(a.out/'complete.stamp').write_text('manifest-complete guest compilation\n')
     if not summary['complete_compilation'] and not a.report_only:raise SystemExit(1)

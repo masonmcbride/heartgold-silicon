@@ -9,6 +9,7 @@ import sys
 from collections import defaultdict
 from native_image_graph import graph, write
 from native_overlay_link import symbols
+from native_provider_registry import provider, registry
 
 
 def executable_diagnostic(text, executable):
@@ -52,7 +53,7 @@ def collect(build, model, supplemental=()):
     return candidates
 
 
-def report(game, build, out, supplemental=(), diagnostic=None, nm='nm'):
+def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_images=(), provider_manifests=()):
     model = graph(game,build)
     candidates = collect(build, model, supplemental)
     paths = sorted(set().union(*candidates.values())) if candidates else []
@@ -184,7 +185,88 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm'):
                   unknown_symbols=full_unknown, default_executable_symbols=default, native_main_providers={s:paths for s,paths in external.items() if paths},
                   system_providers={s:sorted(ps) for s,ps in system.items() if ps},
                   default_executable_link_status=default_link_status,default_executable_link_error=default_link_error)
-    write(out/'graph.json',json.dumps(result,indent=2,sort_keys=True)+'\n')
+    records, requests = [], []
+    for name, image in images.items():
+        for member in image['members']:
+            for path in member['artifacts']:
+                for symbol in artifacts[path]['definitions']:
+                    records.append(provider(symbol[1:], symbol, name, path, 'native-arm64',
+                                            original_member=member['object']))
+        requests.extend(provider(s[1:], s, name, 'observed image members', 'native-arm64')
+                        for s in image['imports'])
+    for symbol, paths in external.items():
+        for path in paths:
+            records.append(provider(symbol[1:], symbol, 'main', path, 'native-arm64'))
+    for symbol, paths in system.items():
+        for path in paths:
+            records.append(provider(symbol[1:], symbol, 'host-system', path, 'native-arm64'))
+    guest_summary = []
+    for directory in guest32_images:
+        directory = directory.resolve()
+        coverage = json.loads((directory/'coverage.json').read_text())
+        catalog = json.loads((directory/'image.json').read_text())
+        name = coverage['image']['name']
+        if (name not in model['images'] or
+            coverage['image']['objects'] != model['images'][name]['objects'] or
+            not coverage['summary']['complete_compilation']):
+            raise ValueError('Guest image does not have complete original membership: '+str(directory))
+        archive = directory/('libheartgold_overlay_'+str(coverage['image']['id'])+'.a')
+        defined = symbols(archive, nm=nm)
+        # Catalog mappings are authoritative; prefix stripping alone would
+        # confuse code, four-byte address metadata and native data pointers.
+        function_catalog = {'_'+f['native']: f for f in catalog['codes'] if not f['local']}
+        mappings = {s: f['name'] for s, f in function_catalog.items()}
+        for symbol in sorted(defined):
+            original = mappings.get(symbol, symbol[1:])
+            records.append(provider(original, symbol, name, archive, 'guest32',
+                                    signature_validation='not admitted by inventory',
+                                    original_llvm_signature=({k: function_catalog[symbol][k] for k in ('params', 'return', 'varargs')}
+                                                             if symbol in function_catalog else None)))
+        for group in ('c_globals', 'assembly_globals'):
+            for identity, placement in catalog[group].items():
+                records.append(provider(identity, None, name, directory/'image.json',
+                                        'guest32-arena', guest_address=placement['offset'],
+                                        guest_size=placement['size']))
+        required = symbols(archive, True, nm=nm)-defined
+        requests.extend(provider(mappings.get(s, s[len('_guest32_'):] if s.startswith('_guest32_') else s[1:]), s,
+                                 name, archive, 'guest32') for s in sorted(required))
+        guest_summary.append(dict(image=name, emitted_definitions=len(defined),
+                                  unresolved_exported_identities=len(required),
+                                  c_global_addresses=len(catalog['c_globals']),
+                                  assembly_global_addresses=len(catalog['assembly_globals']),
+                                  scope='Private guest arena coordinates; no native ABI or lifecycle admission'))
+    import hashlib
+    for manifest_path in provider_manifests:
+        manifest = json.loads(manifest_path.read_text())
+        for family in manifest['families'].values():
+            archive = Path(family['archive'])
+            if hashlib.sha256(archive.read_bytes()).hexdigest() != family['sha256']:
+                raise ValueError('Provider archive changed: '+str(archive))
+            actual = symbols(archive, nm=nm)
+            if actual != set(family['symbols']):
+                raise ValueError('Provider symbol inventory changed: '+str(archive))
+            for member, expected in family['original_members'].items():
+                source = game/Path(member).with_suffix('.c')
+                if hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+                    raise ValueError('Provider original source changed: '+str(source))
+            for symbol, member in family['symbols'].items():
+                owners = [n for n, i in model['images'].items() if member in i['objects']]
+                if len(owners) != 1:
+                    raise ValueError('Ambiguous original provider ownership: '+member)
+                original=family.get('original_identities',{}).get(symbol,symbol[1:])
+                records.append(provider(original, symbol, owners[0], archive,
+                                        family['abi_representation'], original_member=member,
+                                        abi_admission=False))
+            if family['abi_representation']=='guest32':
+                member_owners={n for n,i in model['images'].items() if any(m in i['objects'] for m in family['original_members'])}
+                if len(member_owners)!=1:raise ValueError('Ambiguous guest provider ownership')
+                for symbol in sorted(symbols(archive,True,nm=nm)-actual):
+                    original=family.get('import_identities',{}).get(symbol,symbol[1:])
+                    requests.append(provider(original,symbol,next(iter(member_owners)),archive,'guest32'))
+    inventory = registry(list(images), records, requests)
+    inventory['guest32'] = guest_summary
+    write(out/'provider-registry.json',json.dumps(inventory,indent=2,sort_keys=True)+'\n')
+    write(out/'graph.json' ,json.dumps(result,indent=2,sort_keys=True)+'\n')
     lines = ['# Native whole-image artifact inventory', '', result['scope'], '',
              'Counts describe this invocation and its explicit object evidence. A TBD is never a linked image.', '',
              *[f'- {k}: {v}' for k,v in summary.items()], '',
@@ -205,5 +287,7 @@ if __name__=='__main__':
     p.add_argument('--objects',type=Path,action='append',default=[])
     p.add_argument('--diagnostic',type=Path)
     p.add_argument('--nm',default='nm')
+    p.add_argument('--guest32-image', type=Path, action='append', default=[])
+    p.add_argument('--provider-manifest', type=Path, action='append', default=[])
     a=p.parse_args()
-    print(json.dumps(report(a.game.resolve(),a.build.resolve(),a.out.resolve(),a.objects,a.diagnostic,a.nm),sort_keys=True))
+    print(json.dumps(report(a.game.resolve(),a.build.resolve(),a.out.resolve(),a.objects,a.diagnostic,a.nm,a.guest32_image,a.provider_manifest),sort_keys=True))

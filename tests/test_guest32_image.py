@@ -82,12 +82,21 @@ def main():
     address=max(f['address'] for f in catalog['codes'])+4
     for ir,desc in inputs.values():
         for f in desc['functions']:
-            if f['key'] in by_key:continue
-            f=copy.deepcopy(f);f['address']=address;address+=4
+            previous=by_key.get(f['key'])
+            # Match production catalog selection: a declaration must not mask
+            # the actual definition's parameter/register contract.
+            if previous and (previous['definition'] or not f['definition']):continue
+            f=copy.deepcopy(f)
+            f['address']=previous['address'] if previous else address
+            if not previous:address+=4
             f['used_flat']=[True]*len(f['params']);f['coalesce']=False
             f['native']='guest32_'+f['name']
             if f['local']:f['native']='guest32_local_'+hashlib.sha256(f['key'].encode()).hexdigest()[:16]+'_'+f['name']
-            by_key[f['key']]=f;catalog['codes'].append(f)
+            if previous:
+                previous.clear();previous.update(f)
+                by_key[f['key']]=previous
+            else:
+                by_key[f['key']]=f;catalog['codes'].append(f)
     for f in catalog['codes']:
         if f['name']=='LiveIn':f['params']=['i32'];f['used_flat']=[True]
     for ir,desc in inputs.values():

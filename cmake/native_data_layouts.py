@@ -3,7 +3,7 @@ from functools import lru_cache
 import hashlib
 import json
 from pathlib import Path
-from native_data_ir import native_blocks
+from native_data_ir import native_blocks, parse, raw_layout
 
 METADATA = Path(__file__).with_suffix('.json')
 
@@ -38,4 +38,9 @@ def recipe(game, original, digest=None):
         text=''.join('#include "'+header+'"\n' for header in contract['cpp_headers'])+text
         text=subprocess.run(['clang','-E','-P','-DPM_ASM','-x','assembler-with-cpp','-I',str(game/'include'),'-'],
                             input=text,text=True,capture_output=True,check=True).stdout
+    records = parse(source,text,contract.get('constants'))
+    if 'expected_blocks' in contract and len(records) != contract['expected_blocks']:
+        raise ValueError('Original block count changed: '+original)
+    if 'expected_relocations' in contract and len(raw_layout(records)[2]) != contract['expected_relocations']:
+        raise ValueError('Original relocation count changed: '+original)
     return native_blocks(source,layouts,text,contract.get('constants'))

@@ -1,0 +1,40 @@
+{
+  "lib/NitroDWC/asm/http_data.s": {
+    "provenance": {
+      "commit": "cb87c94469c54aac982bf465df746bd4cc61ba69",
+      "path": "lib/NitroDWC/asm/overlay_38_arm.s",
+      "sha256": "b8173d81dead9917dcc09d8b0f96f7020b62168e38d71e6f02687a8520d3e7fa",
+      "section_sha256": "40f019a26c0b288ba3372f878ca7f4ac6702945b04bb2ed1a8084a7eb588822e"
+    },
+    "source_sha256": "c3421ba8e29dbc6e6b5a0c8cf1dfe1319b812be0933b0a45f571c90c0a918e5b",
+    "sections": {
+      ".data": {
+        "address": 35803448,
+        "size": 3788,
+        "bytes_sha256": "f8c797f3ac32460098b18947babbbf17d589ae80e0731e8e451677e2b580687c",
+        "relocations": [
+          {
+            "offset": 3052,
+            "width": 4,
+            "address": 35806520
+          },
+          {
+            "offset": 3060,
+            "width": 4,
+            "address": 35806600
+          },
+          {
+            "offset": 3068,
+            "width": 4,
+            "address": 35806496
+          },
+          {
+            "offset": 3304,
+            "width": 4,
+            "address": 35806500
+          }
+        ]
+      }
+    }
+  }
+}

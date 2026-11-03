@@ -32,7 +32,7 @@ struct CodeSymbol {
   std::vector<bool> used;
 };
 struct RegisterEdge {
-  std::string source,function,target,previous,mode; unsigned line,argument;
+  std::string source,function,target,previous,mode; unsigned line,argument,offset;
 };
 struct Image {
   std::vector<RegisterEdge> registerEdges;
@@ -41,7 +41,7 @@ struct Image {
     auto B=MemoryBuffer::getFile(Path);if(!B)reject("image catalog file");
     auto J=json::parse((*B)->getBuffer());if(!J){consumeError(J.takeError());reject("image catalog JSON");}
     if(auto *E=J->getAsObject()->getArray("register_edges"))for(auto &V:*E){auto &O=*V.getAsObject();
-      registerEdges.push_back({O.getString("source")->str(),O.getString("function")->str(),O.getString("target")->str(),O.getString("previous").value_or("").str(),O.getString("mode")->str(),(unsigned)*O.getInteger("line"),(unsigned)O.getInteger("argument").value_or(0)});
+      registerEdges.push_back({O.getString("source")->str(),O.getString("function")->str(),O.getString("target")->str(),O.getString("previous").value_or("").str(),O.getString("mode")->str(),(unsigned)*O.getInteger("line"),(unsigned)O.getInteger("argument").value_or(0),(unsigned)O.getInteger("offset").value_or(0)});
     }
     auto *A=J->getAsObject()->getArray("codes");if(!A)reject("image code catalog");
     for(auto &V:*A){auto &O=*V.getAsObject();SmallVector<Type*> Args;

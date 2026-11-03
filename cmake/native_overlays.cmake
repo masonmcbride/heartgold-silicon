@@ -41,12 +41,24 @@ endforeach()
 
 get_target_property(overlay_sdk_targets nitro_sdk INTERFACE_LINK_LIBRARIES)
 set(overlay_main_targets heartgold_main heartgold_runtime heartgold_sound_storage native_host ${overlay_sdk_targets})
+if(TARGET heartgold_guest32_account)
+    list(APPEND overlay_main_targets heartgold_guest32_account heartgold_guest32_crc heartgold_guest32_std heartgold_guest32_runtime heartgold_guest32_mi)
+endif()
 set(overlay_link_args)
 set(overlay_link_dependencies)
 foreach(target IN LISTS overlay_main_targets)
     list(APPEND overlay_link_args --main "$<TARGET_FILE:${target}>")
     list(APPEND overlay_link_dependencies ${target} "$<TARGET_FILE:${target}>")
 endforeach()
+if(TARGET heartgold_guest32_account)
+    foreach(name account crc std)
+        set(manifest "${PROJECT_BINARY_DIR}/guest32-${name}/providers.json")
+        list(APPEND overlay_link_args --provider-manifest "${manifest}")
+        list(APPEND overlay_link_dependencies "${manifest}")
+    endforeach()
+    list(APPEND overlay_link_args --provider-manifest "${guest_mi_manifest}")
+    list(APPEND overlay_link_dependencies "${guest_mi_manifest}" heartgold_guest32_mi_manifest)
+endif()
 foreach(id IN LISTS hg_selected_overlay_ids)
     set(target ${hg_overlay_${id}_archive})
     list(APPEND overlay_link_args --overlay "${id}=$<TARGET_FILE:${target}>")
@@ -56,20 +68,22 @@ set(overlay_link_dir "${PROJECT_BINARY_DIR}/native-overlays")
 set(overlay_imports "${overlay_link_dir}/imports.rsp")
 set(overlay_exports "${overlay_link_dir}/main-exports.txt")
 set(overlay_contracts "${overlay_link_dir}/providers.json")
+set(overlay_registry "${overlay_link_dir}/provider-registry.json")
 set(hg_interface_outputs "${overlay_link_dir}/interfaces/main.tbd")
 foreach(id IN LISTS hg_selected_overlay_ids)
     list(APPEND hg_interface_outputs "${overlay_link_dir}/interfaces/image_${id}.tbd"
         "${overlay_link_dir}/image_${id}.rsp")
 endforeach()
-add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}"
+add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}"
     COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
-        --nm "${CMAKE_NM}" ${overlay_link_args}
+        --nm "${CMAKE_NM}" --image-graph "${PROJECT_BINARY_DIR}/native-graph/images.json" ${overlay_link_args}
         --imports "${overlay_imports}" --exports "${overlay_exports}" --contracts "${overlay_contracts}"
     COMMAND "${CMAKE_COMMAND}" -E touch ${hg_interface_outputs}
         "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}"
     DEPENDS ${overlay_link_dependencies} "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
+        "${CMAKE_CURRENT_LIST_DIR}/native_provider_registry.py" "${PROJECT_BINARY_DIR}/native-graph/images.json"
     VERBATIM)
-add_custom_target(heartgold_overlay_link_contract DEPENDS ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}")
+add_custom_target(heartgold_overlay_link_contract DEPENDS ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}")
 set(hg_native_image_targets)
 set(hg_native_binding_args)
 set(hg_native_binding_dependencies)
@@ -167,6 +181,9 @@ add_test(NAME native_image_graph COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_image_graph.py")
 set_tests_properties(native_data_ir native_image_graph PROPERTIES
     ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+
+add_test(NAME native_provider_registry COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_provider_registry.py")
 
 add_test(NAME native_link_evidence COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_link_evidence.py")

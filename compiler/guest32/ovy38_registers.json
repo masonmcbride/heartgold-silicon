@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "provenance": {
+    "commit": "cb87c94469c54aac982bf465df746bd4cc61ba69",
+    "path": "lib/NitroDWC/asm/overlay_38_arm.s",
+    "sha256": "b8173d81dead9917dcc09d8b0f96f7020b62168e38d71e6f02687a8520d3e7fa"
+  },
+  "source_hashes": {
+    "lib/NitroDWC/src/http_engine_request.c": "c9026967b77f96d325bc832c2053321d80a6eaaeb17d1bb04170c38841c1607c"
+  },
+  "original_functions": {
+    "NdEngine_RequestCallback": "\tarm_func_start ov38_02220830\nov38_02220830: ; 0x02220830\n\tstmdb sp!, {r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}\n\tsub sp, sp, #0x18\n\tmov sb, r2\n\tmov sl, r1\n\tldr r1, [sb, #8]\n\tcmp r0, #0\n\tstr r1, [sp, #8]\n\tldr r1, [sb, #0xc]\n\tldr r5, [sb, #4]\n\tstr r1, [sp, #4]\n\tmvn r1, #0\n\tstr r1, [sp]\n\tbeq _02220878\n\tcmp r0, #6\n\tbeq _02220A54\n\tcmp r0, #8\n\tbeq _02220A4C\n\tb _02220A5C\n_02220878:\n\tldr r1, _02220B48 ; =ov38_02225E24\n\tadd r2, sp, #0x14\n\tmov r0, sl\n\tbl ov38_02222F88\n\tcmp r0, #3\n\tmovne r4, #3\n\tbne _02220A60\n\tldr r0, [sp, #0x14]\n\tmov r1, #3\n\tbl ov38_022218B4\n\tldr r1, _02220B4C ; =0x0000012E\n\tcmp r0, r1\n\tbne _022209C4\n\tadd r1, sp, #0x10\n\tmov r0, sl\n\tmov r8, #0\n\tbl ov38_0222308C\n\tmovs r6, r0\n\tmovmi r4, #3\n\tbmi _02220A60\n\tcmp r6, #0\n\tmov r7, r8\n\tble _022209B0\n\tldr r4, _02220B50 ; =ov38_02225E34\n\tmov fp, #8\n_022208DC:\n\tldr r3, [sp, #0x10]\n\tmov r1, r7\n\tadd r2, r3, r7\n\tb _022208F4\n_022208EC:\n\tadd r2, r2, #1\n\tadd r7, r7, #1\n_022208F4:\n\tldrsb r0, [r2]\n\tcmp r0, #0x3d\n\tbeq _02220908\n\tcmp r7, r6\n\tblt _022208EC\n_02220908:\n\tsub r0, r7, r1\n\tcmp r0, #8\n\tadd r7, r7, #1\n\tbne _02220934\n\tadd r0, r3, r1\n\tmov r1, r4\n\tmov r2, fp\n\tbl ov38_0222187C\n\tcmp r0, #0\n\tmoveq r8, #1\n\tmovne r8, #0\n_02220934:\n\tldr r1, [sp, #0x10]\n\tmov r3, r7\n\tadd r2, r1, r7\n\tb _0222094C\n_02220944:\n\tadd r2, r2, #1\n\tadd r7, r7, #1\n_0222094C:\n\tldrsb r0, [r2]\n\tcmp r0, #0x26\n\tcmpne r0, #0xd\n\tcmpne r0, #0\n\tbeq _02220968\n\tcmp r7, r6\n\tblt _02220944\n_02220968:\n\tcmp r8, #0\n\tsub r2, r7, r3\n\tadd r7, r7, #1\n\tbeq _022209A8\n\tcmp r2, #4\n\tbne _022209B0\n\tadd r0, sp, #0xc\n\tadd r1, r1, r3\n\tbl ov38_022202C0\n\tmov r1, r0\n\tadd r0, sp, #0xc\n\tmov r2, #0\n\tstrb r2, [r0, r1]\n\tbl ov38_022218B4\n\tstr r0, [sp]\n\tb _022209B0\n_022209A8:\n\tcmp r7, r6\n\tblt _022208DC\n_022209B0:\n\tldr r0, [sp]\n\tcmp r0, #0\n\tmovlt r4, #3\n\tmovge r4, #5\n\tb _02220A60\n_022209C4:\n\tcmp r0, #0\n\tble _022209D4\n\tcmp r0, #0xc8\n\tbeq _022209DC\n_022209D4:\n\tmov r4, #3\n\tb _02220A60\n_022209DC:\n\tcmp r5, #1\n\tbeq _022209F8\n\tcmp r5, #2\n\tbeq _02220A14\n\tcmp r5, #3\n\tbeq _02220A30\n\tb _02220A60\n_022209F8:\n\tmov r0, sl\n\tmov r1, sb\n\tbl ov38_02221414\n\tcmp r0, #0\n\tmovne r4, #0\n\tmoveq r4, #3\n\tb _02220A60\n_02220A14:\n\tmov r0, sl\n\tmov r1, sb\n\tbl ov38_02221494\n\tcmp r0, #0\n\tmovne r4, #0\n\tmoveq r4, #3\n\tb _02220A60\n_02220A30:\n\tmov r0, sl\n\tmov r1, sb\n\tbl ov38_02221468\n\tcmp r0, #0\n\tmovne r4, #0\n\tmoveq r4, #3\n\tb _02220A60\n_02220A4C:\n\tmov r4, #6\n\tb _02220A60\n_02220A54:\n\tmov r4, #4\n\tb _02220A60\n_02220A5C:\n\tmov r4, #3\n_02220A60:\n\tcmp r5, #1\n\tbeq _02220AD0\n\tcmp r5, #2\n\tbeq _02220A7C\n\tcmp r5, #3\n\tbeq _02220AC0\n\tb _02220AD0\n_02220A7C:\n\tldr r0, [sb, #0x20]\n\tcmp r0, #0\n\tbeq _02220A94\n\tldr r1, _02220B54 ; =ov38_02226070\n\tldr r1, [r1]\n\tblx r1\n_02220A94:\n\tldr r0, [sb, #0x1c]\n\tcmp r0, #0\n\tbeq _02220AAC\n\tldr r1, _02220B54 ; =ov38_02226070\n\tldr r1, [r1]\n\tblx r1\n_02220AAC:\n\tldr r1, _02220B54 ; =ov38_02226070\n\tldr r0, [sb, #0x18]\n\tldr r1, [r1]\n\tblx r1\n\tb _02220AD0\n_02220AC0:\n\tldr r1, _02220B54 ; =ov38_02226070\n\tldr r0, [sb, #0x10]\n\tldr r1, [r1]\n\tblx r1\n_02220AD0:\n\tbl ov38_02221734\n\tldr r0, _02220B58 ; =ov38_02226074\n\tmvn r1, #0\n\tstr r1, [r0]\n\tbl ov38_02221748\n\tmov r0, sl\n\tbl ov38_02222E04\n\tldr r1, _02220B54 ; =ov38_02226070\n\tmov r0, sb\n\tldr r1, [r1]\n\tblx r1\n\tbl ov38_022217D0\n\tcmp r4, #0\n\tldrne r0, _02220B5C ; =ov38_0222606C\n\tstrne r4, [r0]\n\tldr r0, [sp, #8]\n\tcmp r0, #0\n\tbeq _02220B2C\n\tldr r2, [sp]\n\tldr r3, [sp, #8]\n\tmov r0, r5\n\tmov r1, r4\n\tblx r3\n_02220B2C:\n\tldr r0, [sp, #4]\n\tcmp r0, #0\n\taddeq sp, sp, #0x18\n\tldmeqia sp!, {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n\tbl ov38_022217FC\n\tadd sp, sp, #0x18\n\tldmia sp!, {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n\t.balign 4, 0\n_02220B48: .word ov38_02225E24\n_02220B4C: .word 0x0000012E\n_02220B50: .word ov38_02225E34\n_02220B54: .word ov38_02226070\n_02220B58: .word ov38_02226074\n_02220B5C: .word ov38_0222606C\n\tarm_func_end ov38_02220830",
+    "NdEngine_SendMessage": "\tarm_func_start ov38_022217FC\nov38_022217FC: ; 0x022217FC\n\tldr ip, _0222180C ; =OS_SendMessage\n\tmov r1, #0\n\tmov r2, r1\n\tbx ip\n\t.balign 4, 0\n_0222180C: .word OS_SendMessage\n\tarm_func_end ov38_022217FC"
+  },
+  "implicit_r0": [],
+  "edges": [
+    {
+      "function": "NdEngine_RequestCallback",
+      "target": "NdEngine_SendMessage",
+      "line": 270,
+      "source": "lib/NitroDWC/src/http_engine_request.c",
+      "mode": "branch-value",
+      "argument": 2,
+      "offset": 12,
+      "evidence": "\tldr r0, [sp, #4]\n\tcmp r0, #0\n\taddeq sp, sp, #0x18\n\tldmeqia sp!, {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n\tbl ov38_022217FC"
+    }
+  ]
+}

@@ -9829,35 +9829,215 @@
     },
     "layouts": {
       "gBallCapsuleEditorModes": {
-        "source_size": 20,
-        "alignment": 8,
-        "pointers": [
-          0,
-          4,
-          8,
-          12,
-          16
-        ]
+        "kind": "native_pointer_array",
+        "expected_entries": 5
       },
       "gBallCapsuleEditorMenuItems": {
-        "source_size": 40,
-        "alignment": 8,
-        "pointers": [
-          4,
-          12,
-          20,
-          28,
-          36
-        ],
-        "padding": {
-          "4": 4,
-          "12": 4,
-          "20": 4,
-          "28": 4,
-          "36": 4
-        }
+        "kind": "native_struct",
+        "type": "BallCapsuleEditorMenuItem",
+        "expected_entries": 5
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "expected_blocks": 13,
+    "expected_relocations": 10
+  },
+  "asm/overlay_14_state_dispatch_rodata_67.o": {
+    "inputs": {
+      "asm/overlay_14_state_dispatch_rodata_67.s": "edb327cab3fa974511306c99bf324ad1f9fccc6c8e83dbbc06086096543ba0fb",
+      "include/application/pc_box/pc_box_internal.h": "bca40619b4fe7d0859d351758a81a95cd997e134fcae2eba7ed2f54815d481c3"
+    },
+    "layouts": {
+      "gPCBoxSubApps": {
+        "kind": "native_struct",
+        "type": "PCBoxSubApp",
+        "expected_entries": 3
+      },
+      "gPCBoxYesNoHandlers": {
+        "kind": "native_pointer_array",
+        "expected_entries": 10
+      },
+      "gPCBoxStateTable": {
+        "kind": "native_pointer_array",
+        "expected_entries": 179
+      },
+      "sPCBoxWallpaperGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxWithdrawGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxDepositGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxDepositBoxGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxBoxMenuGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxMoveModePartyGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxTrayGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxMoveModeGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxMarkingGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxItemModePartyGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "sPCBoxItemModeGridCallbacks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "gPCBoxGridLayouts": {
+        "kind": "native_struct",
+        "type": "PCBoxGridLayout",
+        "expected_entries": 11
+      }
+    },
+    "reviewed": false,
+    "expected_blocks": 89,
+    "expected_relocations": 272
+  },
+  "asm/pokewalker_ir_bss.o": {
+    "inputs": {
+      "asm/pokewalker_ir_bss.s": "11e72333244d8d1f0483446ef4a1516d3027541b61fe798eb88729a2b871681a",
+      "include/application/pokewalker/pokewalker_ir_internal.h": "6a0ec0b5ef36c2d20798b04d86ec1166c83cb56c95fd3824f26dfdd424a77101"
+    },
+    "layouts": {
+      "gPokewalkerIrLink": {
+        "source_size": 56,
+        "native_size": 80,
+        "alignment": 8
+      }
+    },
+    "reviewed": false,
+    "expected_blocks": 3,
+    "expected_relocations": 0
+  },
+  "asm/pokewalker_data.o": {
+    "inputs": {
+      "asm/pokewalker_data.s": "38ecad9fbf2acf8ce8e987f502b8467857f8253847f35eb31acc2fa0c6f349fd",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
+      "include/application/pokewalker/pokewalker_app_internal.h": "aa587d32cfea44e8c7f58a04b5274400c2644ba4f5d930cf22d742c4371df4e6",
+      "src/application/main_menu/main_menu.c": "a16014501dcc5367e644f856d8bb530d06d03faf002fd4aa24c21a4464057be2",
+      "include/application/pokewalker/pokewalker_ir_internal.h": "6a0ec0b5ef36c2d20798b04d86ec1166c83cb56c95fd3824f26dfdd424a77101"
+    },
+    "layouts": {
+      "ov112_App_MainMenu_SelectOption_ConnectToPokewalker": {
+        "kind": "native_struct",
+        "type": "OverlayManagerTemplate",
+        "expected_entries": 1
+      },
+      "gEventLogAppTemplate": {
+        "kind": "native_struct",
+        "type": "OverlayManagerTemplate",
+        "expected_entries": 1
+      },
+      "gPokewalkerUploadBlocks": {
+        "kind": "native_pointer_array",
+        "expected_entries": 16
+      },
+      "gSpindaSpotPixels": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "gTouchButtons": {
+        "kind": "native_pointer_array",
+        "expected_entries": 5
+      },
+      "gPokewalkerRouteImages": {
+        "kind": "native_pointer_array",
+        "expected_entries": 9
+      },
+      "gPokewalkerAppModes": {
+        "kind": "native_pointer_array",
+        "expected_entries": 33
+      },
+      "gWindowBank2Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 2
+      },
+      "gWindowBank1Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 6
+      },
+      "gWindowBank7Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 6
+      },
+      "gWindowBank0Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 7
+      },
+      "gWindowBank5Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 7
+      },
+      "gWindowBank3Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 8
+      },
+      "gWindowBank4Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 9
+      },
+      "gWindowBank6Templates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 16
+      },
+      "gMainMenuStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 27
+      },
+      "gQuitMessageStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 4
+      },
+      "gEraseRecordsStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 35
+      },
+      "gLinkStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 67
+      },
+      "gStartStrollStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 8
+      },
+      "gLinkSaveStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 11
+      },
+      "gStrollReportStates": {
+        "kind": "native_pointer_array",
+        "expected_entries": 37
+      },
+      "sPokewalkerIrThread": {
+        "source_size": 200,
+        "native_size": 424,
+        "alignment": 8
+      }
+    },
+    "reviewed": false,
+    "expected_blocks": 334,
+    "expected_relocations": 323
   }
 }

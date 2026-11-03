@@ -3,6 +3,15 @@
 #define HG_GUEST32_H
 #include <stdint.h>
 void *g32_create(uint32_t capacity, uint32_t static_end);
+/* DS mode uses original addresses, not image-local offsets. static_end is the
+ * first address available to the checked host allocator, supplied by the loader.
+ * Passing BASE+SIZE reserves the whole window and disables that allocator.
+ * Share this context across images; creation is per environment, not per image.
+ * Mirrors, devices and overlay residency are not established by this API.
+ * The returned context is opaque; all memory access goes through resolve. */
+#define G32_MAIN_RAM_BASE UINT32_C(0x02000000)
+#define G32_MAIN_RAM_SIZE UINT32_C(0x00400000)
+void *g32_create_ds(uint32_t static_end);
 void g32_destroy(void *ram);
 void *g32_allocate(void *ram, uint32_t bytes, uint32_t alignment);
 void g32_release(void *ram, void *allocation, uint32_t bytes);

@@ -266,6 +266,9 @@ if(HEARTGOLD_BUILD_GAME)
     if(HEARTGOLD_GUEST32_LLVM_DIR)
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
     endif()
+    if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+        include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
+    endif()
 endif()
 
 # Standalone emission observation only; never linked into heartgold.

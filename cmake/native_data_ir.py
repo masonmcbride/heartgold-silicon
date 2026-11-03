@@ -173,6 +173,81 @@ def raw_layout(blocks):
     return sections, labels, references
 
 
+# Ordered source fields. Native offsets/padding follow the ARM64 C ABI; each
+# tuple is (consumer member, pointer or fixed-width integer).
+ABI_SCHEMAS = {
+    'OverlayManagerTemplate': [('init','pointer'),('exec','pointer'),('exit','pointer'),('ovy_id','u32')],
+    'PCBoxSubApp': [('start','pointer'),('end','pointer'),('nextState','u32')],
+    'PCBoxGridLayout': [('hitboxes','pointer'),('dpadBoxes','pointer'),('callbacks','pointer')],
+    'BallCapsuleEditorMenuItem': [('msgId','u32'),('func','pointer')],
+}
+
+
+def schema_layout(name):
+    if name not in ABI_SCHEMAS:
+        raise ValueError('Unknown native ABI structure: '+name)
+    source = native = 0
+    fields = []
+    for member, kind in ABI_SCHEMAS[name]:
+        width = 8 if kind == 'pointer' else 4
+        native += (-native) % width
+        fields.append((member, kind, source, native, width))
+        source += 4
+        native += width
+    return source, native + (-native) % 8, fields
+
+
+def abi_assertions(name):
+    """Assertions to compile in the actual declaration's translation unit."""
+    _, size, fields = schema_layout(name)
+    checks = [f'sizeof({name}) == {size}', f'_Alignof({name}) == 8']
+    for member, _, _, offset, width in fields:
+        checks += [f'__builtin_offsetof({name}, {member}) == {offset}',
+                   f'sizeof((({name} *)0)->{member}) == {width}']
+    return '\n'.join(f'_Static_assert({check}, "{name} native data ABI");' for check in checks)+'\n'
+
+
+def resolve_policy(policy, data, relocations):
+    """Expand explicitly selected semantic policies; never infer pointer meaning."""
+    if 'kind' not in policy:
+        return policy
+    kind = policy['kind']
+    allowed = {'kind','expected_entries','expected_native_size','pointer_addends'}
+    if kind == 'native_struct': allowed.add('type')
+    if policy.keys() - allowed:
+        raise ValueError('Unknown native policy fields')
+    count = policy.get('expected_entries',1)
+    if type(count) is not int or count <= 0:
+        raise ValueError('Invalid native policy entry count')
+    if kind == 'native_pointer_array':
+        stride, native_stride = 4, 8
+        fields = [('', 'pointer', 0, 0, 8)]
+    elif kind == 'native_struct':
+        stride, native_stride, fields = schema_layout(policy.get('type',''))
+    else:
+        raise ValueError('Unknown native policy: '+kind)
+    if len(data) != count * stride:
+        raise ValueError('Native policy source extent changed')
+    pointers, padding = [], {}
+    for index in range(count):
+        cursor = index * native_stride
+        for _, field_kind, offset, native_offset, width in fields:
+            original = index * stride + offset
+            target = index * native_stride + native_offset
+            if target > cursor: padding[original] = target - cursor
+            if field_kind == 'pointer': pointers.append(original)
+            cursor = target + width
+        if cursor < (index+1)*native_stride:
+            padding[(index+1)*stride] = (index+1)*native_stride-cursor
+    if policy.get('expected_native_size', count*native_stride) != count*native_stride:
+        raise ValueError('Incorrect expected native size')
+    # Zero words are permitted NULL fields; other constants cannot become pointers.
+    if any(o not in pointers or w != 4 for o, (_, w) in relocations.items()):
+        raise ValueError('Relocation outside native pointer field')
+    return dict(source_size=len(data), alignment=8, pointers=pointers,
+                padding=padding, pointer_addends=policy.get('pointer_addends',{}))
+
+
 def native_blocks(source, layouts=None, text=None, constants=None):
     """Apply explicit record fields to parsed bytes, using the shared validator IR.
 
@@ -189,7 +264,11 @@ def native_blocks(source, layouts=None, text=None, constants=None):
         section, start = labels[record.symbol]
         end = next((labels[r.symbol][1] for r in records[index+1:] if r.section==section),len(sections[section]))
         data = bytes(sections[section][start:end])
-        layout = layouts.get(record.symbol,{})
+        if section == '.bss' and any(data):
+            raise ValueError('Nonzero initializer in BSS: '+record.symbol)
+        relocations = {offset-start:(value,width) for (sec,offset),(value,width) in refs.items()
+                       if sec==section and start<=offset<end}
+        layout = resolve_policy(layouts.get(record.symbol,{}), data, relocations)
         unknown = layout.keys()-{'source_size','pointers','member_pointers','pointer_addends','padding','native_size','alignment','edits','public','section','label_alignment','segment'}
         align = layout.get('alignment',record.before_alignment)
         if unknown or not isinstance(align,int) or align<=0 or align & (align-1):

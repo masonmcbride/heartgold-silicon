@@ -22,12 +22,113 @@ class DataIRTests(unittest.TestCase):
         from native_data_layouts import recipe
         root=Path(__file__).resolve().parents[1]
         expected=json.loads((root/'tests/native_data_layout_hashes.json').read_text())
+        expected.update(json.loads((root/'tests/native_data_policy_hashes.json').read_text()))
         for original,digest in expected.items():
             with self.subTest(original=original):
                 blocks=recipe(root/'upstream/pokeheartgold',original)
                 sections,labels=reviewed_layout(blocks)
                 snapshot=dict(sections={k:dict(sha256=hashlib.sha256(v['data']).hexdigest(),relocations=v['relocations'],align=v['align']) for k,v in sections.items()},labels=labels,public=sorted(b['symbol'] for b in blocks if b['public']))
                 self.assertEqual(hashlib.sha256(json.dumps(snapshot,sort_keys=True).encode()).hexdigest(),digest)
+
+    def test_migrated_member_objects(self):
+        import json
+        from native_data_layouts import recipe
+        root=Path(__file__).resolve().parents[1]
+        for original in json.loads((root/'tests/native_data_policy_hashes.json').read_text()):
+            with self.subTest(original=original):
+                blocks=recipe(root/'upstream/pokeheartgold',original)
+                native=self.source(emit_reviewed(blocks)).with_suffix('.S')
+                native.write_text(emit_reviewed(blocks));obj=native.with_suffix('.o')
+                subprocess.run(['clang','-arch','arm64','-c',str(native),'-o',str(obj)],check=True,capture_output=True)
+                self.assertTrue(validate_object(obj,blocks)['validated'])
+                if original.endswith('pokewalker_ir_bss.o'):
+                    self.assertEqual([sum(len(v) for k,v in b['native_items']) for b in blocks],[80,8,132])
+
+    def test_policy_arrays_and_structures(self):
+        from native_data_ir import schema_layout
+        for count in (1,2,17):
+            p=self.source('.data\nr:\n'+'.word callback\n'*count)
+            new=native_blocks(p,{'r':dict(kind='native_pointer_array',expected_entries=count)})
+            old=native_blocks(p,{'r':dict(pointers=list(range(0,count*4,4)),alignment=8)})
+            self.assertEqual(reviewed_layout(new),reviewed_layout(old))
+        for name in ('OverlayManagerTemplate','PCBoxSubApp','PCBoxGridLayout','BallCapsuleEditorMenuItem'):
+            stride,size,fields=schema_layout(name)
+            words=['callback' if k=='pointer' else '0xFFFFFFFF' for _,k,*_ in fields]
+            p=self.source('.data\nr:\n'+''.join('.word '+v+'\n' for v in words)*2)
+            b=native_blocks(p,{'r':dict(kind='native_struct',type=name,expected_entries=2,expected_native_size=2*size)})
+            self.assertEqual(len(reviewed_layout(b)[0]['__data']['data']),2*size)
+            for _,kind,_,offset,width in fields:
+                if kind!='pointer':self.assertEqual(reviewed_layout(b)[0]['__data']['data'][offset:offset+width],bytes([255])*width)
+
+    def test_object_rejects_missing_duplicate_and_unsupported_relocations(self):
+        import copy,struct
+        from native_assembly_data import read_object,validate_reviewed
+        p=self.source('.public r\n.data\nr:\n.word external\n')
+        b=native_blocks(p,{'r':dict(kind='native_pointer_array',expected_entries=1)})
+        native=p.with_suffix('.S');obj=p.with_suffix('.o');native.write_text(emit_reviewed(b))
+        subprocess.run(['clang','-arch','arm64','-c',str(native),'-o',str(obj)],check=True,capture_output=True)
+        data,sections,symbols=read_object(obj)
+        section=next(x for x in sections if x['nreloc'])
+        missing=copy.deepcopy(sections)
+        next(x for x in missing if x['nreloc'])['nreloc']=0
+        with self.assertRaises(ValueError):validate_reviewed(data,missing,symbols,b)
+        unsupported=bytearray(data);struct.pack_into('<I',unsupported,section['reloc']+4,0xffffffff)
+        with self.assertRaises(ValueError):validate_reviewed(unsupported,sections,symbols,b)
+        duplicate=copy.deepcopy(sections);target=next(x for x in duplicate if x['nreloc'])
+        target['reloc']=len(data);target['nreloc']=2
+        relocation=data[section['reloc']:section['reloc']+8]
+        with self.assertRaisesRegex(ValueError,'Duplicate native relocation'):
+            validate_reviewed(data+relocation*2,duplicate,symbols,b)
+        defined=next(x for x in symbols if x['kind'] & 0xe == 0xe)
+        with self.assertRaisesRegex(ValueError,'Duplicate symbol'):
+            validate_reviewed(data,sections,symbols+[defined],b)
+
+    def test_policy_rejections(self):
+        p=self.source('.data\nr:\n.word callback\n.word 7\n')
+        for spec in (dict(kind='native_struct',type='Unknown'),
+                     dict(kind='native_pointer_array',expected_entries=2),
+                     dict(kind='native_pointer_array',expected_entries=1),
+                     dict(kind='native_pointer_array',expected_entries=2,expected_native_size=4)):
+            with self.subTest(spec=spec),self.assertRaises(ValueError):native_blocks(p,{'r':spec})
+        with self.assertRaises(ValueError):parse(self.source('.data\nr:\nr:\n.word 0\n'))
+
+    def test_policy_addends_and_local_bindings(self):
+        p=self.source('.data\nr:\n.word local + 4\n.word external - 8\nlocal:\n.word 9\n')
+        spec=dict(kind='native_pointer_array',expected_entries=2,pointer_addends={'0':4,'4':-8})
+        b=native_blocks(p,{'r':spec})
+        native=p.with_suffix('.S');obj=p.with_suffix('.o');native.write_text(emit_reviewed(b))
+        subprocess.run(['clang','-arch','arm64','-c',str(native),'-o',str(obj)],check=True,capture_output=True)
+        self.assertTrue(validate_object(obj,b)['validated'])
+        del spec['pointer_addends']
+        with self.assertRaises(ValueError):native_blocks(p,{'r':spec})
+
+    def test_source_hash_rejection(self):
+        from native_data_layouts import recipe
+        with self.assertRaisesRegex(ValueError,'changed'):
+            recipe(Path(__file__).resolve().parents[1]/'upstream/pokeheartgold',
+                   'asm/pokewalker_data.o',digest=lambda p:'wrong')
+
+    def test_real_consumer_abi(self):
+        import json,shlex
+        from native_data_ir import abi_assertions
+        root=Path(__file__).resolve().parents[1]
+        build=Path(os.environ.get('HEARTGOLD_TEST_BINARY_DIR',root/'build'))
+        entries=json.loads((build/'compile_commands.json').read_text())
+        groups={'pc_box.c':['PCBoxSubApp','PCBoxGridLayout'],
+                'pokewalker_app.c':['OverlayManagerTemplate'],
+                'ball_capsule_editor.c':['BallCapsuleEditorMenuItem']}
+        for suffix,names in groups.items():
+            entry=next(e for e in entries if e['file'].endswith('/'+suffix))
+            args=shlex.split(entry['command']);filtered=[];i=0
+            while i<len(args):
+                if args[i]=='-o':i+=2;continue
+                if args[i] in ('-c',entry['file']):i+=1;continue
+                filtered.append(args[i]);i+=1
+            source=Path(entry['file']).read_text()+'\n'+''.join(abi_assertions(n) for n in names)
+            result=subprocess.run(filtered+['-fsyntax-only','-x','c','-'],input=source,text=True,capture_output=True,cwd=entry['directory'])
+            self.assertEqual(result.returncode,0,result.stderr)
+            result=subprocess.run(filtered+['-fsyntax-only','-x','c','-'],input=source+'\n_Static_assert(sizeof(void*)==4,"wrong ABI");',text=True,capture_output=True,cwd=entry['directory'])
+            self.assertNotEqual(result.returncode,0)
 
     def test_original_dwc_members_parse_and_unsafe_layouts_remain_blocked(self):
         from native_data_layouts import recipe

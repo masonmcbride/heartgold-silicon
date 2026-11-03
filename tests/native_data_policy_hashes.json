@@ -1,0 +1,6 @@
+{
+  "asm/ball_capsule_editor_data.o": "ec5f7501ba04265294ec468a4984b622ae11a0e341413dcac05e8f44feb72bd3",
+  "asm/overlay_14_state_dispatch_rodata_67.o": "0d94fc8d3be0858a1f7c41edae70335e73d346dcb7d3ed8c2bde5af10fa82f15",
+  "asm/pokewalker_data.o": "73196f751b87f25585b63b0742ba36de12b7a0051a2ef1be57dbab0909e34058",
+  "asm/pokewalker_ir_bss.o": "39fc1180444b861d51cbb6603346f3bb3ad9e937f2eff6efc378bf03fa12961a"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "adaptations": [
+    {
+      "source": "upstream/pokeheartgold/lib/libCPS/src/cps_bignum.c",
+      "sha256": "32e9d64dce1461277bab736ae11b05790907d49af90d8ac71d8cf7e118ddebb8",
+      "adapted_sha256": "281c4a2b8b7eee43e159452dec6dfb2caca7ee58788120d79aa986685c3c3874",
+      "replacements": [
+        {
+          "original": "asm u64 get48bits_2(const u16 *top) {\n    ldrh r1, [r0]\n    ldrh r0, [r0, #-2]\n    mov r0, r0, lsl #0x10\n    bx lr\n}",
+          "adapted": "u64 get48bits_2(const u16 *top) {\n\n    u32 r0 = 0, r1 = 0;\n    r1 = top[0];\n    r0 = top[-1];\n    r0 = (u32)((u32)r0 << 16);\n    return ((u64)r1 << 32) | (u64)r0;\n}"
+        },
+        {
+          "original": "asm u64 get48bits_3(const u16 *top) {\n    ldrh r1, [r0]\n    ldrh r2, [r0, #-2]\n    ldrh r3, [r0, #-4]\n    orr r0, r3, r2, lsl #16\n    bx lr\n}",
+          "adapted": "u64 get48bits_3(const u16 *top) {\n\n    u32 r0 = 0, r1 = 0, r2 = 0, r3 = 0;\n    r1 = top[0];\n    r2 = top[-1];\n    r3 = top[-2];\n    r0 = (u32)(r3 | ((u32)r2 << 16));\n    return ((u64)r1 << 32) | (u64)r0;\n}"
+        },
+        {
+          "original": "asm u64 get64bits(const u16 *top) {\n    ldrh r2, [r0]\n    ldrh r3, [r0, #-2]\n    orr r1, r3, r2, lsl #16\n    ldrh r2, [r0, #-4]\n    ldrh r3, [r0, #-6]\n    orr r0, r3, r2, lsl #16\n    bx lr\n}",
+          "adapted": "u64 get64bits(const u16 *top) {\n\n    u32 r0 = 0, r1 = 0, r2 = 0, r3 = 0;\n    r2 = top[0];\n    r3 = top[-1];\n    r1 = (u32)(r3 | ((u32)r2 << 16));\n    r2 = top[-2];\n    r3 = top[-3];\n    r0 = (u32)(r3 | ((u32)r2 << 16));\n    return ((u64)r1 << 32) | (u64)r0;\n}"
+        }
+      ]
+    },
+    {
+      "source": "upstream/pokeheartgold/lib/libVCT/src/vct_audio_send.c",
+      "sha256": "925b1058ca37e30a683064296d33b7b6c8e78c565e3bd6e163a39c0631806122",
+      "adapted_sha256": "03497be39f5e9e6720739ccb93d3a5dc76221e58b80e80593f3a770f4b9c26bd",
+      "replacements": [
+        {
+          "original": "asm { clz x, x }",
+          "adapted": "x = x ? (u32)__builtin_clz(x) : 32u;"
+        }
+      ]
+    }
+  ]
+}

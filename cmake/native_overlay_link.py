@@ -8,6 +8,8 @@ from pathlib import Path
 import subprocess
 import json
 import re
+import hashlib
+from native_provider_registry import provider, registry
 
 def symbols(path, undefined=False, nm="nm"):
     """Only strong public definitions authorize a provider contract."""
@@ -44,8 +46,27 @@ def archive_id(path):
 
 
 def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name='heartgold',
-                       imports_path=None, exports_path=None, contracts_path=None, identities=None):
-    main = set().union(*(symbols(p, nm=nm) for p in main_paths))
+                       imports_path=None, exports_path=None, contracts_path=None, identities=None, image_names=None,
+                       provider_manifests=()):
+    metadata={};inline_definitions={}
+    for manifest in provider_manifests:
+        for family in json.loads(Path(manifest).read_text())['families'].values():
+            path=Path(family['archive']).resolve()
+            if hashlib.sha256(path.read_bytes()).hexdigest()!=family['sha256'] or symbols(path,nm=nm)!=set(family['symbols']):
+                raise ValueError('Provider archive evidence changed: '+str(path))
+            if path in metadata:raise ValueError('Duplicate provider metadata: '+str(path))
+            for name,definition in family.get('inline_definitions',{}).items():
+                if name in inline_definitions and inline_definitions[name]!=definition:
+                    raise ValueError('Conflicting original header inline: '+name)
+                inline_definitions[name]=definition
+            metadata[path]=family
+    def row(path,symbol,owner):
+        info=metadata.get(path.resolve(),{})
+        return provider(info.get('original_identities',{}).get(symbol,symbol[1:]),symbol,owner,path,
+                        info.get('abi_representation','native-arm64'),
+                        **({'original_member':info['symbols'][symbol]} if symbol in info.get('symbols',{}) else {}))
+    main_definitions = {p: symbols(p, nm=nm) for p in main_paths}
+    main = set().union(*main_definitions.values())
     identity = lambda path: identities[str(path)] if identities is not None else archive_id(path)
     definitions = {identity(p): symbols(p, nm=nm) for p in overlay_paths}
     if len(definitions) != len(overlay_paths): raise ValueError('Duplicate original image ID')
@@ -60,11 +81,27 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
         interfaces[ident] = out/f'interfaces/image_{ident}.tbd'
         interface(interfaces[ident], f'@rpath/libheartgold_image_{ident}.dylib',
                   names)
+    owner = lambda ident: image_names.get(ident, str(ident)) if image_names else str(ident)
+    records = [row(p,s,'main')
+               for p in main_paths for s in sorted(main_definitions[p])]
+    for p in overlay_paths:
+        records.extend(row(p,s,owner(identity(p)))
+                       for s in sorted(definitions[identity(p)]))
+    requests = []
+    for path in main_paths:
+        info=metadata.get(path.resolve())
+        if not info:continue
+        for s in sorted(symbols(path,True,nm=nm)-main_definitions[path]):
+            requests.append(provider(info.get('import_identities',{}).get(s,s[1:]),s,'main',path,info['abi_representation']))
     imports = set()
     for path in overlay_paths:
         ident = identity(path)
         required = symbols(path, True, nm=nm) - definitions[ident]
         imports.update(required)
+        info=metadata.get(path.resolve(),{})
+        requests.extend(provider(info.get('import_identities',{}).get(s,s[1:]), s, owner(ident), path,
+                                 info.get('abi_representation','native-arm64'))
+                        for s in sorted(required))
         dependencies = sorted({providers[s] for s in required if s in providers})
         # Unknown imports are deliberately left to ld64 (including libSystem).
         # No -U, flat namespace, dynamic lookup or partial-image fallback.
@@ -73,12 +110,17 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
     if imports_path: write_if_changed(imports_path, '# Explicit interfaces are in image_<id>.rsp\n')
     if exports_path: write_if_changed(exports_path, '\n'.join(sorted((imports & main) | {'_main'}))+'\n')
     if contracts_path: write_if_changed(contracts_path, json.dumps(providers,sort_keys=True,indent=2)+'\n')
+    write_if_changed(out/'provider-registry.json', json.dumps(
+        registry(['main', *map(owner, sorted(definitions))], records, requests),
+        sort_keys=True, indent=2)+'\n')
     return providers
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--nm', required=True)
+    p.add_argument('--image-graph', type=Path)
+    p.add_argument('--provider-manifest', type=Path, action='append', default=[])
     p.add_argument('--main', action='append', default=[], type=Path)
     p.add_argument('--overlay', action='append', default=[], help='Original numeric ID=archive path')
     p.add_argument('--imports', required=True, type=Path)
@@ -95,8 +137,10 @@ def main():
         if not ident.isdecimal(): raise ValueError('Invalid original image ID: '+ident)
         if str(archive) in identities: raise ValueError('Duplicate archive path: '+path)
         identities[str(archive)]=int(ident);archives.append(archive)
+    image_names = ({i['id']: n for n, i in json.loads(a.image_graph.read_text())['images'].items()
+                    if i['kind'] == 'Overlay'} if a.image_graph else None)
     generate_contracts(a.main, archives, a.imports.parent, a.nm,
-                       a.executable_name, a.imports, a.exports, a.contracts, identities)
+                       a.executable_name, a.imports, a.exports, a.contracts, identities, image_names,a.provider_manifest)
 
 
 

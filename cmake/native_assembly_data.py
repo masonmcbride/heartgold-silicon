@@ -217,6 +217,8 @@ def validate_reviewed(data, sections, symbols, blocks):
     public={'_'+b['symbol'] for b in blocks if b['public']}
     if public!=set(actual): raise ValueError('Original/global symbol identity mismatch')
     all_symbols={s['name']:s for s in symbols if s['kind'] & 0xe == 0xe}
+    if len(all_symbols) != sum(s['kind'] & 0xe == 0xe for s in symbols):
+        raise ValueError('Duplicate symbol ownership in native object')
     def find_section(key):
         segment,name=key.split(',',1) if ',' in key else ('__DATA',key)
         return next(s for s in sections if s['segment']==segment and s['name']==name)
@@ -230,6 +232,8 @@ def validate_reviewed(data, sections, symbols, blocks):
         relocs={}
         for i in range(section['nreloc']):
             offset,bits=struct.unpack_from('<II',data,section['reloc']+i*8)
+            if offset in relocs:
+                raise ValueError('Duplicate native relocation')
             if bits>>24 == 0x0e:
                 relocs[offset]=symbols[bits&0xffffff]['name']
             elif bits>>24 == 0x06 and offset in want['relocations']:

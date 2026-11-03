@@ -284,3 +284,146 @@ compile, 87 actual dylibs validate, and the nine real image-link failures remain
 
 The physical platform/resource layout and removal of production Global Terminal
 special-case dispatch are described in [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Shared DS RAM and guest-image closure
+
+`g32_create_ds(static_end)` provides a shared 4 MiB main-RAM backing at original
+DS addresses, with metadata outside the backing, checked translation and existing
+allocation/frame ownership and sanitizer checks. `g32_create` retains its private
+coordinate contract. Selected original OVY_0/OVY_38 functions and the new account
+and CRC providers execute against DS RAM. Complete image catalogs still use private
+coordinates; a successful link would not establish shared image placement, original
+overlay residency, RAM aliases or callback lifetime correctness.
+
+The OVY_38 register mismatch is resolved in the compiler representation. Historical
+`overlay_38_arm.s` at `cb87c94469c54aac982bf465df746bd4cc61ba69` saves request field
+`+0x0c`, reloads it into r0, tests it for zero and calls the queue-taking send wrapper.
+The C source saves the same value as `notify` but omits the call argument. The
+`branch-value` contract verifies the original saved field's SSA load and nonzero
+branch before forwarding it. It does not reload the freed request or invent an
+argument. Source hashes, original assembly snapshots and a negative wrong-field
+regression protect that contract.
+
+All eight OVY_38 C members and both data members compile, and the archive contains
+all ten original members. Its four data relocations pass an independent source-byte
+comparison against actual generated loaders. The previously unanchored `.data`
+section is now validated at `0x02225138`: all 3,788 bytes match historical assembly,
+and all four symbolic references resolve to the historical numeric targets.
+Generated loader helpers now have image-specific names to prevent collisions.
+
+The largest concrete original C-member provider group in the measured OVY_0
+inventory was `dwc_account.c` (19 requested identities). All 48 functions compile
+through guest32, together with the complete original 12-function `MATH_crc.c`
+dependency. These are main-image providers, registered with their original member
+ownership and guest ABI; no guest function is aliased to a native implementation.
+Their remaining imports are retained in the provider registry. Original account
+ID/profile/dirty/CRC operations execute in DS RAM at O0/O2 with ASan/UBSan, including
+corruption rejection and the independent CRC32 `123456789` vector.
+
+Build and reproduce the actual linker diagnostics with:
+
+```
+cmake --build build --target heartgold_guest32_link_diagnostics -j8
+```
+
+This diagnostic target records failed links; it is not a successful game-build
+target. It uses the existing global linker and provider registry. Source/ABI
+compatibility checks precede cross-image interface generation.
+
+| Actual link scope | Before | After |
+| --- | ---: | ---: |
+| OVY_0, including complete added-provider dependency demands | 189 unresolved | 182 unresolved |
+| OVY_0, global provider/cross-image interfaces | 169 unresolved | 162 unresolved |
+| OVY_38, including complete added-provider dependency demands | 76 unresolved | 71 unresolved |
+| OVY_38, global provider/cross-image interfaces | 45 unresolved | 40 unresolved |
+| Distinct undefined identities across dependency-inclusive guest probes | 237 | 227 |
+| Failed guest-image probes | 2 | 2 |
+| Failed configured native image links | 13 | 13 |
+| Exact-member linked images in the whole-image inventory | 92/132 | 92/132 |
+
+The preceding account/CRC batch removed 22 identities and exposed seven genuine
+additional dependencies, establishing the measured 189/76 baseline used here.
+The MI/STD batch removes seven OVY_0 identities and five OVY_38 identities, with
+no added unresolved identities. The global-interface figures additionally
+resolve imports against actual complete emitted archives; they do not prove main
+executable closure. No new game image is admitted. The default build still fails
+at native linking before an isolated executable-link inventory is available.
+
+The binary directory contains the evidence:
+
+- `guest32-closure/summary.json`: exact identity deltas; individual JSON files contain commands.
+  The `providers` phase retains the 189/76 baseline, `admitted` adds MI, and
+  `source` adds the complete original STD member. `global` is separate interface accounting.
+- `guest32-closure/OVY_0-provider-groups.json`: all 204 measured baseline identities,
+  grouped by original member or emitted native provider, with observed signatures
+  and required ABI work. Unknown providers remain explicitly unknown.
+- `guest32-closure/OVY_{0,38}-{before,providers,global}.{json,log}`: real linker output.
+- `guest32-closure/contracts/provider-registry.json`: global guest link contracts;
+  `native-overlays/provider-registry.json` also includes the main-owned providers.
+- `guest32-closure/native-failures/`: fresh attempts for all 13 failing configured
+  native images; `global-report/graph.json` retains the 92/132 exact-member count.
+- `guest32-closure-tests/results.json`: register/data/provider execution evidence.
+
+Validation for the preceding account/CRC batch: 54/58 tests passed, retaining
+`real_metal_raster`, `global_terminal_native_images`, `native_g3_original_model`
+and `native_g3_commands_metal`. A fresh binary directory also configures and builds
+both complete providers and the complete OVY_38 archive. Upstream HeartGold stays
+clean, and existing SDK working-tree changes remain untouched.
+
+Remaining concrete blockers include OS thread/context and mutex layouts, SOC/WCM/WM
+and CPS pointer-bearing interfaces, native VCT implementations required by existing
+scalar adapters, heap and sound layouts, guest C-library formatting/scanning, and
+unresolved guest data coordinates. The added account member specifically still
+requires `DWC_Auth_CheckPseudoWiFiID`, `DWC_Auth_GetId`, `DWC_BM_Init`,
+`OSi_ReferSymbol` and coordinates for `_version_NINTENDO_DWC`,
+`gDwcAccBase32Digits` and `gDwcAccUserNameFormat`.
+
+The seven MI memory imports are now admitted: `MI_CpuCopy8`, `MI_CpuFill8`,
+`MIi_CpuClear16`, `MIi_CpuClear32`, `MIi_CpuClearFast`, `MIi_CpuCopy16`, and
+`MIi_CpuCopy32`. `cmake/native_sources.py` owns the single-source adaptation,
+using `native_mi.py` to translate the fixed original instruction bodies to C.
+There is no runtime interpreter or import table. All registers remain 32-bit;
+loads/stores share checked two-/four-byte span operations in
+`hardware_drivers/guest32_mi.h`. Original branch/carry behavior, word patterns,
+partial-word tails and forward overlap order are preserved. Native libntr's
+byte-pattern `MIi_CpuClear32` and `memcpy` copies are not used for these guest calls.
+Byte operations retain their original neighbour-halfword touches; access to an
+unowned neighbour is rejected, not silently unpoisoned. This is a source-validated
+translation, not an ARM32 runtime equivalence claim or a replacement for the full
+SDK MI object. All seven exports retain main-image ownership.
+
+The complete original `std_string.c` member also supplies OVY_38's three unresolved
+STD calls. Tests preserve signed plain-character comparison and bounded comparison
+past equal NULs; neither is aliased to POSIX string functions. Identical original
+header inlines use the compiler's existing weak-ODR representation, avoiding
+competing strong providers when complete original members are linked together.
+The linker checks matching original header hashes, signatures and body hashes;
+a conflicting-body negative test rejects mismatches.
+
+The ephemeral 413-name classification is not an unresolved inventory and was not
+recreated. `network-provider-admission/api-admission.json` considers only the
+actual 189/76 identities and distinguishes existing guest exports, unadmitted
+compiled native/guest candidates, real imports and their pointer/state/callback
+obligations. Compiling the complete SOC socket member alone produced 189/79
+failures, so it was not admitted. SOC's second member still requires verified
+allocator callback identities and shared state; CPS and OS layout/scheduler
+obligations remain explicit.
+
+New verification is in `guest32-mi-tests/results.json` and
+`guest32-std-tests/results.json`. MI covers 4,224 copy and 4,224 fill alignment/length
+fixtures per build, word-copy/clear tails, original ARM32 caller declarations,
+overlap fixtures, null zero-length operations, and invalid spans/alignment/lifetime.
+STD covers all four original source functions. Both execute at O0/O2 with and
+without ASan/UBSan. The MI target also builds in an empty binary directory.
+`network-provider-admission/` holds the baseline links, actual linker diagnostics,
+SOC admission probe, configured native-link failures and fresh whole-image report.
+
+Final validation for this batch: 12 focused tests pass; the full suite passes
+56/60 with the same four recorded failures. MI and STD fixtures pass at O0/O2,
+with and without ASan/UBSan. A separate initially empty binary directory builds
+the MI providers and complete STD member. All 106 configured native images were
+attempted through their real linker commands: 13 still fail, 93 artifacts link,
+and the stricter whole-image inventory remains 92/132 exact-member links (93
+binding-validated artifacts). Neither guest-image link succeeds. Final measured
+identity sets and scopes are in `network-provider-admission/verification.json`.
+Original HeartGold and existing SDK source changes remain untouched.

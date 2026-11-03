@@ -67,9 +67,16 @@ set(native_headers
     lib/include/nnsys/g3d_render_internal.h lib/include/nnsys/snd_internal.h
     lib/include/nnsys/snd_arc_internal.h lib/include/nnsys/snd_arc_strm_internal.h
     lib/include/nnsys/g2d/g2d_CellTransferManager.h lib/NitroDWC/src/tree-iterator4.h)
+list(APPEND native_headers
+    include/application/pokewalker/pokewalker_ir.h
+    include/application/pokewalker/pokewalker_ir_internal.h
+    lib/include/nitro/card/card_spi_wait_internal.h)
 set(header_outputs)
 foreach(relative IN LISTS native_headers)
     set(extra)
+    if(relative STREQUAL "include/application/pokewalker/pokewalker_ir_internal.h")
+        list(APPEND extra "${game_source}/src/application/pokewalker/pokewalker_ir_requests.c")
+    endif()
     if(relative STREQUAL "src/comm_state_private.h")
         list(APPEND extra "${game_source}/src/comm_state.c")
     endif()
@@ -169,7 +176,12 @@ foreach(relative IN LISTS overlay_native_sources)
     set(output "${native_root}/${relative}")
     list(FIND native_sources "${relative}" native_source_index)
     if(native_source_index EQUAL -1)
-        native_generate(native "${game_source}/${relative}" "${output}")
+        set(extra)
+        if(relative STREQUAL "src/application/pokewalker/pokewalker_ir_requests.c")
+            list(APPEND extra "${game_source}/include/application/pokewalker/pokewalker_ir_internal.h"
+                "${game_source}/src/application/pokewalker/pokewalker_ir_requests.alias-map.json")
+        endif()
+        native_generate(native "${game_source}/${relative}" "${output}" ${extra})
     endif()
     get_filename_component(original_directory "${game_source}/${relative}" DIRECTORY)
     set_property(SOURCE "${output}" APPEND PROPERTY COMPILE_OPTIONS
@@ -231,7 +243,33 @@ target_sources(heartgold_main PRIVATE
 set(native_mi_clear "${native_root}/lib/NitroSDK/src/mi/mi_clear_fast.c")
 native_generate(native-mi-clear-fast
     "${game_source}/lib/NitroSDK/src/mi/mi_memory.c" "${native_mi_clear}")
-target_sources(heartgold_runtime PRIVATE "${native_mi_clear}")
+target_sources(heartgold_runtime PRIVATE "${native_mi_clear}"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os/msl_arithmetic.c"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os/card_spi_host.c")
+set(msl_fp_original "${game_source}/lib/MSL_C/src/msl_fp_runtime.c")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${msl_fp_original}")
+file(SHA256 "${msl_fp_original}" msl_fp_digest)
+if(NOT msl_fp_digest STREQUAL "4772579d74e6406a595ce01ebbbcc45b1f64bf7b7b79833b16b509f591c1dcaa")
+    message(FATAL_ERROR "Original MSL arithmetic runtime changed; revalidate native ABI bridges")
+endif()
+add_test(NAME native_msl_arithmetic COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_msl_arithmetic.py"
+    --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}")
+add_test(NAME pokewalker_native_abi COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_pokewalker_native.py"
+    --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}")
+# Original CARD protocol, with native pointer storage and an explicit physical
+# cartridge register boundary. No successful hardware response is synthesized.
+foreach(member card_spi_wait card_spi_wait_cycles card_spi_wait_init)
+    set(output "${native_root}/lib/NitroSDK/src/card/${member}.c")
+    native_generate(native "${game_source}/lib/NitroSDK/src/card/${member}.c" "${output}")
+    target_sources(heartgold_runtime PRIVATE "${output}")
+endforeach()
+set(card_storage "${native_root}/lib/asm/card_spi_storage.c")
+native_generate(native-card-spi-storage "${game_source}/lib/asm/nitro_sdk_data.s" "${card_storage}")
+target_sources(heartgold_runtime PRIVATE "${card_storage}")
+target_include_directories(heartgold_runtime BEFORE PRIVATE "${native_root}/lib/include")
+add_dependencies(heartgold_runtime heartgold_native_headers)
 add_test(NAME linker_contracts COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_linker_contracts.py"
     --root "${PROJECT_SOURCE_DIR}" --build "${PROJECT_BINARY_DIR}"
@@ -342,9 +380,6 @@ target_include_directories(heartgold_sound_storage PRIVATE "${native_root}/lib/i
 target_compile_options(heartgold_sound_storage PRIVATE "-idirafter${game_source}/lib/include")
 add_dependencies(heartgold_sound_storage heartgold_native_headers fx_constants)
 target_link_libraries(heartgold_main PUBLIC heartgold_sound_storage)
-if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
-    include("${CMAKE_CURRENT_LIST_DIR}/native_overlays.cmake")
-endif()
 add_executable(test_sound_storage "${PROJECT_SOURCE_DIR}/tests/test_sound_storage.c")
 target_link_libraries(test_sound_storage PRIVATE heartgold_sound_storage nitro_sdk)
 target_include_directories(test_sound_storage PRIVATE "${native_root}/lib/include")

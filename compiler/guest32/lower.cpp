@@ -12,6 +12,7 @@
 #include "llvm/Transforms/Utils/PromoteMemToReg.h"
 #include "llvm/IR/Dominators.h"
 #include "llvm/IR/StructuralHash.h"
+#include "llvm/Analysis/ValueTracking.h"
 #include <map>
 #include <functional>
 using namespace llvm;
@@ -340,6 +341,23 @@ int main(int argc, char **argv) {
             Args.push_back(PreviousResult);
           }else if(Edge && Edge->mode=="live-in"){
             if(!ImplicitR0)reject("missing register live-in");Args.push_back(ImplicitR0);
+          }else if(Edge && Edge->mode=="branch-value"){
+            // Original r0 is the saved field tested by the incoming branch.
+            // Require that exact SSA load, not a later reload after callbacks.
+            BasicBlock *Pred=BB.getSinglePredecessor();
+            auto *Branch=Pred?dyn_cast<CondBrInst>(Pred->getTerminator()):nullptr;
+            auto *Cmp=Branch?dyn_cast<ICmpInst>(Branch->getCondition()):nullptr;
+            auto *Zero=Cmp?dyn_cast<ConstantInt>(Cmp->getOperand(1)):nullptr;
+            auto *Load=Cmp?dyn_cast<LoadInst>(Cmp->getOperand(0)):nullptr;
+            if(X->arg_size()!=0 || !Branch || Branch->getSuccessor(0)!=&BB || !Cmp ||
+               Cmp->getPredicate()!=ICmpInst::ICMP_NE || !Zero || !Zero->isZero() ||
+               !Load || !Load->getType()->isIntegerTy(32) || Edge->argument>=F.arg_size())
+              reject("register branch-value shape mismatch");
+            int64_t Offset=0;
+            Value *Origin=GetPointerBaseWithConstantOffset(Load->getPointerOperand(),Offset,DL);
+            if(Origin!=F.getArg(Edge->argument) || Offset!=Edge->offset)
+              reject("register branch-value field mismatch");
+            Args.push_back(Get(Load));
           }
           Type *ResultType=X->use_empty()?B.getVoidTy():valueType(X->getType());
           bool Preserved=Edge && Edge->mode=="preserved-argument";

@@ -324,7 +324,136 @@ def native_libc(relative, text):
     return headers + text
 
 
+
+POKEWALKER_ABI_INPUTS = {
+    "include/application/pokewalker/pokewalker_ir.h": "436e1dd6795cfbf8ecf4b5a65ad81107299c308270ee167800166e3d2836d765",
+    "include/application/pokewalker/pokewalker_ir_internal.h": "6a0ec0b5ef36c2d20798b04d86ec1166c83cb56c95fd3824f26dfdd424a77101",
+    "src/application/pokewalker/pokewalker_ir_requests.c": "053ab4bdeff6fc289e70c3fdb511f827613c11cd3a97dbbd88dc1908c438bb89",
+    "src/application/pokewalker/pokewalker_ir_status.c": "caf8d128e91464e5c48d26d4681a1e3b9ec5ab70c3d98407e15f4b663c7cbc70",
+    "lib/include/nitro/card/card_spi_wait_internal.h": "7bc527d7f68f14131ba83db63dd661d33032449ece97658cfff6ef26fa0648bb",
+    "lib/NitroSDK/src/card/card_spi_wait.c": "14a2c756126316176209128569cc9f6e5987c8d225068cbcf1c3d14949829a33",
+    "lib/NitroSDK/src/card/card_spi_wait_cycles.c": "65d6cf1f16ad44ca93bfb79fe452ef645fe0ed2e0b34ea905fdd198ffdd998b8",
+    "lib/NitroSDK/src/card/card_spi_wait_init.c": "2dbdf695362a0c97a30246a56a7109f63e05a96774887678c45e1f8b574c7126"
+}
+
+
+def pokewalker_abi(relative, text, root):
+    if hashlib.sha256(text.encode()).hexdigest() != POKEWALKER_ABI_INPUTS[relative]:
+        raise ValueError('Pokewalker native ABI source drift: '+relative)
+    internal = 'include/application/pokewalker/pokewalker_ir_internal.h'
+    requests = 'src/application/pokewalker/pokewalker_ir_requests.c'
+    if relative == 'include/application/pokewalker/pokewalker_ir.h':
+        return '#include <stdint.h>\n'+replace(text,'void *data, u32 address, int size','void *data, uintptr_t address, int size')
+    if relative == internal:
+        original_requests=(root/requests).read_text()
+        if hashlib.sha256(original_requests.encode()).hexdigest()!=POKEWALKER_ABI_INPUTS[requests]:
+            raise ValueError('Pokewalker shared owner changed')
+        buffers=span(original_requests,'typedef struct PokewalkerIrWorkBuffers {','} PokewalkerIrWorkBuffers;')
+        sync=span(original_requests,'typedef struct PokewalkerIrWorkSync {','} PokewalkerIrWorkSync;')
+        progress=span(original_requests,'typedef struct PokewalkerIrWorkProgress {','} PokewalkerIrWorkProgress;')
+        transfer=span(text,'typedef struct PokewalkerIrTransfer {','} PokewalkerIrTransfer;')
+        # The transfer alias starts one original pointer into the queue. Its
+        # opaque prefix is the rest of that same queue, not extra storage.
+        transfer=replace(transfer,'u8 unk_00[0x1C];','u8 unk_00[sizeof(OSMessageQueue) - sizeof(void *)];')
+        transfer=replace(transfer,'u32 address;', 'uintptr_t address;')
+        transfer=replace(transfer,'u32 addressStart;', 'uintptr_t addressStart;')
+        old=span(text,'typedef struct PokewalkerIrTransfer {','} PokewalkerIrTransfer;')
+        text=replace(text,old,transfer)
+        # The full original work view already covers header and buffer owners.
+        # Its unk_1C is the one-message array, an OSMessage (native pointer).
+        text=replace(text,'u32 unk_1C;','OSMessage messages[1];')
+        text=replace(text,'    void *compressedStroll;\n} PokewalkerIrWork;',
+                     '    void *compressedStroll;\n    u8 *compressedRecordSizes;\n    u8 *compressedRecords;\n} PokewalkerIrWork;')
+        # One canonical mutex/queue/payload allocation replaces separate C
+        # declarations whose original aliases span owner boundaries.
+        payload=transfer.split('u8 command;',1)[1].split('} PokewalkerIrTransfer;',1)[0]
+        payload='    u8 command;'+payload
+        sync=sync[:sync.index('    u8 command;')]+payload+'    u16 unk_3E;\n    u8 buffer[0x74];\n} PokewalkerIrWorkSync;'
+        text=replace(text,'extern OSMessage gPokewalkerIrBuffers[];',
+                     'extern PokewalkerIrWorkBuffers gPokewalkerIrBuffers;')
+        text=replace(text,'extern OSMutex gPokewalkerIrSync;',
+                     'extern PokewalkerIrWorkSync gPokewalkerIrSync;\nextern PokewalkerIrWorkProgress gPokewalkerIrProgress;')
+        text=replace(text,'extern PokewalkerIrWork gPokewalkerIrWork;',
+                     buffers+'\n'+sync+'\n'+progress+'\nextern PokewalkerIrWork gPokewalkerIrWork;')
+        return '#include <stdint.h>\n'+text
+    if relative == requests:
+        text=replace(text,'#include "application/pokewalker/pokewalker_ir.h"',
+                     '#include "application/pokewalker/pokewalker_ir_internal.h"')
+        text=replace(text,span(text,'typedef struct PokewalkerIrWorkHeader {','PokewalkerIrWorkProgress gPokewalkerIrProgress;'),
+                     'PokewalkerIrWork gPokewalkerIrWork;\nPokewalkerIrWorkSync gPokewalkerIrSync;')
+        text=text.replace('gPokewalkerIrBuffers.', 'gPokewalkerIrWork.').replace('gPokewalkerIrProgress.', 'gPokewalkerIrSync.')
+        text=replace(text,'gPokewalkerIrWork.status = status;', 'gPokewalkerIrWork.status = (PokewalkerIrStatus *)status;',count=2)
+        text=replace(text,'gPokewalkerIrWork.blocks = blocks;', 'gPokewalkerIrWork.blocks = (PokewalkerIrBlocks *)blocks;',count=2)
+        text += pokewalker_aliases(root)
+        return text
+    if relative.endswith('/pokewalker_ir_status.c'):
+        return text.replace('gPokewalkerIrTransfer.', 'gPokewalkerIrSync.')
+    if relative.endswith('/card_spi_wait_internal.h'):
+        # Materialize the original interior alias as an actual C subobject,
+        # so optimized native code never accesses incompatible global views.
+        first=text.index('    u32 active;      //')
+        last=text.index('    u32 unk_10;',first)+len('    u32 unk_10;')
+        return text[:first]+'    CardSpiTransfer transfer;'+text[last:]
+    if relative.endswith('/card_spi_wait_init.c'):
+        text=replace(text,'    u32 active;', '    _Alignas(8) u32 active;')
+        text=replace(text,'extern CardSpiWaitHead gCardSpiWait;', 'extern CardSpiWait gCardSpiWait;')
+        text=replace(text,'gCardSpiWait.active', 'gCardSpiWait.transfer.active')
+        return text+'\n_Static_assert(__builtin_offsetof(CardSpiWaitHead,active) == __builtin_offsetof(CardSpiWait,transfer.active), "shared SPI head");\n'
+    if relative.endswith('/card_spi_wait.c'):
+        # Lvalue macros preserve the original read/write and polling order.
+        # With no physical cartridge transport, the accessor terminates before
+        # dereferencing an unmapped DS address or returning invented status.
+        text=replace(text,'#pragma force_active on', '#include \"card_spi_host.h\"\n#pragma force_active on')
+        text=text.replace('gCardSpiWait.input','gCardSpiWait.transfer.input').replace('gCardSpiWait.output','gCardSpiWait.transfer.output')
+        return text.replace('&gCardSpiTransfer','&gCardSpiWait.transfer')
+    return text
+
+
+def pokewalker_aliases(root):
+    alias_map=root/'src/application/pokewalker/pokewalker_ir_requests.alias-map.json'
+    if hashlib.sha256(alias_map.read_bytes()).hexdigest() != '7ac91219180952f182d6be01bae10ad1e5de9dca68a4504020da05007148a766':
+        raise ValueError('Pokewalker original shared-storage aliases changed')
+    internal=(root/'include/application/pokewalker/pokewalker_ir_internal.h').read_text()
+    transfer=span(internal,'typedef struct PokewalkerIrTransfer {','} PokewalkerIrTransfer;')
+    fields=re.findall(r'\b(?:u8|u16|u32)\s*\*?\s*(\w+)\s*(?:;|\[)',transfer)
+    fields=[f for f in fields if f!='unk_00']
+    aliases={
+        'gPokewalkerIrBuffers':('gPokewalkerIrWork','__builtin_offsetof(PokewalkerIrWork,messages)'),
+        'gPokewalkerIrImageSizes':('gPokewalkerIrWork','__builtin_offsetof(PokewalkerIrWork,compressedImageSizes)'),
+        'gPokewalkerIrStrollSizes':('gPokewalkerIrWork','__builtin_offsetof(PokewalkerIrWork,compressedStrollSizes)'),
+        'gPokewalkerIrMessageQueue':('gPokewalkerIrSync','__builtin_offsetof(PokewalkerIrWorkSync,queue)'),
+        'gPokewalkerIrTransfer':('gPokewalkerIrSync','__builtin_offsetof(PokewalkerIrWorkSync,queue)+sizeof(void*)'),
+        'gPokewalkerIrProgress':('gPokewalkerIrSync','__builtin_offsetof(PokewalkerIrWorkSync,totalChunks)'),
+        'gPokewalkerIrSendBuffer':('gPokewalkerIrSync','__builtin_offsetof(PokewalkerIrWorkSync,buffer)'),
+    }
+    out='\n__attribute__((used)) static void hg_pokewalker_storage_aliases(void) {\n'
+    for name,(owner,offset) in aliases.items():
+        out+='    __asm__ volatile(".globl _'+name+'\\n.set _'+name+',_'+owner+'+%c0" : : "i"('+offset+'));\n'
+    out+='}\n'
+    def assertion(expr):return '_Static_assert('+expr+', "Pokewalker shared storage ABI");\n'
+    requests=(root/'src/application/pokewalker/pokewalker_ir_requests.c').read_text()
+    buffers=span(requests,'typedef struct PokewalkerIrWorkBuffers {','} PokewalkerIrWorkBuffers;')
+    names=re.findall(r'\b(?:OSMessage|PokewalkerIrIdentity|void|u8|u64)\s*\*?\s*(\w+)\s*(?:;|\[)',buffers)
+    for field in names:
+        out+=assertion('__builtin_offsetof(PokewalkerIrWork,'+field+') == __builtin_offsetof(PokewalkerIrWork,messages)+__builtin_offsetof(PokewalkerIrWorkBuffers,'+field+')')
+    for field in fields:
+        out+=assertion('__builtin_offsetof(PokewalkerIrWorkSync,'+field+') == __builtin_offsetof(PokewalkerIrWorkSync,queue)+sizeof(void*)+__builtin_offsetof(PokewalkerIrTransfer,'+field+')')
+    for field in ['totalChunks','totalChunk','totalSize','unk_3E','buffer']:
+        out+=assertion('__builtin_offsetof(PokewalkerIrWorkSync,'+field+') == __builtin_offsetof(PokewalkerIrWorkSync,totalChunks)+__builtin_offsetof(PokewalkerIrWorkProgress,'+field+')')
+    out+=assertion('sizeof(((PokewalkerIrTransfer*)0)->address) == sizeof(void*)')
+    out+=assertion('sizeof(PokewalkerIrPacket) == 8')
+    return out
+
+
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + (
+    'src/application/pokewalker/pokewalker_ir_requests.c',
+    'src/application/pokewalker/pokewalker_ir_status.c',
+)))
+
+
 def _adapt(relative, text, root):
+    if relative in POKEWALKER_ABI_INPUTS:
+        return pokewalker_abi(relative,text,root)
     if relative == "src/application/ball_capsule_editor.c":
         text = replace(
             text,
@@ -491,6 +620,28 @@ def adapt(relative, text, root):
                 result = result.replace(old, new)
             elif new not in result:
                 raise ValueError('Native header routing fragment changed: ' + relative + ': ' + old)
+    if relative == 'src/application/pokewalker/pokewalker_ir.c':
+        result=replace(result,'void *data, u32 address, int size','void *data, uintptr_t address, int size')
+        result=replace(result,'(u32)buffer & 3','(uintptr_t)buffer & 3')
+        # The final u16 is the original wire address; only the intermediate
+        # host pointer conversion changes width.
+        result=replace(result,'(u16)(u32)gPokewalkerIrTransfer.data','(u16)(uintptr_t)gPokewalkerIrTransfer.data')
+        result,count=re.subn(r'\(u32\)(?=\(?gPokewalkerIrWork\.(?:status|blocks|records|walkerMon)\b)','(uintptr_t)',result)
+        if count!=9: raise ValueError('Pokewalker destination casts changed: '+str(count))
+        result=replace(result,'&gPokewalkerIrSync','&gPokewalkerIrSync.mutex',count=5)
+        result=replace(result,'gPokewalkerIrBuffers, 1','gPokewalkerIrWork.messages, 1')
+        result=result.replace('gPokewalkerIrTransfer.', 'gPokewalkerIrSync.')
+        result=result.replace('&gPokewalkerIrMessageQueue','&gPokewalkerIrSync.queue')
+        result=result.replace('sizes = gPokewalkerIrImageSizes;', 'sizes = &gPokewalkerIrWork.compressedImageSizes;')
+        result=result.replace('sizes = gPokewalkerIrStrollSizes;', 'sizes = &gPokewalkerIrWork.compressedStrollSizes;')
+        result += '''
+_Static_assert(sizeof(PokewalkerIrLink) == 80 && _Alignof(PokewalkerIrLink) == 8, "native link storage");
+_Static_assert(sizeof(OSThread) == 424 && _Alignof(OSThread) == 8, "native thread storage");
+_Static_assert(sizeof(PokewalkerIrPacket) == 8 && sizeof(PokewalkerIrClock) == 40, "serialized IR packet and clock");
+_Static_assert(sizeof(PokewalkerIrIdentity) == 104 && sizeof(PokewalkerMon) == 16, "serialized IR identity and mon");
+_Static_assert(sizeof(PokewalkerIrRecord) == 136 && sizeof(PokewalkerIrStatus) == 3404, "serialized IR records");
+_Static_assert(sizeof(PokewalkerIrBlocks) == 1736, "serialized IR blocks");
+'''
     return result
 
 
@@ -1082,6 +1233,24 @@ _Static_assert(sizeof(G2dRendererContext)==32,"numeric renderer context and matr
 
 
 def asset_types(kind, text, source):
+    if kind == 'native-card-spi-storage':
+        if hashlib.sha256(text.encode()).hexdigest() != '5677a289072e2d843d96b1707a892efb0b78c0ea079585db9a996fd2193df9c7':
+            raise ValueError('Original CARD SPI storage changed')
+        return '''#include <nitro.h>
+#include <nitro/card/card_spi_wait_internal.h>
+CardSpiWait gCardSpiWait;
+u8 gCardSpiCommand[0xBC];
+u8 gCardSpiWriteCommand[0xC8];
+u16 gCardSpiLockId = 0xFFFD;
+_Static_assert(__builtin_offsetof(CardSpiWait,transfer.active) == 8, "native transfer alias");
+_Static_assert(__builtin_offsetof(CardSpiWait,transfer.input) == 8 + __builtin_offsetof(CardSpiTransfer,input), "shared input");
+_Static_assert(__builtin_offsetof(CardSpiWait,transfer.output) == 8 + __builtin_offsetof(CardSpiTransfer,output), "shared output");
+_Static_assert(sizeof(CardSpiWait) == 8 + sizeof(CardSpiTransfer), "shared transfer extent");
+__attribute__((used)) static void hg_card_spi_transfer_alias(void) {
+    __asm__ volatile(".globl _gCardSpiTransfer\\n.set _gCardSpiTransfer,_gCardSpiWait+%c0" : : "i"(__builtin_offsetof(CardSpiWait,transfer.active)));
+}
+'''
+
     if kind == "guest-mi-memory":
         spec = importlib.util.spec_from_file_location("native_mi", Path(__file__).with_name("native_mi.py"))
         module = importlib.util.module_from_spec(spec)
