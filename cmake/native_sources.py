@@ -311,6 +311,7 @@ OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tup
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c",)))
 
 def native_libc(relative, text):
     for declaration in LIBC_DECLARATIONS[relative]:
@@ -324,6 +325,22 @@ def native_libc(relative, text):
 
 
 def _adapt(relative, text, root):
+    if relative == "src/application/ball_capsule_editor.c":
+        text = replace(
+            text,
+            "(int)gBallCapsuleEditorMenuItems[items[i]].func",
+            "(items[i] + 1)"
+        )
+        text = replace(
+            text,
+            "if (((BOOL(*)(BallCapsuleEditor *))input)(editor) != TRUE) {",
+            "if (input < 1 || input > BALL_CAPSULE_MENU_ITEM_SWITCH + 1) {\n"
+            "                    GF_ASSERT(FALSE);\n"
+            "                    break;\n"
+            "                }\n"
+            "                if (gBallCapsuleEditorMenuItems[input - 1].func(editor) != TRUE) {"
+        )
+        return text
     if relative == 'src/global_terminal/global_terminal_socket.c':
         if hashlib.sha256(text.encode()).hexdigest() != 'ccb95e6265138c5f0a21a6c024117b3fbbc946233ad8b23253e40ab01be36f5f':
             raise ValueError('Global Terminal socket ABI source drift')
@@ -1065,6 +1082,11 @@ _Static_assert(sizeof(G2dRendererContext)==32,"numeric renderer context and matr
 
 
 def asset_types(kind, text, source):
+    if kind == "guest-mi-memory":
+        spec = importlib.util.spec_from_file_location("native_mi", Path(__file__).with_name("native_mi.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.translate(text, source)
     if kind == "native-mi-clear32":
         if (source.name != "mi_memory.c" or hashlib.sha256(text.encode()).hexdigest()
                 != "7bfc34240ca43ec5c45773a7dad14547b0bb38fe7638c055a0f735e0aa0eb592"):

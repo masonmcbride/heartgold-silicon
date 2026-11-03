@@ -9821,5 +9821,43 @@
         "alignment": 4
       }
     }
+  },
+  "asm/ball_capsule_editor_data.o": {
+    "inputs": {
+      "asm/ball_capsule_editor_data.s": "2927153db250575d9eeff056be99839d08306182bc378283e9240e6cbaf99422",
+      "src/application/ball_capsule_editor.c": "1c1360893c1876ccfe2e071bcbffb81fc7ebedafc26bdb3122bdf9c5c7178f36"
+    },
+    "layouts": {
+      "gBallCapsuleEditorModes": {
+        "source_size": 20,
+        "alignment": 8,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ]
+      },
+      "gBallCapsuleEditorMenuItems": {
+        "source_size": 40,
+        "alignment": 8,
+        "pointers": [
+          4,
+          12,
+          20,
+          28,
+          36
+        ],
+        "padding": {
+          "4": 4,
+          "12": 4,
+          "20": 4,
+          "28": 4,
+          "36": 4
+        }
+      }
+    },
+    "reviewed": true
   }
 }
