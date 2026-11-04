@@ -30,7 +30,9 @@ struct CodeSymbol {
   FunctionType *type;
   bool local, signReturn, addressTaken, definition,coalesce;
   std::vector<bool> used;
-  bool returnsTwice=false,noReturn=false;
+  bool returnsTwice=false,noReturn=false,executable=true,nativeBoundary=false;
+  std::string returnHook;
+  std::vector<unsigned> returnArguments;
 };
 struct RegisterEdge {
   std::string source,function,target,previous,mode; unsigned line,argument,offset;
@@ -52,6 +54,12 @@ struct Image {
       S.used.push_back(true);
       S.returnsTwice=O.getBoolean("returns_twice").value_or(false);
       S.noReturn=O.getBoolean("noreturn").value_or(false);
+      S.executable=O.getBoolean("executable").value_or(true);
+      S.returnHook=O.getString("return_hook").value_or("").str();
+      if(auto *Arguments=O.getArray("return_arguments"))for(auto &V:*Arguments){
+        auto Index=V.getAsInteger();if(!Index || *Index<0 || (uint64_t)*Index>=S.type->getNumParams())reject("return hook argument index");
+        S.returnArguments.push_back(*Index);
+      }
       if(auto *U=O.getArray("used_flat"))for(auto &V:*U)S.used.push_back(V.getAsBoolean().value_or(true));
       codes.emplace(S.key,std::move(S));
     }
@@ -120,6 +128,25 @@ static Value *guestCall(IRBuilder<> &B,FunctionCallee Callee,ArrayRef<Value*> Ar
     if(T->getReturnType()->isVoidTy())reject("void variadic provider used as value");
     return adaptScalar(B,R,Return,SignReturn);
   }
+  // Separately reconstructed original declarations may spell an ARM register
+  // pair as two words. Reconstitute only complete, aligned 64-bit lanes for a
+  // known definition; never extend one word or discard a high word.
+  if(Extra && !T->isVarArg() && Args.size()>T->getNumParams()){
+    SmallVector<Value*> Packed{Args[0]};unsigned Source=1,Lane=0;bool Valid=true;
+    for(unsigned I=1;I<T->getNumParams();++I){
+      Type *Want=T->getParamType(I);
+      if(Source>=Args.size()){Valid=false;break;}
+      if(Want->isIntegerTy(64) && Args[Source]->getType()->isIntegerTy(32)){
+        if((Lane&1) || Source+1>=Args.size() || !Args[Source+1]->getType()->isIntegerTy(32)){Valid=false;break;}
+        Value *Low=B.CreateZExt(Args[Source],Want),*High=B.CreateZExt(Args[Source+1],Want);
+        Packed.push_back(B.CreateOr(Low,B.CreateShl(High,32)));Source+=2;Lane+=2;
+      }else{
+        if(!scalarCompatible(Args[Source]->getType(),Want)){Valid=false;break;}
+        Packed.push_back(Args[Source++]);Lane+=Want->isIntegerTy(64)?2:1;
+      }
+    }
+    if(Valid && Source==Args.size()){Flat=Packed;Args=Flat;}
+  }
   if(Args.size()<T->getNumParams()){
     for(unsigned I=Args.size();I<T->getNumParams();++I){
       if(!Used || I>=Used->size() || (*Used)[I])reject("missing observable guest argument: "+Callee.getCallee()->getName()+" argument "+Twine(I-1));
@@ -165,7 +192,7 @@ static Function *indirectDispatcher(Module &Out,Image &Img,ABI &Interfaces,Modul
   SmallVector<Value*> Values{F->getArg(0)};for(unsigned I=2;I<F->arg_size();++I)Values.push_back(F->getArg(I));
   for(const auto &Pair:Img.codes){
     const CodeSymbol &K=Pair.second;
-    if(!K.addressTaken)continue;
+    if(!K.addressTaken || !K.executable)continue;
     if(!K.definition && !Interfaces.calls.count(K.name))continue;
     FunctionType *T=guestSignature(K.type,C);
     unsigned Fixed=T->getNumParams()-(hasArgumentHomes(K.type)?1:0);
@@ -200,7 +227,7 @@ static Value *constantValue(Value *X,IRBuilder<> &B,const DataLayout &DL,
   }
   if(auto *F=dyn_cast<Function>(X)){
     auto I=Img.codes.find(symbolKey(*F));if(I==Img.codes.end())reject("missing guest code identity: "+F->getName());
-    if(!I->second.definition){
+    if(!I->second.definition && !I->second.nativeBoundary){
       // A declaration is not proof that a code coordinate exists. In particular
       // linker absolute symbols written as functions must not become invented
       // callback IDs. Retain a genuine unresolved coordinate until its owning

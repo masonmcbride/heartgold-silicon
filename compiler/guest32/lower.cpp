@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
     if (verifyModule(*Native, &errs())) return 1;
     if (Native->getDataLayout().getPointerSizeInBits() != 64) reject("native ABI needs 64-bit pointers");
     Interfaces.read(AbiPath, *Native);
+    for(auto &Pair:Img.codes)Pair.second.nativeBoundary=Interfaces.calls.count(Pair.second.name);
     for (const auto &S : Interfaces.calls) if (Function *F = In->getFunction(S.first)) ABI::checkGuest(*F,S.second);
     for (const auto &S : Interfaces.exports) {
       Function *F = In->getFunction(S.first);
@@ -358,6 +359,12 @@ int main(int argc, char **argv) {
           auto *S=B.CreateSwitch(Get(X->getCondition()),Blocks.at(X->getDefaultDest()),X->getNumCases());
           for(auto Case:X->cases())S->addCase(Case.getCaseValue(),Blocks.at(Case.getCaseSuccessor()));R=S;
         } else if (auto *X = dyn_cast<ReturnInst>(&I)) {
+          auto Contract=Img.codes.find(symbolKey(F));
+          if(Contract!=Img.codes.end() && !Contract->second.returnHook.empty()){
+            SmallVector<Value*> Args{Base};
+            for(unsigned Index:Contract->second.returnArguments)Args.push_back(V.at(F.getArg(Index)));
+            runtime(B,Out,Contract->second.returnHook,B.getVoidTy(),Args);
+          }
           if(Frame){
             if(X->getReturnValue() && X->getReturnValue()->getType()->isPointerTy())
               runtime(B,Out,"g32_check_return",B.getVoidTy(),{Base,Frame,Get(X->getReturnValue())});

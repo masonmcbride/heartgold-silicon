@@ -20,6 +20,7 @@ typedef struct Continuation {
     void *ram;
     uint32_t guest;
     uint32_t identity;
+    uint32_t thread,thread_top,thread_bottom;
     void *frame;
     uint32_t stack,floor;
     void *native_stack;
@@ -63,12 +64,28 @@ static Continuation *get(void *ram,uint32_t address){
 }
 void guest32_OS_InitContext(void *ram,uint32_t address,uint32_t pc,uint32_t sp){
     Continuation *p=get(ram,address);p->initialized=1;p->saved=0;p->reset=1;
+    /* OS_InitContext also accepts standalone contexts. Only the verified
+     * OS_CreateThread completion contract may establish an OSThread owner. */
+    p->thread=0;p->thread_top=0;p->thread_bottom=0;
     /* Exact original OS_InitContext stores. CP context is not zeroed there. */
     pc+=4;write32(ram,address+64,pc);write32(ram,address+68,sp);sp-=0x40;
     if(sp&4)sp-=4;write32(ram,address+56,sp);
     write32(ram,address,(pc&1)?0x3f:0x1f);
     for(unsigned i=0;i<13;i++)write32(ram,address+4+4*i,0);
     write32(ram,address+60,0);
+}
+void g32_bind_thread_context(void *ram,uint32_t thread,uint32_t bottom,uint32_t size){
+    /* These offsets are guarded by original source/header hashes and ARM32
+     * static assertions in the original scheduler regression. The hook runs
+     * only after all original OS_CreateThread stores have completed. */
+    g32_resolve(ram,thread,192,0);
+    if(size<8 || bottom<size)bad("thread registration stack extent");
+    uint32_t top=bottom-size;
+    if(read32(ram,thread+144)!=top || read32(ram,thread+148)!=bottom)bad("thread registration disagrees with original stores");
+    g32_resolve(ram,top,size,0);
+    Continuation *p=get(ram,thread);
+    if(!p->initialized || p->saved)bad("thread registration requires original context initialization");
+    p->thread=thread;p->thread_top=top;p->thread_bottom=bottom;
 }
 Continuation *g32_context_save_record(void *ram,uint32_t address){
     Continuation *p=get(ram,address);Contexts *c=contexts(ram);
@@ -97,15 +114,14 @@ Continuation *g32_context_load_record(void *ram,uint32_t address){
     Contexts *c=contexts(ram);Continuation *p=get(ram,address),*old=c->current;
     if(!p->saved && !p->initialized)bad("load without original initialization or save");
     if(old)g32_execution_save(ram,&old->frame,&old->stack,&old->floor);
-    if(old && old!=p && old->initialized && read32(ram,old->guest+100)==2){
+    if(old && old!=p && old->thread && read32(ram,old->thread+100)==2){
         g32_execution_discard(ram);g32_execution_save(ram,&old->frame,&old->stack,&old->floor);
     }
     if(p->saved){
         if(read32(ram,address+64)!=p->identity+4)bad("modified saved program counter lacks a compiled continuation");
     } else {
-        /* Original OSThread starts with OSContext; offsets are ARM32-asserted by
-         * the executable original scheduler test. No native OSThread projection. */
-        uint32_t top=read32(ram,address+144),bottom=read32(ram,address+148),sp=read32(ram,address+56);
+        if(!p->thread)bad("initial context has no validated thread/stack owner");
+        uint32_t top=p->thread_top,bottom=p->thread_bottom,sp=read32(ram,address+56);
         if(top>=bottom || sp<top+4 || sp>bottom-4)bad("original thread stack bounds");
         g32_resolve(ram,top,bottom-top,0);
         if(p==old && p->native_stack)bad("active destructor stack reset requires deferred stack retirement");

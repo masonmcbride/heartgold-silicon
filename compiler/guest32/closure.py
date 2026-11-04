@@ -26,6 +26,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('game','build','out','llvm-bin','lowerer','image-root'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--discover-only',action='store_true')
+    p.add_argument('--reuse-discovery',action='store_true',help='Refresh effective changed inputs in the existing census, retaining unaffected original discovery')
     a=p.parse_args()
     for n in ('game','build','out','llvm_bin','lowerer','image_root'):setattr(a,n,getattr(a,n).resolve())
     a.out.mkdir(parents=True,exist_ok=True)
@@ -43,14 +44,21 @@ def main():
         write_if_changed(output,guest32_frontend(relative,source.read_text(),a.game))
         adapted.append({'type':'file','name':str(source),'external-contents':str(output),'use-external-name':False})
     overlay=a.out/'frontend.json';write_if_changed(overlay,json.dumps(dict(version=0,roots=adapted)))
+    virtual_files={entry['name']:entry['external-contents'] for entry in adapted}
+    previous={}
+    if a.reuse_discovery and (a.out/'discovery.json').exists():
+        previous={m['object']:m for m in json.loads((a.out/'discovery.json').read_text())['members']}
     from frontend import flags as frontend_flags
     flags=frontend_flags(a.game,a.build)+['-ivfsoverlay',str(overlay)]
     def discover(r):
         r=dict(r)
         if r['kind']!='C':return r
         source=a.game/r['source'];work=a.out/r['object'];work.mkdir(parents=True,exist_ok=True)
+        old=previous.get(r['object'])
+        if (old and not old.get('frontend') and str(source) not in virtual_files and
+                old.get('sha256')==hashlib.sha256(source.read_bytes()).hexdigest()):return old
         ir=work/'guest.ll';desc=work/'description.json'
-        run=cached_run(list(map(str,[a.llvm_bin/'clang',*flags,'-S','-emit-llvm',source,'-o',ir,'-MD','-MF',str(ir)+'.d'])),[ir],inputs=[source,overlay,*[Path(x['external-contents']) for x in adapted]],depfile=str(ir)+'.d')
+        run=cached_run(list(map(str,[a.llvm_bin/'clang',*flags,'-S','-emit-llvm',source,'-o',ir,'-MD','-MF',str(ir)+'.d'])),[ir],inputs=[source],depfile=str(ir)+'.d',virtual_files=virtual_files)
         (work/'frontend.log').write_text(run.stdout+run.stderr)
         r.update(sha256=hashlib.sha256(source.read_bytes()).hexdigest(),frontend=not run.returncode,frontend_diagnostic=run.stderr)
         if not run.returncode:
@@ -182,6 +190,18 @@ def main():
             cursor=(cursor+g['alignment']-1)&~(g['alignment']-1)
             c_globals[g['key']]=dict(offset=cursor,size=g['size']);cursor+=g['size']
     if cursor>=MAIN_BASE+MAIN_SIZE:raise ValueError('whole-provider static guest storage exceeds DS RAM')
+    from runtime_contracts import apply
+    apply(functions.values(),a.game)
+    # Source discovery is not executable admission. An unrelated unavailable
+    # main callback must not synthesize imports into every overlay dispatch.
+    # Keep its original identity and dependency evidence; calls fail closed.
+    prior_results=json.loads((a.out/'closure.json').read_text())['results'] if (a.out/'closure.json').exists() else []
+    prior_compiled={r['member'] for r in prior_results if r['compiled']}
+    def execution_domain(compiled):
+        available={key for key,defs in definitions.items() if any(member in compiled for member,f in defs)}
+        available.update(overlay_definitions)
+        for key,f in functions.items():f['executable']=not f['definition'] or key in available
+    execution_domain(prior_compiled)
     catalog=a.out/'catalog.json';catalog.write_text(json.dumps(dict(codes=list(functions.values()),globals=placements,c_globals=c_globals,images=shared['images'],static_end=cursor,register_edges=shared.get('register_edges',[])),indent=2)+'\n')
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
     conflict_keys={r['key'] for r in conflicts}
@@ -200,6 +220,12 @@ def main():
         (work/'object.log').write_text(run.stdout+run.stderr)
         return dict(member=member,compiled=not run.returncode,reason=run.stderr)
     with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(compile_member,sorted(selected)))
+    compiled={r['member'] for r in results if r['compiled']}
+    if compiled!=prior_compiled:
+        execution_domain(compiled)
+        data=json.loads(catalog.read_text());data['codes']=list(functions.values());catalog.write_text(json.dumps(data,indent=2)+'\n')
+        with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(compile_member,sorted(selected)))
+        if {r['member'] for r in results if r['compiled']}!=compiled:raise ValueError('executable provider domain did not converge')
     # Publish every translated member, while retaining all failed members and
     # external imports as outstanding closure requirements in the report.
     families={}
@@ -217,6 +243,21 @@ def main():
         headers=[f for f in desc['functions'] if f['definition'] and not f['local'] and Path(f.get('origin','')).suffix=='.h']
         families[member]=dict(archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),original_members={member:hashlib.sha256(source.read_bytes()).hexdigest()},symbols=owners,original_identities=identities,import_identities=imports,abi_representation='guest32',
                              inline_definitions={f['name']:dict(origin=str(Path(f['origin']).relative_to(a.game)),line=f['origin_line'],body_hash=f['body_hash'],params=f['params'],result=f['return'],header_sha256=hashlib.sha256(Path(f['origin']).read_bytes()).hexdigest()) for f in headers})
+    # Production bootstrap dispatch is derived from emitted, admitted main code,
+    # never declaration-only or nonresident overlay coordinates.
+    from runtime_contracts import dispatcher
+    admitted={f['key'] for r in results if r['compiled'] for f in descriptions[r['member']]['functions'] if f['definition']}
+    dispatch,entries=dispatcher(list(functions.values()),admitted)
+    dispatch_source=a.out/'thread-entry.c';dispatch_source.write_text(dispatch)
+    dispatch_object=a.out/'thread-entry.o';dispatch_archive=a.out/'thread-entry.a'
+    subprocess.run(list(map(str,[a.llvm_bin/'clang','-O2','-I'+str(ROOT/'hardware_drivers'),'-c',dispatch_source,'-o',dispatch_object])),check=True)
+    subprocess.run(list(map(str,[a.llvm_bin/'llvm-ar','rcsD',dispatch_archive,dispatch_object])),check=True)
+    (a.out/'thread-entry.json').write_text(json.dumps(dict(entries=entries,overlay_policy='reject until original residency loader exists'),indent=2)+'\n')
+    runtime_families={}
+    for name,archive,owner in [('thread-entry',dispatch_archive,'generated main code catalog'),('context',a.build/'libheartgold_guest32_context.a','lib/NitroSDK/src/os/os_context.c'),('cache',a.build/'libheartgold_guest32_cache.a','lib/NitroSDK/src/os/os_cache.c')]:
+        exports=emitted_symbols(archive,nm=str(a.llvm_bin/'llvm-nm'))
+        runtime_families[name]=dict(link_into_image=True,archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),symbols={n:owner for n in exports},original_identities={n:n.removeprefix('_guest32_') for n in exports},abi_representation='guest32')
+    (a.out/'runtime-providers.json').write_text(json.dumps(dict(families=runtime_families),indent=2)+'\n')
     (a.out/'providers.json').write_text(json.dumps(dict(schema=1,families=families),indent=2)+'\n')
     report=dict(roots=sorted(inv),selected_members=sorted(selected),results=results,conflicts=conflicts,unplaced_data=unplaced,static_end=cursor,counts=dict(discovered=len(members),frontend=sum(m.get('frontend',False) for m in members),selected=len(selected),compiled=sum(r['compiled'] for r in results)))
     (a.out/'closure.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report['counts']),flush=True)

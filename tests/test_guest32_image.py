@@ -160,6 +160,20 @@ def main():
             results.append(run([exe]).strip())
             for name,message in [('wrong','incompatible indirect signature'),('escape','escaped pointer'),('stale','unmapped, freed')]:
                 diagnostic=run([exe,name],ok=False);assert message in diagnostic,diagnostic
+    # Discovery of a source definition does not authorize executing an
+    # unadmitted provider. Keep the coordinate but reject it at dispatch.
+    unavailable=copy.deepcopy(catalog)
+    secret=next(f for f in unavailable['codes'] if f['name']=='secret')
+    secret['executable']=False
+    disabled=out/'unavailable.json';disabled.write_text(json.dumps(unavailable))
+    ir,desc=inputs['right']
+    lowered=out/'unavailable.ll'
+    run([tool,ir,lowered,'--abi',abi,'--native-ir',native_ir,'--image',disabled,'--guest-externals','--prefix','guest32_','--entry','Invoke'])
+    assert '@'+secret['native']+'(' not in lowered.read_text(),'unavailable definition synthesized an import'
+    host=out/'unavailable.c';host.write_text('#include "guest32.h"\n#include <stdint.h>\nextern unsigned guest32_Invoke(void*,unsigned,unsigned,unsigned);\nvoid *host_touch(void *ram,void *p,unsigned n){(void)ram;*(unsigned*)p+=n;return p;}\nint main(void){void *ram=g32_create(65536,4096);unsigned *p=g32_allocate(ram,8,4);p[0]='+str(secret['address'])+';p[1]=7;unsigned a=g32_encode(ram,p,8,0);return guest32_Invoke(ram,a,a+4,1);}')
+    exe=out/'unavailable'
+    run([clang,'-I'+str(ROOT/'hardware_drivers'),host,lowered,ROOT/'hardware_drivers/guest32.c','-o',exe])
+    diagnostic=run([exe],ok=False);assert 'unknown identity' in diagnostic,diagnostic
     (out/'results.json').write_text(json.dumps(dict(results=results,complete_image=coverage['summary']['complete_compilation'],
         fixture_scope='controlled browser input/event boundaries; genuine original random/work providers; all four original assembly snapshots'),indent=2)+'\n')
     print('\n'.join(results))

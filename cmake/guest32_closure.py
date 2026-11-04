@@ -28,6 +28,7 @@ def main():
             c=json.loads((archive.parent/'image.json').read_text())
             assert c['codes']==shared['codes'] and c['static_end']==shared['static_end']
             assert all(c[k]==shared['images'][f'OVY_{ident}'][k] for k in ('assembly_globals','c_globals'))
+    runtime=[]
     common=[str(b/'libheartgold_guest32_runtime.a'),str(b/'libheartgold_guest32_scalar_bridges.a'),str(b/'libheartgold_guest32_libc_memory.a')]
     native_interface=out/'native-main.tbd';interface(native_interface,'@executable_path/heartgold',set().union(*(symbols(path) for path in native_paths)))
     manifests=[b/'guest32-account/providers.json',b/'guest32-crc/providers.json',b/'guest32-std/providers.json',b/'guest32-mi/providers.json'];catalogs=[]
@@ -35,8 +36,10 @@ def main():
     for path in a.provider_manifest:
         manifests.append(path.resolve())
         for family in json.loads(path.read_text())['families'].values():
+            if family.get('link_into_image',False):runtime.append(str(Path(family['archive']).resolve()))
             if family['abi_representation']!='guest32':raise ValueError('experimental manifest requires guest32 representation')
             additional.append(Path(family['archive']).resolve())
+    runtime.sort(key=lambda path: 'thread-entry' in path)
     for ident,archive in zip((0,38),archives):
         directory=archive.parent;coverage=json.loads((directory/'coverage.json').read_text());catalog=json.loads((directory/'image.json').read_text());catalogs.append(catalog)
         assert coverage['summary']['complete_compilation'] and [m['object'] for m in coverage['members']]==coverage['image']['objects']
@@ -73,7 +76,9 @@ def main():
             # Prefer the verified original guest providers before optional
             # native scalar adapters; otherwise a pulled adapter object can
             # reintroduce native copies of state already owned by guest main.
-            if phase=='global':args+=['@'+str(contracts/f'image_{ident}.rsp')]
+            if phase=='global':
+                args+=runtime
+                args+=['@'+str(contracts/f'image_{ident}.rsp')]
             args+=common
             if phase!='global':args+=[str(native_interface)]
             if phase in ('providers','admitted','source'):args += [str(account),str(crc)]

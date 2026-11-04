@@ -1427,3 +1427,7 @@
 **Unknown:** source body, dependent providers and runtime ABI not included in uploaded evidence
 **Evidence:** INVENTORY_ONLY
 **Observed 2026-11-03:** original translation compiled. Complete original image linkage and full semantic correctness remain unvalidated; see [experiment report](EXPERIMENT_REPORT.md) and exact per-symbol observations.
+
+### Isolated link milestone after 3cc28c8
+
+See [LINK_MILESTONE.md](LINK_MILESTONE.md) for commands, mechanisms, counterexamples and execution limits. Actual rebuilt OVY_0 and OVY_38 global dylibs both link with exit 0 and empty unresolved sets and pass native image preflight. Main census: 703 frontend-successful, 586 selected, 574 compiled, versus 699/585/570. Four original members newly compile; the nine requested exports bind, and the four VCT imports bind to their original guest state owners. These are linkage observations, not upgrades of all 176 recipes to semantic correctness. Source discovery, executable admission and hardware validation remain distinct: 83 unavailable address-taken main definitions synthesized imports absent from both overlays' original IR, demonstrating why a located definition cannot automatically be admitted to indirect execution. Their catalog coordinates and original dependencies remain recorded; unavailable dispatch rejects and direct original imports remain required. Full CTest: 64/69 pass, with the same five previously known failures; original scheduler/SOCL, RC4, variadic homes, register-pair, VCT software, heap and cross-image regressions pass.

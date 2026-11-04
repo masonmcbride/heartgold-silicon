@@ -320,3 +320,79 @@ set_tests_properties(guest32_shared_execution PROPERTIES FIXTURES_REQUIRED guest
 add_test(NAME guest32_provider_experiments COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_provider_experiments.py" --build "${PROJECT_BINARY_DIR}"
     --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower> --execute)
+
+# Explicit completion target. Each stage validates content receipts against the
+# original sources, effective VFS dependencies, compiler and joint ABI catalog.
+# It is intentionally separate from game admission and hardware validation.
+set(guest32_provider_dir "${PROJECT_BINARY_DIR}/provider-closure170")
+set(guest32_provider_outputs)
+string(JSON guest32_main_count LENGTH "${guest32_model}" images main objects)
+math(EXPR guest32_main_last "${guest32_main_count}-1")
+foreach(i RANGE 0 ${guest32_main_last})
+    string(JSON obj GET "${guest32_model}" images main objects ${i})
+    string(JSON kind GET "${guest32_model}" members "${obj}" kind)
+    if(kind STREQUAL "C")
+        foreach(file IN ITEMS guest.ll guest.ll.d guest.ll.receipt.json frontend.log
+                description.json description.json.receipt.json abi.json native.ll
+                native.ll.receipt.json lower.log native.o native.o.receipt.json object.log provider.a)
+            list(APPEND guest32_provider_outputs "${guest32_provider_dir}/${obj}/${file}")
+        endforeach()
+    endif()
+endforeach()
+foreach(file IN LISTS guest32_shared_outputs)
+    string(REPLACE "${guest32_shared_dir}" "${guest32_provider_dir}" file "${file}")
+    list(APPEND guest32_provider_outputs "${file}")
+endforeach()
+add_custom_target(heartgold_guest32_provider_closure
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/finish.py"
+        --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_provider_dir}"
+        --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
+        --image-root "${guest32_shared_dir}" --compiler "${CMAKE_C_COMPILER}"
+    BYPRODUCTS ${guest32_provider_outputs} "${guest32_provider_dir}/complete.stamp"
+        "${guest32_provider_dir}/discovery.json" "${guest32_provider_dir}/closure.json"
+        "${guest32_provider_dir}/thread-entry.json" "${guest32_provider_dir}/bindings.json"
+        "${guest32_provider_dir}/providers.json" "${guest32_provider_dir}/runtime-providers.json"
+        "${guest32_provider_dir}/catalog.json" "${guest32_provider_dir}/thread-entry.c"
+        "${guest32_provider_dir}/thread-entry.o" "${guest32_provider_dir}/thread-entry.a"
+        "${guest32_provider_dir}/links/OVY_0-global.dylib"
+        "${guest32_provider_dir}/links/OVY_38-global.dylib"
+    DEPENDS guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
+        heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_std_build
+        heartgold_guest32_runtime heartgold_guest32_mi_manifest heartgold_guest32_scalar_bridges
+        heartgold_guest32_libc_memory heartgold_overlay_link_contract
+    VERBATIM)
+add_test(NAME guest32_effective_inputs COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_effective_inputs.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}")
+add_test(NAME guest32_varargs_execution COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_varargs.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+add_test(NAME guest32_original_execution COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_execution170.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+set(guest32_execution_data_members
+    lib/MSL_C/asm/MSL_Common_ctype.o lib/MSL_C/asm/MSL_Common_errno.o
+    lib/asm/wifi_data.o lib/asm/wifi_bss.o)
+set(guest32_execution_data_args)
+set(guest32_execution_data_sources)
+foreach(member IN LISTS guest32_execution_data_members)
+    list(APPEND guest32_execution_data_args --member "${member}")
+    string(REGEX REPLACE "\\.o$" ".s" relative "${member}")
+    list(APPEND guest32_execution_data_sources "${game_source}/${relative}")
+endforeach()
+add_custom_command(OUTPUT "${guest32_provider_dir}/data/provider.a"
+    "${guest32_provider_dir}/data/providers.json" "${guest32_provider_dir}/data/data.json"
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/data.py"
+        --game "${game_source}" --out "${guest32_provider_dir}/data" --llvm-bin "${guest32_tools}"
+        --owner main ${guest32_execution_data_args}
+    DEPENDS ${guest32_execution_data_sources} "${game_source}/main.lsf"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/data.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/original_layout.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/original_data_layouts.json"
+        "${PROJECT_SOURCE_DIR}/cmake/native_data_ir.py"
+    VERBATIM)
+add_custom_target(heartgold_guest32_execution_data DEPENDS "${guest32_provider_dir}/data/provider.a")
+add_test(NAME guest32_execution_data_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
+    --target heartgold_guest32_execution_data -j8)
+set_tests_properties(guest32_execution_data_build PROPERTIES FIXTURES_SETUP guest32_execution_data)
+set_tests_properties(guest32_original_execution PROPERTIES FIXTURES_REQUIRED guest32_execution_data)

@@ -3,6 +3,9 @@
 #include <stddef.h>
 #include "nitrowifi/socl_internal.h"
 #define CHECK(x) do{if(!(x))failure=__LINE__;}while(0)
+typedef char ThreadSize[sizeof(OSThread)==192?1:-1];
+typedef char ContextOffset[offsetof(OSThread,context)==0?1:-1];
+typedef char StateOffset[offsetof(OSThread,state)==100?1:-1];
 typedef char ContextSize[sizeof(OSContext)==100?1:-1];
 typedef char StackTop[offsetof(OSThread,stackTop)==144?1:-1];
 typedef char StackBottom[offsetof(OSThread,stackBottom)==148?1:-1];

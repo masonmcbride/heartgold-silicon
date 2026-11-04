@@ -10,7 +10,7 @@ def main():
  def run(args):
   r=subprocess.run(list(map(str,args)),capture_output=True,text=True);commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr));(out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n');assert r.returncode==0,r.stdout+r.stderr;return r.stdout
  flags=['-target','armv5-apple-darwin','-ffreestanding','-fno-builtin','-std=gnu89','-DSDK_ARM9','-DSDK_CODE_ARM','-DSDK_FINALROM',*['-I'+str(d) for d in (b/'include',game/'include',game/'include/library',game/'lib/include',game/'lib/NitroSDK/include')],'-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes']
- sources=[ROOT/'tests/guest32_varargs_guest.c',*[game/'lib/NitroSDK/src'/n for n in ('os/os_printf.c','std_sprintf.c','std_sprintf_writer.c')]]
+ sources=[ROOT/'tests/guest32_varargs_guest.c',ROOT/'tests/guest32_pair_provider.c',*[game/'lib/NitroSDK/src'/n for n in ('os/os_printf.c','std_sprintf.c','std_sprintf_writer.c')]]
  descriptions=[];codes={};globals_={};cursor=0x02200000
  for i,s in enumerate(sources):
   ir=out/(str(i)+'.guest.ll');desc=out/(str(i)+'.json');run([llvm/'clang',*flags,'-S','-emit-llvm',s,'-o',ir]);run([lowerer,ir,out/'unused.ll','--diagnose',desc]);d=json.loads(desc.read_text());descriptions.append(d)

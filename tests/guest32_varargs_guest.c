@@ -17,7 +17,9 @@ static int Halfwords(u16 api,u16 count,...) {
     u32 c=*(u32*)ap;
     return api==0x1234 && count==3 && a==0x11223344 && b==0x55667788 && c==0x99AABBCC;
 }
+extern int PairProvider(void *,u32,u32,u32);
 int ProbeVarargs(char *dest) {
+    if(!PairProvider(0,1,0x87654321,0x12345678) || !PairProvider(0,1,~0U,~0U) || !PairProvider(0,1,52365,0))return 6;
     if(!Mixed(7,-19,0x8877665544332211ULL,"x",(float)1.25))return 1;
     if(!Halfwords(0x1234,3,0x11223344,0x55667788,0x99AABBCC))return 2;
     if(OS_SNPrintf(dest,64,"%d %08x %s %llu",-17,0xabc,"ok",0x1122334455667788ULL)!=35)return 3;
