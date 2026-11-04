@@ -30,6 +30,7 @@ struct CodeSymbol {
   FunctionType *type;
   bool local, signReturn, addressTaken, definition,coalesce;
   std::vector<bool> used;
+  bool returnsTwice=false,noReturn=false;
 };
 struct RegisterEdge {
   std::string source,function,target,previous,mode; unsigned line,argument,offset;
@@ -49,16 +50,22 @@ struct Image {
       CodeSymbol S{(uint32_t)*O.getInteger("address"),O.getString("key")->str(),O.getString("name")->str(),O.getString("source")->str(),O.getString("native")->str(),
         FunctionType::get(readType(C,*O.get("return")),Args,O.getBoolean("varargs").value_or(false)),O.getBoolean("local").value_or(false),O.getBoolean("sign_return").value_or(false),O.getBoolean("address_taken").value_or(false),O.getBoolean("definition").value_or(false),O.getBoolean("coalesce").value_or(false),{}};
       S.used.push_back(true);
+      S.returnsTwice=O.getBoolean("returns_twice").value_or(false);
+      S.noReturn=O.getBoolean("noreturn").value_or(false);
       if(auto *U=O.getArray("used_flat"))for(auto &V:*U)S.used.push_back(V.getAsBoolean().value_or(true));
       codes.emplace(S.key,std::move(S));
     }
   }
 };
+static bool hasArgumentHomes(FunctionType *T){return T->isVarArg() && T->getNumParams()!=0;}
 static FunctionType *guestSignature(FunctionType *T,LLVMContext &C){
   SmallVector<Type*> A{PointerType::getUnqual(C)};
   std::function<void(Type*)> Add=[&](Type *P){if(auto *X=dyn_cast<ArrayType>(P)){for(unsigned I=0;I<X->getNumElements();++I)Add(X->getElementType());}else A.push_back(valueType(P));};
   for(Type *P:T->params())Add(P);
-  return FunctionType::get(valueType(T->getReturnType()),A,T->isVarArg());
+  // Original MSL va_start takes the address of the last named argument. Native
+  // ARM64 varargs do not have that layout. Pass one explicit guest home address.
+  if(hasArgumentHomes(T))A.push_back(Type::getInt32Ty(C));
+  return FunctionType::get(valueType(T->getReturnType()),A,T->isVarArg() && !hasArgumentHomes(T));
 }
 static void flattenValue(IRBuilder<> &B,Value *V,SmallVectorImpl<Value*> &Out){
   if(auto *A=dyn_cast<ArrayType>(V->getType()))for(unsigned I=0;I<A->getNumElements();++I)flattenValue(B,B.CreateExtractValue(V,{I}),Out);
@@ -81,9 +88,38 @@ static Value *adaptScalar(IRBuilder<> &B,Value *V,Type *T,bool Sign=false){
   if(!scalarCompatible(V->getType(),T))reject("incompatible guest call scalar "+typeText(V->getType())+" -> "+typeText(T));
   return Sign?B.CreateSExtOrTrunc(V,T):B.CreateZExtOrTrunc(V,T);
 }
-static Value *guestCall(IRBuilder<> &B,FunctionCallee Callee,ArrayRef<Value*> Args,Type *Return,bool SignReturn,bool Extra,const std::vector<bool> *Used=nullptr){
+static Value *guestCall(IRBuilder<> &B,FunctionCallee Callee,ArrayRef<Value*> Args,Type *Return,bool SignReturn,bool Extra,const std::vector<bool> *Used=nullptr,bool Homes=false){
   SmallVector<Value*> Flat;for(Value *A:Args)flattenValue(B,A,Flat);Args=Flat;
   FunctionType *T=Callee.getFunctionType();
+  if(Homes){
+    unsigned Fixed=T->getNumParams()-2;
+    if(Args.size()<Fixed+1)reject("missing fixed variadic argument: "+Callee.getCallee()->getName());
+    SmallVector<Value*> Passed{Args[0]},Words;
+    uint64_t Bytes=0;
+    for(unsigned I=1;I<Args.size();++I){
+      Value *V=I<=Fixed?adaptScalar(B,Args[I],T->getParamType(I)):Args[I];
+      Type *K=V->getType();
+      if(!K->isIntegerTy() && !K->isDoubleTy())reject("unsupported ARM32 argument home type");
+      if(I>Fixed && K->isIntegerTy() && K->getIntegerBitWidth()<32)reject("unpromoted variadic integer");
+      if(K->isIntegerTy() && K->getIntegerBitWidth()>64)reject("oversized ARM32 argument home");
+      Bytes+=alignTo((K->getPrimitiveSizeInBits().getFixedValue()+7)/8,4);
+      Words.push_back(V);if(I<=Fixed)Passed.push_back(V);
+    }
+    Value *Frame=runtime(B,*B.GetInsertBlock()->getModule(),"g32_frame_enter",B.getPtrTy(),{Args[0]});
+    auto &M=*B.GetInsertBlock()->getModule();
+    Value *Home=runtime(B,M,"g32_stack_alloc",B.getInt32Ty(),{Args[0],Frame,B.getInt64(Bytes),B.getInt32(4)});
+    uint64_t Offset=0;
+    for(Value *V:Words){
+      unsigned Size=(V->getType()->getPrimitiveSizeInBits().getFixedValue()+7)/8;
+      Value *P=runtime(B,M,"g32_resolve",B.getPtrTy(),{Args[0],B.CreateAdd(Home,B.getInt32(Offset)),B.getInt32(Size),B.getInt32(0)});
+      B.CreateAlignedStore(V,P,Align(1));Offset+=alignTo(Size,4);
+    }
+    Passed.push_back(Home);Value *R=B.CreateCall(Callee,Passed);
+    runtime(B,M,"g32_frame_leave",B.getVoidTy(),{Args[0],Frame});
+    if(Return->isVoidTy())return R;
+    if(T->getReturnType()->isVoidTy())reject("void variadic provider used as value");
+    return adaptScalar(B,R,Return,SignReturn);
+  }
   if(Args.size()<T->getNumParams()){
     for(unsigned I=Args.size();I<T->getNumParams();++I){
       if(!Used || I>=Used->size() || (*Used)[I])reject("missing observable guest argument: "+Callee.getCallee()->getName()+" argument "+Twine(I-1));
@@ -130,10 +166,12 @@ static Function *indirectDispatcher(Module &Out,Image &Img,ABI &Interfaces,Modul
   for(const auto &Pair:Img.codes){
     const CodeSymbol &K=Pair.second;
     if(!K.addressTaken)continue;
+    if(!K.definition && !Interfaces.calls.count(K.name))continue;
     FunctionType *T=guestSignature(K.type,C);
-    if(Values.size()<T->getNumParams())continue;
+    unsigned Fixed=T->getNumParams()-(hasArgumentHomes(K.type)?1:0);
+    if(Values.size()<Fixed)continue;
     if(!Site->getReturnType()->isVoidTy() && !scalarCompatible(T->getReturnType(),Site->getReturnType()))continue;
-    bool Match=true;for(unsigned I=0;I<T->getNumParams();++I)if(!scalarCompatible(Values[I]->getType(),T->getParamType(I)))Match=false;
+    bool Match=true;for(unsigned I=0;I<Fixed;++I)if(!scalarCompatible(Values[I]->getType(),T->getParamType(I)))Match=false;
     if(!Match)continue;
     auto *Case=BasicBlock::Create(C,"code_"+Twine(K.address),F);S->addCase(B.getInt32(K.address),Case);
     IRBuilder<> D(Case);
@@ -145,8 +183,9 @@ static Function *indirectDispatcher(Module &Out,Image &Img,ABI &Interfaces,Modul
       if(!Site->getReturnType()->isVoidTy())R=adaptScalar(D,R,Site->getReturnType(),K.signReturn);
     }else{
       auto Target=Out.getOrInsertFunction(K.native,T);
-      if(K.local)cast<GlobalValue>(Target.getCallee())->setVisibility(GlobalValue::HiddenVisibility);
-      R=guestCall(D,Target,Values,Site->getReturnType(),K.signReturn,true);
+      // Address-taken local functions have globally unique generated identities.
+      // Their guest-ABI entry must remain bindable by a peer image dispatcher.
+      R=guestCall(D,Target,Values,Site->getReturnType(),K.signReturn,true,nullptr,hasArgumentHomes(K.type));
     }
     if(Site->getReturnType()->isVoidTy())D.CreateRetVoid();else D.CreateRet(R);
   }
@@ -161,6 +200,16 @@ static Value *constantValue(Value *X,IRBuilder<> &B,const DataLayout &DL,
   }
   if(auto *F=dyn_cast<Function>(X)){
     auto I=Img.codes.find(symbolKey(*F));if(I==Img.codes.end())reject("missing guest code identity: "+F->getName());
+    if(!I->second.definition){
+      // A declaration is not proof that a code coordinate exists. In particular
+      // linker absolute symbols written as functions must not become invented
+      // callback IDs. Retain a genuine unresolved coordinate until its owning
+      // original provider or linker contract supplies it.
+      Module &M=*B.GetInsertBlock()->getModule();std::string Name="guest32_code_address_"+F->getName().str();
+      auto *Coordinate=M.getNamedGlobal(Name);
+      if(!Coordinate)Coordinate=new GlobalVariable(M,B.getInt32Ty(),true,GlobalValue::ExternalLinkage,nullptr,Name);
+      return B.CreateLoad(B.getInt32Ty(),Coordinate);
+    }
     return B.getInt32(I->second.address);
   }
   if(isa<ConstantPointerNull>(X))return B.getInt32(0);
@@ -168,6 +217,12 @@ static Value *constantValue(Value *X,IRBuilder<> &B,const DataLayout &DL,
   if(isa<UndefValue>(X))return UndefValue::get(valueType(X->getType()));
   if(isa<PoisonValue>(X))return PoisonValue::get(valueType(X->getType()));
   if(isa<ConstantAggregateZero>(X))return Constant::getNullValue(valueType(X->getType()));
+  if(auto *K=dyn_cast<Constant>(X);K && K->getType()->isAggregateType()){
+    Type *T=K->getType();Value *Result=PoisonValue::get(valueType(T));
+    unsigned Count=isa<StructType>(T)?cast<StructType>(T)->getNumElements():cast<ArrayType>(T)->getNumElements();
+    for(unsigned I=0;I<Count;++I)Result=B.CreateInsertValue(Result,constantValue(K->getAggregateElement(I),B,DL,Values,Img,External),{I});
+    return Result;
+  }
   if(auto *E=dyn_cast<ConstantExpr>(X)){
     Value *A=constantValue(E->getOperand(0),B,DL,Values,Img,External);
     if(auto *G=dyn_cast<GEPOperator>(E)){
@@ -184,6 +239,25 @@ static Value *constantValue(Value *X,IRBuilder<> &B,const DataLayout &DL,
 static void initializeConstant(IRBuilder<> &B,Module &Out,const DataLayout &DL,Value *Base,uint32_t Offset,Constant *K,
     std::map<const Value*,Value*> &Values,Image &Img,std::map<const GlobalVariable*,GlobalVariable*> &External){
   Type *T=K->getType();
+  // The owning initializer has already zeroed the entire original object,
+  // including padding. Do not emit a second resolver/store for every zero byte.
+  if(K->isNullValue())return;
+  if(auto *Data=dyn_cast<ConstantDataSequential>(K)){
+    SmallVector<uint8_t> Bytes;
+    for(unsigned I=0;I<Data->getNumElements();++I){
+      Constant *E=Data->getElementAsConstant(I);APInt Bits;
+      if(auto *N=dyn_cast<ConstantInt>(E))Bits=N->getValue();
+      else if(auto *N=dyn_cast<ConstantFP>(E))Bits=N->getValueAPF().bitcastToAPInt();
+      else reject("unsupported constant data element");
+      unsigned Size=DL.getTypeAllocSize(E->getType()).getFixedValue();
+      Bits=Bits.zextOrTrunc(Size*8);
+      for(unsigned J=0;J<Size;++J)Bytes.push_back((uint8_t)Bits.extractBitsAsZExtValue(8,J*8));
+    }
+    auto *Template=ConstantDataArray::get(Out.getContext(),Bytes);
+    auto *Storage=new GlobalVariable(Out,Template->getType(),true,GlobalValue::PrivateLinkage,Template,"guest_initializer_bytes");
+    Value *Dest=runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,B.getInt32(Offset),B.getInt32(Bytes.size()),B.getInt32(0)});
+    B.CreateMemCpy(Dest,Align(1),Storage,Align(1),Bytes.size());return;
+  }
   if(auto *S=dyn_cast<StructType>(T)){
     for(unsigned I=0;I<S->getNumElements();++I)initializeConstant(B,Out,DL,Base,Offset+DL.getStructLayout(S)->getElementOffset(I),K->getAggregateElement(I),Values,Img,External);
   } else if(auto *A=dyn_cast<ArrayType>(T)){

@@ -36,5 +36,22 @@
         ]
       }
     }
+  },
+  "lib/asm/wifi_data.s": {
+    "provenance": {
+      "commit": "37bfa0aaa1e3689466d476adb82e62842e46090d",
+      "path": "lib/asm/to59_wifi_anchor.s",
+      "sha256": "9fdd211f293206b7693a3935b04bbf9c4bdc9f1cd63ec1fce234b5c3bf7f994e",
+      "section_sha256": "86edcf0ea0ebc032cdb08048ccc5cd56b0555abb32a22377179bd028fcb0e8ec"
+    },
+    "source_sha256": "2ee08c18042c4b4d4e99208af2ac512f59541f2aeadbdc59612e1a8880920bf0",
+    "sections": {
+      ".rodata": {
+        "address": 34639800,
+        "size": 48,
+        "bytes_sha256": "86edcf0ea0ebc032cdb08048ccc5cd56b0555abb32a22377179bd028fcb0e8ec",
+        "relocations": []
+      }
+    }
   }
 }

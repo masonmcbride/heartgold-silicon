@@ -12,6 +12,7 @@
 #include "llvm/Transforms/Utils/PromoteMemToReg.h"
 #include "llvm/IR/Dominators.h"
 #include "llvm/IR/StructuralHash.h"
+#include "llvm/IR/DebugInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
 #include <map>
 #include <functional>
@@ -27,6 +28,10 @@ static Type *valueType(Type *T) {
   }
   if (T->isIntegerTy() || T->isFloatingPointTy() || T->isVoidTy()) return T;
   if(auto *A=dyn_cast<ArrayType>(T))return ArrayType::get(valueType(A->getElementType()),A->getNumElements());
+  if(auto *S=dyn_cast<StructType>(T)){
+    SmallVector<Type*> Fields;for(Type *F:S->elements())Fields.push_back(valueType(F));
+    return StructType::get(T->getContext(),Fields,S->isPacked());
+  }
   reject("aggregate/vector value or call ABI");
 }
 #include "abi.h"
@@ -88,6 +93,8 @@ int main(int argc, char **argv) {
         {"return",describeType(F.getReturnType())},{"varargs",F.isVarArg()},{"local",F.hasLocalLinkage()},
         {"definition",!F.isDeclaration()},{"source",In->getSourceFileName()},{"sign_return",F.hasRetAttribute(Attribute::SExt)},{"address_taken",AddressTaken},{"argument_uses",std::move(Uses)},
         {"origin",Origin},{"origin_line",(int64_t)OriginLine},{"body_hash",F.isDeclaration()?"":formatv("{0:x}",StructuralHash(F,true)).str()}});
+      Functions.back().getAsObject()->try_emplace("returns_twice",F.hasFnAttribute(Attribute::ReturnsTwice));
+      Functions.back().getAsObject()->try_emplace("noreturn",F.hasFnAttribute(Attribute::NoReturn));
     }
     for(GlobalVariable &G:In->globals())if(G.getValueType()->isSized())Globals.push_back(json::Object{{"name",G.getName()},{"key",symbolKey(G)},
       {"size",(int64_t)In->getDataLayout().getTypeAllocSize(G.getValueType()).getFixedValue()},
@@ -137,17 +144,31 @@ int main(int argc, char **argv) {
   const DataLayout DL = In->getDataLayout();
   if (DL.getPointerSizeInBits() != 32 || DL.isBigEndian())
     reject("requires little-endian 32-bit source layout");
+  std::map<const AllocaInst*,unsigned> ArgumentHomes;
+  // Debug argument declarations identify source formal storage, rather than a
+  // local copy that happens to be initialized from a formal argument.
+  for(Function *F:Selected)if(hasArgumentHomes(F->getFunctionType())){
+    SmallVector<unsigned> Offsets;unsigned Offset=0;
+    for(Argument &A:F->args()){
+      Offsets.push_back(Offset);Offset+=alignTo(DL.getTypeAllocSize(A.getType()).getFixedValue(),4);
+    }
+    for(Instruction &I:F->getEntryBlock())if(auto *AI=dyn_cast<AllocaInst>(&I))
+      for(auto *D:findDVRDeclares(AI))if(unsigned Arg=D->getVariable()->getArg()){
+        if(Arg>Offsets.size())reject("variadic debug argument index");
+        ArgumentHomes[AI]=Offsets[Arg-1];
+      }
+  }
   // Only promotion, never guest optimization, precedes address elaboration.
   for (Function &F : *In) if (Selected.count(&F)) {
     SmallVector<AllocaInst *> A;
     for (Instruction &I : F.getEntryBlock()) if (auto *AI = dyn_cast<AllocaInst>(&I)) {
       if (!isAllocaPromotable(AI)) {
         if (AbiPath.empty()) reject("addressable guest stack frame in " + F.getName());
-      } else A.push_back(AI);
+      } else if(!ArgumentHomes.count(AI))A.push_back(AI);
     }
     DominatorTree DT(F); PromoteMemToReg(A, DT);
-    if(F.isVarArg() && GuestExternals)for(BasicBlock &BB:F)for(Instruction &I:BB)
-      if(isa<PtrToIntInst,VAArgInst>(I))reject("observed guest variadic argument homes in "+F.getName());
+    if(F.isVarArg() && GuestExternals && !hasArgumentHomes(F.getFunctionType()))
+      reject("variadic definition without named argument homes in "+F.getName());
   }
   Module Out("guest32", C);
   Out.setTargetTriple(Triple("arm64-apple-macosx14.0.0"));
@@ -178,6 +199,9 @@ int main(int argc, char **argv) {
     if (Placement != Interfaces.globals.end()) {
       if (Size > Placement->second.size) reject("global declaration exceeds placement: " + G.getName());
       V[&G] = ConstantInt::get(Type::getInt32Ty(C), Placement->second.offset);
+      if(GuestExternals && G.hasInitializer() && !G.hasLocalLinkage())
+        new GlobalVariable(Out,Type::getInt32Ty(C),true,GlobalValue::ExternalLinkage,
+          ConstantInt::get(Type::getInt32Ty(C),Placement->second.offset),Prefix+"address_"+G.getName());
       outs() << G.getName() << " " << Placement->second.offset << " " << Placement->second.size << '\n';
       Next = std::max(Next,(uint64_t)Placement->second.offset + Placement->second.size);
       continue;
@@ -193,7 +217,6 @@ int main(int argc, char **argv) {
     if (F.isVarArg() && !GuestExternals) reject("varargs");
     SmallVector<Type *> Args{PointerType::getUnqual(C)};
     for (Argument &A : F.args()) {
-      if (A.hasByValAttr() || A.hasStructRetAttr()) reject("aggregate argument");
       Args.push_back(valueType(A.getType()));
     }
     FunctionType *NativeType=guestSignature(F.getFunctionType(),C);
@@ -203,10 +226,19 @@ int main(int argc, char **argv) {
     if(GuestExternals && Canonical!=Img.codes.end())Name=Canonical->second.native;
     auto *NF = Function::Create(NativeType,
                                F.hasLocalLinkage() && !GuestExternals?GlobalValue::InternalLinkage:GlobalValue::ExternalLinkage, Name, Out);
-    if(F.hasLocalLinkage() && GuestExternals)NF->setVisibility(GlobalValue::HiddenVisibility);
+    if(F.hasLocalLinkage() && GuestExternals &&
+       (Canonical==Img.codes.end() || !Canonical->second.addressTaken))
+      NF->setVisibility(GlobalValue::HiddenVisibility);
     if(GuestExternals && !F.isDeclaration() && Canonical!=Img.codes.end() && Canonical->second.coalesce)NF->setLinkage(GlobalValue::WeakODRLinkage);
     if (Asan) NF->addFnAttr(Attribute::SanitizeAddress);
+    if(F.hasFnAttribute(Attribute::ReturnsTwice) || (Canonical!=Img.codes.end() && Canonical->second.returnsTwice))NF->addFnAttr(Attribute::ReturnsTwice);
+    if(F.hasFnAttribute(Attribute::NoReturn) || (Canonical!=Img.codes.end() && Canonical->second.noReturn))NF->addFnAttr(Attribute::NoReturn);
     Functions[&F] = NF;
+    if(GuestExternals && !F.isDeclaration() && !F.hasLocalLinkage() && Canonical!=Img.codes.end()){
+      auto Linkage=Canonical->second.coalesce?GlobalValue::WeakODRLinkage:GlobalValue::ExternalLinkage;
+      new GlobalVariable(Out,Type::getInt32Ty(C),true,Linkage,
+        ConstantInt::get(Type::getInt32Ty(C),Canonical->second.address),"guest32_code_address_"+F.getName());
+    }
   }
   for (Function &F : *In) if (Selected.count(&F)) {
     Function *NF = Functions.at(&F);
@@ -215,11 +247,21 @@ int main(int argc, char **argv) {
     for (BasicBlock &BB : F) Blocks[&BB] = BasicBlock::Create(C, BB.getName(), NF);
     IRBuilder<> Arguments(Blocks.at(&F.getEntryBlock()));
     for(Argument &A:F.args())V[&A]=rebuildArgument(Arguments,A.getType(),Arg);
-    Value *ImplicitR0=Arg!=NF->arg_end()?&*Arg:nullptr;
+    Value *Homes=hasArgumentHomes(F.getFunctionType())?&*Arg:nullptr;
+    Value *ImplicitR0=!Homes && Arg!=NF->arg_end()?&*Arg:nullptr;
     bool HasFrame=false;
     for(BasicBlock &BB:F)for(Instruction &I:BB)if(isa<AllocaInst>(I))HasFrame=true;
+    for(Argument &A:F.args())HasFrame|=A.hasByValAttr();
     Value *Frame=nullptr;
     if(HasFrame){IRBuilder<> B(Blocks.at(&F.getEntryBlock()));Frame=runtime(B,Out,"g32_frame_enter",B.getPtrTy(),{Base});}
+    for(Argument &A:F.args())if(A.hasByValAttr()){
+      IRBuilder<> B(Blocks.at(&F.getEntryBlock()));Type *T=A.getParamByValType();
+      uint64_t Size=DL.getTypeAllocSize(T).getFixedValue();
+      Value *Copy=runtime(B,Out,"g32_stack_alloc",B.getInt32Ty(),{Base,Frame,B.getInt64(Size),B.getInt32(DL.getABITypeAlign(T).value())});
+      Value *Dest=runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,Copy,B.getInt32(Size),B.getInt32(0)});
+      Value *Source=runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,V.at(&A),B.getInt32(Size),B.getInt32(0)});
+      B.CreateMemCpy(Dest,Align(1),Source,Align(1),Size);V[&A]=Copy;
+    }
     IRBuilder<> *Current=nullptr;
     auto Get = [&](Value *X) -> Value * {return constantValue(X,*Current,DL,V,Img,ExternalAddresses);};
     // Create all PHIs before translating edges, including loop backedges.
@@ -235,10 +277,43 @@ int main(int argc, char **argv) {
             {Base,Get(P),B.getInt32(DL.getTypeStoreSize(T).getFixedValue()),B.getInt32(0)});
         return B.CreateGEP(B.getInt8Ty(), Base, B.CreateZExt(Get(P), B.getInt64Ty()));
       };
+      std::function<Value*(Type*,Value*,bool)> LoadGuest;
+      std::function<void(Type*,Value*,Value*,bool)> StoreGuest;
+      auto Span=[&](Value *Offset,Type *T){
+        if(!AbiPath.empty())return runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,Offset,B.getInt32(DL.getTypeStoreSize(T).getFixedValue()),B.getInt32(0)});
+        return B.CreateGEP(B.getInt8Ty(),Base,B.CreateZExt(Offset,B.getInt64Ty()));
+      };
+      LoadGuest=[&](Type *T,Value *Offset,bool Volatile)->Value*{
+        if(T->isAggregateType()){
+          Value *Result=PoisonValue::get(valueType(T));
+          unsigned Count=isa<StructType>(T)?cast<StructType>(T)->getNumElements():cast<ArrayType>(T)->getNumElements();
+          for(unsigned J=0;J<Count;++J){
+            Type *E=isa<StructType>(T)?cast<StructType>(T)->getElementType(J):cast<ArrayType>(T)->getElementType();
+            uint64_t N=isa<StructType>(T)?DL.getStructLayout(cast<StructType>(T))->getElementOffset(J):J*DL.getTypeAllocSize(E).getFixedValue();
+            Result=B.CreateInsertValue(Result,LoadGuest(E,B.CreateAdd(Offset,B.getInt32(N)),Volatile),{J});
+          }return Result;
+        }
+        auto *L=B.CreateAlignedLoad(valueType(T),Span(Offset,T),Align(1));L->setVolatile(Volatile);return L;
+      };
+      StoreGuest=[&](Type *T,Value *Offset,Value *Value,bool Volatile){
+        if(T->isAggregateType()){
+          unsigned Count=isa<StructType>(T)?cast<StructType>(T)->getNumElements():cast<ArrayType>(T)->getNumElements();
+          for(unsigned J=0;J<Count;++J){
+            Type *E=isa<StructType>(T)?cast<StructType>(T)->getElementType(J):cast<ArrayType>(T)->getElementType();
+            uint64_t N=isa<StructType>(T)?DL.getStructLayout(cast<StructType>(T))->getElementOffset(J):J*DL.getTypeAllocSize(E).getFixedValue();
+            StoreGuest(E,B.CreateAdd(Offset,B.getInt32(N)),B.CreateExtractValue(Value,{J}),Volatile);
+          }return;
+        }
+        auto *S=B.CreateAlignedStore(Value,Span(Offset,T),Align(1));S->setVolatile(Volatile);
+      };
       for (Instruction &I : BB) {
         if (isa<PHINode>(I)) continue;
         Value *R = nullptr;
         if (auto *A = dyn_cast<AllocaInst>(&I)) {
+          if(ArgumentHomes.count(A)){
+            if(!Homes)reject("missing variadic formal home");
+            V[&I]=B.CreateAdd(Homes,B.getInt32(ArgumentHomes.at(A)));continue;
+          }
           Value *Bytes=B.CreateMul(B.CreateZExtOrTrunc(Get(A->getArraySize()),B.getInt64Ty()),B.getInt64(DL.getTypeAllocSize(A->getAllocatedType()).getFixedValue()));
           R=runtime(B,Out,"g32_stack_alloc",B.getInt32Ty(),{Base,Frame,Bytes,B.getInt32(A->getAlign().value())});
         } else if (auto *G = dyn_cast<GetElementPtrInst>(&I)) {
@@ -251,12 +326,16 @@ int main(int argc, char **argv) {
           }
         } else if (auto *L = dyn_cast<LoadInst>(&I)) {
           if (L->isAtomic() || (L->isVolatile() && !GuestExternals)) reject("atomic/volatile effect");
-          R = B.CreateAlignedLoad(valueType(L->getType()), Address(L->getPointerOperand(),L->getType()), Align(1));
-          cast<LoadInst>(R)->setVolatile(L->isVolatile());
+          R = LoadGuest(L->getType(),Get(L->getPointerOperand()),L->isVolatile());
         } else if (auto *S = dyn_cast<StoreInst>(&I)) {
           if (S->isAtomic() || (S->isVolatile() && !GuestExternals)) reject("atomic/volatile effect");
-          R = B.CreateAlignedStore(Get(S->getValueOperand()), Address(S->getPointerOperand(),S->getValueOperand()->getType()), Align(1));
-          cast<StoreInst>(R)->setVolatile(S->isVolatile());
+          StoreGuest(S->getValueOperand()->getType(),Get(S->getPointerOperand()),Get(S->getValueOperand()),S->isVolatile());R=nullptr;
+        } else if(auto *X=dyn_cast<ExtractValueInst>(&I)){
+          R=B.CreateExtractValue(Get(X->getAggregateOperand()),X->getIndices());
+        } else if(auto *X=dyn_cast<InsertValueInst>(&I)){
+          R=B.CreateInsertValue(Get(X->getAggregateOperand()),Get(X->getInsertedValueOperand()),X->getIndices());
+        } else if(I.getOpcode()==Instruction::FNeg){
+          R=B.CreateFNeg(Get(I.getOperand(0)));
         } else if (auto *X = dyn_cast<BinaryOperator>(&I)) {
           R = B.CreateBinOp(X->getOpcode(), Get(X->getOperand(0)), Get(X->getOperand(1)));
         } else if (auto *X = dyn_cast<ICmpInst>(&I)) {
@@ -285,6 +364,8 @@ int main(int argc, char **argv) {
             runtime(B,Out,"g32_frame_leave",B.getVoidTy(),{Base,Frame});
           }
           R = X->getReturnValue() ? B.CreateRet(Get(X->getReturnValue())) : B.CreateRetVoid();
+        } else if(isa<UnreachableInst>(I)){
+          R=B.CreateUnreachable();
         } else if (auto *X = dyn_cast<CallInst>(&I)) {
           Function *Callee = directCallee(*X);
           if(!Callee && GuestExternals){
@@ -309,7 +390,19 @@ int main(int argc, char **argv) {
             } else if(Callee->getIntrinsicID()==Intrinsic::fmuladd){
               SmallVector<Value*> Args;for(Value *A:X->args())Args.push_back(Get(A));
               R=B.CreateCall(Intrinsic::getOrInsertDeclaration(&Out,Intrinsic::fmuladd,{X->getType()}),Args);
-            } else reject("intrinsic "+Callee->getName());
+            } else {
+              switch(Callee->getIntrinsicID()){
+              case Intrinsic::ctlz:case Intrinsic::cttz:case Intrinsic::ctpop:case Intrinsic::bswap:
+              case Intrinsic::bitreverse:case Intrinsic::fshl:case Intrinsic::fshr:case Intrinsic::fabs:
+              case Intrinsic::abs:case Intrinsic::smax:case Intrinsic::smin:case Intrinsic::umax:case Intrinsic::umin:
+              case Intrinsic::sqrt:case Intrinsic::floor:case Intrinsic::ceil:case Intrinsic::trunc:
+              case Intrinsic::round:case Intrinsic::roundeven:{
+                SmallVector<Value*> Args;for(Value *A:X->args())Args.push_back(Get(A));
+                R=B.CreateCall(Out.getOrInsertFunction(Callee->getName(),Callee->getFunctionType()),Args);break;
+              }
+              default:reject("intrinsic "+Callee->getName());
+              }
+            }
             V[&I]=R;continue;
           }
           auto Boundary = Interfaces.calls.find(Callee ? Callee->getName().str() : "");
@@ -362,7 +455,8 @@ int main(int argc, char **argv) {
           Type *ResultType=X->use_empty()?B.getVoidTy():valueType(X->getType());
           bool Preserved=Edge && Edge->mode=="preserved-argument";
           R = guestCall(B,Functions.at(Callee),Args,Preserved?B.getVoidTy():ResultType,K!=Img.codes.end() && K->second.signReturn,
-                        X->getFunctionType()->isVarArg() || (GuestExternals && Known),Known?&K->second.used:nullptr);
+                        X->getFunctionType()->isVarArg() || (GuestExternals && Known),Known?&K->second.used:nullptr,
+                        hasArgumentHomes(Known?K->second.type:Callee->getFunctionType()));
           if(Preserved){if(Edge->argument+1>=Args.size())reject("register return argument index");R=adaptScalar(B,Args[Edge->argument+1],ResultType);}
           PreviousResult=R;PreviousTarget=Callee->getName().str();
         } else reject("instruction " + Twine(I.getOpcodeName()));

@@ -108,9 +108,49 @@ def representation(game, original, native_dir=None, adapted_dir=None):
     return record
 
 
+# These identities have no object/library directives in the original LSF.
+# The independently checked ROM checksums prove linker-generated padding only.
+EMPTY_OVERLAYS = {9: 'OVY_6', 11: 'main', 66: 'main', 77: 'main',
+                  79: 'OVY_42', 107: 'main', 125: 'ds_protect',
+                  126: 'ds_protect', 127: 'ds_protect', 128: 'ds_protect'}
+
+
+def original_membership(game, image):
+    if image['objects']:
+        return dict(classification='nonempty original', verified_empty=False)
+    result = dict(classification='unverified empty membership', verified_empty=False)
+    if image['id'] not in EMPTY_OVERLAYS or image['kind'] != 'Overlay':
+        return result
+    # Synthetic/partial manifests are not authoritative original checkouts.
+    if not (game/'heartgold.us/main.sha1').exists():
+        return result
+    import hashlib
+    name = image['name']
+    if name != f"OVY_{image['id']}" or image['after'] != [EMPTY_OVERLAYS[image['id']]]:
+        raise ValueError('Empty overlay identity/placement changed: '+name)
+    evidence = ['main.lsf', 'global.inc']
+    if (game/'global.inc').read_text().splitlines().count(f'FS_EXTERN_OVERLAY({name})') != 1:
+        raise ValueError('Missing/duplicate original overlay declaration: '+name)
+    digest = hashlib.sha1(bytes(32)).hexdigest()
+    for variant in ('heartgold.us', 'soulsilver.us'):
+        relative = variant+'/main.sha1'
+        expected = f'{digest} *build/{variant}/{name}.sbin'
+        if (game/relative).read_text().splitlines().count(expected) != 1:
+            raise ValueError('Empty overlay original checksum changed: '+name)
+        evidence.append(relative)
+    return dict(classification='verified empty original overlay', verified_empty=True,
+                evidence=evidence, overlay_table_role=dict(id=image['id'], file_id=image['id'], after=image['after']),
+                original_file_size=32, original_file_sha1=digest,
+                original_file_content='null static-initializer terminator and alignment padding',
+                native_representation='identity metadata only; no executable image',
+                runtime_validation='not exercised; original ROM retains table entry and file')
+
+
 def graph(game, binary=None):
     images = parse_manifest(game / 'main.lsf')
     owners=ownership(images)
+    for image in images.values():
+        image['original_membership'] = original_membership(game, image)
     return dict(schema=1, images=images, ownership=owners,
                 members={obj:representation(game,obj,
                     (binary/('native-data' if owners[obj]==['main'] else 'native-overlays/data')) if binary else None,

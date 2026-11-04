@@ -1,5 +1,9 @@
 # Executable guest32 compiler milestone
 
+The [joint OVY_0/OVY_38 implementation](../../docs/GUEST32_SHARED_IMAGES.md)
+adds shared storage/code planning and tested cross-image callback bindings.
+Both original image links remain blocked on genuine provider/ABI requirements.
+
 The subsequent [typed call and ownership implementation](CALLS.md) executes the
 original clear function, adds opt-in OVY_0 CMake admission, and records the current
 93-image validation. Measurements below describe the first compiler milestone.

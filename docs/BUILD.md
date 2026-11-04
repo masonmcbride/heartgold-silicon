@@ -46,7 +46,8 @@ HeartGold remains unchanged at its pin. `cmake/native_image_graph.py` parses
 `main.lsf` for main, autoload and overlay membership. Its generated graph drives
 main/overlay source selection and `arm9-sources.tsv`; After is placement metadata,
 not a native symbol dependency. `cmake/heartgold.cmake` declares the existing
-native adaptations.
+native adaptations. See [the ten independent empty overlay identities](INDEPENDENT_EMPTY_OVERLAYS.md)
+for verified original membership, original file semantics and image accounting.
 `cmake/native_sources.py` validates expected source fragments and emits each
 adaptation once, preserving original source locations and unchanged output files.
 It is not a general patch mechanism or permission to replace original algorithms.

@@ -108,6 +108,13 @@ add_test(NAME guest32_ovy0_pipeline COMMAND "${Python3_EXECUTABLE}" -B
 # Separate from original-image membership.
 add_library(heartgold_guest32_runtime STATIC
     "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32.c")
+enable_language(ASM)
+add_library(heartgold_guest32_context STATIC
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_context.c"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_context.S")
+add_library(heartgold_guest32_cache STATIC
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_cache.c")
+target_link_libraries(heartgold_guest32_cache PUBLIC ntr_os)
 set_target_properties(heartgold_guest32_runtime PROPERTIES
     C_STANDARD 11
     C_STANDARD_REQUIRED YES)
@@ -238,3 +245,78 @@ add_test(NAME guest32_mi_execution COMMAND "${Python3_EXECUTABLE}" -B
 add_test(NAME guest32_std_execution COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_std.py" --build "${PROJECT_BINARY_DIR}"
     --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+
+# Joint placement is separate from native image admission. Original overlay
+# archives and explicit initializers retain their original ownership/lifetimes.
+set(guest32_shared_dir "${PROJECT_BINARY_DIR}/guest32-shared")
+set(guest32_shared_outputs "${guest32_shared_dir}/shared.json" "${guest32_shared_dir}/shared.d")
+foreach(id IN ITEMS 0 38)
+    set(dir "${guest32_shared_dir}/OVY_${id}")
+    list(APPEND guest32_shared_outputs "${dir}/libheartgold_overlay_${id}.a"
+        "${dir}/plan.json" "${dir}/image.json" "${dir}/coverage.json" "${dir}/data-relocations.json"
+        "${dir}/cross-unit-abi.json" "${dir}/complete.stamp" "${dir}/image.d" "${dir}/native-abi.ll")
+    string(JSON count LENGTH "${guest32_model}" images OVY_${id} objects)
+    math(EXPR last "${count}-1")
+    foreach(i RANGE 0 ${last})
+        string(JSON obj GET "${guest32_model}" images OVY_${id} objects ${i})
+        list(APPEND guest32_shared_outputs "${dir}/${obj}/native.o")
+        string(JSON kind GET "${guest32_model}" members "${obj}" kind)
+        if(kind STREQUAL "C")
+            foreach(file IN ITEMS guest.ll guest.ll.d guest.ll.receipt.json frontend.log operations.json
+                    abi.json native.ll native.ll.receipt.json lower.log native.o.receipt.json object.log)
+                list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
+            endforeach()
+        else()
+            foreach(file IN ITEMS data.c data.d native.o.receipt.json object.log)
+                list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
+            endforeach()
+            string(JSON relative GET "${guest32_model}" members "${obj}" source)
+            file(STRINGS "${game_source}/${relative}" sections REGEX "^[ \t]*\\.(rodata|data|bss)[ \t]*$")
+            foreach(section IN LISTS sections)
+                string(STRIP "${section}" section)
+                string(SUBSTRING "${section}" 1 -1 section)
+                list(APPEND guest32_shared_outputs "${dir}/${obj}/${section}.bin")
+            endforeach()
+        endif()
+    endforeach()
+endforeach()
+add_custom_command(OUTPUT "${guest32_shared_dir}/complete.stamp"
+    BYPRODUCTS ${guest32_shared_outputs}
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/shared.py"
+        --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_shared_dir}"
+        --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
+    DEPENDS guest32-lower fx_constants heartgold_native_headers ${guest32_image_inputs} ${guest38_inputs} ${guest32_headers}
+        "${game_source}/main.lsf" "${guest32_driver}"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/shared.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/archive.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/original_layout.py"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/original_data_layouts.json"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/ovy0_layout.json"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/ovy0_registers.json"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/ovy38_registers.json"
+        "${PROJECT_SOURCE_DIR}/cmake/native_data_layouts.py"
+        "${PROJECT_SOURCE_DIR}/cmake/native_data_layouts.json"
+    DEPFILE "${guest32_shared_dir}/shared.d"
+    VERBATIM)
+add_custom_target(heartgold_guest32_shared DEPENDS "${guest32_shared_dir}/complete.stamp")
+add_custom_target(heartgold_guest32_shared_link_diagnostics
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/guest32_closure.py"
+        --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}"
+        --image-root "${guest32_shared_dir}" --out "${guest32_shared_dir}/links"
+    DEPENDS heartgold_guest32_shared heartgold_guest32_account_build heartgold_guest32_crc_build
+        heartgold_guest32_std_build heartgold_guest32_runtime heartgold_guest32_mi_manifest
+        heartgold_guest32_scalar_bridges heartgold_guest32_libc_memory heartgold_overlay_link_contract
+    VERBATIM)
+add_test(NAME guest32_shared_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
+    --target heartgold_guest32_shared -j8)
+set_tests_properties(guest32_shared_build PROPERTIES FIXTURES_SETUP guest32_shared)
+add_test(NAME guest32_shared_execution COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_shared.py" --build "${PROJECT_BINARY_DIR}"
+    --image-root "${guest32_shared_dir}" --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+set_tests_properties(guest32_shared_execution PROPERTIES FIXTURES_REQUIRED guest32_shared)
+
+# Deliberately bounded software experiments, not admission of complete images.
+add_test(NAME guest32_provider_experiments COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_provider_experiments.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower> --execute)

@@ -13,12 +13,17 @@ def contracts():
     return json.loads(METADATA.read_text())
 
 
-def recipe(game, original, digest=None):
-    contract = contracts()[original]
+def validate_inputs(game, contract, digest=None):
+    """Share source guards without approving a different ABI representation."""
     for relative, expected in contract['inputs'].items():
         actual = digest(game/relative) if digest else hashlib.sha256((game/relative).read_bytes()).hexdigest()
         if actual!=expected:
             raise ValueError('Data source/consumer changed: '+relative)
+
+
+def recipe(game, original, digest=None):
+    contract = contracts()[original]
+    validate_inputs(game, contract, digest)
     layouts = contract['layouts']
     for layout in layouts.values():
         if 'padding' in layout: layout['padding']={int(k):v for k,v in layout['padding'].items()}

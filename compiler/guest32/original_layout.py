@@ -10,6 +10,32 @@ MAIN_BASE = 0x02000000
 MAIN_SIZE = 0x00400000
 
 
+def annotated_sections(text, raw, labels):
+    """Recover main-image placement only from agreeing original numeric labels.
+
+    Named labels retain address comments after source naming. Every available
+    anchor in a section must agree; adjacency is never placement evidence.
+    """
+    anchors = {}
+    for name, address in re.findall(r'^([A-Za-z_][A-Za-z_0-9]*):\s*;\s*0x([0-9A-Fa-f]{8})', text, re.M):
+        if name in labels:
+            section, offset = labels[name]
+            anchors.setdefault(section, []).append((name, int(address, 16)-offset))
+    for name, (section, offset) in labels.items():
+        if re.fullmatch(r'_[0-9A-Fa-f]{8}', name):
+            anchors.setdefault(section, []).append((name, int(name[1:], 16)-offset))
+    result = {}
+    for section, entries in anchors.items():
+        bases = {base for _, base in entries}
+        if len(bases) != 1:
+            raise ValueError('inconsistent original address annotations: '+repr(entries))
+        base = bases.pop()
+        if base < MAIN_BASE or len(raw[section]) > MAIN_BASE+MAIN_SIZE-base:
+            raise ValueError('original section outside DS main RAM: '+section)
+        result[section] = dict(address=base, size=len(raw[section]), anchors=[n for n, _ in entries])
+    return result
+
+
 def anchored_sections(raw, labels, image_id):
     result = {}
     for section, data in raw.items():

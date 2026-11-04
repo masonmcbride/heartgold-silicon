@@ -1,0 +1,6309 @@
+{
+  "scope": "Observed direct IR call edges only; not a complete semantic dependency graph",
+  "edges": {
+    "abs": [],
+    "__msl_assertion_failed": [
+      "abort",
+      "printf"
+    ],
+    "fread": [
+      "OS_LockMutex",
+      "OS_TryLockMutex",
+      "OS_UnlockMutex",
+      "__fread"
+    ],
+    "fclose": [
+      "INDIRECT:lib/MSL_C/src/msl_file_io.c:fclose:39",
+      "fflush"
+    ],
+    "fflush": [
+      "__flush_all",
+      "__flush_buffer"
+    ],
+    "fseek": [
+      "OS_LockMutex",
+      "OS_TryLockMutex",
+      "OS_UnlockMutex",
+      "_fseek"
+    ],
+    "ftell": [
+      "OS_LockMutex",
+      "OS_TryLockMutex",
+      "OS_UnlockMutex",
+      "_ftell"
+    ],
+    "rewind": [
+      "fseek"
+    ],
+    "MI_GetUncompressedSize": [],
+    "parse_format": [],
+    "long2str": [],
+    "longlong2str": [],
+    "double2hex": [
+      "__num2dec",
+      "fabs",
+      "long2str",
+      "memcpy"
+    ],
+    "round_decimal": [],
+    "float2str": [
+      "__num2dec",
+      "memcpy",
+      "round_decimal"
+    ],
+    "__pformatter": [
+      "lib/MSL_C/src/msl_printf_formatter.c|Large",
+      "lib/MSL_C/src/msl_printf_formatter.c|Small",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1129",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1140",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1147",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1153",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1159",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:920",
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:927",
+      "double2hex",
+      "float2str",
+      "memchr",
+      "parse_format",
+      "strchr",
+      "strlen",
+      "wcstombs"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|Large": [
+      "longlong2str"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|Small": [
+      "long2str"
+    ],
+    "__FileWrite": [
+      "__fwrite"
+    ],
+    "__StringWrite": [
+      "memcpy"
+    ],
+    "printf": [
+      "lib/MSL_C/src/msl_printf_formatter.c|lock",
+      "lib/MSL_C/src/msl_printf_formatter.c|unlock",
+      "__pformatter",
+      "fwide"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|lock": [
+      "lib/MSL_C/src/msl_printf_formatter.c|OS_GetCurrentThread",
+      "OS_LockMutex",
+      "OS_TryLockMutex"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|unlock": [
+      "OS_UnlockMutex"
+    ],
+    "vsnprintf": [
+      "__pformatter"
+    ],
+    "vsprintf": [
+      "vsnprintf"
+    ],
+    "snprintf": [
+      "vsnprintf"
+    ],
+    "sprintf": [
+      "vsnprintf"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|OS_GetCurrentThread": [
+      "lib/MSL_C/src/msl_printf_formatter.c|OS_GetThreadInfo"
+    ],
+    "lib/MSL_C/src/msl_printf_formatter.c|OS_GetThreadInfo": [],
+    "qsort": [
+      "INDIRECT:lib/MSL_C/src/msl_qsort.c:qsort:45",
+      "INDIRECT:lib/MSL_C/src/msl_qsort.c:qsort:50"
+    ],
+    "sscanf": [
+      "vsscanf"
+    ],
+    "stricmp": [
+      "lib/MSL_C/src/msl_string_extras.c|Lower"
+    ],
+    "lib/MSL_C/src/msl_string_extras.c|Lower": [],
+    "strnicmp": [
+      "stricmp"
+    ],
+    "strncmp": [],
+    "strchr": [],
+    "strspn": [],
+    "strncpy": [],
+    "strcat": [],
+    "strncat": [],
+    "strtol": [
+      "__strtoul"
+    ],
+    "atol": [
+      "strtol"
+    ],
+    "strtold": [
+      "__strtold",
+      "fabs"
+    ],
+    "atod": [
+      "strtold"
+    ],
+    "strtoul": [
+      "__strtoul"
+    ],
+    "wcslen": [],
+    "rand": [],
+    "srand": [],
+    "DWCi_Util_WiFiId_scrambleUid": [
+      "MI_CpuCopy8"
+    ],
+    "DWCi_AUTH_GetNewWiFiInfo": [
+      "lib/NitroDWC/src/dwc_auth_wifi_id.c|Mac24b",
+      "DWCi_BM_GetWiFiInfo",
+      "DWCi_Util_WiFiId_scrambleUid",
+      "OS_GetMacAddress",
+      "OS_IsTickAvailable",
+      "RTC_ConvertDateTimeToSecond",
+      "RTC_GetDate",
+      "RTC_GetTime",
+      "RTC_Init"
+    ],
+    "lib/NitroDWC/src/dwc_auth_wifi_id.c|Mac24b": [],
+    "DWCi_AUTH_MakeWiFiID": [
+      "DWCi_AUTH_GetNewWiFiInfo",
+      "DWCi_BM_SetWiFiInfo"
+    ],
+    "DWCi_AUTH_UpDateWiFiID": [
+      "DWCi_BM_GetWiFiInfo",
+      "DWCi_BM_SetWiFiInfo"
+    ],
+    "DWCi_AUTH_RemakeWiFiID": [
+      "DWCi_BM_GetWiFiInfo",
+      "DWCi_Util_WiFiId_scrambleUid",
+      "OS_GetMacAddress",
+      "OS_IsTickAvailable",
+      "RTC_ConvertDateTimeToSecond",
+      "RTC_GetDate",
+      "RTC_GetTime",
+      "RTC_Init"
+    ],
+    "DWC_Auth_GetId": [
+      "DWCi_BM_GetWiFiInfo"
+    ],
+    "DWC_Auth_CheckPseudoWiFiID": [
+      "DWCi_BM_GetWiFiInfo"
+    ],
+    "DWCi_BM_GetApInfo": [
+      "readNvram"
+    ],
+    "DWCi_BM_GetWiFiInfo": [
+      "MI_CpuCopy8"
+    ],
+    "DWCi_BM_SetWiFiInfo": [
+      "DWCi_BACKUPlConvWifiInfo",
+      "MATH_CalcCRC16",
+      "MATHi_CRC16InitTableRev",
+      "MI_CpuCopy8",
+      "OS_Terminate",
+      "readNvram",
+      "verify",
+      "writeDisable",
+      "writeNvram"
+    ],
+    "DWCi_BACKUPlInit": [
+      "readNvram"
+    ],
+    "DWCi_BACKUPlRead": [
+      "readNvram"
+    ],
+    "DWCi_BACKUPlWritePage": [
+      "verify",
+      "writeDisable",
+      "writeNvram"
+    ],
+    "DWCi_BACKUPlWriteAll": [
+      "MATH_CalcCRC16",
+      "verify",
+      "writeDisable",
+      "writeNvram"
+    ],
+    "DWCi_BACKUPlSetWiFi": [
+      "MI_CpuCopy8"
+    ],
+    "DWCi_BACKUPlConvMaskCidr": [],
+    "DWCi_BACKUPlConvMaskAddr": [],
+    "DWC_BACKUPlCheckSsid": [],
+    "DWC_BACKUPlCheckIp": [
+      "DWC_BACKUPlCheckAddress",
+      "MI_CpuCopy8"
+    ],
+    "DWC_BACKUPlCheckAddress": [],
+    "DGT_Hash1Reset": [],
+    "DGT_Hash1SetSource": [
+      "MI_CpuCopy8",
+      "ProcessBlock"
+    ],
+    "ProcessBlock": [],
+    "DGT_Hash1GetDigest_R": [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear8",
+      "DGT_Hash1SetSource",
+      "MI_CpuCopy8",
+      "ProcessBlock"
+    ],
+    "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear8": [
+      "MI_CpuFill8"
+    ],
+    "DGT_Hash2Reset": [],
+    "DGT_Hash2SetSource": [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:181",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:193",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:199",
+      "MI_CpuCopy8"
+    ],
+    "DGT_Hash2GetDigest": [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear32",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2GetDigest:231",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2GetDigest:248"
+    ],
+    "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear32": [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuFill32"
+    ],
+    "DGT_Hash2CalcHmac": [
+      "HmacCalc"
+    ],
+    "HmacCalc": [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:301",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:302",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:303",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:313",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:314",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:315",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:316",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:323",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:324",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:325",
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:326"
+    ],
+    "lib/NitroSDK/src/dgt_hash.c|MI_CpuFill32": [
+      "MIi_CpuClear32"
+    ],
+    "MATH_CalcMD5": [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5GetHash",
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Init",
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Update"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Init": [
+      "DGT_Hash1Reset"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Update": [
+      "DGT_Hash1SetSource"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5GetHash": [
+      "DGT_Hash1GetDigest_R"
+    ],
+    "MATH_CalcSHA1": [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1GetHash",
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Init",
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Update"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Init": [
+      "DGT_Hash2Reset"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Update": [
+      "DGT_Hash2SetSource"
+    ],
+    "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1GetHash": [
+      "DGT_Hash2GetDigest"
+    ],
+    "OS_GetLowEntropyData": [
+      "lib/NitroSDK/src/os/os_entropy.c|GX_GetVCount",
+      "OS_GetTickLo"
+    ],
+    "lib/NitroSDK/src/os/os_entropy.c|GX_GetVCount": [],
+    "OS_InitMessageQueue": [
+      "lib/NitroSDK/src/os/os_message.c|OS_InitThreadQueue"
+    ],
+    "lib/NitroSDK/src/os/os_message.c|OS_InitThreadQueue": [],
+    "OS_SendMessage": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OS_WakeupThread"
+    ],
+    "OS_ReceiveMessage": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OS_WakeupThread"
+    ],
+    "OS_JamMessage": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OS_WakeupThread"
+    ],
+    "OS_ReadMessage": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread"
+    ],
+    "OS_InitMutex": [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_InitThreadQueue"
+    ],
+    "lib/NitroSDK/src/os/os_mutex.c|OS_InitThreadQueue": [],
+    "OS_LockMutex": [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetCurrentThread",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OSi_EnqueueTail"
+    ],
+    "lib/NitroSDK/src/os/os_mutex.c|OS_GetCurrentThread": [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetThreadInfo"
+    ],
+    "OSi_EnqueueTail": [],
+    "OS_UnlockMutex": [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetCurrentThread",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_WakeupThread",
+      "OSi_DequeueItem"
+    ],
+    "OSi_DequeueItem": [],
+    "OSi_UnlockAllMutex": [
+      "OS_WakeupThread",
+      "OSi_RemoveMutexLinkFromQueue"
+    ],
+    "OS_TryLockMutex": [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetCurrentThread",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OSi_EnqueueTail"
+    ],
+    "lib/NitroSDK/src/os/os_mutex.c|OS_GetThreadInfo": [],
+    "OS_GetMacAddress": [
+      "MI_CpuCopy8"
+    ],
+    "OS_GetOwnerInfo": [
+      "lib/NitroSDK/src/os/os_ownerInfo.c|MI_CpuCopy16"
+    ],
+    "lib/NitroSDK/src/os/os_ownerInfo.c|MI_CpuCopy16": [
+      "MIi_CpuCopy16"
+    ],
+    "OS_GetOwnerRtcOffset": [],
+    "OS_SPrintf": [
+      "OS_VSPrintf"
+    ],
+    "OS_VSPrintf": [
+      "OS_VSNPrintf"
+    ],
+    "OS_VSNPrintf": [
+      "STD_TVSNPrintf"
+    ],
+    "OS_SNPrintf": [
+      "OS_VSNPrintf"
+    ],
+    "OS_Terminate": [
+      "OS_DisableInterrupts",
+      "OS_Halt"
+    ],
+    "OS_IsThreadAvailable": [],
+    "OS_InitTick": [
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerControl",
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerCount",
+      "OS_EnableIrqMask",
+      "OS_SetIrqFunction",
+      "OSi_SetTimerReserved"
+    ],
+    "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerControl": [],
+    "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerCount": [],
+    "OSi_CountUpTick": [
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerControl",
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerCount",
+      "OSi_EnterTimerCallback"
+    ],
+    "OS_IsTickAvailable": [],
+    "OS_GetTick": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "OS_GetTickLo": [],
+    "OS_SetTick": [
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerControl",
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerCount",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "PMi_Lock": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "PMi_WaitBusy": [
+      "OS_GetCpsrIrq",
+      "PXIi_HandlerRecvFifoNotEmpty"
+    ],
+    "PMi_DummyCallback": [],
+    "PMi_CallCallbackAndUnlock": [
+      "INDIRECT:lib/NitroSDK/src/pm.c:PMi_CallCallbackAndUnlock:133"
+    ],
+    "PM_Init": [
+      "OS_InitMutex",
+      "PXI_Init",
+      "PXI_IsCallbackReady",
+      "PXI_SetFifoRecvCallback"
+    ],
+    "PMi_CommonCallback": [
+      "PMi_CallCallbackAndUnlock"
+    ],
+    "PMi_SendSleepStart": [
+      "PMi_Lock",
+      "PMi_SendPxiData",
+      "PMi_SetLCDPower"
+    ],
+    "PMi_SendPxiData": [
+      "PXI_SendWordByFifo"
+    ],
+    "PMi_SetLCDPower": [
+      "PMi_SetAmp",
+      "PMi_SetLED",
+      "PMi_SetLEDAsync"
+    ],
+    "PM_SendUtilityCommandAsync": [
+      "PMi_Lock",
+      "PMi_SendPxiData"
+    ],
+    "PMi_ReadRegisterAsync": [
+      "PMi_Lock",
+      "PMi_SendPxiData"
+    ],
+    "PMi_ReadRegister": [
+      "PMi_ReadRegisterAsync",
+      "PMi_WaitBusy"
+    ],
+    "PMi_WriteRegisterAsync": [
+      "PMi_Lock",
+      "PMi_SendPxiData"
+    ],
+    "PMi_WriteRegister": [
+      "PMi_WaitBusy",
+      "PMi_WriteRegisterAsync"
+    ],
+    "PMi_SetLEDAsync": [
+      "PM_SendUtilityCommandAsync"
+    ],
+    "PMi_SetLED": [
+      "PMi_SetLEDAsync",
+      "PMi_WaitBusy"
+    ],
+    "PM_SetBackLightAsync": [
+      "PM_SendUtilityCommandAsync"
+    ],
+    "PM_SetBackLight": [
+      "PM_SetBackLightAsync",
+      "PMi_WaitBusy"
+    ],
+    "PM_ForceToPowerOffAsync": [
+      "OS_SpinWait",
+      "PM_GetBackLight",
+      "PM_GetLCDPower",
+      "PM_SendUtilityCommandAsync",
+      "PM_SetBackLight",
+      "PM_SetLCDPower"
+    ],
+    "PM_GetLCDPower": [],
+    "PM_GetBackLight": [
+      "PMi_ReadRegister"
+    ],
+    "PM_SetLCDPower": [
+      "PMi_SetLCDPower"
+    ],
+    "PM_ForceToPowerOff": [
+      "PM_ForceToPowerOffAsync",
+      "PMi_WaitBusy"
+    ],
+    "PM_SetAmp": [
+      "PMi_SetAmp"
+    ],
+    "PMi_SetAmp": [
+      "PM_GetLCDPower",
+      "PMi_WriteRegister"
+    ],
+    "PM_SetAmpGain": [
+      "PMi_WriteRegister"
+    ],
+    "PM_GoSleepMode": [
+      "lib/NitroSDK/src/pm.c|OS_GetVBlankCount",
+      "lib/NitroSDK/src/pm.c|PmWaitVBlank",
+      "CTRDG_IsExisting",
+      "OS_DisableInterrupts",
+      "OS_DisableIrqMask",
+      "OS_Halt",
+      "OS_IsTickAvailable",
+      "OS_RestoreInterrupts",
+      "OS_SetIrqMask",
+      "OS_SpinWait",
+      "PM_ForceToPowerOff",
+      "PM_GetBackLight",
+      "PM_GetLCDPower",
+      "PM_SetBackLight",
+      "PMi_ExecuteList",
+      "PMi_SendSleepStart",
+      "PMi_SetLCDPower",
+      "PMi_SetLED"
+    ],
+    "PMi_ExecuteList": [
+      "INDIRECT:lib/NitroSDK/src/pm.c:PMi_ExecuteList:623"
+    ],
+    "lib/NitroSDK/src/pm.c|OS_GetVBlankCount": [],
+    "lib/NitroSDK/src/pm.c|PmWaitVBlank": [
+      "lib/NitroSDK/src/pm.c|OS_GetVBlankCount"
+    ],
+    "PMi_SendLEDPatternCommandAsync": [
+      "PMi_Lock",
+      "PMi_SendPxiData"
+    ],
+    "PMi_SendLEDPatternCommand": [
+      "PMi_SendLEDPatternCommandAsync",
+      "PMi_WaitBusy"
+    ],
+    "PM_GetLEDPatternAsync": [
+      "PMi_Lock",
+      "PMi_SendPxiData"
+    ],
+    "PM_GetLEDPattern": [
+      "PM_GetLEDPatternAsync",
+      "PMi_WaitBusy"
+    ],
+    "PMi_PrependList": [],
+    "PMi_AppendList": [],
+    "PMi_DeleteList": [],
+    "PM_PrependPreSleepCallback": [
+      "PMi_PrependList"
+    ],
+    "PM_AppendPostSleepCallback": [
+      "PMi_AppendList"
+    ],
+    "PM_DeletePreSleepCallback": [
+      "PMi_DeleteList"
+    ],
+    "PM_DeletePostSleepCallback": [
+      "PMi_DeleteList"
+    ],
+    "RTC_ConvertDateTimeToSecond": [
+      "RTC_ConvertDateToDay",
+      "RTCi_ConvertTimeToSecond"
+    ],
+    "RTC_ConvertDayToDate": [
+      "lib/NitroSDK/src/rtc/rtc_convert_post.c|RTCi_IsLeapYear"
+    ],
+    "lib/NitroSDK/src/rtc/rtc_convert_post.c|RTCi_IsLeapYear": [],
+    "RTCi_ConvertSecondToTime": [],
+    "RTC_ConvertSecondToDateTime": [
+      "RTC_ConvertDayToDate",
+      "RTCi_ConvertSecondToTime"
+    ],
+    "RTC_GetDayOfWeek": [],
+    "WM_Init": [
+      "WmInitCore"
+    ],
+    "WmInitCore": [
+      "DC_InvalidateRange",
+      "DC_StoreRange",
+      "MI_DmaFill32",
+      "OS_DisableInterrupts",
+      "OS_InitMessageQueue",
+      "OS_RestoreInterrupts",
+      "OS_SendMessage",
+      "PXI_Init",
+      "PXI_IsCallbackReady",
+      "PXI_SetFifoRecvCallback",
+      "WmClearFifoRecvFlag"
+    ],
+    "WmClearFifoRecvFlag": [],
+    "WmReceiveFifo": [
+      "DC_InvalidateRange",
+      "DC_StoreRange",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:236",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:244",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:250",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:262",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:267",
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:327",
+      "MI_CpuCopy8",
+      "MI_CpuFill8",
+      "MIi_CpuClear16",
+      "MIi_CpuCopy16",
+      "OS_Terminate",
+      "WM_Finish",
+      "WmClearFifoRecvFlag"
+    ],
+    "WM_Finish": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "PXI_SetFifoRecvCallback",
+      "WMi_CheckInitialized",
+      "WMi_CheckStateEx",
+      "WmClearFifoRecvFlag"
+    ],
+    "WMi_CheckInitialized": [],
+    "WMi_CheckStateEx": [
+      "DC_InvalidateRange",
+      "WMi_CheckInitialized"
+    ],
+    "WMi_SetCallbackTable": [],
+    "WmGetCommandBuffer4Arm7": [
+      "DC_InvalidateRange",
+      "OS_JamMessage",
+      "OS_ReceiveMessage"
+    ],
+    "WMi_SendCommand": [
+      "DC_StoreRange",
+      "OS_SendMessage",
+      "PXI_SendWordByFifo",
+      "WmGetCommandBuffer4Arm7"
+    ],
+    "WMi_SendCommandDirect": [
+      "DC_StoreRange",
+      "MI_CpuCopy8",
+      "OS_SendMessage",
+      "PXI_SendWordByFifo",
+      "WmGetCommandBuffer4Arm7"
+    ],
+    "WMi_GetSystemWork": [],
+    "WMi_CheckIdle": [
+      "DC_InvalidateRange",
+      "WMi_CheckInitialized"
+    ],
+    "WMi_GetStatusAddress": [
+      "WMi_CheckInitialized"
+    ],
+    "WM_GetAID": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WM_GetConnectedAIDs": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WM_SetIndCallback": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WMi_CheckInitialized",
+      "WMi_GetSystemWork"
+    ],
+    "WM_SetPortCallback": [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WM_SetPortCallback:428",
+      "MI_CpuFill8",
+      "OS_DisableInterrupts",
+      "OS_GetMacAddress",
+      "OS_RestoreInterrupts",
+      "WM_GetAID",
+      "WM_GetConnectedAIDs",
+      "WMi_CheckInitialized",
+      "WMi_GetSystemWork"
+    ],
+    "WM_ReadStatus": [
+      "DC_InvalidateRange",
+      "MIi_CpuCopyFast",
+      "WMi_CheckInitialized",
+      "WMi_GetSystemWork"
+    ],
+    "WM_GetMPSendBufferSize": [
+      "DC_InvalidateRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork"
+    ],
+    "WM_GetMPReceiveBufferSize": [
+      "DC_InvalidateRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork"
+    ],
+    "WM_ReadMPData": [
+      "DC_InvalidateRange",
+      "WMi_CheckInitialized",
+      "WMi_GetSystemWork"
+    ],
+    "WM_GetAllowedChannel": [
+      "WMi_CheckInitialized"
+    ],
+    "WM_GetLinkLevel": [
+      "DC_InvalidateRange",
+      "WMi_CheckInitialized",
+      "WMi_GetSystemWork"
+    ],
+    "WM_GetDispersionBeaconPeriod": [
+      "OS_GetMacAddress"
+    ],
+    "WM_GetDispersionScanPeriod": [
+      "OS_GetMacAddress"
+    ],
+    "WM_GetOtherElements": [],
+    "WM_GetNextTgid": [
+      "RTC_GetTime",
+      "RTC_Init"
+    ],
+    "WM_Enable": [
+      "WMi_EnableEx"
+    ],
+    "WMi_EnableEx": [
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_Disable": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_PowerOn": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_PowerOff": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_Initialize": [
+      "WMi_InitializeEx"
+    ],
+    "WMi_InitializeEx": [
+      "WM_Init",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_InitializeForListening": [
+      "WMi_InitializeEx"
+    ],
+    "WM_Reset": [
+      "WMi_CheckIdle",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_End": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetParentParameter": [
+      "DC_StoreRange",
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable",
+      "WmCheckParentParameter"
+    ],
+    "WmCheckParentParameter": [],
+    "WMi_StartParentEx": [
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartParent": [
+      "WMi_StartParentEx"
+    ],
+    "WM_EndParent": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartScan": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommandDirect",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartScanEx": [
+      "MI_CpuCopy8",
+      "WMi_CheckStateEx",
+      "WMi_SendCommandDirect",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_EndScan": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartConnectEx": [
+      "DC_StoreRange",
+      "MI_CpuCopy8",
+      "MI_CpuFill8",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommandDirect",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_Disconnect": [
+      "DC_InvalidateRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WMi_StartMP": [
+      "DC_InvalidateRange",
+      "MIi_CpuClear32",
+      "MIi_CpuCopy32",
+      "WM_GetMPReceiveBufferSize",
+      "WM_GetMPSendBufferSize",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommandDirect",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartMPEx": [
+      "lib/NitroSDK/src/wm_requests.c|MI_CpuClear32",
+      "WMi_StartMP"
+    ],
+    "lib/NitroSDK/src/wm_requests.c|MI_CpuClear32": [
+      "lib/NitroSDK/src/wm_requests.c|MI_CpuFill32"
+    ],
+    "WM_StartMP": [
+      "lib/NitroSDK/src/wm_requests.c|MI_CpuClear32",
+      "WMi_StartMP"
+    ],
+    "WM_SetMPDataToPortEx": [
+      "DC_InvalidateRange",
+      "DC_StoreRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand"
+    ],
+    "WM_EndMP": [
+      "DC_InvalidateRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_StartDCF": [
+      "DC_InvalidateRange",
+      "DC_StoreRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetDCFData": [
+      "DC_InvalidateRange",
+      "DC_StoreRange",
+      "MI_CpuCopy8",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_EndDCF": [
+      "DC_InvalidateRange",
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "lib/NitroSDK/src/wm_requests.c|MI_CpuFill32": [
+      "MIi_CpuClear32"
+    ],
+    "WM_StartKeySharing": [
+      "WM_StartDataSharing"
+    ],
+    "WM_EndKeySharing": [
+      "WM_EndDataSharing"
+    ],
+    "WM_SetWEPKey": [
+      "DC_StoreRange",
+      "WMi_CheckIdle",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetWEPKeyEx": [
+      "DC_StoreRange",
+      "WMi_CheckIdle",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetGameInfo": [
+      "DC_StoreRange",
+      "MIi_CpuCopy16",
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetBeaconIndication": [
+      "WMi_CheckIdle",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetLifeTime": [
+      "WMi_CheckIdle",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_MeasureChannel": [
+      "WMi_CheckStateEx",
+      "WMi_GetSystemWork",
+      "WMi_SendCommandDirect",
+      "WMi_SetCallbackTable"
+    ],
+    "WM_SetEntry": [
+      "WMi_CheckStateEx",
+      "WMi_SendCommand",
+      "WMi_SetCallbackTable"
+    ],
+    "GetRegionOfMBlock": [],
+    "RemoveMBlock": [],
+    "InsertMBlock": [],
+    "InitMBlock": [],
+    "InitExpHeap": [
+      "InitMBlock",
+      "NNSi_FndInitHeapHead"
+    ],
+    "AllocUsedBlockFromFreeBlock": [
+      "lib/NitroSystem/src/fnd_expheap.c|FillAllocMemory",
+      "lib/NitroSystem/src/fnd_expheap.c|SetAlignment",
+      "lib/NitroSystem/src/fnd_expheap.c|SetAllocDir",
+      "lib/NitroSystem/src/fnd_expheap.c|SetGroupID",
+      "GetRegionOfMBlock",
+      "InitMBlock",
+      "InsertMBlock",
+      "RemoveMBlock"
+    ],
+    "lib/NitroSystem/src/fnd_expheap.c|FillAllocMemory": [
+      "MIi_CpuClear32"
+    ],
+    "lib/NitroSystem/src/fnd_expheap.c|SetAllocDir": [],
+    "lib/NitroSystem/src/fnd_expheap.c|SetAlignment": [],
+    "lib/NitroSystem/src/fnd_expheap.c|SetGroupID": [],
+    "AllocFromHead__ExpHeap": [
+      "AllocUsedBlockFromFreeBlock"
+    ],
+    "AllocFromTail__ExpHeap": [
+      "AllocUsedBlockFromFreeBlock"
+    ],
+    "RecycleRegion": [
+      "lib/NitroSystem/src/fnd_expheap.c|GetBlockEnd",
+      "InitMBlock",
+      "InsertMBlock",
+      "RemoveMBlock"
+    ],
+    "lib/NitroSystem/src/fnd_expheap.c|GetBlockEnd": [],
+    "NNS_FndCreateExpHeapEx": [
+      "InitExpHeap"
+    ],
+    "NNS_FndDestroyExpHeap": [
+      "NNSi_FndFinalizeHeap"
+    ],
+    "NNS_FndAllocFromExpHeapEx": [
+      "AllocFromHead__ExpHeap",
+      "AllocFromTail__ExpHeap"
+    ],
+    "NNS_FndResizeForMBlockExpHeap": [
+      "GetRegionOfMBlock",
+      "InitMBlock",
+      "InsertMBlock",
+      "MIi_CpuClear32",
+      "RecycleRegion",
+      "RemoveMBlock"
+    ],
+    "NNS_FndFreeToExpHeap": [
+      "GetRegionOfMBlock",
+      "RecycleRegion",
+      "RemoveMBlock"
+    ],
+    "NNS_FndGetTotalFreeSizeForExpHeap": [],
+    "NNS_FndSetGroupIDForExpHeap": [],
+    "NNS_FndGetSizeForMBlockExpHeap": [],
+    "NNS_FndGetGroupIDForMBlockExpHeap": [],
+    "FindContainHeap": [
+      "FindContainHeap",
+      "NNS_FndGetNextListObject"
+    ],
+    "FindListContainHeap": [
+      "FindContainHeap"
+    ],
+    "NNSi_FndInitHeapHead": [
+      "FindListContainHeap",
+      "NNS_FndAppendListObject",
+      "NNS_FndInitList"
+    ],
+    "NNSi_FndFinalizeHeap": [
+      "FindListContainHeap",
+      "NNS_FndRemoveListObject"
+    ],
+    "NNS_FndInitList": [],
+    "SetFirstObject": [],
+    "NNS_FndAppendListObject": [
+      "SetFirstObject"
+    ],
+    "NNS_FndPrependListObject": [
+      "SetFirstObject"
+    ],
+    "NNS_FndInsertListObject": [
+      "NNS_FndAppendListObject",
+      "NNS_FndPrependListObject"
+    ],
+    "NNS_FndRemoveListObject": [],
+    "NNS_FndGetNextListObject": [],
+    "NNS_FndGetPrevListObject": [],
+    "NNS_SndStrmInit": [
+      "NNS_FndInitList"
+    ],
+    "BeginSleep__Strm": [
+      "SND_FlushCommand",
+      "SND_GetCurrentCommandTag",
+      "SND_StopTimer",
+      "SND_WaitForCommandProc"
+    ],
+    "EndSleep__Strm": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SND_StartTimer",
+      "StrmCallback"
+    ],
+    "NNS_SndStrmAllocChannel": [
+      "NNS_SndLockChannel"
+    ],
+    "NNS_SndStrmFreeChannel": [
+      "NNS_SndUnlockChannel"
+    ],
+    "NNS_SndStrmSetup": [
+      "NNS_FndAppendListObject",
+      "NNS_SndAllocAlarm",
+      "NNS_SndStrmStop",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SND_SetupAlarm",
+      "SND_SetupChannelPcm",
+      "StrmCallback"
+    ],
+    "NNS_SndStrmStop": [
+      "ForceStopStrm"
+    ],
+    "AlarmCallback": [
+      "StrmCallback"
+    ],
+    "StrmCallback": [
+      "INDIRECT:lib/NitroSystem/src/snd_stream.c:StrmCallback:160"
+    ],
+    "NNS_SndStrmStart": [
+      "PM_AppendPostSleepCallback",
+      "PM_PrependPreSleepCallback",
+      "SND_StartTimer"
+    ],
+    "ForceStopStrm": [
+      "PM_DeletePostSleepCallback",
+      "PM_DeletePreSleepCallback",
+      "SND_FlushCommand",
+      "SND_GetCurrentCommandTag",
+      "SND_StopTimer",
+      "SND_WaitForCommandProc",
+      "ShutdownStrm"
+    ],
+    "NNS_SndStrmSetVolume": [
+      "SND_CalcChannelVolume",
+      "SND_SetChannelVolume"
+    ],
+    "ShutdownStrm": [
+      "NNS_FndRemoveListObject",
+      "NNS_SndFreeAlarm"
+    ],
+    "NNS_SndInit": [
+      "NNSi_SndCaptureInit",
+      "NNSi_SndInitResourceMgr",
+      "NNSi_SndPlayerInit",
+      "PM_AppendPostSleepCallback",
+      "PM_PrependPreSleepCallback",
+      "SND_Init"
+    ],
+    "BeginSleep": [
+      "NNSi_SndCaptureBeginSleep",
+      "SND_FlushCommand",
+      "SND_GetCurrentCommandTag",
+      "SND_StopTimer",
+      "SND_WaitForCommandProc"
+    ],
+    "EndSleep": [
+      "NNSi_SndCaptureEndSleep"
+    ],
+    "NNS_SndMain": [
+      "NNSi_SndArcStrmMain",
+      "NNSi_SndCaptureMain",
+      "NNSi_SndPlayerMain",
+      "SND_FlushCommand",
+      "SND_RecvCommandReply"
+    ],
+    "NNS_SndSetMasterVolume": [
+      "SND_SetMasterVolume"
+    ],
+    "NNS_SndSetMonoFlag": [
+      "SND_ResetMasterPan",
+      "SND_SetMasterPan"
+    ],
+    "NNS_SndUpdateDriverInfo": [
+      "DC_InvalidateRange",
+      "SND_FlushCommand",
+      "SND_GetCurrentCommandTag",
+      "SND_IsFinishedCommandTag",
+      "SND_ReadDriverInfo",
+      "SND_RecvCommandReply"
+    ],
+    "NNS_SndReadDriverChannelInfo": [
+      "SND_ReadChannelInfo"
+    ],
+    "NNSi_SndReadDriverTrackInfo": [
+      "SND_ReadTrackInfo"
+    ],
+    "SOC_Socket": [
+      "SOCL_CreateSocket"
+    ],
+    "SOC_Bind": [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap16",
+      "SOCL_Bind"
+    ],
+    "lib/NitroWiFi/src/soc.c|Socl_Swap16": [],
+    "SOC_Connect": [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap16",
+      "lib/NitroWiFi/src/soc.c|Socl_Swap32",
+      "SOCL_Connect"
+    ],
+    "lib/NitroWiFi/src/soc.c|Socl_Swap32": [],
+    "SOC_Recv": [
+      "SOCL_ReadFrom"
+    ],
+    "SOC_RecvFrom": [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap16",
+      "lib/NitroWiFi/src/soc.c|Socl_Swap32",
+      "SOCL_ReadFrom"
+    ],
+    "SOC_Send": [
+      "SOCL_WriteTo"
+    ],
+    "SOC_SendTo": [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap16",
+      "lib/NitroWiFi/src/soc.c|Socl_Swap32",
+      "SOCL_WriteTo"
+    ],
+    "SOC_Shutdown": [
+      "SOCL_Shutdown"
+    ],
+    "SOC_Close": [
+      "SOCL_Close"
+    ],
+    "SOC_GetHostByName": [
+      "lib/NitroWiFi/src/soc_gethostbyname.c|Socl_Swap32",
+      "MI_CpuFill8",
+      "SOCL_Resolve",
+      "STD_CopyLString"
+    ],
+    "lib/NitroWiFi/src/soc_gethostbyname.c|Socl_Swap32": [],
+    "SOC_GetSockName": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap16",
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_GetHostID"
+    ],
+    "lib/NitroWiFi/src/soc_inet.c|Socl_Swap16": [],
+    "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32": [],
+    "SOC_GetHostID": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_GetHostID"
+    ],
+    "SOC_SetResolver": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_SetResolver"
+    ],
+    "SOC_Listen": [
+      "SOCL_Listen"
+    ],
+    "SOC_Accept": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap16",
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_Accept"
+    ],
+    "SOC_Fcntl": [],
+    "AllocFunc_SOCL": [
+      "INDIRECT:lib/NitroWiFi/src/soc_inet.c:AllocFunc_SOCL:73"
+    ],
+    "FreeFunc_SOCL": [
+      "INDIRECT:lib/NitroWiFi/src/soc_inet.c:FreeFunc_SOCL:83"
+    ],
+    "SOC_Startup": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_Startup"
+    ],
+    "SOC_Cleanup": [
+      "SOCL_Cleanup"
+    ],
+    "SOC_InetNtoA": [
+      "SOC_InetNtoP"
+    ],
+    "SOC_InetNtoP": [
+      "MI_CpuCopy8",
+      "OS_SNPrintf",
+      "SOC_U32to4U8"
+    ],
+    "SOC_InetAtoN": [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32",
+      "SOCL_InetAtoH"
+    ],
+    "SOC_U32to4U8": [],
+    "SOC_Poll": [
+      "OS_Sleep",
+      "SOCL_GetStatus"
+    ],
+    "SOCL_Shutdown": [
+      "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsCreated",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInSendPipe"
+    ],
+    "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsCreated": [],
+    "SOCLi_ShutdownCallBack": [
+      "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsStream",
+      "CPS_TcpShutdown"
+    ],
+    "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsStream": [],
+    "SOCL_IsClosed": [
+      "SOCL_SocketIsInTrash",
+      "SOCL_SocketIsInvalid"
+    ],
+    "SOCL_Close": [
+      "SOCL_SocketIsInTrash",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_SendCommandPacket",
+      "SOCLi_SendCommandPacketToCtrlPipe"
+    ],
+    "SOCLi_CloseCallBack": [
+      "CPS_SocRelease",
+      "CPS_SocUnRegister",
+      "CPS_TcpClose",
+      "CPS_TcpShutdown",
+      "OS_DisableInterrupts",
+      "OS_JoinThread",
+      "OS_RestoreInterrupts",
+      "SOCLi_SendCommandPacket",
+      "SOCLi_SocketRegisterTrash",
+      "SOCLi_SocketUnregister"
+    ],
+    "SOCLi_CleanupSocket": [
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCLi_CleanupSocket:134",
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCLi_CleanupSocket:148",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_WakeupThread",
+      "SOCLi_FreeCommandPipe",
+      "SOCLi_SocketUnregister",
+      "SOCLi_SocketUnregisterTrash"
+    ],
+    "SOCLi_FreeCommandPipe": [
+      "OS_DisableInterrupts",
+      "OS_DisableScheduler",
+      "OS_EnableScheduler",
+      "OS_JoinThread",
+      "OS_ReceiveMessage",
+      "OS_RescheduleThread",
+      "OS_RestoreInterrupts",
+      "OS_SendMessage",
+      "SOCLi_FreeCommandPacket"
+    ],
+    "SOCLi_TrashSocket": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SOCLi_CleanupSocket"
+    ],
+    "SOCL_Cleanup": [
+      "CPS_Cleanup",
+      "CPS_SetScavengerCallback",
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCL_Cleanup:201",
+      "OS_Sleep",
+      "SOCL_CalmDown",
+      "SOCLi_CleanupCommandPacketQueue"
+    ],
+    "SOCL_CalmDown": [
+      "CPS_CalmDown",
+      "SOCL_Close",
+      "SOCL_CloseAll",
+      "SOCL_IsClosed",
+      "SOCLi_TrashSocket",
+      "WCM_SetRecvDCFCallback"
+    ],
+    "SOCL_CloseAll": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SOCL_Close"
+    ],
+    "SOCLi_StartupCommandPacketQueue": [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_StartupCommandPacketQueue:19",
+      "OS_InitMessageQueue",
+      "SOCLi_FreeCommandPacket"
+    ],
+    "SOCLi_FreeCommandPacket": [
+      "OS_SendMessage"
+    ],
+    "SOCLi_CleanupCommandPacketQueue": [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_CleanupCommandPacketQueue:40"
+    ],
+    "SOCLi_AllocCommandPacket": [
+      "OS_ReceiveMessage"
+    ],
+    "SOCLi_CreateCommandPacket": [
+      "SOCLi_AllocCommandPacket"
+    ],
+    "SOCLi_GetCtrlPipe": [],
+    "SOCLi_SendCommandPacket": [
+      "OS_SendMessage",
+      "SOCLi_FreeCommandPacket"
+    ],
+    "SOCLi_SendCommandPacketToCtrlPipe": [
+      "SOCLi_GetCtrlPipe",
+      "SOCLi_SendCommandPacket"
+    ],
+    "SOCLi_ExecCommandPacket": [
+      "OS_InitMessageQueue",
+      "OS_ReceiveMessage",
+      "SOCLi_SendCommandPacket"
+    ],
+    "SOCLi_ExecCommandPacketInRecvPipe": [
+      "SOCLi_ExecCommandPacket"
+    ],
+    "SOCLi_ExecCommandPacketInSendPipe": [
+      "SOCLi_ExecCommandPacket"
+    ],
+    "SOCLi_ExecCommandPacketInCtrlPipe": [
+      "SOCLi_ExecCommandPacket",
+      "SOCLi_GetCtrlPipe"
+    ],
+    "SOCLi_CommandPacketHandler": [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_CommandPacketHandler:140",
+      "OS_DisableInterrupts",
+      "OS_DisableScheduler",
+      "OS_EnableScheduler",
+      "OS_ReadMessage",
+      "OS_ReceiveMessage",
+      "OS_RestoreInterrupts",
+      "OS_SendMessage",
+      "SOCLi_FreeCommandPacket"
+    ],
+    "SOCL_ReadFrom": [
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsCreated",
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsStream",
+      "OS_GetProcMode",
+      "OS_LockMutex",
+      "OS_TryLockMutex",
+      "OS_UnlockMutex",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_ReadAndConsumeBuffer"
+    ],
+    "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsCreated": [],
+    "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsStream": [],
+    "SOCLi_ReadAndConsumeBuffer": [
+      "SOCLi_ConsumeBuffer",
+      "SOCLi_ReadBuffer",
+      "SOCLi_ReadUdpBuffer"
+    ],
+    "SOCLi_ReadUdpBuffer": [
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsCreated",
+      "INDIRECT:lib/NitroWiFi/src/socl_read.c:SOCLi_ReadUdpBuffer:302",
+      "MI_CpuCopy8",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "SOCL_SocketIsInvalid"
+    ],
+    "SOCLi_ReadBuffer": [
+      "SOCLi_CopyCPSBuffer",
+      "SOCLi_ExecReadCommand"
+    ],
+    "SOCLi_ConsumeBuffer": [
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    "SOCLi_ExecReadCommand": [
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    "SOCLi_CopyCPSBuffer": [
+      "lib/NitroWiFi/src/socl_read.c|CopyData",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SOCLi_ReadCPSBuffer"
+    ],
+    "SOCLi_ReadCPSBuffer": [],
+    "lib/NitroWiFi/src/socl_read.c|CopyData": [
+      "lib/NitroWiFi/src/socl_read.c|AddConsumed",
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsStream",
+      "MI_CpuCopy8"
+    ],
+    "SOCLi_ReadCallBack": [
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsStream",
+      "CPS_SocConsume",
+      "CPS_SocRead",
+      "MI_CpuCopy8",
+      "OS_Sleep",
+      "SOCLi_ConsumeCPSBuffer",
+      "SOCLi_CopyCPSBuffer"
+    ],
+    "SOCLi_ConsumeCPSBuffer": [
+      "CPS_SocConsume",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "SOCLi_ConsumeCallBack": [
+      "SOCLi_ConsumeCPSBuffer"
+    ],
+    "SOCLi_UdpRecvCallback": [
+      "INDIRECT:lib/NitroWiFi/src/socl_read.c:SOCLi_UdpRecvCallback:317",
+      "MI_CpuCopy8",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_WakeupThread"
+    ],
+    "lib/NitroWiFi/src/socl_read.c|AddConsumed": [],
+    "SOCL_Resolve": [
+      "CPS_Resolve",
+      "CPS_SocRegister",
+      "CPS_SocUnRegister",
+      "INDIRECT:lib/NitroWiFi/src/socl_resolver.c:SOCL_Resolve:15",
+      "INDIRECT:lib/NitroWiFi/src/socl_resolver.c:SOCL_Resolve:27",
+      "MI_CpuFill8"
+    ],
+    "SOCL_InetAtoH": [
+      "CPS_Resolve",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "SOCL_SetResolver": [
+      "SOCL_GetHostID"
+    ],
+    "SOCL_GetHostID": [
+      "OS_GetProcMode",
+      "OS_Sleep"
+    ],
+    "SOCL_CreateSocket": [
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInCtrlPipe",
+      "SOCLi_StartupSocket"
+    ],
+    "SOCLi_StartupSocket": [
+      "INDIRECT:lib/NitroWiFi/src/socl_socket.c:SOCLi_StartupSocket:44",
+      "MI_CpuFill8",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "SOCLi_GetSizeSocket",
+      "SOCLi_InitSocket",
+      "SOCLi_SocketRegister"
+    ],
+    "SOCLi_CreateSocketCallBack": [
+      "CPS_SetUdpCallback",
+      "CPS_SocDatagramMode",
+      "CPS_SocDup",
+      "CPS_SocRegister",
+      "CPS_SocUse"
+    ],
+    "SOCLi_GetSizeSocket": [
+      "SOCLi_GetSizeCommandPipe",
+      "SOCLi_RoundUp4"
+    ],
+    "SOCLi_InitSocket": [
+      "SOCLi_InitCommandPipe",
+      "SOCLi_InitSocketBuffer"
+    ],
+    "SOCLi_GetSizeCommandPipe": [
+      "SOCLi_RoundUp4"
+    ],
+    "SOCLi_InitCommandPipe": [
+      "OS_CreateThread",
+      "OS_InitMessageQueue",
+      "OS_InitMutex",
+      "OS_WakeupThreadDirect",
+      "SOCLi_GetSizeCommandPipe"
+    ],
+    "SOCLi_InitSocketBuffer": [
+      "SOCLi_RoundUp4"
+    ],
+    "SOCL_Listen": [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated",
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream",
+      "SOCL_SocketIsInvalid"
+    ],
+    "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated": [],
+    "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream": [],
+    "SOCL_Accept": [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated",
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream",
+      "SOCL_Bind",
+      "SOCL_CreateSocket",
+      "SOCL_ListenAccept",
+      "SOCL_SocketIsInvalid"
+    ],
+    "SOCL_Bind": [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_ExecBindCommand"
+    ],
+    "SOCL_ListenAccept": [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated",
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    "SOCLi_ListenAcceptCallBack": [
+      "CPS_SocBind",
+      "CPS_SocWho",
+      "CPS_TcpListen",
+      "OS_LockMutex",
+      "OS_UnlockMutex"
+    ],
+    "SOCLi_ExecBindCommand": [
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    "SOCL_Connect": [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated",
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_ExecBindCommand"
+    ],
+    "SOCLi_BindCallBack": [
+      "CPS_SocBind",
+      "CPS_TcpConnect",
+      "OS_LockMutex",
+      "OS_UnlockMutex"
+    ],
+    "SOCL_EnableSsl": [
+      "lib/NitroWiFi/src/socl_ssl.c|SoclSocket_IsStream",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_ExecEnableSslCommand"
+    ],
+    "lib/NitroWiFi/src/socl_ssl.c|SoclSocket_IsStream": [],
+    "SOCLi_ExecEnableSslCommand": [
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    "SOCLi_EnableSslCallBack": [
+      "CPS_SetSsl",
+      "OS_LockMutex",
+      "OS_UnlockMutex"
+    ],
+    "SOCL_WriteTo": [
+      "lib/NitroWiFi/src/socl_write.c|SoclSocket_IsStream",
+      "OS_LockMutex",
+      "OS_TryLockMutex",
+      "OS_UnlockMutex",
+      "SOCL_SocketIsInvalid",
+      "SOCLi_WriteBuffer"
+    ],
+    "lib/NitroWiFi/src/socl_write.c|SoclSocket_IsStream": [],
+    "SOCLi_WriteBuffer": [
+      "SOCLi_AllocWriteBuffer",
+      "SOCLi_ExecWriteCommand"
+    ],
+    "SOCLi_AllocWriteBuffer": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "SOCLi_GetWriteBufferFreeSize"
+    ],
+    "SOCLi_ExecWriteCommand": [
+      "CPS_SocGetEport",
+      "MI_CpuCopy8",
+      "SOCLi_CreateCommandPacket",
+      "SOCLi_ExecCommandPacketInSendPipe"
+    ],
+    "SOCLi_GetWriteBufferFreeSize": [
+      "lib/NitroWiFi/src/socl_write.c|GetRingFreeSize"
+    ],
+    "lib/NitroWiFi/src/socl_write.c|GetRingFreeSize": [],
+    "SOCLi_WriteCallBack": [
+      "CPS_SocBind",
+      "CPS_SocWrite",
+      "CPS_TcpClose",
+      "OS_WakeupThread",
+      "SOCLi_GetOptimumSendBufLen",
+      "SOCLi_MemCpy"
+    ],
+    "SOCLi_GetOptimumSendBufLen": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "SOCLi_MemCpy": [
+      "MI_CpuCopy8"
+    ],
+    "MD5Init": [
+      "DGT_Hash1Reset"
+    ],
+    "MD5Update": [
+      "DGT_Hash1SetSource"
+    ],
+    "MD5Final": [
+      "DGT_Hash1GetDigest_R"
+    ],
+    "WCM_Init": [
+      "OS_CreateAlarm",
+      "OS_DisableInterrupts",
+      "OS_InitAlarm",
+      "OS_InitTick",
+      "OS_IsAlarmAvailable",
+      "OS_IsTickAvailable",
+      "OS_RestoreInterrupts",
+      "WCMi_InitCpsif",
+      "WcmInitOption"
+    ],
+    "WCM_Finish": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WCM_StartupAsync": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WM_Enable",
+      "WM_Finish",
+      "WM_GetAllowedChannel",
+      "WM_Init",
+      "WM_SetIndCallback",
+      "WcmConfigure",
+      "WcmSetPhase"
+    ],
+    "WCM_CleanupAsync": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WM_PowerOff",
+      "WcmSetPhase"
+    ],
+    "WCM_SearchAsync": [
+      "WCM_BeginSearchAsync",
+      "WCM_EndSearchAsync"
+    ],
+    "WCM_EndSearchAsync": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WcmSetPhase"
+    ],
+    "WCM_BeginSearchAsync": [
+      "DC_InvalidateRange",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WM_StartScanEx",
+      "WcmEditScanExParam",
+      "WcmSetPhase"
+    ],
+    "WCM_ConnectAsync": [
+      "MI_CpuCopy8",
+      "MI_CpuFill8",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WCM_UpdateOption",
+      "WM_SetLifeTime",
+      "WcmSetPhase"
+    ],
+    "WCM_UpdateOption": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WCM_DisconnectAsync": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WM_EndDCF",
+      "WcmSetPhase"
+    ],
+    "WCM_TerminateAsync": [
+      "DC_InvalidateRange",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WM_Disable",
+      "WM_Finish",
+      "WM_PowerOff",
+      "WM_Reset",
+      "WMi_GetStatusAddress",
+      "WcmSetPhase"
+    ],
+    "WCM_GetPhase": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WCMi_GetSystemWork": [],
+    "WCMi_InitCpsif": [
+      "OS_InitMutex"
+    ],
+    "WCMi_CpsifRecvCallback": [
+      "INDIRECT:lib/NitroWiFi/src/wcm_cpsif.c:WCMi_CpsifRecvCallback:22"
+    ],
+    "WCMi_CpsifSendNullPacket": [
+      "WCMi_GetSystemWork",
+      "WM_SetDCFData",
+      "WcmCpsifTryLockMutexInIRQ",
+      "WcmCpsifUnlockMutexInIRQ"
+    ],
+    "WcmCpsifTryLockMutexInIRQ": [],
+    "WcmCpsifKACallback": [
+      "WcmCpsifUnlockMutexInIRQ"
+    ],
+    "WcmCpsifUnlockMutexInIRQ": [
+      "OS_WakeupThread"
+    ],
+    "WCM_GetApMacAddress": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WCMi_GetSystemWork"
+    ],
+    "WCM_GetApEssid": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WCMi_GetSystemWork"
+    ],
+    "WCM_SetRecvDCFCallback": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "WCM_SendDCFDataEx": [
+      "MI_CpuCopy8",
+      "OS_DisableInterrupts",
+      "OS_LockMutex",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OS_UnlockMutex",
+      "WCMi_GetSystemWork",
+      "WM_SetDCFData"
+    ],
+    "WcmCpsifWmCallback": [
+      "OS_WakeupThread",
+      "WCMi_ResetKeepAliveAlarm"
+    ],
+    "WCM_CompareBssID": [],
+    "WCM_GetLinkLevel": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "WCMi_GetSystemWork",
+      "WcmGetLinkLevel"
+    ],
+    "WcmGetLinkLevel": [
+      "WCMi_GetRssiAverage"
+    ],
+    "WCMi_GetRssiAverage": [],
+    "WCMi_ShelterRssi": [
+      "lib/NitroWiFi/src/wcm_cpsif.c|CalibrateRssi"
+    ],
+    "lib/NitroWiFi/src/wcm_cpsif.c|CalibrateRssi": [],
+    "CPS_Resolve": [
+      "lib/libCPS/src/cps_resolve.c|RandomValue",
+      "rawip",
+      "resolve_sub"
+    ],
+    "lib/libCPS/src/cps_resolve.c|RandomValue": [],
+    "CPS_SocGetEport": [],
+    "get_seqno": [],
+    "CPS_SocRegister": [],
+    "CPS_SocUnRegister": [],
+    "CPS_SocDatagramMode": [],
+    "CPS_SocBind": [
+      "CPS_SocGetEport"
+    ],
+    "CPS_SocUse": [],
+    "CPS_SocRelease": [],
+    "CPS_SocDup": [],
+    "CPSi_TcpListenRaw": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "get_seqno"
+    ],
+    "CPS_SetUdpCallback": [],
+    "CPS_TcpListen": [
+      "CPSi_SslListen",
+      "CPSi_TcpListenRaw"
+    ],
+    "CPSi_TcpConnectRaw": [
+      "OS_DisableInterrupts",
+      "OS_GetTick",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "get_seqno",
+      "tcp_send_handshake"
+    ],
+    "CPS_TcpConnect": [
+      "CPSi_SslConnect",
+      "CPSi_TcpConnectRaw"
+    ],
+    "CPS_SocWho": [],
+    "CPSi_TcpShutdownRaw": [
+      "OS_YieldThread",
+      "tcp_send_ack",
+      "tcp_send_finack"
+    ],
+    "CPS_TcpShutdown": [
+      "CPSi_SslShutdown",
+      "CPSi_TcpShutdownRaw"
+    ],
+    "CPS_TcpClose": [
+      "CPSi_SslClose",
+      "INDIRECT:lib/libCPS/src/cps_socket.c:CPS_TcpClose:219",
+      "OS_GetTick",
+      "OS_YieldThread__"
+    ],
+    "udp_read_raw": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread"
+    ],
+    "CPSi_TcpReadRaw": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "OS_SleepThread",
+      "OS_YieldThread"
+    ],
+    "CPS_SocRead": [
+      "CPSi_SslRead",
+      "CPSi_TcpReadRaw",
+      "udp_read_raw"
+    ],
+    "CPSi_SocConsumeRaw": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "memmove",
+      "tcp_send_ack"
+    ],
+    "CPS_SocConsume": [
+      "CPSi_SocConsumeRaw",
+      "CPSi_SslConsume"
+    ],
+    "set_random": [
+      "CPS_SslAddRandomSeed",
+      "CPSi_sha1_calc",
+      "CPSi_sha1_init",
+      "CPSi_sha1_result_prng",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "CPS_SslAddRandomSeed": [
+      "CPSi_sha1_calc",
+      "CPSi_sha1_init",
+      "CPSi_sha1_result",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "date2sec": [
+      "RTC_ConvertDateTimeToSecond",
+      "RTC_GetDate",
+      "RTC_GetTime"
+    ],
+    "CPS_GetSslHandshakePriority": [],
+    "CPS_SetSslHandshakePriority": [],
+    "enter_computebound": [
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetCurrentThread",
+      "OS_GetThreadPriority",
+      "OS_SetThreadPriority"
+    ],
+    "lib/libCPS/src/cps_ssl_util.c|OS_GetCurrentThread": [
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetThreadInfo"
+    ],
+    "exit_computebound": [
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetCurrentThread",
+      "OS_SetThreadPriority"
+    ],
+    "CPS_SetRootCa": [
+      "lib/libCPS/src/cps_ssl_util.c|CpsThread_GetSocket",
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetCurrentThread"
+    ],
+    "lib/libCPS/src/cps_ssl_util.c|CpsThread_GetSocket": [],
+    "lib/libCPS/src/cps_ssl_util.c|OS_GetThreadInfo": [],
+    "tcp_write_do": [
+      "OS_YieldThread",
+      "send_tcp"
+    ],
+    "tcp_write_do2": [
+      "tcp_write_do"
+    ],
+    "CPSi_TcpWrite2Raw": [
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:75",
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:82",
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:96",
+      "OS_GetTick",
+      "OS_YieldThread__",
+      "tcp_write_do2"
+    ],
+    "CPSi_SocWrite2": [
+      "CPSi_SslWrite2",
+      "CPSi_TcpWrite2Raw",
+      "send_ping",
+      "send_udp"
+    ],
+    "CPS_SocWrite": [
+      "CPSi_SocWrite2",
+      "memmove"
+    ],
+    "CPS_SocGetLength": [
+      "CPSi_SslGetLength"
+    ],
+    "CPS_SocFlush": [
+      "CPSi_SocWrite2"
+    ],
+    "vct_init_audio": [
+      "lib/libVCT/src/vct_audio.c|InitializeAudioStreams",
+      "InitFIRFilter",
+      "OS_GetTickLo",
+      "vct_init_decoder",
+      "vct_init_vad"
+    ],
+    "lib/libVCT/src/vct_audio.c|InitializeAudioStreams": [
+      "vct_init_audio_queue",
+      "vct_init_stream"
+    ],
+    "vct_finish_audio": [],
+    "VCT_StartStreaming": [
+      "OS_GetTickLo",
+      "VCT_ResetVAD",
+      "vct_init_audio_queue",
+      "vct_init_stream"
+    ],
+    "VCT_StopStreaming": [
+      "VCT_ResetVAD",
+      "vct_flush_audio_queue",
+      "vct_flush_decoder",
+      "vct_reset_stream"
+    ],
+    "VCT_SendAudio": [
+      "MIi_CpuCopyFast",
+      "OS_GetTick",
+      "_ll_udiv"
+    ],
+    "VCTi_ReceiveAudioData": [
+      "MIi_CpuCopyFast",
+      "OS_GetTick",
+      "vct_count_audio_queue",
+      "vct_free_packet_buffer",
+      "vct_save_previous_buffer",
+      "vct_top_audio_queue"
+    ],
+    "VCT_ReceiveAudio": [
+      "MIi_CpuClearFast",
+      "VCTi_ReceiveAudioData",
+      "vct_mix_audio",
+      "vct_set_speaker_samples"
+    ],
+    "VCT_SetCodec": [],
+    "VCT_EnableVAD": [
+      "VCT_ResetVAD"
+    ],
+    "VCT_EnableEchoCancel": [],
+    "vct_prepare_send_buffer": [
+      "HPFFilter",
+      "MATH_CountPopulation",
+      "VCTi_GetVADStatus",
+      "vct_encode_8bit_raw",
+      "vct_encode_adpcm",
+      "vct_encode_g711_ulaw",
+      "vct_process_fir"
+    ],
+    "vct_handle_audio": [
+      "MI_CpuCopy8",
+      "vct_alloc_packet_buffer",
+      "vct_calc_jitter_and_skew",
+      "vct_flush_all_audio_queue",
+      "vct_flush_all_decoder",
+      "vct_flush_audio_queue",
+      "vct_flush_decoder",
+      "vct_free_packet_buffer",
+      "vct_insert_decoder"
+    ],
+    "vct_decode_audio_buffer": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "vct_count_decoder_queue",
+      "vct_decode_8bit_raw",
+      "vct_decode_adpcm",
+      "vct_decode_g711_ulaw",
+      "vct_free_packet_buffer",
+      "vct_get_packet_from_decoder",
+      "vct_insert_audio_queue",
+      "vct_remove_packet_from_decoder",
+      "vct_top_decoder"
+    ],
+    "vct_init_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_flush_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "vct_free_packet_buffer"
+    ],
+    "vct_flush_all_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "vct_free_packet_buffer"
+    ],
+    "vct_insert_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_top_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_pop_audio_queue": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_count_audio_queue": [],
+    "vct_init_stream": [
+      "MI_CpuFill8"
+    ],
+    "vct_reset_stream": [
+      "vct_free_packet_buffer"
+    ],
+    "vct_save_previous_buffer": [
+      "vct_free_packet_buffer",
+      "vct_pop_audio_queue"
+    ],
+    "vct_init_sequence": [],
+    "vct_update_sequence": [
+      "vct_init_sequence"
+    ],
+    "vct_calc_jitter_and_skew": [
+      "OS_GetTick",
+      "vct_init_sequence",
+      "vct_update_sequence"
+    ],
+    "vct_init_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_flush_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "vct_free_packet_buffer",
+      "vct_get_packet_from_decoder",
+      "vct_remove_packet_from_decoder"
+    ],
+    "vct_get_packet_from_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_remove_packet_from_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_flush_all_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts",
+      "vct_free_packet_buffer"
+    ],
+    "vct_insert_decoder": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_top_decoder": [],
+    "vct_count_decoder_queue": [],
+    "VCT_Init": [
+      "MI_CpuFill8",
+      "OSi_ReferSymbol",
+      "vct_cleanup_packet_buffer",
+      "vct_finish_ssp",
+      "vct_init_audio",
+      "vct_init_packet_buffer",
+      "vct_init_ssp"
+    ],
+    "VCT_Cleanup": [
+      "vct_cleanup_packet_buffer",
+      "vct_finish_audio",
+      "vct_finish_ssp"
+    ],
+    "VCT_Main": [
+      "vct_check_timeout",
+      "vct_decode_audio_buffer",
+      "vct_flush_send_buffer"
+    ],
+    "VCT_HandleData": [
+      "INDIRECT:lib/libVCT/src/vct_main.c:VCT_HandleData:90",
+      "VCTi_HandleData"
+    ],
+    "VCTi_HandleData": [
+      "lib/libVCT/src/vct_main.c|IsAudioPacket",
+      "lib/libVCT/src/vct_main.c|IsSspPacket",
+      "OS_GetTick",
+      "vct_handle_audio",
+      "vct_handle_ssp"
+    ],
+    "lib/libVCT/src/vct_main.c|IsAudioPacket": [],
+    "lib/libVCT/src/vct_main.c|IsSspPacket": [],
+    "vct_init_packet_buffer": [
+      "lib/libVCT/src/vct_packet_buffer.c|ConstructLinks",
+      "MIi_CpuClearFast"
+    ],
+    "lib/libVCT/src/vct_packet_buffer.c|ConstructLinks": [],
+    "vct_cleanup_packet_buffer": [],
+    "vct_alloc_packet_buffer": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "vct_free_packet_buffer": [
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "VCT_CreateSession": [
+      "vct_create_session_impl"
+    ],
+    "vct_create_session_impl": [
+      "vct_init_session"
+    ],
+    "VCT_DeleteSession": [],
+    "vct_build_request_data": [
+      "vct_build_ssp_header",
+      "vct_check_multisession",
+      "vct_check_send_state"
+    ],
+    "vct_build_ssp_header": [],
+    "vct_check_send_state": [],
+    "vct_check_multisession": [],
+    "VCT_Request": [
+      "vct_request_impl"
+    ],
+    "vct_request_impl": [
+      "vct_build_request_data",
+      "vct_send_ssp"
+    ],
+    "vct_build_response_data": [
+      "vct_build_ssp_header",
+      "vct_check_multisession",
+      "vct_check_send_state"
+    ],
+    "VCT_Response": [
+      "vct_response_impl"
+    ],
+    "vct_response_impl": [
+      "vct_build_response_data",
+      "vct_send_ssp"
+    ],
+    "VCT_AddConferenceClient": [
+      "INDIRECT:lib/libVCT/src/vct_ssp.c:VCT_AddConferenceClient:138",
+      "VCT_CreateSession",
+      "vct_find_session"
+    ],
+    "vct_find_session": [],
+    "vct_init_ssp": [
+      "lib/libVCT/src/vct_ssp.c|LinkSessions",
+      "MI_CpuFill8"
+    ],
+    "lib/libVCT/src/vct_ssp.c|LinkSessions": [],
+    "vct_finish_ssp": [],
+    "vct_check_timeout": [
+      "INDIRECT:lib/libVCT/src/vct_ssp.c:vct_check_timeout:208",
+      "OS_GetTick",
+      "vct_send_notify"
+    ],
+    "vct_send_notify": [
+      "vct_build_ssp_header",
+      "vct_send_notify_impl"
+    ],
+    "vct_handle_ssp": [
+      "vct_handle_ssp_client",
+      "vct_handle_ssp_server",
+      "vct_response_reject"
+    ],
+    "vct_response_reject": [
+      "vct_find_session",
+      "vct_init_session",
+      "vct_response_impl"
+    ],
+    "vct_handle_ssp_client": [
+      "VCT_DeleteSession",
+      "vct_check_recv_state",
+      "vct_create_session_impl",
+      "vct_dispatch_session",
+      "vct_find_session",
+      "vct_handle_notify",
+      "vct_init_session",
+      "vct_response_impl"
+    ],
+    "vct_handle_ssp_server": [
+      "OS_GetTick",
+      "vct_check_recv_state",
+      "vct_dispatch_session",
+      "vct_send_notify"
+    ],
+    "vct_init_session": [
+      "memset"
+    ],
+    "vct_send_ssp": [
+      "DWC_SendReliable",
+      "vct_send_notify_impl"
+    ],
+    "vct_add_notify_aid_list": [],
+    "vct_send_notify_impl": [
+      "DWC_SendReliable",
+      "vct_add_notify_aid_list"
+    ],
+    "vct_dispatch_session": [],
+    "vct_check_recv_state": [
+      "vct_response_impl"
+    ],
+    "vct_handle_notify": [],
+    "VCT_ResetVAD": [],
+    "VCT_GetVADInfo": [
+      "MI_CpuCopy8"
+    ],
+    "VCTi_GetVADStatus": [
+      "lib/libVCT/src/vct_vad.c|PushScale",
+      "lib/libVCT/src/vct_vad.c|RootAvg"
+    ],
+    "lib/libVCT/src/vct_vad.c|RootAvg": [],
+    "lib/libVCT/src/vct_vad.c|PushScale": [],
+    "vct_init_vad": [
+      "VCT_ResetVAD"
+    ],
+    "CRYPTO_RC4Init": [],
+    "CRYPTO_RC4FastInit": [],
+    "ByteRing_Init": [],
+    "ByteRing_Write": [
+      "src/communication_command.c|ByteRing_GetWritableSize",
+      "src/communication_command.c|ByteRing_Wrap",
+      "Comm_SetLinkError"
+    ],
+    "src/communication_command.c|ByteRing_GetWritableSize": [],
+    "src/communication_command.c|ByteRing_Wrap": [],
+    "ByteRing_Read": [
+      "src/communication_command.c|ByteRing_Peek",
+      "src/communication_command.c|ByteRing_Wrap"
+    ],
+    "src/communication_command.c|ByteRing_Peek": [
+      "src/communication_command.c|ByteRing_Wrap"
+    ],
+    "ByteRing_ReadByte": [
+      "ByteRing_Read"
+    ],
+    "ByteRing_GetReadableSize": [],
+    "ByteRing_GetFreeSize": [
+      "ByteRing_GetReadableSize"
+    ],
+    "ByteRing_Commit": [],
+    "PacketPool_AllNodesFree": [],
+    "PacketPool_Enqueue": [
+      "src/communication_command.c|PacketPool_GetFreeNode",
+      "ByteRing_Commit",
+      "ByteRing_GetFreeSize",
+      "ByteRing_Write",
+      "Comm_GetCommandSize"
+    ],
+    "src/communication_command.c|PacketPool_GetFreeNode": [],
+    "Comm_GetCommandSize": [
+      "Comm_SetLinkError",
+      "INDIRECT:src/communication_command.c:Comm_GetCommandSize:538"
+    ],
+    "PacketPool_WriteFrame": [
+      "src/communication_command.c|PacketPool_PeekNext",
+      "src/communication_command.c|PacketPool_PopNext",
+      "src/communication_command.c|Packet_Write",
+      "MI_CpuFill8"
+    ],
+    "src/communication_command.c|PacketPool_PeekNext": [],
+    "src/communication_command.c|PacketPool_PopNext": [
+      "src/communication_command.c|PacketQueue_PopFront"
+    ],
+    "src/communication_command.c|Packet_Write": [
+      "src/communication_command.c|Packet_WriteHeader",
+      "ByteRing_Read",
+      "Comm_GetCommandSize",
+      "MI_CpuCopy8"
+    ],
+    "PacketPool_Init": [
+      "Heap_Alloc",
+      "MI_CpuFill8"
+    ],
+    "PacketPool_Reset": [
+      "MI_CpuFill8"
+    ],
+    "PacketPool_Free": [
+      "Heap_Free"
+    ],
+    "PacketPool_HasCommand": [],
+    "Comm_GetMaxChildren": [],
+    "Comm_GetMinChildren": [],
+    "Comm_IsUnionRoomLinkMode": [],
+    "Comm_IsWifiLinkMode": [],
+    "Comm_IsWifiPeerLinkMode": [],
+    "Comm_IsLinkMode19To23Or34": [],
+    "Comm_IsCommClubLinkMode": [],
+    "Comm_RegisterCommandTable": [
+      "Heap_Alloc"
+    ],
+    "Comm_FreeCommandTable": [
+      "Heap_Free"
+    ],
+    "Comm_CallCommandRecv": [
+      "Comm_SetLinkError",
+      "INDIRECT:src/communication_command.c:Comm_CallCommandRecv:512",
+      "INDIRECT:src/communication_command.c:Comm_CallCommandRecv:514"
+    ],
+    "Comm_CommandHasBuffer": [],
+    "Comm_GetCommandBuffer": [
+      "INDIRECT:src/communication_command.c:Comm_GetCommandBuffer:559",
+      "INDIRECT:src/communication_command.c:Comm_GetCommandBuffer:561"
+    ],
+    "CommCmd_GetSizeVariable": [],
+    "CommCmd_GetSize0": [],
+    "CommCmd_GetSize1": [],
+    "src/communication_command.c|PacketQueue_PopFront": [],
+    "src/communication_command.c|Packet_WriteHeader": [
+      "src/communication_command.c|ByteWriter_PutByte",
+      "Comm_GetCommandSize"
+    ],
+    "src/communication_command.c|ByteWriter_PutByte": [],
+    "src/communication_command.c|CommCmd_RecvReady": [
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_SendParentCommand"
+    ],
+    "src/communication_command.c|CommCmd_RecvShutdown": [
+      "Comm_SendFixedCommand"
+    ],
+    "src/communication_command.c|CommCmd_RecvNotReady": [
+      "Comm_GetLocalNetId"
+    ],
+    "src/communication_command.c|CommCmd_GetSize2": [],
+    "Comm_StartParent": [
+      "src/communication_core.c|Comm_InitWork",
+      "CommState_GetLinkMode",
+      "CommWireless_StartParent",
+      "Comm_IsWifiLinkMode",
+      "Wireless_SetChildJoinedCallback"
+    ],
+    "src/communication_core.c|Comm_OnChildJoined": [
+      "src/communication_core.c|Comm_ResetNetIdBuffers"
+    ],
+    "src/communication_core.c|Comm_InitWork": [
+      "src/communication_core.c|Comm_Reset",
+      "CommRandom_Init",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "Comm_IsWifiLinkMode",
+      "Heap_Alloc",
+      "LinkSync_Init",
+      "MI_CpuFill8",
+      "PacketPool_Init",
+      "SysTask_CreateOnVBlankQueue"
+    ],
+    "Comm_StartScan": [
+      "src/communication_core.c|Comm_InitWork",
+      "CommState_GetLinkMode",
+      "CommWireless_StartScan",
+      "Comm_IsWifiLinkMode"
+    ],
+    "Comm_RequestTransferMode1": [
+      "src/communication_core.c|Comm_RequestTransferMode"
+    ],
+    "src/communication_core.c|Comm_RequestTransferMode": [],
+    "Comm_RequestTransferMode0": [
+      "src/communication_core.c|Comm_RequestTransferMode"
+    ],
+    "Comm_IsTransferMode1": [
+      "src/communication_core.c|Comm_GetTransferMode"
+    ],
+    "src/communication_core.c|Comm_GetTransferMode": [],
+    "Comm_Shutdown": [
+      "CommPlayerInfo_Free",
+      "CommState_GetLinkMode",
+      "CommWireless_RequestStopAndFree",
+      "Comm_IsWifiLinkMode",
+      "Heap_Free",
+      "LinkSync_Free",
+      "PacketPool_Free",
+      "SysTask_Destroy",
+      "WifiConnection_Shutdown"
+    ],
+    "Comm_ConnectToParent": [
+      "CommWireless_ConnectToParent"
+    ],
+    "Comm_Update": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_ReceiveFromChildren",
+      "src/communication_core.c|Comm_ReceiveFromParent",
+      "src/communication_core.c|Comm_ResetDisconnectedNetIds",
+      "src/communication_core.c|Comm_ScrambleDirectionKeys",
+      "src/communication_core.c|Comm_ShutdownWhenRequested",
+      "src/communication_core.c|Comm_UpdateChildSend",
+      "src/communication_core.c|Comm_UpdateParentSend",
+      "src/communication_core.c|Comm_UpdateTransferMode",
+      "CommState_CheckLinkError",
+      "CommState_GetLinkMode",
+      "CommState_Main",
+      "CommWireless_Main",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_IsWifiPeerLinkMode",
+      "LinkSync_Update"
+    ],
+    "src/communication_core.c|Comm_UpdateTransferMode": [
+      "src/communication_core.c|Comm_OnTransferModeChanged",
+      "src/communication_core.c|Comm_UpdateTransferModeHandshake",
+      "Comm_GetLocalNetId"
+    ],
+    "src/communication_core.c|Comm_ScrambleDirectionKeys": [
+      "src/communication_core.c|CommWork_Random"
+    ],
+    "src/communication_core.c|Comm_UpdateChildSend": [
+      "src/communication_core.c|Comm_BuildChildFrame",
+      "src/communication_core.c|Comm_HasNoChildBacklog",
+      "src/communication_core.c|Comm_IsSendSkippedThisFrame",
+      "src/communication_core.c|Comm_SendChildFrame",
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected",
+      "Comm_IsWifiLinkMode",
+      "Comm_IsWifiPeerLinkMode",
+      "WifiConnection_SendToAll",
+      "WifiConnection_SendToHost",
+      "Wireless_GetState"
+    ],
+    "src/communication_core.c|Comm_ReceiveFromParent": [
+      "src/communication_core.c|Comm_ReceiveCommands",
+      "ByteRing_Commit",
+      "ByteRing_GetReadableSize"
+    ],
+    "Comm_GetLocalNetId": [
+      "CommState_GetLinkMode",
+      "Comm_IsWifiLinkMode",
+      "WifiConnection_GetAid",
+      "Wireless_GetAid"
+    ],
+    "Comm_IsNetIdConnected": [
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_IsActive",
+      "Comm_IsWifiLinkMode",
+      "DWC_GetAIDBitmap",
+      "Wireless_GetConnectedBitmap",
+      "Wireless_GetState"
+    ],
+    "src/communication_core.c|Comm_UpdateParentSend": [
+      "src/communication_core.c|Comm_BuildParentFrame",
+      "src/communication_core.c|Comm_FillParentFrameFromChildren",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_HasNoChildBacklog",
+      "src/communication_core.c|Comm_SendParentFrame",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected",
+      "Comm_IsWifiLinkMode",
+      "WifiConnection_SendFromHost",
+      "Wireless_GetState"
+    ],
+    "src/communication_core.c|Comm_ReceiveFromChildren": [
+      "src/communication_core.c|Comm_ReceiveCommands",
+      "ByteRing_Commit",
+      "ByteRing_GetReadableSize",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren"
+    ],
+    "src/communication_core.c|Comm_ResetDisconnectedNetIds": [
+      "src/communication_core.c|Comm_ResetNetIdBuffers",
+      "Comm_IsNetIdConnected"
+    ],
+    "src/communication_core.c|Comm_ShutdownWhenRequested": [
+      "CommWireless_GetConnectedChildren",
+      "CommWireless_IsShutdownRequested",
+      "Comm_GetLocalNetId",
+      "Comm_Shutdown"
+    ],
+    "Comm_ResetWork": [
+      "src/communication_core.c|Comm_Reset"
+    ],
+    "src/communication_core.c|Comm_Reset": [
+      "src/communication_core.c|Comm_ResetBuffers"
+    ],
+    "Comm_ResetInTransferMode1": [
+      "src/communication_core.c|Comm_Reset"
+    ],
+    "Comm_ResetWorkAndParents": [
+      "src/communication_core.c|Comm_Reset",
+      "CommWireless_ClearParents"
+    ],
+    "Comm_RecvParentFrameCallback": [
+      "src/communication_core.c|Comm_OnParentFrameReceived"
+    ],
+    "src/communication_core.c|Comm_OnParentFrameReceived": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "ByteRing_Write",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren"
+    ],
+    "Comm_RecvChildFrameCallback": [
+      "src/communication_core.c|Comm_OnChildFrameReceived"
+    ],
+    "src/communication_core.c|Comm_OnChildFrameReceived": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_ReadFrameKeys",
+      "ByteRing_Write",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren"
+    ],
+    "Comm_RecvPeerFrameCallback": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "ByteRing_Write",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren"
+    ],
+    "src/communication_core.c|Comm_GetChildFrameSize": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "Comm_GetMaxChildren"
+    ],
+    "Comm_SendCommandNoCopy": [
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_SetLinkError",
+      "PacketPool_Enqueue"
+    ],
+    "Comm_SetLinkError": [],
+    "Comm_SendCommand": [
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_SetLinkError",
+      "PacketPool_Enqueue"
+    ],
+    "Comm_SendParentCommandNoCopy": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_SendCommandNoCopy",
+      "Comm_SetLinkError",
+      "PacketPool_Enqueue"
+    ],
+    "Comm_SendParentCommand": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected",
+      "Comm_SendCommand",
+      "Comm_SetLinkError",
+      "PacketPool_Enqueue"
+    ],
+    "Comm_SendFixedParentCommand": [
+      "Comm_SendParentCommand"
+    ],
+    "Comm_GetSendBufferFreeSpace": [
+      "ByteRing_GetFreeSize"
+    ],
+    "Comm_IsActive": [
+      "CommState_GetLinkMode",
+      "CommWireless_Exists",
+      "Comm_IsWifiLinkMode"
+    ],
+    "Comm_CountConnected": [
+      "Comm_IsNetIdConnected"
+    ],
+    "Comm_SetLocalMoveSpeed": [],
+    "Comm_GetMoveSpeed": [],
+    "Comm_TakeDirectionKeys": [],
+    "Comm_EnableKeySync": [],
+    "Comm_DisableKeySync": [],
+    "Comm_SendParentCommandNoCopyUnchecked": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "PacketPool_Enqueue"
+    ],
+    "Comm_RecvTransferModeRequest": [
+      "Comm_GetLocalNetId"
+    ],
+    "Comm_RecvTransferModeChange": [
+      "Comm_GetLocalNetId"
+    ],
+    "Comm_RecvTransferModeAck": [
+      "src/communication_core.c|Comm_RequestTransferMode",
+      "Comm_GetLocalNetId"
+    ],
+    "Comm_SendFixedCommandNoCopy": [
+      "Comm_SendCommandNoCopy"
+    ],
+    "Comm_SendFixedCommand": [
+      "Comm_SendCommand"
+    ],
+    "Comm_SendEmptyCommand": [
+      "Comm_SendCommand"
+    ],
+    "Comm_GetConnectedChildren": [
+      "CommWireless_GetConnectedChildren"
+    ],
+    "Comm_HasLinkError": [
+      "CommState_SetErrorWatch",
+      "CommWireless_IsLinkLost"
+    ],
+    "Comm_GetMaxPlayers": [
+      "Comm_GetMaxChildren"
+    ],
+    "Comm_GetMinPlayers": [
+      "Comm_GetMinChildren"
+    ],
+    "Comm_RecvShutdown": [
+      "CommWireless_IsShutdownRequested",
+      "CommWireless_RequestShutdown",
+      "Comm_GetLocalNetId",
+      "Comm_SendFixedParentCommand"
+    ],
+    "CommRandom_Init": [
+      "GF_RTC_CopyDateTime"
+    ],
+    "Comm_ParentQueueHasCommand": [
+      "PacketPool_HasCommand"
+    ],
+    "Comm_IsParentQueueEmpty": [
+      "PacketPool_AllNodesFree"
+    ],
+    "Comm_IsChildQueueEmpty": [
+      "PacketPool_AllNodesFree"
+    ],
+    "Comm_SetWifiConnected": [],
+    "Comm_IsWifiConnected": [],
+    "Comm_SetBattleSlot": [],
+    "Comm_GetBattleSlot": [],
+    "Comm_IsWifiVoiceChatEnabled": [
+      "CommState_GetLinkMode",
+      "Comm_IsWifiLinkMode",
+      "WifiConnection_IsVoiceChatEnabled"
+    ],
+    "Comm_SetWifiContinuousSend": [
+      "CommState_GetLinkMode",
+      "Comm_IsWifiLinkMode"
+    ],
+    "Comm_SetWifiContinuousSendAndMuteVoice": [
+      "CommState_GetLinkMode",
+      "Comm_IsWifiLinkMode",
+      "Comm_SetWifiContinuousSend",
+      "WifiConnection_SetVoiceUnmuted"
+    ],
+    "Comm_IsSendingMoveKeys": [],
+    "Comm_StopFrameUpdate": [],
+    "src/communication_core.c|Comm_ResetNetIdBuffers": [
+      "ByteRing_Init",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren"
+    ],
+    "src/communication_core.c|Comm_VBlankSendTask": [
+      "src/communication_core.c|Comm_SendChildFrame",
+      "src/communication_core.c|Comm_SendParentFrame",
+      "Comm_GetLocalNetId",
+      "Comm_IsNetIdConnected"
+    ],
+    "src/communication_core.c|Comm_SendChildFrame": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_OnChildFrameReceived",
+      "src/communication_core.c|Comm_OnChildFrameSent",
+      "CommState_GetLinkMode",
+      "Comm_GetLocalNetId",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected",
+      "Comm_IsWifiLinkMode",
+      "Wireless_GetConnectedBitmap",
+      "Wireless_GetState",
+      "Wireless_SendData"
+    ],
+    "src/communication_core.c|Comm_SendParentFrame": [
+      "src/communication_core.c|Comm_FillParentFrameFromChildren",
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_OnParentFrameReceived",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected",
+      "Comm_IsWifiLinkMode",
+      "Wireless_GetState",
+      "Wireless_SendData"
+    ],
+    "src/communication_core.c|Comm_OnChildFrameSent": [],
+    "src/communication_core.c|Comm_FillParentFrameFromChildren": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "ByteRing_Commit",
+      "ByteRing_Read",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected"
+    ],
+    "src/communication_core.c|Comm_OnParentFrameSent": [],
+    "src/communication_core.c|Comm_OnTransferModeChanged": [
+      "src/communication_core.c|Comm_ResetBuffers"
+    ],
+    "src/communication_core.c|Comm_UpdateTransferModeHandshake": [
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_RequestTransferMode",
+      "Comm_SendFixedCommand",
+      "Comm_SendParentCommand"
+    ],
+    "src/communication_core.c|Comm_ResetBuffers": [
+      "ByteRing_Init",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "MI_CpuFill8",
+      "PacketPool_Reset"
+    ],
+    "src/communication_core.c|Comm_HasNoChildBacklog": [
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "Comm_IsNetIdConnected"
+    ],
+    "src/communication_core.c|Comm_BuildChildFrame": [
+      "src/communication_core.c|Comm_GetChildFrameSize",
+      "src/communication_core.c|Comm_GetTransferMode",
+      "src/communication_core.c|Comm_WriteFrameKeys",
+      "CommState_GetLinkMode",
+      "Comm_GetMaxChildren",
+      "PacketPool_AllNodesFree",
+      "PacketPool_WriteFrame"
+    ],
+    "src/communication_core.c|Comm_IsSendSkippedThisFrame": [],
+    "src/communication_core.c|Comm_WriteFrameKeys": [
+      "src/communication_core.c|Comm_IsKeySyncEnabled"
+    ],
+    "src/communication_core.c|Comm_IsKeySyncEnabled": [],
+    "src/communication_core.c|Comm_BuildParentFrame": [
+      "PacketPool_WriteFrame",
+      "Wireless_GetConnectedBitmap"
+    ],
+    "src/communication_core.c|Comm_ReadFrameKeys": [],
+    "src/communication_core.c|CommWork_Random": [],
+    "src/communication_core.c|Comm_ReceiveCommands": [
+      "src/communication_core.c|Comm_FinishCommand",
+      "ByteRing_GetReadableSize",
+      "ByteRing_Read",
+      "ByteRing_ReadByte",
+      "Comm_CommandHasBuffer",
+      "Comm_GetCommandBuffer",
+      "Comm_GetCommandSize",
+      "MI_CpuCopy8"
+    ],
+    "src/communication_core.c|Comm_FinishCommand": [
+      "Comm_CallCommandRecv"
+    ],
+    "Save_FriendRoster_sizeof": [],
+    "Save_FriendRoster_Init": [
+      "src/friend_roster.c|MI_CpuClearFast",
+      "Comm_EnsureDwcUserData",
+      "MI_CpuCopy8"
+    ],
+    "src/friend_roster.c|MI_CpuClearFast": [
+      "MIi_CpuClearFast"
+    ],
+    "FriendRoster_GetUserData": [],
+    "FriendRoster_GetEntryField": [],
+    "FriendRoster_SetEntryField": [],
+    "FriendRoster_GetDwcFriendData": [],
+    "FriendRoster_GetPlayerName": [],
+    "FriendRoster_SetPlayerName": [
+      "CopyStringToU16Array"
+    ],
+    "FriendRoster_GetGroupName": [],
+    "FriendRoster_SetGroupName": [
+      "CopyStringToU16Array"
+    ],
+    "FriendRoster_IsFriendValid": [
+      "DWC_IsValidFriendData"
+    ],
+    "FriendRoster_CountFriends": [
+      "FriendRoster_IsFriendValid"
+    ],
+    "FriendRoster_GetUsedSlotCount": [
+      "FriendRoster_IsFriendValid"
+    ],
+    "FriendRoster_RemoveFriend": [
+      "src/friend_roster.c|MI_CpuClearFast",
+      "MI_CpuCopy8"
+    ],
+    "FriendRoster_Compact": [
+      "src/friend_roster.c|FriendRoster_MoveFriend",
+      "FriendRoster_IsFriendValid"
+    ],
+    "src/friend_roster.c|FriendRoster_MoveFriend": [
+      "src/friend_roster.c|MI_CpuClearFast",
+      "MI_CpuCopy8"
+    ],
+    "FriendRoster_UpdateDate": [
+      "GF_RTC_CopyDate"
+    ],
+    "FriendRoster_AddWinsLossesTrades": [
+      "FriendRoster_UpdateDate"
+    ],
+    "FriendRoster_AddPlazaGame0Plays": [
+      "FriendRoster_UpdateDate"
+    ],
+    "FriendRoster_AddPlazaGame1Plays": [
+      "FriendRoster_UpdateDate"
+    ],
+    "FriendRoster_AddPlazaGame2Plays": [
+      "FriendRoster_UpdateDate"
+    ],
+    "FriendRoster_MergeFriend": [
+      "src/friend_roster.c|MI_CpuClearFast",
+      "src/friend_roster.c|MI_CpuCopyFast"
+    ],
+    "src/friend_roster.c|MI_CpuCopyFast": [
+      "MIi_CpuCopyFast"
+    ],
+    "Save_FriendRoster_Get": [],
+    "Save_FriendRoster_LoadFromSave": [
+      "MI_CpuCopy8",
+      "SaveArray_Get"
+    ],
+    "Save_FriendRoster_StoreToSave": [
+      "MI_CpuCopy8",
+      "SaveArray_Get"
+    ],
+    "Save_Frontier_sizeof": [],
+    "Save_Frontier_Init": [
+      "ArcadeFlags_Init",
+      "BattleRoomDownload_Init",
+      "CastleFlags_Init",
+      "FactoryFlags_Init",
+      "FrontierData_Reset",
+      "HallFlags_Init",
+      "MI_CpuCopy8",
+      "MI_CpuFill8",
+      "TowerMessages_Init"
+    ],
+    "Save_Frontier_GetStatic": [],
+    "Save_Frontier_Commit": [
+      "MI_CpuCopy8",
+      "SaveArray_Get"
+    ],
+    "Save_Frontier_Load": [
+      "MI_CpuCopy8",
+      "SaveArray_Get"
+    ],
+    "FrontierSave_GetStat": [],
+    "FrontierSave_SetStat": [],
+    "FrontierSave_ClearRows": [
+      "MI_CpuFill8"
+    ],
+    "FrontierSave_DeleteRow": [
+      "FrontierSave_GetStat",
+      "FrontierSave_SetStat",
+      "MI_CpuCopy8",
+      "MI_CpuFill8"
+    ],
+    "FrontierSave_ClearRow": [
+      "MI_CpuFill8"
+    ],
+    "FrontierSave_AddStat": [
+      "FrontierSave_GetStat",
+      "FrontierSave_SetStat"
+    ],
+    "FrontierSave_SubStat": [
+      "FrontierSave_GetStat",
+      "FrontierSave_SetStat"
+    ],
+    "FrontierSave_RaiseStat": [
+      "FrontierSave_GetStat",
+      "FrontierSave_SetStat"
+    ],
+    "FrontierSpeciesRecords_sizeof": [],
+    "FrontierSpeciesRecords_Init": [
+      "MI_CpuFill8"
+    ],
+    "FrontierSpeciesRecords_Load": [
+      "LoadFrontierSpeciesRecords"
+    ],
+    "FrontierSpeciesRecords_Get": [
+      "Save_CheckExtraChunksExist"
+    ],
+    "FrontierSpeciesRecords_UpdateFromStat": [
+      "src/frontier_save.c|FrontierSpeciesRecords_Raise",
+      "src/frontier_save.c|FrontierSpeciesRecords_Save",
+      "FrontierSave_GetStat",
+      "FrontierSpeciesRecords_Get",
+      "FrontierSpeciesRecords_Load",
+      "Heap_Free",
+      "Save_CheckExtraChunksExist",
+      "Save_Frontier_GetStatic"
+    ],
+    "src/frontier_save.c|FrontierSpeciesRecords_Raise": [
+      "src/frontier_save.c|FrontierSpeciesRecords_Set",
+      "FrontierSpeciesRecords_Get",
+      "Save_CheckExtraChunksExist"
+    ],
+    "src/frontier_save.c|FrontierSpeciesRecords_Save": [
+      "SaveFrontierSpeciesRecords",
+      "SaveGameNormal"
+    ],
+    "src/frontier_save.c|FrontierSpeciesRecords_Set": [],
+    "Heap_InitSystem": [
+      "NNS_FndCreateExpHeapEx",
+      "OS_AllocFromArenaHi",
+      "OS_AllocFromArenaLo"
+    ],
+    "Heap_Create": [
+      "src/heap.c|CreateHeapInternal"
+    ],
+    "src/heap.c|CreateHeapInternal": [
+      "src/heap.c|FindFirstAvailableHeapHandle",
+      "NNS_FndAllocFromExpHeapEx",
+      "NNS_FndCreateExpHeapEx"
+    ],
+    "Heap_CreateAtEnd": [
+      "src/heap.c|CreateHeapInternal"
+    ],
+    "Heap_Destroy": [
+      "NNS_FndDestroyExpHeap",
+      "NNS_FndFreeToExpHeap"
+    ],
+    "Heap_Alloc": [
+      "src/heap.c|AllocFail",
+      "src/heap.c|AllocFromHeapInternal"
+    ],
+    "src/heap.c|AllocFromHeapInternal": [
+      "NNS_FndAllocFromExpHeapEx",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "src/heap.c|AllocFail": [
+      "CommState_Exists",
+      "PrintErrorMessageAndReset"
+    ],
+    "Heap_AllocAtEnd": [
+      "src/heap.c|AllocFail",
+      "src/heap.c|AllocFromHeapInternal"
+    ],
+    "Heap_Free": [
+      "GF_heap_c_dummy_return_true",
+      "NNS_FndFreeToExpHeap",
+      "OS_DisableInterrupts",
+      "OS_RestoreInterrupts"
+    ],
+    "GF_heap_c_dummy_return_true": [],
+    "Heap_FreeExplicit": [
+      "NNS_FndFreeToExpHeap"
+    ],
+    "HeapExp_FndGetTotalFreeSize": [
+      "NNS_FndGetTotalFreeSizeForExpHeap"
+    ],
+    "HeapExp_FndInitAllocator": [
+      "NNS_FndInitAllocatorForExpHeap"
+    ],
+    "Heap_Realloc": [
+      "NNS_FndGetSizeForMBlockExpHeap",
+      "NNS_FndResizeForMBlockExpHeap"
+    ],
+    "src/heap.c|FindFirstAvailableHeapHandle": []
+  },
+  "scc": [
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|Large"
+    ],
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|OS_GetCurrentThread"
+    ],
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|OS_GetThreadInfo"
+    ],
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|Small"
+    ],
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|lock"
+    ],
+    [
+      "lib/MSL_C/src/msl_printf_formatter.c|unlock"
+    ],
+    [
+      "lib/MSL_C/src/msl_string_extras.c|Lower"
+    ],
+    [
+      "lib/NitroDWC/src/dwc_auth_wifi_id.c|Mac24b"
+    ],
+    [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear32"
+    ],
+    [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuClear8"
+    ],
+    [
+      "lib/NitroSDK/src/dgt_hash.c|MI_CpuFill32"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5GetHash"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Init"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_MD5Update"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1GetHash"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Init"
+    ],
+    [
+      "lib/NitroSDK/src/math/MATH_dgt.c|MATH_SHA1Update"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_entropy.c|GX_GetVCount"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_message.c|OS_InitThreadQueue"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetCurrentThread"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_GetThreadInfo"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_mutex.c|OS_InitThreadQueue"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_ownerInfo.c|MI_CpuCopy16"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerControl"
+    ],
+    [
+      "lib/NitroSDK/src/os/os_tick.c|OS_SetTimerCount"
+    ],
+    [
+      "lib/NitroSDK/src/pm.c|OS_GetVBlankCount"
+    ],
+    [
+      "lib/NitroSDK/src/pm.c|PmWaitVBlank"
+    ],
+    [
+      "lib/NitroSDK/src/rtc/rtc_convert_post.c|RTCi_IsLeapYear"
+    ],
+    [
+      "lib/NitroSDK/src/wm_requests.c|MI_CpuClear32"
+    ],
+    [
+      "lib/NitroSDK/src/wm_requests.c|MI_CpuFill32"
+    ],
+    [
+      "lib/NitroSystem/src/fnd_expheap.c|FillAllocMemory"
+    ],
+    [
+      "lib/NitroSystem/src/fnd_expheap.c|GetBlockEnd"
+    ],
+    [
+      "lib/NitroSystem/src/fnd_expheap.c|SetAlignment"
+    ],
+    [
+      "lib/NitroSystem/src/fnd_expheap.c|SetAllocDir"
+    ],
+    [
+      "lib/NitroSystem/src/fnd_expheap.c|SetGroupID"
+    ],
+    [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap16"
+    ],
+    [
+      "lib/NitroWiFi/src/soc.c|Socl_Swap32"
+    ],
+    [
+      "lib/NitroWiFi/src/soc_gethostbyname.c|Socl_Swap32"
+    ],
+    [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap16"
+    ],
+    [
+      "lib/NitroWiFi/src/soc_inet.c|Socl_Swap32"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsCreated"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_close.c|SoclSocket_IsStream"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_read.c|AddConsumed"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_read.c|CopyData"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsCreated"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_read.c|SoclSocket_IsStream"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsCreated"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_socket.c|SoclSocket_IsStream"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_ssl.c|SoclSocket_IsStream"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_write.c|GetRingFreeSize"
+    ],
+    [
+      "lib/NitroWiFi/src/socl_write.c|SoclSocket_IsStream"
+    ],
+    [
+      "lib/NitroWiFi/src/wcm_cpsif.c|CalibrateRssi"
+    ],
+    [
+      "lib/libCPS/src/cps_resolve.c|RandomValue"
+    ],
+    [
+      "lib/libCPS/src/cps_ssl_util.c|CpsThread_GetSocket"
+    ],
+    [
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetCurrentThread"
+    ],
+    [
+      "lib/libCPS/src/cps_ssl_util.c|OS_GetThreadInfo"
+    ],
+    [
+      "lib/libVCT/src/vct_audio.c|InitializeAudioStreams"
+    ],
+    [
+      "lib/libVCT/src/vct_main.c|IsAudioPacket"
+    ],
+    [
+      "lib/libVCT/src/vct_main.c|IsSspPacket"
+    ],
+    [
+      "lib/libVCT/src/vct_packet_buffer.c|ConstructLinks"
+    ],
+    [
+      "lib/libVCT/src/vct_ssp.c|LinkSessions"
+    ],
+    [
+      "lib/libVCT/src/vct_vad.c|PushScale"
+    ],
+    [
+      "lib/libVCT/src/vct_vad.c|RootAvg"
+    ],
+    [
+      "src/communication_command.c|ByteRing_GetWritableSize"
+    ],
+    [
+      "src/communication_command.c|ByteRing_Peek"
+    ],
+    [
+      "src/communication_command.c|ByteRing_Wrap"
+    ],
+    [
+      "src/communication_command.c|ByteWriter_PutByte"
+    ],
+    [
+      "src/communication_command.c|CommCmd_GetSize2"
+    ],
+    [
+      "src/communication_command.c|CommCmd_RecvNotReady"
+    ],
+    [
+      "src/communication_command.c|CommCmd_RecvReady"
+    ],
+    [
+      "src/communication_command.c|CommCmd_RecvShutdown"
+    ],
+    [
+      "src/communication_command.c|PacketPool_GetFreeNode"
+    ],
+    [
+      "src/communication_command.c|PacketPool_PeekNext"
+    ],
+    [
+      "src/communication_command.c|PacketPool_PopNext"
+    ],
+    [
+      "src/communication_command.c|PacketQueue_PopFront"
+    ],
+    [
+      "src/communication_command.c|Packet_Write"
+    ],
+    [
+      "src/communication_command.c|Packet_WriteHeader"
+    ],
+    [
+      "src/communication_core.c|CommWork_Random"
+    ],
+    [
+      "src/communication_core.c|Comm_BuildChildFrame"
+    ],
+    [
+      "src/communication_core.c|Comm_BuildParentFrame"
+    ],
+    [
+      "src/communication_core.c|Comm_FillParentFrameFromChildren"
+    ],
+    [
+      "src/communication_core.c|Comm_FinishCommand"
+    ],
+    [
+      "src/communication_core.c|Comm_GetChildFrameSize"
+    ],
+    [
+      "src/communication_core.c|Comm_GetTransferMode"
+    ],
+    [
+      "src/communication_core.c|Comm_HasNoChildBacklog"
+    ],
+    [
+      "src/communication_core.c|Comm_InitWork"
+    ],
+    [
+      "src/communication_core.c|Comm_IsKeySyncEnabled"
+    ],
+    [
+      "src/communication_core.c|Comm_IsSendSkippedThisFrame"
+    ],
+    [
+      "src/communication_core.c|Comm_OnChildFrameReceived"
+    ],
+    [
+      "src/communication_core.c|Comm_OnChildFrameSent"
+    ],
+    [
+      "src/communication_core.c|Comm_OnChildJoined"
+    ],
+    [
+      "src/communication_core.c|Comm_OnParentFrameReceived"
+    ],
+    [
+      "src/communication_core.c|Comm_OnParentFrameSent"
+    ],
+    [
+      "src/communication_core.c|Comm_OnTransferModeChanged"
+    ],
+    [
+      "src/communication_core.c|Comm_ReadFrameKeys"
+    ],
+    [
+      "src/communication_core.c|Comm_ReceiveCommands"
+    ],
+    [
+      "src/communication_core.c|Comm_ReceiveFromChildren"
+    ],
+    [
+      "src/communication_core.c|Comm_ReceiveFromParent"
+    ],
+    [
+      "src/communication_core.c|Comm_RequestTransferMode"
+    ],
+    [
+      "src/communication_core.c|Comm_Reset"
+    ],
+    [
+      "src/communication_core.c|Comm_ResetBuffers"
+    ],
+    [
+      "src/communication_core.c|Comm_ResetDisconnectedNetIds"
+    ],
+    [
+      "src/communication_core.c|Comm_ResetNetIdBuffers"
+    ],
+    [
+      "src/communication_core.c|Comm_ScrambleDirectionKeys"
+    ],
+    [
+      "src/communication_core.c|Comm_SendChildFrame"
+    ],
+    [
+      "src/communication_core.c|Comm_SendParentFrame"
+    ],
+    [
+      "src/communication_core.c|Comm_ShutdownWhenRequested"
+    ],
+    [
+      "src/communication_core.c|Comm_UpdateChildSend"
+    ],
+    [
+      "src/communication_core.c|Comm_UpdateParentSend"
+    ],
+    [
+      "src/communication_core.c|Comm_UpdateTransferMode"
+    ],
+    [
+      "src/communication_core.c|Comm_UpdateTransferModeHandshake"
+    ],
+    [
+      "src/communication_core.c|Comm_VBlankSendTask"
+    ],
+    [
+      "src/communication_core.c|Comm_WriteFrameKeys"
+    ],
+    [
+      "src/friend_roster.c|FriendRoster_MoveFriend"
+    ],
+    [
+      "src/friend_roster.c|MI_CpuClearFast"
+    ],
+    [
+      "src/friend_roster.c|MI_CpuCopyFast"
+    ],
+    [
+      "src/frontier_save.c|FrontierSpeciesRecords_Raise"
+    ],
+    [
+      "src/frontier_save.c|FrontierSpeciesRecords_Save"
+    ],
+    [
+      "src/frontier_save.c|FrontierSpeciesRecords_Set"
+    ],
+    [
+      "src/heap.c|AllocFail"
+    ],
+    [
+      "src/heap.c|AllocFromHeapInternal"
+    ],
+    [
+      "src/heap.c|CreateHeapInternal"
+    ],
+    [
+      "src/heap.c|FindFirstAvailableHeapHandle"
+    ],
+    [
+      "AlarmCallback"
+    ],
+    [
+      "AllocFromHead__ExpHeap"
+    ],
+    [
+      "AllocFromTail__ExpHeap"
+    ],
+    [
+      "AllocFunc_SOCL"
+    ],
+    [
+      "AllocUsedBlockFromFreeBlock"
+    ],
+    [
+      "ArcadeFlags_Init"
+    ],
+    [
+      "BattleRoomDownload_Init"
+    ],
+    [
+      "BeginSleep"
+    ],
+    [
+      "BeginSleep__Strm"
+    ],
+    [
+      "ByteRing_Commit"
+    ],
+    [
+      "ByteRing_GetFreeSize"
+    ],
+    [
+      "ByteRing_GetReadableSize"
+    ],
+    [
+      "ByteRing_Init"
+    ],
+    [
+      "ByteRing_Read"
+    ],
+    [
+      "ByteRing_ReadByte"
+    ],
+    [
+      "ByteRing_Write"
+    ],
+    [
+      "CPS_CalmDown"
+    ],
+    [
+      "CPS_Cleanup"
+    ],
+    [
+      "CPS_GetSslHandshakePriority"
+    ],
+    [
+      "CPS_Resolve"
+    ],
+    [
+      "CPS_SetRootCa"
+    ],
+    [
+      "CPS_SetScavengerCallback"
+    ],
+    [
+      "CPS_SetSsl"
+    ],
+    [
+      "CPS_SetSslHandshakePriority"
+    ],
+    [
+      "CPS_SetUdpCallback"
+    ],
+    [
+      "CPS_SocBind"
+    ],
+    [
+      "CPS_SocConsume"
+    ],
+    [
+      "CPS_SocDatagramMode"
+    ],
+    [
+      "CPS_SocDup"
+    ],
+    [
+      "CPS_SocFlush"
+    ],
+    [
+      "CPS_SocGetEport"
+    ],
+    [
+      "CPS_SocGetLength"
+    ],
+    [
+      "CPS_SocRead"
+    ],
+    [
+      "CPS_SocRegister"
+    ],
+    [
+      "CPS_SocRelease"
+    ],
+    [
+      "CPS_SocUnRegister"
+    ],
+    [
+      "CPS_SocUse"
+    ],
+    [
+      "CPS_SocWho"
+    ],
+    [
+      "CPS_SocWrite"
+    ],
+    [
+      "CPS_SslAddRandomSeed"
+    ],
+    [
+      "CPS_TcpClose"
+    ],
+    [
+      "CPS_TcpConnect"
+    ],
+    [
+      "CPS_TcpListen"
+    ],
+    [
+      "CPS_TcpShutdown"
+    ],
+    [
+      "CPSi_SocConsumeRaw"
+    ],
+    [
+      "CPSi_SocWrite2"
+    ],
+    [
+      "CPSi_SslClose"
+    ],
+    [
+      "CPSi_SslConnect"
+    ],
+    [
+      "CPSi_SslConsume"
+    ],
+    [
+      "CPSi_SslGetLength"
+    ],
+    [
+      "CPSi_SslListen"
+    ],
+    [
+      "CPSi_SslRead"
+    ],
+    [
+      "CPSi_SslShutdown"
+    ],
+    [
+      "CPSi_SslWrite2"
+    ],
+    [
+      "CPSi_TcpConnectRaw"
+    ],
+    [
+      "CPSi_TcpListenRaw"
+    ],
+    [
+      "CPSi_TcpReadRaw"
+    ],
+    [
+      "CPSi_TcpShutdownRaw"
+    ],
+    [
+      "CPSi_TcpWrite2Raw"
+    ],
+    [
+      "CPSi_sha1_calc"
+    ],
+    [
+      "CPSi_sha1_init"
+    ],
+    [
+      "CPSi_sha1_result"
+    ],
+    [
+      "CPSi_sha1_result_prng"
+    ],
+    [
+      "CRYPTO_RC4FastInit"
+    ],
+    [
+      "CRYPTO_RC4Init"
+    ],
+    [
+      "CTRDG_IsExisting"
+    ],
+    [
+      "CastleFlags_Init"
+    ],
+    [
+      "CommCmd_GetSize0"
+    ],
+    [
+      "CommCmd_GetSize1"
+    ],
+    [
+      "CommCmd_GetSizeVariable"
+    ],
+    [
+      "CommPlayerInfo_Free"
+    ],
+    [
+      "CommRandom_Init"
+    ],
+    [
+      "CommState_CheckLinkError"
+    ],
+    [
+      "CommState_Exists"
+    ],
+    [
+      "CommState_GetLinkMode"
+    ],
+    [
+      "CommState_Main"
+    ],
+    [
+      "CommState_SetErrorWatch"
+    ],
+    [
+      "CommWireless_ClearParents"
+    ],
+    [
+      "CommWireless_ConnectToParent"
+    ],
+    [
+      "CommWireless_Exists"
+    ],
+    [
+      "CommWireless_GetConnectedChildren"
+    ],
+    [
+      "CommWireless_IsLinkLost"
+    ],
+    [
+      "CommWireless_IsShutdownRequested"
+    ],
+    [
+      "CommWireless_Main"
+    ],
+    [
+      "CommWireless_RequestShutdown"
+    ],
+    [
+      "CommWireless_RequestStopAndFree"
+    ],
+    [
+      "CommWireless_StartParent"
+    ],
+    [
+      "CommWireless_StartScan"
+    ],
+    [
+      "Comm_CallCommandRecv"
+    ],
+    [
+      "Comm_CommandHasBuffer"
+    ],
+    [
+      "Comm_ConnectToParent"
+    ],
+    [
+      "Comm_CountConnected"
+    ],
+    [
+      "Comm_DisableKeySync"
+    ],
+    [
+      "Comm_EnableKeySync"
+    ],
+    [
+      "Comm_EnsureDwcUserData"
+    ],
+    [
+      "Comm_FreeCommandTable"
+    ],
+    [
+      "Comm_GetBattleSlot"
+    ],
+    [
+      "Comm_GetCommandBuffer"
+    ],
+    [
+      "Comm_GetCommandSize"
+    ],
+    [
+      "Comm_GetConnectedChildren"
+    ],
+    [
+      "Comm_GetLocalNetId"
+    ],
+    [
+      "Comm_GetMaxChildren"
+    ],
+    [
+      "Comm_GetMaxPlayers"
+    ],
+    [
+      "Comm_GetMinChildren"
+    ],
+    [
+      "Comm_GetMinPlayers"
+    ],
+    [
+      "Comm_GetMoveSpeed"
+    ],
+    [
+      "Comm_GetSendBufferFreeSpace"
+    ],
+    [
+      "Comm_HasLinkError"
+    ],
+    [
+      "Comm_IsActive"
+    ],
+    [
+      "Comm_IsChildQueueEmpty"
+    ],
+    [
+      "Comm_IsCommClubLinkMode"
+    ],
+    [
+      "Comm_IsLinkMode19To23Or34"
+    ],
+    [
+      "Comm_IsNetIdConnected"
+    ],
+    [
+      "Comm_IsParentQueueEmpty"
+    ],
+    [
+      "Comm_IsSendingMoveKeys"
+    ],
+    [
+      "Comm_IsTransferMode1"
+    ],
+    [
+      "Comm_IsUnionRoomLinkMode"
+    ],
+    [
+      "Comm_IsWifiConnected"
+    ],
+    [
+      "Comm_IsWifiLinkMode"
+    ],
+    [
+      "Comm_IsWifiPeerLinkMode"
+    ],
+    [
+      "Comm_IsWifiVoiceChatEnabled"
+    ],
+    [
+      "Comm_ParentQueueHasCommand"
+    ],
+    [
+      "Comm_RecvChildFrameCallback"
+    ],
+    [
+      "Comm_RecvParentFrameCallback"
+    ],
+    [
+      "Comm_RecvPeerFrameCallback"
+    ],
+    [
+      "Comm_RecvShutdown"
+    ],
+    [
+      "Comm_RecvTransferModeAck"
+    ],
+    [
+      "Comm_RecvTransferModeChange"
+    ],
+    [
+      "Comm_RecvTransferModeRequest"
+    ],
+    [
+      "Comm_RegisterCommandTable"
+    ],
+    [
+      "Comm_RequestTransferMode0"
+    ],
+    [
+      "Comm_RequestTransferMode1"
+    ],
+    [
+      "Comm_ResetInTransferMode1"
+    ],
+    [
+      "Comm_ResetWork"
+    ],
+    [
+      "Comm_ResetWorkAndParents"
+    ],
+    [
+      "Comm_SendCommand"
+    ],
+    [
+      "Comm_SendCommandNoCopy"
+    ],
+    [
+      "Comm_SendEmptyCommand"
+    ],
+    [
+      "Comm_SendFixedCommand"
+    ],
+    [
+      "Comm_SendFixedCommandNoCopy"
+    ],
+    [
+      "Comm_SendFixedParentCommand"
+    ],
+    [
+      "Comm_SendParentCommand"
+    ],
+    [
+      "Comm_SendParentCommandNoCopy"
+    ],
+    [
+      "Comm_SendParentCommandNoCopyUnchecked"
+    ],
+    [
+      "Comm_SetBattleSlot"
+    ],
+    [
+      "Comm_SetLinkError"
+    ],
+    [
+      "Comm_SetLocalMoveSpeed"
+    ],
+    [
+      "Comm_SetWifiConnected"
+    ],
+    [
+      "Comm_SetWifiContinuousSend"
+    ],
+    [
+      "Comm_SetWifiContinuousSendAndMuteVoice"
+    ],
+    [
+      "Comm_Shutdown"
+    ],
+    [
+      "Comm_StartParent"
+    ],
+    [
+      "Comm_StartScan"
+    ],
+    [
+      "Comm_StopFrameUpdate"
+    ],
+    [
+      "Comm_TakeDirectionKeys"
+    ],
+    [
+      "Comm_Update"
+    ],
+    [
+      "CopyStringToU16Array"
+    ],
+    [
+      "DC_InvalidateRange"
+    ],
+    [
+      "DC_StoreRange"
+    ],
+    [
+      "DGT_Hash1GetDigest_R"
+    ],
+    [
+      "DGT_Hash1Reset"
+    ],
+    [
+      "DGT_Hash1SetSource"
+    ],
+    [
+      "DGT_Hash2CalcHmac"
+    ],
+    [
+      "DGT_Hash2GetDigest"
+    ],
+    [
+      "DGT_Hash2Reset"
+    ],
+    [
+      "DGT_Hash2SetSource"
+    ],
+    [
+      "DWC_Auth_CheckPseudoWiFiID"
+    ],
+    [
+      "DWC_Auth_GetId"
+    ],
+    [
+      "DWC_BACKUPlCheckAddress"
+    ],
+    [
+      "DWC_BACKUPlCheckIp"
+    ],
+    [
+      "DWC_BACKUPlCheckSsid"
+    ],
+    [
+      "DWC_GetAIDBitmap"
+    ],
+    [
+      "DWC_IsValidFriendData"
+    ],
+    [
+      "DWC_SendReliable"
+    ],
+    [
+      "DWCi_AUTH_GetNewWiFiInfo"
+    ],
+    [
+      "DWCi_AUTH_MakeWiFiID"
+    ],
+    [
+      "DWCi_AUTH_RemakeWiFiID"
+    ],
+    [
+      "DWCi_AUTH_UpDateWiFiID"
+    ],
+    [
+      "DWCi_BACKUPlConvMaskAddr"
+    ],
+    [
+      "DWCi_BACKUPlConvMaskCidr"
+    ],
+    [
+      "DWCi_BACKUPlConvWifiInfo"
+    ],
+    [
+      "DWCi_BACKUPlInit"
+    ],
+    [
+      "DWCi_BACKUPlRead"
+    ],
+    [
+      "DWCi_BACKUPlSetWiFi"
+    ],
+    [
+      "DWCi_BACKUPlWriteAll"
+    ],
+    [
+      "DWCi_BACKUPlWritePage"
+    ],
+    [
+      "DWCi_BM_GetApInfo"
+    ],
+    [
+      "DWCi_BM_GetWiFiInfo"
+    ],
+    [
+      "DWCi_BM_SetWiFiInfo"
+    ],
+    [
+      "DWCi_Util_WiFiId_scrambleUid"
+    ],
+    [
+      "EndSleep"
+    ],
+    [
+      "EndSleep__Strm"
+    ],
+    [
+      "FactoryFlags_Init"
+    ],
+    [
+      "FindContainHeap"
+    ],
+    [
+      "FindListContainHeap"
+    ],
+    [
+      "ForceStopStrm"
+    ],
+    [
+      "FreeFunc_SOCL"
+    ],
+    [
+      "FriendRoster_AddPlazaGame0Plays"
+    ],
+    [
+      "FriendRoster_AddPlazaGame1Plays"
+    ],
+    [
+      "FriendRoster_AddPlazaGame2Plays"
+    ],
+    [
+      "FriendRoster_AddWinsLossesTrades"
+    ],
+    [
+      "FriendRoster_Compact"
+    ],
+    [
+      "FriendRoster_CountFriends"
+    ],
+    [
+      "FriendRoster_GetDwcFriendData"
+    ],
+    [
+      "FriendRoster_GetEntryField"
+    ],
+    [
+      "FriendRoster_GetGroupName"
+    ],
+    [
+      "FriendRoster_GetPlayerName"
+    ],
+    [
+      "FriendRoster_GetUsedSlotCount"
+    ],
+    [
+      "FriendRoster_GetUserData"
+    ],
+    [
+      "FriendRoster_IsFriendValid"
+    ],
+    [
+      "FriendRoster_MergeFriend"
+    ],
+    [
+      "FriendRoster_RemoveFriend"
+    ],
+    [
+      "FriendRoster_SetEntryField"
+    ],
+    [
+      "FriendRoster_SetGroupName"
+    ],
+    [
+      "FriendRoster_SetPlayerName"
+    ],
+    [
+      "FriendRoster_UpdateDate"
+    ],
+    [
+      "FrontierData_Reset"
+    ],
+    [
+      "FrontierSave_AddStat"
+    ],
+    [
+      "FrontierSave_ClearRow"
+    ],
+    [
+      "FrontierSave_ClearRows"
+    ],
+    [
+      "FrontierSave_DeleteRow"
+    ],
+    [
+      "FrontierSave_GetStat"
+    ],
+    [
+      "FrontierSave_RaiseStat"
+    ],
+    [
+      "FrontierSave_SetStat"
+    ],
+    [
+      "FrontierSave_SubStat"
+    ],
+    [
+      "FrontierSpeciesRecords_Get"
+    ],
+    [
+      "FrontierSpeciesRecords_Init"
+    ],
+    [
+      "FrontierSpeciesRecords_Load"
+    ],
+    [
+      "FrontierSpeciesRecords_UpdateFromStat"
+    ],
+    [
+      "FrontierSpeciesRecords_sizeof"
+    ],
+    [
+      "GF_RTC_CopyDate"
+    ],
+    [
+      "GF_RTC_CopyDateTime"
+    ],
+    [
+      "GF_heap_c_dummy_return_true"
+    ],
+    [
+      "GetRegionOfMBlock"
+    ],
+    [
+      "HPFFilter"
+    ],
+    [
+      "HallFlags_Init"
+    ],
+    [
+      "HeapExp_FndGetTotalFreeSize"
+    ],
+    [
+      "HeapExp_FndInitAllocator"
+    ],
+    [
+      "Heap_Alloc"
+    ],
+    [
+      "Heap_AllocAtEnd"
+    ],
+    [
+      "Heap_Create"
+    ],
+    [
+      "Heap_CreateAtEnd"
+    ],
+    [
+      "Heap_Destroy"
+    ],
+    [
+      "Heap_Free"
+    ],
+    [
+      "Heap_FreeExplicit"
+    ],
+    [
+      "Heap_InitSystem"
+    ],
+    [
+      "Heap_Realloc"
+    ],
+    [
+      "HmacCalc"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_file_io.c:fclose:39"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1129"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1140"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1147"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1153"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:1159"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:920"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_printf_formatter.c:__pformatter:927"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_qsort.c:qsort:45"
+    ],
+    [
+      "INDIRECT:lib/MSL_C/src/msl_qsort.c:qsort:50"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2GetDigest:231"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2GetDigest:248"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:181"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:193"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:DGT_Hash2SetSource:199"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:301"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:302"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:303"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:313"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:314"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:315"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:316"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:323"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:324"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:325"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/dgt_hash.c:HmacCalc:326"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/pm.c:PMi_CallCallbackAndUnlock:133"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/pm.c:PMi_ExecuteList:623"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WM_SetPortCallback:428"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:236"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:244"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:250"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:262"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:267"
+    ],
+    [
+      "INDIRECT:lib/NitroSDK/src/wm_core.c:WmReceiveFifo:327"
+    ],
+    [
+      "INDIRECT:lib/NitroSystem/src/snd_stream.c:StrmCallback:160"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/soc_inet.c:AllocFunc_SOCL:73"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/soc_inet.c:FreeFunc_SOCL:83"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCL_Cleanup:201"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCLi_CleanupSocket:134"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_close.c:SOCLi_CleanupSocket:148"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_CleanupCommandPacketQueue:40"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_CommandPacketHandler:140"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_command.c:SOCLi_StartupCommandPacketQueue:19"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_read.c:SOCLi_ReadUdpBuffer:302"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_read.c:SOCLi_UdpRecvCallback:317"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_resolver.c:SOCL_Resolve:15"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_resolver.c:SOCL_Resolve:27"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/socl_socket.c:SOCLi_StartupSocket:44"
+    ],
+    [
+      "INDIRECT:lib/NitroWiFi/src/wcm_cpsif.c:WCMi_CpsifRecvCallback:22"
+    ],
+    [
+      "INDIRECT:lib/libCPS/src/cps_socket.c:CPS_TcpClose:219"
+    ],
+    [
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:75"
+    ],
+    [
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:82"
+    ],
+    [
+      "INDIRECT:lib/libCPS/src/cps_tcp_write.c:CPSi_TcpWrite2Raw:96"
+    ],
+    [
+      "INDIRECT:lib/libVCT/src/vct_main.c:VCT_HandleData:90"
+    ],
+    [
+      "INDIRECT:lib/libVCT/src/vct_ssp.c:VCT_AddConferenceClient:138"
+    ],
+    [
+      "INDIRECT:lib/libVCT/src/vct_ssp.c:vct_check_timeout:208"
+    ],
+    [
+      "INDIRECT:src/communication_command.c:Comm_CallCommandRecv:512"
+    ],
+    [
+      "INDIRECT:src/communication_command.c:Comm_CallCommandRecv:514"
+    ],
+    [
+      "INDIRECT:src/communication_command.c:Comm_GetCommandBuffer:559"
+    ],
+    [
+      "INDIRECT:src/communication_command.c:Comm_GetCommandBuffer:561"
+    ],
+    [
+      "INDIRECT:src/communication_command.c:Comm_GetCommandSize:538"
+    ],
+    [
+      "InitExpHeap"
+    ],
+    [
+      "InitFIRFilter"
+    ],
+    [
+      "InitMBlock"
+    ],
+    [
+      "InsertMBlock"
+    ],
+    [
+      "LinkSync_Free"
+    ],
+    [
+      "LinkSync_Init"
+    ],
+    [
+      "LinkSync_Update"
+    ],
+    [
+      "LoadFrontierSpeciesRecords"
+    ],
+    [
+      "MATH_CalcCRC16"
+    ],
+    [
+      "MATH_CalcMD5"
+    ],
+    [
+      "MATH_CalcSHA1"
+    ],
+    [
+      "MATH_CountPopulation"
+    ],
+    [
+      "MATHi_CRC16InitTableRev"
+    ],
+    [
+      "MD5Final"
+    ],
+    [
+      "MD5Init"
+    ],
+    [
+      "MD5Update"
+    ],
+    [
+      "MI_CpuCopy8"
+    ],
+    [
+      "MI_CpuFill8"
+    ],
+    [
+      "MI_DmaFill32"
+    ],
+    [
+      "MI_GetUncompressedSize"
+    ],
+    [
+      "MIi_CpuClear16"
+    ],
+    [
+      "MIi_CpuClear32"
+    ],
+    [
+      "MIi_CpuClearFast"
+    ],
+    [
+      "MIi_CpuCopy16"
+    ],
+    [
+      "MIi_CpuCopy32"
+    ],
+    [
+      "MIi_CpuCopyFast"
+    ],
+    [
+      "NNS_FndAllocFromExpHeapEx"
+    ],
+    [
+      "NNS_FndAppendListObject"
+    ],
+    [
+      "NNS_FndCreateExpHeapEx"
+    ],
+    [
+      "NNS_FndDestroyExpHeap"
+    ],
+    [
+      "NNS_FndFreeToExpHeap"
+    ],
+    [
+      "NNS_FndGetGroupIDForMBlockExpHeap"
+    ],
+    [
+      "NNS_FndGetNextListObject"
+    ],
+    [
+      "NNS_FndGetPrevListObject"
+    ],
+    [
+      "NNS_FndGetSizeForMBlockExpHeap"
+    ],
+    [
+      "NNS_FndGetTotalFreeSizeForExpHeap"
+    ],
+    [
+      "NNS_FndInitAllocatorForExpHeap"
+    ],
+    [
+      "NNS_FndInitList"
+    ],
+    [
+      "NNS_FndInsertListObject"
+    ],
+    [
+      "NNS_FndPrependListObject"
+    ],
+    [
+      "NNS_FndRemoveListObject"
+    ],
+    [
+      "NNS_FndResizeForMBlockExpHeap"
+    ],
+    [
+      "NNS_FndSetGroupIDForExpHeap"
+    ],
+    [
+      "NNS_SndAllocAlarm"
+    ],
+    [
+      "NNS_SndFreeAlarm"
+    ],
+    [
+      "NNS_SndInit"
+    ],
+    [
+      "NNS_SndLockChannel"
+    ],
+    [
+      "NNS_SndMain"
+    ],
+    [
+      "NNS_SndReadDriverChannelInfo"
+    ],
+    [
+      "NNS_SndSetMasterVolume"
+    ],
+    [
+      "NNS_SndSetMonoFlag"
+    ],
+    [
+      "NNS_SndStrmAllocChannel"
+    ],
+    [
+      "NNS_SndStrmFreeChannel"
+    ],
+    [
+      "NNS_SndStrmInit"
+    ],
+    [
+      "NNS_SndStrmSetVolume"
+    ],
+    [
+      "NNS_SndStrmSetup"
+    ],
+    [
+      "NNS_SndStrmStart"
+    ],
+    [
+      "NNS_SndStrmStop"
+    ],
+    [
+      "NNS_SndUnlockChannel"
+    ],
+    [
+      "NNS_SndUpdateDriverInfo"
+    ],
+    [
+      "NNSi_FndFinalizeHeap"
+    ],
+    [
+      "NNSi_FndInitHeapHead"
+    ],
+    [
+      "NNSi_SndArcStrmMain"
+    ],
+    [
+      "NNSi_SndCaptureBeginSleep"
+    ],
+    [
+      "NNSi_SndCaptureEndSleep"
+    ],
+    [
+      "NNSi_SndCaptureInit"
+    ],
+    [
+      "NNSi_SndCaptureMain"
+    ],
+    [
+      "NNSi_SndInitResourceMgr"
+    ],
+    [
+      "NNSi_SndPlayerInit"
+    ],
+    [
+      "NNSi_SndPlayerMain"
+    ],
+    [
+      "NNSi_SndReadDriverTrackInfo"
+    ],
+    [
+      "OS_AllocFromArenaHi"
+    ],
+    [
+      "OS_AllocFromArenaLo"
+    ],
+    [
+      "OS_CreateAlarm"
+    ],
+    [
+      "OS_CreateThread"
+    ],
+    [
+      "OS_DisableInterrupts"
+    ],
+    [
+      "OS_DisableIrqMask"
+    ],
+    [
+      "OS_DisableScheduler"
+    ],
+    [
+      "OS_EnableIrqMask"
+    ],
+    [
+      "OS_EnableScheduler"
+    ],
+    [
+      "OS_GetCpsrIrq"
+    ],
+    [
+      "OS_GetLowEntropyData"
+    ],
+    [
+      "OS_GetMacAddress"
+    ],
+    [
+      "OS_GetOwnerInfo"
+    ],
+    [
+      "OS_GetOwnerRtcOffset"
+    ],
+    [
+      "OS_GetProcMode"
+    ],
+    [
+      "OS_GetThreadPriority"
+    ],
+    [
+      "OS_GetTick"
+    ],
+    [
+      "OS_GetTickLo"
+    ],
+    [
+      "OS_Halt"
+    ],
+    [
+      "OS_InitAlarm"
+    ],
+    [
+      "OS_InitMessageQueue"
+    ],
+    [
+      "OS_InitMutex"
+    ],
+    [
+      "OS_InitTick"
+    ],
+    [
+      "OS_IsAlarmAvailable"
+    ],
+    [
+      "OS_IsThreadAvailable"
+    ],
+    [
+      "OS_IsTickAvailable"
+    ],
+    [
+      "OS_JamMessage"
+    ],
+    [
+      "OS_JoinThread"
+    ],
+    [
+      "OS_LockMutex"
+    ],
+    [
+      "OS_ReadMessage"
+    ],
+    [
+      "OS_ReceiveMessage"
+    ],
+    [
+      "OS_RescheduleThread"
+    ],
+    [
+      "OS_RestoreInterrupts"
+    ],
+    [
+      "OS_SNPrintf"
+    ],
+    [
+      "OS_SPrintf"
+    ],
+    [
+      "OS_SendMessage"
+    ],
+    [
+      "OS_SetIrqFunction"
+    ],
+    [
+      "OS_SetIrqMask"
+    ],
+    [
+      "OS_SetThreadPriority"
+    ],
+    [
+      "OS_SetTick"
+    ],
+    [
+      "OS_Sleep"
+    ],
+    [
+      "OS_SleepThread"
+    ],
+    [
+      "OS_SpinWait"
+    ],
+    [
+      "OS_Terminate"
+    ],
+    [
+      "OS_TryLockMutex"
+    ],
+    [
+      "OS_UnlockMutex"
+    ],
+    [
+      "OS_VSNPrintf"
+    ],
+    [
+      "OS_VSPrintf"
+    ],
+    [
+      "OS_WakeupThread"
+    ],
+    [
+      "OS_WakeupThreadDirect"
+    ],
+    [
+      "OS_YieldThread"
+    ],
+    [
+      "OS_YieldThread__"
+    ],
+    [
+      "OSi_CountUpTick"
+    ],
+    [
+      "OSi_DequeueItem"
+    ],
+    [
+      "OSi_EnqueueTail"
+    ],
+    [
+      "OSi_EnterTimerCallback"
+    ],
+    [
+      "OSi_ReferSymbol"
+    ],
+    [
+      "OSi_RemoveMutexLinkFromQueue"
+    ],
+    [
+      "OSi_SetTimerReserved"
+    ],
+    [
+      "OSi_UnlockAllMutex"
+    ],
+    [
+      "PM_AppendPostSleepCallback"
+    ],
+    [
+      "PM_DeletePostSleepCallback"
+    ],
+    [
+      "PM_DeletePreSleepCallback"
+    ],
+    [
+      "PM_ForceToPowerOff"
+    ],
+    [
+      "PM_ForceToPowerOffAsync"
+    ],
+    [
+      "PM_GetBackLight"
+    ],
+    [
+      "PM_GetLCDPower"
+    ],
+    [
+      "PM_GetLEDPattern"
+    ],
+    [
+      "PM_GetLEDPatternAsync"
+    ],
+    [
+      "PM_GoSleepMode"
+    ],
+    [
+      "PM_Init"
+    ],
+    [
+      "PM_PrependPreSleepCallback"
+    ],
+    [
+      "PM_SendUtilityCommandAsync"
+    ],
+    [
+      "PM_SetAmp"
+    ],
+    [
+      "PM_SetAmpGain"
+    ],
+    [
+      "PM_SetBackLight"
+    ],
+    [
+      "PM_SetBackLightAsync"
+    ],
+    [
+      "PM_SetLCDPower"
+    ],
+    [
+      "PMi_AppendList"
+    ],
+    [
+      "PMi_CallCallbackAndUnlock"
+    ],
+    [
+      "PMi_CommonCallback"
+    ],
+    [
+      "PMi_DeleteList"
+    ],
+    [
+      "PMi_DummyCallback"
+    ],
+    [
+      "PMi_ExecuteList"
+    ],
+    [
+      "PMi_Lock"
+    ],
+    [
+      "PMi_PrependList"
+    ],
+    [
+      "PMi_ReadRegister"
+    ],
+    [
+      "PMi_ReadRegisterAsync"
+    ],
+    [
+      "PMi_SendLEDPatternCommand"
+    ],
+    [
+      "PMi_SendLEDPatternCommandAsync"
+    ],
+    [
+      "PMi_SendPxiData"
+    ],
+    [
+      "PMi_SendSleepStart"
+    ],
+    [
+      "PMi_SetAmp"
+    ],
+    [
+      "PMi_SetLCDPower"
+    ],
+    [
+      "PMi_SetLED"
+    ],
+    [
+      "PMi_SetLEDAsync"
+    ],
+    [
+      "PMi_WaitBusy"
+    ],
+    [
+      "PMi_WriteRegister"
+    ],
+    [
+      "PMi_WriteRegisterAsync"
+    ],
+    [
+      "PXI_Init"
+    ],
+    [
+      "PXI_IsCallbackReady"
+    ],
+    [
+      "PXI_SendWordByFifo"
+    ],
+    [
+      "PXI_SetFifoRecvCallback"
+    ],
+    [
+      "PXIi_HandlerRecvFifoNotEmpty"
+    ],
+    [
+      "PacketPool_AllNodesFree"
+    ],
+    [
+      "PacketPool_Enqueue"
+    ],
+    [
+      "PacketPool_Free"
+    ],
+    [
+      "PacketPool_HasCommand"
+    ],
+    [
+      "PacketPool_Init"
+    ],
+    [
+      "PacketPool_Reset"
+    ],
+    [
+      "PacketPool_WriteFrame"
+    ],
+    [
+      "PrintErrorMessageAndReset"
+    ],
+    [
+      "ProcessBlock"
+    ],
+    [
+      "RTC_ConvertDateTimeToSecond"
+    ],
+    [
+      "RTC_ConvertDateToDay"
+    ],
+    [
+      "RTC_ConvertDayToDate"
+    ],
+    [
+      "RTC_ConvertSecondToDateTime"
+    ],
+    [
+      "RTC_GetDate"
+    ],
+    [
+      "RTC_GetDayOfWeek"
+    ],
+    [
+      "RTC_GetTime"
+    ],
+    [
+      "RTC_Init"
+    ],
+    [
+      "RTCi_ConvertSecondToTime"
+    ],
+    [
+      "RTCi_ConvertTimeToSecond"
+    ],
+    [
+      "RecycleRegion"
+    ],
+    [
+      "RemoveMBlock"
+    ],
+    [
+      "SND_CalcChannelVolume"
+    ],
+    [
+      "SND_FlushCommand"
+    ],
+    [
+      "SND_GetCurrentCommandTag"
+    ],
+    [
+      "SND_Init"
+    ],
+    [
+      "SND_IsFinishedCommandTag"
+    ],
+    [
+      "SND_ReadChannelInfo"
+    ],
+    [
+      "SND_ReadDriverInfo"
+    ],
+    [
+      "SND_ReadTrackInfo"
+    ],
+    [
+      "SND_RecvCommandReply"
+    ],
+    [
+      "SND_ResetMasterPan"
+    ],
+    [
+      "SND_SetChannelVolume"
+    ],
+    [
+      "SND_SetMasterPan"
+    ],
+    [
+      "SND_SetMasterVolume"
+    ],
+    [
+      "SND_SetupAlarm"
+    ],
+    [
+      "SND_SetupChannelPcm"
+    ],
+    [
+      "SND_StartTimer"
+    ],
+    [
+      "SND_StopTimer"
+    ],
+    [
+      "SND_WaitForCommandProc"
+    ],
+    [
+      "SOCL_Accept"
+    ],
+    [
+      "SOCL_Bind"
+    ],
+    [
+      "SOCL_CalmDown"
+    ],
+    [
+      "SOCL_Cleanup"
+    ],
+    [
+      "SOCL_Close"
+    ],
+    [
+      "SOCL_CloseAll"
+    ],
+    [
+      "SOCL_Connect"
+    ],
+    [
+      "SOCL_CreateSocket"
+    ],
+    [
+      "SOCL_EnableSsl"
+    ],
+    [
+      "SOCL_GetHostID"
+    ],
+    [
+      "SOCL_GetStatus"
+    ],
+    [
+      "SOCL_InetAtoH"
+    ],
+    [
+      "SOCL_IsClosed"
+    ],
+    [
+      "SOCL_Listen"
+    ],
+    [
+      "SOCL_ListenAccept"
+    ],
+    [
+      "SOCL_ReadFrom"
+    ],
+    [
+      "SOCL_Resolve"
+    ],
+    [
+      "SOCL_SetResolver"
+    ],
+    [
+      "SOCL_Shutdown"
+    ],
+    [
+      "SOCL_SocketIsInTrash"
+    ],
+    [
+      "SOCL_SocketIsInvalid"
+    ],
+    [
+      "SOCL_Startup"
+    ],
+    [
+      "SOCL_WriteTo"
+    ],
+    [
+      "SOCLi_AllocCommandPacket"
+    ],
+    [
+      "SOCLi_AllocWriteBuffer"
+    ],
+    [
+      "SOCLi_BindCallBack"
+    ],
+    [
+      "SOCLi_CleanupCommandPacketQueue"
+    ],
+    [
+      "SOCLi_CleanupSocket"
+    ],
+    [
+      "SOCLi_CloseCallBack"
+    ],
+    [
+      "SOCLi_CommandPacketHandler"
+    ],
+    [
+      "SOCLi_ConsumeBuffer"
+    ],
+    [
+      "SOCLi_ConsumeCPSBuffer"
+    ],
+    [
+      "SOCLi_ConsumeCallBack"
+    ],
+    [
+      "SOCLi_CopyCPSBuffer"
+    ],
+    [
+      "SOCLi_CreateCommandPacket"
+    ],
+    [
+      "SOCLi_CreateSocketCallBack"
+    ],
+    [
+      "SOCLi_EnableSslCallBack"
+    ],
+    [
+      "SOCLi_ExecBindCommand"
+    ],
+    [
+      "SOCLi_ExecCommandPacket"
+    ],
+    [
+      "SOCLi_ExecCommandPacketInCtrlPipe"
+    ],
+    [
+      "SOCLi_ExecCommandPacketInRecvPipe"
+    ],
+    [
+      "SOCLi_ExecCommandPacketInSendPipe"
+    ],
+    [
+      "SOCLi_ExecEnableSslCommand"
+    ],
+    [
+      "SOCLi_ExecReadCommand"
+    ],
+    [
+      "SOCLi_ExecWriteCommand"
+    ],
+    [
+      "SOCLi_FreeCommandPacket"
+    ],
+    [
+      "SOCLi_FreeCommandPipe"
+    ],
+    [
+      "SOCLi_GetCtrlPipe"
+    ],
+    [
+      "SOCLi_GetOptimumSendBufLen"
+    ],
+    [
+      "SOCLi_GetSizeCommandPipe"
+    ],
+    [
+      "SOCLi_GetSizeSocket"
+    ],
+    [
+      "SOCLi_GetWriteBufferFreeSize"
+    ],
+    [
+      "SOCLi_InitCommandPipe"
+    ],
+    [
+      "SOCLi_InitSocket"
+    ],
+    [
+      "SOCLi_InitSocketBuffer"
+    ],
+    [
+      "SOCLi_ListenAcceptCallBack"
+    ],
+    [
+      "SOCLi_MemCpy"
+    ],
+    [
+      "SOCLi_ReadAndConsumeBuffer"
+    ],
+    [
+      "SOCLi_ReadBuffer"
+    ],
+    [
+      "SOCLi_ReadCPSBuffer"
+    ],
+    [
+      "SOCLi_ReadCallBack"
+    ],
+    [
+      "SOCLi_ReadUdpBuffer"
+    ],
+    [
+      "SOCLi_RoundUp4"
+    ],
+    [
+      "SOCLi_SendCommandPacket"
+    ],
+    [
+      "SOCLi_SendCommandPacketToCtrlPipe"
+    ],
+    [
+      "SOCLi_ShutdownCallBack"
+    ],
+    [
+      "SOCLi_SocketRegister"
+    ],
+    [
+      "SOCLi_SocketRegisterTrash"
+    ],
+    [
+      "SOCLi_SocketUnregister"
+    ],
+    [
+      "SOCLi_SocketUnregisterTrash"
+    ],
+    [
+      "SOCLi_StartupCommandPacketQueue"
+    ],
+    [
+      "SOCLi_StartupSocket"
+    ],
+    [
+      "SOCLi_TrashSocket"
+    ],
+    [
+      "SOCLi_UdpRecvCallback"
+    ],
+    [
+      "SOCLi_WriteBuffer"
+    ],
+    [
+      "SOCLi_WriteCallBack"
+    ],
+    [
+      "SOC_Accept"
+    ],
+    [
+      "SOC_Bind"
+    ],
+    [
+      "SOC_Cleanup"
+    ],
+    [
+      "SOC_Close"
+    ],
+    [
+      "SOC_Connect"
+    ],
+    [
+      "SOC_Fcntl"
+    ],
+    [
+      "SOC_GetHostByName"
+    ],
+    [
+      "SOC_GetHostID"
+    ],
+    [
+      "SOC_GetSockName"
+    ],
+    [
+      "SOC_InetAtoN"
+    ],
+    [
+      "SOC_InetNtoA"
+    ],
+    [
+      "SOC_InetNtoP"
+    ],
+    [
+      "SOC_Listen"
+    ],
+    [
+      "SOC_Poll"
+    ],
+    [
+      "SOC_Recv"
+    ],
+    [
+      "SOC_RecvFrom"
+    ],
+    [
+      "SOC_Send"
+    ],
+    [
+      "SOC_SendTo"
+    ],
+    [
+      "SOC_SetResolver"
+    ],
+    [
+      "SOC_Shutdown"
+    ],
+    [
+      "SOC_Socket"
+    ],
+    [
+      "SOC_Startup"
+    ],
+    [
+      "SOC_U32to4U8"
+    ],
+    [
+      "STD_CopyLString"
+    ],
+    [
+      "STD_TVSNPrintf"
+    ],
+    [
+      "SaveArray_Get"
+    ],
+    [
+      "SaveFrontierSpeciesRecords"
+    ],
+    [
+      "SaveGameNormal"
+    ],
+    [
+      "Save_CheckExtraChunksExist"
+    ],
+    [
+      "Save_FriendRoster_Get"
+    ],
+    [
+      "Save_FriendRoster_Init"
+    ],
+    [
+      "Save_FriendRoster_LoadFromSave"
+    ],
+    [
+      "Save_FriendRoster_StoreToSave"
+    ],
+    [
+      "Save_FriendRoster_sizeof"
+    ],
+    [
+      "Save_Frontier_Commit"
+    ],
+    [
+      "Save_Frontier_GetStatic"
+    ],
+    [
+      "Save_Frontier_Init"
+    ],
+    [
+      "Save_Frontier_Load"
+    ],
+    [
+      "Save_Frontier_sizeof"
+    ],
+    [
+      "SetFirstObject"
+    ],
+    [
+      "ShutdownStrm"
+    ],
+    [
+      "StrmCallback"
+    ],
+    [
+      "SysTask_CreateOnVBlankQueue"
+    ],
+    [
+      "SysTask_Destroy"
+    ],
+    [
+      "TowerMessages_Init"
+    ],
+    [
+      "VCT_AddConferenceClient"
+    ],
+    [
+      "VCT_Cleanup"
+    ],
+    [
+      "VCT_CreateSession"
+    ],
+    [
+      "VCT_DeleteSession"
+    ],
+    [
+      "VCT_EnableEchoCancel"
+    ],
+    [
+      "VCT_EnableVAD"
+    ],
+    [
+      "VCT_GetVADInfo"
+    ],
+    [
+      "VCT_HandleData"
+    ],
+    [
+      "VCT_Init"
+    ],
+    [
+      "VCT_Main"
+    ],
+    [
+      "VCT_ReceiveAudio"
+    ],
+    [
+      "VCT_Request"
+    ],
+    [
+      "VCT_ResetVAD"
+    ],
+    [
+      "VCT_Response"
+    ],
+    [
+      "VCT_SendAudio"
+    ],
+    [
+      "VCT_SetCodec"
+    ],
+    [
+      "VCT_StartStreaming"
+    ],
+    [
+      "VCT_StopStreaming"
+    ],
+    [
+      "VCTi_GetVADStatus"
+    ],
+    [
+      "VCTi_HandleData"
+    ],
+    [
+      "VCTi_ReceiveAudioData"
+    ],
+    [
+      "WCM_BeginSearchAsync"
+    ],
+    [
+      "WCM_CleanupAsync"
+    ],
+    [
+      "WCM_CompareBssID"
+    ],
+    [
+      "WCM_ConnectAsync"
+    ],
+    [
+      "WCM_DisconnectAsync"
+    ],
+    [
+      "WCM_EndSearchAsync"
+    ],
+    [
+      "WCM_Finish"
+    ],
+    [
+      "WCM_GetApEssid"
+    ],
+    [
+      "WCM_GetApMacAddress"
+    ],
+    [
+      "WCM_GetLinkLevel"
+    ],
+    [
+      "WCM_GetPhase"
+    ],
+    [
+      "WCM_Init"
+    ],
+    [
+      "WCM_SearchAsync"
+    ],
+    [
+      "WCM_SendDCFDataEx"
+    ],
+    [
+      "WCM_SetRecvDCFCallback"
+    ],
+    [
+      "WCM_StartupAsync"
+    ],
+    [
+      "WCM_TerminateAsync"
+    ],
+    [
+      "WCM_UpdateOption"
+    ],
+    [
+      "WCMi_CpsifRecvCallback"
+    ],
+    [
+      "WCMi_CpsifSendNullPacket"
+    ],
+    [
+      "WCMi_GetRssiAverage"
+    ],
+    [
+      "WCMi_GetSystemWork"
+    ],
+    [
+      "WCMi_InitCpsif"
+    ],
+    [
+      "WCMi_ResetKeepAliveAlarm"
+    ],
+    [
+      "WCMi_ShelterRssi"
+    ],
+    [
+      "WM_Disable"
+    ],
+    [
+      "WM_Disconnect"
+    ],
+    [
+      "WM_Enable"
+    ],
+    [
+      "WM_End"
+    ],
+    [
+      "WM_EndDCF"
+    ],
+    [
+      "WM_EndDataSharing"
+    ],
+    [
+      "WM_EndKeySharing"
+    ],
+    [
+      "WM_EndMP"
+    ],
+    [
+      "WM_EndParent"
+    ],
+    [
+      "WM_EndScan"
+    ],
+    [
+      "WM_Finish"
+    ],
+    [
+      "WM_GetAID"
+    ],
+    [
+      "WM_GetAllowedChannel"
+    ],
+    [
+      "WM_GetConnectedAIDs"
+    ],
+    [
+      "WM_GetDispersionBeaconPeriod"
+    ],
+    [
+      "WM_GetDispersionScanPeriod"
+    ],
+    [
+      "WM_GetLinkLevel"
+    ],
+    [
+      "WM_GetMPReceiveBufferSize"
+    ],
+    [
+      "WM_GetMPSendBufferSize"
+    ],
+    [
+      "WM_GetNextTgid"
+    ],
+    [
+      "WM_GetOtherElements"
+    ],
+    [
+      "WM_Init"
+    ],
+    [
+      "WM_Initialize"
+    ],
+    [
+      "WM_InitializeForListening"
+    ],
+    [
+      "WM_MeasureChannel"
+    ],
+    [
+      "WM_PowerOff"
+    ],
+    [
+      "WM_PowerOn"
+    ],
+    [
+      "WM_ReadMPData"
+    ],
+    [
+      "WM_ReadStatus"
+    ],
+    [
+      "WM_Reset"
+    ],
+    [
+      "WM_SetBeaconIndication"
+    ],
+    [
+      "WM_SetDCFData"
+    ],
+    [
+      "WM_SetEntry"
+    ],
+    [
+      "WM_SetGameInfo"
+    ],
+    [
+      "WM_SetIndCallback"
+    ],
+    [
+      "WM_SetLifeTime"
+    ],
+    [
+      "WM_SetMPDataToPortEx"
+    ],
+    [
+      "WM_SetParentParameter"
+    ],
+    [
+      "WM_SetPortCallback"
+    ],
+    [
+      "WM_SetWEPKey"
+    ],
+    [
+      "WM_SetWEPKeyEx"
+    ],
+    [
+      "WM_StartConnectEx"
+    ],
+    [
+      "WM_StartDCF"
+    ],
+    [
+      "WM_StartDataSharing"
+    ],
+    [
+      "WM_StartKeySharing"
+    ],
+    [
+      "WM_StartMP"
+    ],
+    [
+      "WM_StartMPEx"
+    ],
+    [
+      "WM_StartParent"
+    ],
+    [
+      "WM_StartScan"
+    ],
+    [
+      "WM_StartScanEx"
+    ],
+    [
+      "WMi_CheckIdle"
+    ],
+    [
+      "WMi_CheckInitialized"
+    ],
+    [
+      "WMi_CheckStateEx"
+    ],
+    [
+      "WMi_EnableEx"
+    ],
+    [
+      "WMi_GetStatusAddress"
+    ],
+    [
+      "WMi_GetSystemWork"
+    ],
+    [
+      "WMi_InitializeEx"
+    ],
+    [
+      "WMi_SendCommand"
+    ],
+    [
+      "WMi_SendCommandDirect"
+    ],
+    [
+      "WMi_SetCallbackTable"
+    ],
+    [
+      "WMi_StartMP"
+    ],
+    [
+      "WMi_StartParentEx"
+    ],
+    [
+      "WcmConfigure"
+    ],
+    [
+      "WcmCpsifKACallback"
+    ],
+    [
+      "WcmCpsifTryLockMutexInIRQ"
+    ],
+    [
+      "WcmCpsifUnlockMutexInIRQ"
+    ],
+    [
+      "WcmCpsifWmCallback"
+    ],
+    [
+      "WcmEditScanExParam"
+    ],
+    [
+      "WcmGetLinkLevel"
+    ],
+    [
+      "WcmInitOption"
+    ],
+    [
+      "WcmSetPhase"
+    ],
+    [
+      "WifiConnection_GetAid"
+    ],
+    [
+      "WifiConnection_IsVoiceChatEnabled"
+    ],
+    [
+      "WifiConnection_SendFromHost"
+    ],
+    [
+      "WifiConnection_SendToAll"
+    ],
+    [
+      "WifiConnection_SendToHost"
+    ],
+    [
+      "WifiConnection_SetVoiceUnmuted"
+    ],
+    [
+      "WifiConnection_Shutdown"
+    ],
+    [
+      "Wireless_GetAid"
+    ],
+    [
+      "Wireless_GetConnectedBitmap"
+    ],
+    [
+      "Wireless_GetState"
+    ],
+    [
+      "Wireless_SendData"
+    ],
+    [
+      "Wireless_SetChildJoinedCallback"
+    ],
+    [
+      "WmCheckParentParameter"
+    ],
+    [
+      "WmClearFifoRecvFlag"
+    ],
+    [
+      "WmGetCommandBuffer4Arm7"
+    ],
+    [
+      "WmInitCore"
+    ],
+    [
+      "WmReceiveFifo"
+    ],
+    [
+      "__FileWrite"
+    ],
+    [
+      "__StringWrite"
+    ],
+    [
+      "__flush_all"
+    ],
+    [
+      "__flush_buffer"
+    ],
+    [
+      "__fread"
+    ],
+    [
+      "__fwrite"
+    ],
+    [
+      "__msl_assertion_failed"
+    ],
+    [
+      "__num2dec"
+    ],
+    [
+      "__pformatter"
+    ],
+    [
+      "__strtold"
+    ],
+    [
+      "__strtoul"
+    ],
+    [
+      "_fseek"
+    ],
+    [
+      "_ftell"
+    ],
+    [
+      "_ll_udiv"
+    ],
+    [
+      "abort"
+    ],
+    [
+      "abs"
+    ],
+    [
+      "atod"
+    ],
+    [
+      "atol"
+    ],
+    [
+      "date2sec"
+    ],
+    [
+      "double2hex"
+    ],
+    [
+      "enter_computebound"
+    ],
+    [
+      "exit_computebound"
+    ],
+    [
+      "fabs"
+    ],
+    [
+      "fclose"
+    ],
+    [
+      "fflush"
+    ],
+    [
+      "float2str"
+    ],
+    [
+      "fread"
+    ],
+    [
+      "fseek"
+    ],
+    [
+      "ftell"
+    ],
+    [
+      "fwide"
+    ],
+    [
+      "get_seqno"
+    ],
+    [
+      "long2str"
+    ],
+    [
+      "longlong2str"
+    ],
+    [
+      "memchr"
+    ],
+    [
+      "memcpy"
+    ],
+    [
+      "memmove"
+    ],
+    [
+      "memset"
+    ],
+    [
+      "parse_format"
+    ],
+    [
+      "printf"
+    ],
+    [
+      "qsort"
+    ],
+    [
+      "rand"
+    ],
+    [
+      "rawip"
+    ],
+    [
+      "readNvram"
+    ],
+    [
+      "resolve_sub"
+    ],
+    [
+      "rewind"
+    ],
+    [
+      "round_decimal"
+    ],
+    [
+      "send_ping"
+    ],
+    [
+      "send_tcp"
+    ],
+    [
+      "send_udp"
+    ],
+    [
+      "set_random"
+    ],
+    [
+      "snprintf"
+    ],
+    [
+      "sprintf"
+    ],
+    [
+      "srand"
+    ],
+    [
+      "sscanf"
+    ],
+    [
+      "strcat"
+    ],
+    [
+      "strchr"
+    ],
+    [
+      "stricmp"
+    ],
+    [
+      "strlen"
+    ],
+    [
+      "strncat"
+    ],
+    [
+      "strncmp"
+    ],
+    [
+      "strncpy"
+    ],
+    [
+      "strnicmp"
+    ],
+    [
+      "strspn"
+    ],
+    [
+      "strtol"
+    ],
+    [
+      "strtold"
+    ],
+    [
+      "strtoul"
+    ],
+    [
+      "tcp_send_ack"
+    ],
+    [
+      "tcp_send_finack"
+    ],
+    [
+      "tcp_send_handshake"
+    ],
+    [
+      "tcp_write_do"
+    ],
+    [
+      "tcp_write_do2"
+    ],
+    [
+      "udp_read_raw"
+    ],
+    [
+      "vct_add_notify_aid_list"
+    ],
+    [
+      "vct_alloc_packet_buffer"
+    ],
+    [
+      "vct_build_request_data"
+    ],
+    [
+      "vct_build_response_data"
+    ],
+    [
+      "vct_build_ssp_header"
+    ],
+    [
+      "vct_calc_jitter_and_skew"
+    ],
+    [
+      "vct_check_multisession"
+    ],
+    [
+      "vct_check_recv_state"
+    ],
+    [
+      "vct_check_send_state"
+    ],
+    [
+      "vct_check_timeout"
+    ],
+    [
+      "vct_cleanup_packet_buffer"
+    ],
+    [
+      "vct_count_audio_queue"
+    ],
+    [
+      "vct_count_decoder_queue"
+    ],
+    [
+      "vct_create_session_impl"
+    ],
+    [
+      "vct_decode_8bit_raw"
+    ],
+    [
+      "vct_decode_adpcm"
+    ],
+    [
+      "vct_decode_audio_buffer"
+    ],
+    [
+      "vct_decode_g711_ulaw"
+    ],
+    [
+      "vct_dispatch_session"
+    ],
+    [
+      "vct_encode_8bit_raw"
+    ],
+    [
+      "vct_encode_adpcm"
+    ],
+    [
+      "vct_encode_g711_ulaw"
+    ],
+    [
+      "vct_find_session"
+    ],
+    [
+      "vct_finish_audio"
+    ],
+    [
+      "vct_finish_ssp"
+    ],
+    [
+      "vct_flush_all_audio_queue"
+    ],
+    [
+      "vct_flush_all_decoder"
+    ],
+    [
+      "vct_flush_audio_queue"
+    ],
+    [
+      "vct_flush_decoder"
+    ],
+    [
+      "vct_flush_send_buffer"
+    ],
+    [
+      "vct_free_packet_buffer"
+    ],
+    [
+      "vct_get_packet_from_decoder"
+    ],
+    [
+      "vct_handle_audio"
+    ],
+    [
+      "vct_handle_notify"
+    ],
+    [
+      "vct_handle_ssp"
+    ],
+    [
+      "vct_handle_ssp_client"
+    ],
+    [
+      "vct_handle_ssp_server"
+    ],
+    [
+      "vct_init_audio"
+    ],
+    [
+      "vct_init_audio_queue"
+    ],
+    [
+      "vct_init_decoder"
+    ],
+    [
+      "vct_init_packet_buffer"
+    ],
+    [
+      "vct_init_sequence"
+    ],
+    [
+      "vct_init_session"
+    ],
+    [
+      "vct_init_ssp"
+    ],
+    [
+      "vct_init_stream"
+    ],
+    [
+      "vct_init_vad"
+    ],
+    [
+      "vct_insert_audio_queue"
+    ],
+    [
+      "vct_insert_decoder"
+    ],
+    [
+      "vct_mix_audio"
+    ],
+    [
+      "vct_pop_audio_queue"
+    ],
+    [
+      "vct_prepare_send_buffer"
+    ],
+    [
+      "vct_process_fir"
+    ],
+    [
+      "vct_remove_packet_from_decoder"
+    ],
+    [
+      "vct_request_impl"
+    ],
+    [
+      "vct_reset_stream"
+    ],
+    [
+      "vct_response_impl"
+    ],
+    [
+      "vct_response_reject"
+    ],
+    [
+      "vct_save_previous_buffer"
+    ],
+    [
+      "vct_send_notify"
+    ],
+    [
+      "vct_send_notify_impl"
+    ],
+    [
+      "vct_send_ssp"
+    ],
+    [
+      "vct_set_speaker_samples"
+    ],
+    [
+      "vct_top_audio_queue"
+    ],
+    [
+      "vct_top_decoder"
+    ],
+    [
+      "vct_update_sequence"
+    ],
+    [
+      "verify"
+    ],
+    [
+      "vsnprintf"
+    ],
+    [
+      "vsprintf"
+    ],
+    [
+      "vsscanf"
+    ],
+    [
+      "wcslen"
+    ],
+    [
+      "wcstombs"
+    ],
+    [
+      "writeDisable"
+    ],
+    [
+      "writeNvram"
+    ]
+  ],
+  "inventory_roots": [
+    "CPS_Resolve",
+    "CPS_SetRootCa",
+    "CPS_SocRead",
+    "CPS_SocRegister",
+    "CPS_SocWrite",
+    "CPS_SslAddRandomSeed",
+    "CRYPTO_RC4FastEncrypt",
+    "CRYPTO_RC4FastInit",
+    "CommState_GetLinkMode",
+    "CommState_SetError",
+    "CommState_SetWifiError",
+    "Comm_CountConnected",
+    "Comm_IsLinkMode19To23Or34",
+    "Comm_IsWifiPeerLinkMode",
+    "DC_InvalidateRange",
+    "DGT_Hash1GetDigest_R",
+    "DGT_Hash1Reset",
+    "DGT_Hash1SetSource",
+    "DWCi_AUTH_MakeWiFiID",
+    "DWCi_AUTH_RemakeWiFiID",
+    "DWCi_AUTH_UpDateWiFiID",
+    "DWCi_BM_GetApInfo",
+    "DWCi_BM_GetWiFiInfo",
+    "FriendRoster_GetDwcFriendData",
+    "FriendRoster_GetUserData",
+    "FriendRoster_MergeFriend",
+    "FrontierSave_ClearRow",
+    "Heap_Alloc",
+    "Heap_Free",
+    "Heap_FreeExplicit",
+    "MATH_CalcSHA1",
+    "MD5Final",
+    "MD5Init",
+    "MD5Update",
+    "MIC_GetLastSamplingAddress",
+    "MIC_Init",
+    "MIC_StartAutoSamplingAsync",
+    "MIC_StopAutoSampling",
+    "NNS_FndAllocFromExpHeapEx",
+    "NNS_FndCreateExpHeapEx",
+    "NNS_FndDestroyExpHeap",
+    "NNS_FndFreeToExpHeap",
+    "NNS_FndGetGroupIDForMBlockExpHeap",
+    "NNS_FndGetTotalFreeSizeForExpHeap",
+    "NNS_FndSetGroupIDForExpHeap",
+    "NNS_SndInit",
+    "NNS_SndStrmAllocChannel",
+    "NNS_SndStrmFreeChannel",
+    "NNS_SndStrmInit",
+    "NNS_SndStrmSetVolume",
+    "NNS_SndStrmSetup",
+    "NNS_SndStrmStart",
+    "NNS_SndStrmStop",
+    "OS_CreateThread",
+    "OS_DisableInterrupts",
+    "OS_GetLowEntropyData",
+    "OS_GetMacAddress",
+    "OS_GetOwnerInfo",
+    "OS_GetThreadPriority",
+    "OS_GetTick",
+    "OS_InitMessageQueue",
+    "OS_InitMutex",
+    "OS_IsThreadAvailable",
+    "OS_IsThreadTerminated",
+    "OS_IsTickAvailable",
+    "OS_JoinThread",
+    "OS_LockMutex",
+    "OS_ReceiveMessage",
+    "OS_RestoreInterrupts",
+    "OS_SNPrintf",
+    "OS_SPrintf",
+    "OS_SendMessage",
+    "OS_Sleep",
+    "OS_Terminate",
+    "OS_UnlockMutex",
+    "OS_WakeupThreadDirect",
+    "OSi_ThreadInfo",
+    "PM_Init",
+    "PM_SetAmp",
+    "PM_SetAmpGain",
+    "RTC_ConvertDateTimeToSecond",
+    "RTC_ConvertSecondToDateTime",
+    "RTC_GetDateTime",
+    "SOCL_CalmDown",
+    "SOCL_EnableSsl",
+    "SOCL_GetHostID",
+    "SOCL_Resolve",
+    "SOC_Accept",
+    "SOC_Bind",
+    "SOC_Cleanup",
+    "SOC_Close",
+    "SOC_Connect",
+    "SOC_Fcntl",
+    "SOC_GetHostByName",
+    "SOC_GetHostID",
+    "SOC_GetSockName",
+    "SOC_InetAtoN",
+    "SOC_InetNtoA",
+    "SOC_Listen",
+    "SOC_Poll",
+    "SOC_Recv",
+    "SOC_RecvFrom",
+    "SOC_Send",
+    "SOC_SendTo",
+    "SOC_SetResolver",
+    "SOC_Shutdown",
+    "SOC_Socket",
+    "SOC_Startup",
+    "SOC_U32to4U8",
+    "Save_FriendRoster_Get",
+    "Save_Frontier_GetStatic",
+    "VCT_AddConferenceClient",
+    "VCT_Cleanup",
+    "VCT_CreateSession",
+    "VCT_DeleteSession",
+    "VCT_EnableEchoCancel",
+    "VCT_EnableVAD",
+    "VCT_GetVADInfo",
+    "VCT_HandleData",
+    "VCT_Init",
+    "VCT_Main",
+    "VCT_ReceiveAudio",
+    "VCT_Request",
+    "VCT_Response",
+    "VCT_SendAudio",
+    "VCT_SetCodec",
+    "VCT_StartStreaming",
+    "VCT_StopStreaming",
+    "WCM_Bssid_Any",
+    "WCM_CleanupAsync",
+    "WCM_ConnectAsync",
+    "WCM_DisconnectAsync",
+    "WCM_EndSearchAsync",
+    "WCM_Essid_Any",
+    "WCM_Finish",
+    "WCM_GetApEssid",
+    "WCM_GetApMacAddress",
+    "WCM_GetLinkLevel",
+    "WCM_GetPhase",
+    "WCM_Init",
+    "WCM_SearchAsync",
+    "WCM_StartupAsync",
+    "WCM_TerminateAsync",
+    "WM_End",
+    "WM_EndScan",
+    "WM_GetAllowedChannel",
+    "WM_GetDispersionScanPeriod",
+    "WM_Initialize",
+    "WM_StartScanEx",
+    "__lower_mapC",
+    "__msl_assertion_failed",
+    "__msl_digit",
+    "__upper_mapC",
+    "abs",
+    "atod",
+    "atol",
+    "errno",
+    "fclose",
+    "fread",
+    "fseek",
+    "ftell",
+    "gSoclHostAddress",
+    "gSoclState",
+    "qsort",
+    "rand",
+    "rewind",
+    "snprintf",
+    "sprintf",
+    "srand",
+    "sscanf",
+    "strncat",
+    "strnicmp",
+    "strspn",
+    "strtol",
+    "strtoul",
+    "wcslen"
+  ],
+  "source_members": 79
+}

@@ -7,13 +7,80 @@ import tempfile
 import os
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'cmake'))
-from native_image_graph import graph,ownership,configure,parse_manifest
-from native_graph_report import report, executable_diagnostic
+from native_image_graph import graph,ownership,configure,parse_manifest,EMPTY_OVERLAYS,original_membership
+from native_graph_report import report, executable_diagnostic, image_accounting
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 class GraphTests(unittest.TestCase):
+    def test_all_ten_original_empty_identities(self):
+        game=ROOT/'upstream/pokeheartgold'
+        model=graph(game)
+        empty=[i for i in model['images'].values() if not i['objects']]
+        self.assertEqual({i['id'] for i in empty},set(EMPTY_OVERLAYS))
+        for image in empty:
+            with self.subTest(image=image['name']):
+                self.assertEqual(image['name'],f"OVY_{image['id']}")
+                self.assertEqual(image['after'],[EMPTY_OVERLAYS[image['id']]])
+                self.assertTrue(image['original_membership']['verified_empty'])
+                self.assertEqual(image['original_membership']['original_file_size'],32)
+                changed=dict(image,after=['unknown'])
+                with self.assertRaises(ValueError): original_membership(game,changed)
+                # A newly discovered member must never retain the empty classification.
+                changed=dict(image,objects=['src/genuine.o'])
+                self.assertFalse(original_membership(game,changed)['verified_empty'])
+        self.assertEqual(len({i['id'] for i in model['images'].values() if i['kind']=='Overlay'}),129)
+        self.assertFalse(set(i['name'] for i in empty) &
+                         {owner for owners in model['ownership'].values() for owner in owners})
+        from native_overlay_manifest import select
+        for image in empty:
+            with self.assertRaisesRegex(ValueError, 'No native providers'):
+                select(model['images'], [image['name']], game)
+        template=(ROOT/'upstream/libntr/specfiles/ARM9-TS.lcf.template').read_text()
+        overlay=template[template.index('<FOREACH.OVERLAYS>\n    .<OVERLAY.NAME>'):]
+        sinit=overlay[overlay.index('SINIT_START'):overlay.index('SINIT_END')]
+        self.assertIn('WRITEW    0;',sinit)
+        self.assertIn('. = ALIGN(32);',overlay)
+        self.assertIn('WRITEW <OVERLAY.ID>;',overlay)
+        self.assertIn('# ROM file ID',overlay)
+        self.assertIn('WRITES ("<TARGET.NAME=%_ov_><OVERLAY.NAME><PROPERTY.SUFFIX>")',overlay)
+
+    def test_empty_classification_rejects_missing_independent_evidence(self):
+        game=ROOT/'upstream/pokeheartgold'
+        images=parse_manifest(game/'main.lsf')
+        with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR',ROOT/'build')) as directory:
+            copy=Path(directory)
+            for relative in ('global.inc','heartgold.us/main.sha1','soulsilver.us/main.sha1'):
+                target=copy/relative
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes((game/relative).read_bytes())
+            for number in EMPTY_OVERLAYS:
+                image=images[f'OVY_{number}']
+                for relative in ('global.inc','heartgold.us/main.sha1','soulsilver.us/main.sha1'):
+                    with self.subTest(image=image['name'],evidence=relative):
+                        path=copy/relative
+                        original=path.read_text()
+                        path.write_text('')
+                        with self.assertRaises(ValueError): original_membership(copy,image)
+                        path.write_text(original)
+            self.assertFalse(original_membership(copy,dict(name='unknown',id=130,
+                kind='Overlay',objects=[],after=['main']))['verified_empty'])
+
+    def test_accounting_never_counts_empty_artifacts_as_progress(self):
+        def image(objects,linked,verified=False):
+            return dict(objects=objects,link_status='linked' if linked else 'absent',
+                        original_membership=dict(verified_empty=verified))
+        images={'main':image(['main.o'],False), 'OVY_1':image(['a.o'],True),
+                'OVY_9':image([],True,True),'unknown':image([],False)}
+        counts=image_accounting(images)
+        self.assertEqual(counts['linked_nonempty_images'],1)
+        self.assertEqual(counts['verified_empty_original_identities'],1)
+        self.assertEqual(counts['nonempty_images_not_linked'],1)
+        self.assertEqual(counts['unverified_empty_identities'],1)
+        self.assertEqual(counts['linked_images_not_fully_runtime_validated'],1)
+        self.assertEqual(counts['special_core_images'],{'main':'absent'})
+
     def test_executable_diagnostic_does_not_count_overlay_failures(self):
         undefined='Undefined symbols for architecture arm64:\n  "_missing", referenced from:\n'
         self.assertEqual(executable_diagnostic(undefined,Path('heartgold'))[0],['_missing'])

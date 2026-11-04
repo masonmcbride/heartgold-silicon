@@ -5,7 +5,7 @@ from pathlib import Path
 import native_assembly_data as assembly_data
 
 
-from native_image_graph import parse_manifest, representation, ownership, data_commands, image_policy
+from native_image_graph import parse_manifest, representation, ownership, data_commands, image_policy, original_membership
 
 
 def select(images, names, game, native_dir=None, adapted_dir=None):
@@ -52,7 +52,7 @@ def generate(game, out, names, adapted_dir=None, supported=False):
             records = [representation(game,obj) for obj in image['objects']]
             failures = [r for r in records if r['status']!='available']
             if not records:
-                excluded[name]=[dict(status='empty original image',reason='No original source members')]
+                excluded[name]=[dict(status='no original members', **original_membership(game,image))]
                 continue
             if failures: excluded[name]=failures
             else: names.append(name)

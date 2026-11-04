@@ -11,16 +11,32 @@ from native_overlay_link import generate_contracts,interface,symbols
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--build',type=Path,required=True);p.add_argument('--compiler',required=True)
-    a=p.parse_args();b=a.build.resolve();out=b/'guest32-closure';out.mkdir(exist_ok=True)
+    p.add_argument('--image-root',type=Path,help='Jointly planned image directories named OVY_<id>')
+    p.add_argument('--out',type=Path)
+    p.add_argument('--provider-manifest',type=Path,action='append',default=[],help='Additional source-owned guest providers for measured link experiments')
+    a=p.parse_args();b=a.build.resolve();out=(a.out or b/'guest32-closure').resolve();out.mkdir(parents=True,exist_ok=True)
     native_registry=json.loads((b/'native-overlays/provider-registry.json').read_text())
     native_paths=sorted({Path(d['artifact']) for d in native_registry['definitions'] if d['image_owner']=='main' and d['abi_representation']=='native-arm64'})
     account=b/'guest32-account/provider.a';crc=b/'guest32-crc/provider.a'
     mi=b/'libheartgold_guest32_mi.a'
     std=b/'guest32-std/provider.a'
-    archives=[b/f'guest32-ovy{i}-image/libheartgold_overlay_{i}.a' for i in (0,38)]
+    archives=[(a.image_root/f'OVY_{i}' if a.image_root else b/f'guest32-ovy{i}-image')/f'libheartgold_overlay_{i}.a' for i in (0,38)]
+    archives=[path.resolve() for path in archives]
+    if a.image_root:
+        shared=json.loads((a.image_root/'shared.json').read_text())
+        for ident,archive in zip((0,38),archives):
+            c=json.loads((archive.parent/'image.json').read_text())
+            assert c['codes']==shared['codes'] and c['static_end']==shared['static_end']
+            assert all(c[k]==shared['images'][f'OVY_{ident}'][k] for k in ('assembly_globals','c_globals'))
     common=[str(b/'libheartgold_guest32_runtime.a'),str(b/'libheartgold_guest32_scalar_bridges.a'),str(b/'libheartgold_guest32_libc_memory.a')]
     native_interface=out/'native-main.tbd';interface(native_interface,'@executable_path/heartgold',set().union(*(symbols(path) for path in native_paths)))
     manifests=[b/'guest32-account/providers.json',b/'guest32-crc/providers.json',b/'guest32-std/providers.json',b/'guest32-mi/providers.json'];catalogs=[]
+    additional=[]
+    for path in a.provider_manifest:
+        manifests.append(path.resolve())
+        for family in json.loads(path.read_text())['families'].values():
+            if family['abi_representation']!='guest32':raise ValueError('experimental manifest requires guest32 representation')
+            additional.append(Path(family['archive']).resolve())
     for ident,archive in zip((0,38),archives):
         directory=archive.parent;coverage=json.loads((directory/'coverage.json').read_text());catalog=json.loads((directory/'image.json').read_text());catalogs.append(catalog)
         assert coverage['summary']['complete_compilation'] and [m['object'] for m in coverage['members']]==coverage['image']['objects']
@@ -48,14 +64,18 @@ def main():
             assert len(f['params'])>=len(d['params']),('missing cross-image argument',f['name'])
             assert f['return']=='void' or abi(f['return'])==abi(d['return']),('incompatible cross-image result',f['name'])
     contracts=out/'contracts'
-    generate_contracts([*native_paths,account,crc,mi,std],archives,contracts,provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'})
+    generate_contracts([*native_paths,account,crc,mi,std,*additional],archives,contracts,provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'})
     results={}
     for phase in ('before','providers','admitted','source','global'):
         for ident,archive in zip((0,38),archives):
             destination=out/f'OVY_{ident}-{phase}.dylib'
-            args=[a.compiler,'-dynamiclib','-Wl,-force_load,'+str(archive),*common]
+            args=[a.compiler,'-dynamiclib','-Wl,-force_load,'+str(archive)]
+            # Prefer the verified original guest providers before optional
+            # native scalar adapters; otherwise a pulled adapter object can
+            # reintroduce native copies of state already owned by guest main.
             if phase=='global':args+=['@'+str(contracts/f'image_{ident}.rsp')]
-            else:args+=[str(native_interface)]
+            args+=common
+            if phase!='global':args+=[str(native_interface)]
             if phase in ('providers','admitted','source'):args += [str(account),str(crc)]
             if phase in ('admitted','source'):args += [str(mi)]
             if phase=='source':args += [str(std)]
@@ -63,7 +83,8 @@ def main():
             r=subprocess.run(args,capture_output=True,text=True);log=out/f'OVY_{ident}-{phase}.log';log.write_text(r.stdout+r.stderr)
             missing=sorted(set(re.findall(r'^\s+"([^"]+)", referenced from:',r.stderr,re.M)))
             if r.returncode and not missing:raise RuntimeError('link failed without symbol diagnostic: '+str(log))
-            record=dict(command=args,returncode=r.returncode,unresolved=missing,log=str(log))
+            record=dict(command=args,returncode=r.returncode,unresolved=missing,log=str(log),
+                        preflight='not run: image link failed' if r.returncode else 'not run by diagnostic driver')
             (out/f'OVY_{ident}-{phase}.json').write_text(json.dumps(record,indent=2)+'\n');results[(phase,ident)]=record
     # Group the measured baseline by actual original definitions, retaining
     # ambiguous alternatives rather than selecting a provider by prefix alone.
@@ -103,6 +124,8 @@ def main():
     summary['distinct_guest_undefined_before']=len(set().union(*(set(results['before',i]['unresolved']) for i in (0,38))))
     summary['distinct_guest_undefined_after']=len(set().union(*(set(results['global',i]['unresolved']) for i in (0,38))))
     summary['scope']='Complete guest archives; source phase includes account/CRC/MI/STD dependency demands. Providers phase retains the measured 189/76 baseline. Global phase uses global interfaces; executable closure and shared image placement remain unproven. No diagnostic artifact is automatically admitted to game image selection.'
+    if a.image_root:
+        summary['scope']='Jointly planned original guest data and code identities; complete separate archives. Actual linker failures remain authoritative. Runtime residency, native call boundaries and executable closure are unproven; no game image admission.'
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     print(json.dumps(summary,indent=2))
 

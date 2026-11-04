@@ -29,6 +29,10 @@ typedef struct Arena {
     Allocation *allocations;
     Frame *frame;
     uint32_t stack, stack_floor;
+    uint32_t cpsr;
+    unsigned char cp_state[28];
+    void *context_storage;
+    void (*context_cleanup)(void*);
 } Arena;
 static _Thread_local void *current;
 static void fail(const char *reason) {
@@ -55,6 +59,7 @@ void *g32_create(uint32_t capacity, uint32_t static_end) {
     Arena *a = storage;
     if ((uintptr_t)a <= UINT32_MAX) fail("host arena must be above 4 GiB");
     a->magic = UINT64_C(0x4755455354333252);
+    a->cpsr=0x1f;
     a->data = storage; a->static_begin = 4096;
     a->capacity = capacity; a->cursor = static_end; a->static_end = static_end;
     a->stack = capacity; a->stack_floor = static_end + (capacity-static_end)*3/4;
@@ -70,6 +75,7 @@ void *g32_create_ds(uint32_t static_end) {
     if (posix_memalign(&storage, 4096, G32_MAIN_RAM_SIZE)) { free(a); return NULL; }
     memset(storage, 0, G32_MAIN_RAM_SIZE);
     a->magic = UINT64_C(0x4755455354333252);
+    a->cpsr=0x1f;
     a->data = storage; a->base = G32_MAIN_RAM_BASE;
     a->capacity = G32_MAIN_RAM_SIZE;
     a->static_end = a->cursor = static_end - a->base;
@@ -80,6 +86,7 @@ void *g32_create_ds(uint32_t static_end) {
 }
 void g32_destroy(void *ram) {
     Arena *a = arena(ram);
+    if(a->context_cleanup)a->context_cleanup(ram);
     Allocation *p = a->allocations;
     while (p) { Allocation *next = p->next; free(p); p = next; }
     ASAN_UNPOISON_MEMORY_REGION(a->data, a->capacity);
@@ -189,8 +196,18 @@ void g32_check_return(void *ram,void *frame,uint32_t offset) {
 void g32_frame_leave(void *ram,void *frame) {
     Arena *a=arena(ram);Frame *f=frame;
     if(!f || a->frame!=f)fail("guest frame restoration order");
-    for(Allocation *p=a->allocations;p;p=p->next)if(p->live && p->frame==f){
-        p->live=0;ASAN_POISON_MEMORY_REGION(a->data+p->offset,p->size);
+    /* A returned stack extent has no allocation ownership to retain. Keeping
+     * its dead record made every subsequent memory lookup and frame exit scan
+     * the entire call history. Heap records remain for consume-boundary checks.
+     * Unlink rather than assuming stack records are adjacent: a native callee
+     * may allocate a genuine heap object while a guest frame is live. */
+    Allocation **link=&a->allocations;
+    while(*link){
+        Allocation *p=*link;
+        if(p->frame==f){
+            ASAN_POISON_MEMORY_REGION(a->data+p->offset,p->size);
+            *link=p->next;free(p);
+        }else link=&p->next;
     }
     a->stack=f->saved;a->frame=f->parent;free(f);
 }
@@ -199,3 +216,11 @@ void g32_bad_code(void *ram,uint32_t address){
     arena(ram);fprintf(stderr,"guest32 code: unknown identity or incompatible indirect signature 0x%08x\n",address);abort();
 }
 void *g32_memory_span(void *ram,uint32_t offset,uint32_t bytes){return bytes?g32_resolve(ram,offset,bytes,0):NULL;}
+/* Compiled execution state is switched independently of shared DS RAM. */
+void g32_execution_save(void *ram,void **frame,uint32_t *stack,uint32_t *floor){Arena *a=arena(ram);*frame=a->frame;*stack=a->stack;*floor=a->stack_floor;}
+void g32_execution_load(void *ram,void *frame,uint32_t stack,uint32_t floor){Arena *a=arena(ram);if(floor>=stack || stack>a->capacity)fail("execution stack bounds");a->frame=frame;a->stack=stack;a->stack_floor=floor;}
+void g32_execution_discard(void *ram){Arena *a=arena(ram);while(a->frame)g32_frame_leave(ram,a->frame);}
+uint32_t *g32_cpsr(void *ram){return &arena(ram)->cpsr;}
+unsigned char *g32_cp_state(void *ram){return arena(ram)->cp_state;}
+void **g32_context_storage(void *ram){return &arena(ram)->context_storage;}
+void g32_context_cleanup(void *ram,void(*cleanup)(void*)){arena(ram)->context_cleanup=cleanup;}

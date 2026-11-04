@@ -1442,6 +1442,116 @@ def write_if_changed(path, data):
     path.write_text(data)
 
 
+def rc4_guest32(text):
+    """Finite instruction elaboration of the original unrolled RC4 routine.
+
+    Registers, flags, shifted indexing and store/load order stay explicit. This
+    is not a replacement RC4 algorithm or a general guest instruction engine.
+    """
+    if hashlib.sha256(text.encode()).hexdigest()!='21c109973cd24847da150c828b013c28e261bbc9ecf6c8e660c89f35f6a115f2':
+        raise ValueError('Original RC4 ARM source changed')
+    match=re.search(r'asm void CRYPTO_RC4FastEncrypt\([^\n]*\) \{\n(.*?)\n\}',text,re.S)
+    if not match:raise ValueError('Original RC4 function missing')
+    body=['void CRYPTO_RC4FastEncrypt(void *context,const void *in,u32 length,void *out) {',
+          'u32 r0=(u32)context,r1=(u32)in,r2=length,r3=(u32)out,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,lr=0;',
+          'u32 x,y,z; int negative=0,zero=0,overflow=0;']
+    def value(v):
+        v=v.strip()
+        if re.fullmatch(r'r[0-9]|lr',v):return v
+        if re.fullmatch(r'#(?:0x[0-9a-f]+|[0-9]+)',v):return v[1:]+'u'
+        if re.fullmatch(r'#-\d+',v):return '(-'+v[2:]+'u)'
+        raise ValueError('Unsupported RC4 operand: '+v)
+    def shifted(parts):
+        if len(parts)==1:return value(parts[0])
+        if len(parts)!=2:raise ValueError('RC4 shifted operand')
+        m=re.fullmatch(r'(lsr|lsl) #(\d+)',parts[1])
+        if not m or not 0<int(m[2])<32:raise ValueError('RC4 shift')
+        return '('+value(parts[0])+(' >> ' if m[1]=='lsr' else ' << ')+m[2]+')'
+    for raw in match[1].splitlines():
+        line=raw.strip()
+        if line.startswith('@') and line.endswith(':'):body.append(line[1:]);continue
+        op,_,args=line.partition(' ')
+        if (op,args)==('stmdb','sp!, {r4, r5, r6, r7, r8, r9, lr}'):
+            statement='/* Native ABI preserves the original callee-save/return contract. */'
+        elif (op,args)==('ldmia','sp!, {r4, r5, r6, r7, r8, r9, pc}'):statement='return;'
+        elif op in ('bmi','bpl','ble','bgt'):
+            if not re.fullmatch(r'@L[0-9A-F]+',args):raise ValueError('RC4 branch target')
+            condition={'bmi':'negative','bpl':'!negative','ble':'zero || (negative!=overflow)','bgt':'!zero && (negative==overflow)'}[op]
+            statement='if('+condition+')goto '+args[1:]+';'
+        elif op in ('ldr','ldrb','str','strb'):
+            m=re.fullmatch(r'(r\d+), \[(r\d+)(?:, (.*?))?\](?:, #(\d+))?',args)
+            if not m:raise ValueError('RC4 memory instruction: '+line)
+            reg,base,offset,post=m.groups();address=base+('+'+shifted(offset.split(', ')) if offset else '')
+            pointer='((u8 *)('+address+'))' if op.endswith('b') else '((u32 *)('+address+'))'
+            statement=reg+'=*'+pointer+';' if op.startswith('ldr') else '*'+pointer+'='+reg+';'
+            if post:statement+=base+'+='+post+'u;'
+        else:
+            parts=args.split(', ')
+            if op=='mov':statement=value(parts[0])+'='+shifted(parts[1:])+';'
+            elif op in ('add','adds','sub','subs','eor','and'):
+                dest=value(parts[0]);lhs=value(parts[1]);rhs=shifted(parts[2:]);symbol={'add':'+','adds':'+','sub':'-','subs':'-','eor':'^','and':'&'}[op]
+                if op.endswith('s'):
+                    statement='x='+lhs+';y='+rhs+';z=x'+symbol+'y;'+dest+'=z;zero=(z==0);negative=((int)z<0);'
+                    statement+='overflow=((~(x^y)&(x^z))>>31)!=0;' if op=='adds' else 'overflow=(((x^y)&(x^z))>>31)!=0;'
+                else:statement=dest+'='+lhs+symbol+rhs+';'
+            else:raise ValueError('Unsupported original RC4 instruction: '+line)
+        body.append(statement+' /* '+line+' */')
+    body.append('}')
+    return text[:match.start()]+'\n'.join(body)+text[match.end():]
+
+def guest32_frontend(relative, text, root):
+    """Source-validated frontend spelling/declaration corrections, still ARM32.
+
+    No LP64 structure or algorithm adaptations are admitted to the guest input.
+    Clang VFS keeps the original paths and ownership while these deterministic
+    build-directory files repair mismatched declarations and finite ARM forms.
+    """
+    if relative == 'src/comm_state.c':
+        return adapt(relative, text, root)
+    if relative == 'src/comm_state_private.h':
+        # Retain the original ARM32 MATHRandContext32 declaration. Its native
+        # replacement header is an LP64 port detail, not a guest dependency.
+        original=(root/'src/comm_state.c').read_text()
+        private=set(re.findall(r'^static\s+(?:void|BOOL|s32|int)\s+(CommState_\w+)\(',original,re.M))
+        if len(private)!=77:raise ValueError('CommState private helper definitions changed')
+        for name in sorted(private):
+            text,count=re.subn(r'^(?:void|BOOL|s32|int) '+name+r'\([^;\n]*;','',text,flags=re.M)
+            if count!=1:raise ValueError('Private CommState declaration changed: '+name)
+        return replace(text,'int DWC_Init(int);','int DWC_Init(void *work);')
+    if relative == 'lib/include/nitro/os/thread.h':
+        original = (root/'lib/NitroSDK/src/os/os_thread.c').read_text()
+        if original.count('static void OSi_InsertLinkToQueue(OSThreadQueue *queue, OSThread *thread) {') != 1:
+            raise ValueError('Original OS private queue helper changed')
+        return drop(text, 'void OSi_InsertLinkToQueue(OSThreadQueue *queue, OSThread *thread);')
+    if relative == 'lib/include/nitro/os/context.h':
+        text=replace(text,'BOOL OS_SaveContext(register OSContext *context);',
+                     '__attribute__((returns_twice)) BOOL OS_SaveContext(register OSContext *context);')
+        return replace(text,'void OS_LoadContext(register OSContext *context);',
+                       '__attribute__((noreturn)) void OS_LoadContext(register OSContext *context);')
+    for source,name,lock in (('lib/NitroSDK/src/mic.c','MicWaitBusy','gMicLock'),
+                             ('lib/NitroSDK/src/rtc/rtc_api.c','RtcWaitBusy','gRtcLock')):
+        if relative==source:
+            before=('asm void '+name+'(void) {\n    ldr r12, ='+lock+'\n@wait:\n'
+                    '    ldr r0, [r12]\n    cmp r0, #1\n    beq @wait\n    bx lr\n}')
+            after=('void '+name+'(void) {\n    /* Original ldr/cmp/beq loop; each read remains volatile. */\n'
+                   '    while (*(volatile u32 *)&'+lock+' == 1) {}\n}')
+            return replace(text,before,after)
+    if relative == 'lib/src/nitrocrypto_rc4_fast.c':
+        return rc4_guest32(text)
+    spec = json.loads((Path(__file__).resolve().parents[1]/'compiler/guest32/sdk_asm_adaptations.json').read_text())
+    for record in spec['adaptations']:
+        if record['source'] != 'upstream/pokeheartgold/'+relative:
+            continue
+        if hashlib.sha256(text.encode()).hexdigest() != record['sha256']:
+            raise ValueError('Original finite ARM adaptation source changed: '+relative)
+        for replacement in record['replacements']:
+            text = replace(text, replacement['original'], replacement['adapted'])
+        if hashlib.sha256(text.encode()).hexdigest() != record['adapted_sha256']:
+            raise ValueError('Finite ARM adaptation output changed: '+relative)
+        return text
+    raise ValueError('Unapproved guest32 frontend adaptation: '+relative)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--list-overlay-sources", action="store_true")
@@ -1462,6 +1572,8 @@ def main():
     original = source.read_text()
     if args.kind == "native":
         result = adapt(source.relative_to(root).as_posix(), original, root)
+    elif args.kind == 'guest32-frontend':
+        result = guest32_frontend(source.relative_to(root).as_posix(), original, root)
     elif args.kind == "coordinated-msl":
         result = coordinated.runtime_source(source.relative_to(root).as_posix(), original)
     else:

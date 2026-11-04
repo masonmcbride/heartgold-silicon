@@ -1,6 +1,8 @@
 # main.lsf owns ARM9 source/image membership. SDK code is supplied by libntr;
 # overlays and ARM assembly are inventoried, never silently merged into main.
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${game_source}/main.lsf")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${game_source}/main.lsf"
+    "${game_source}/global.inc" "${game_source}/heartgold.us/main.sha1"
+    "${game_source}/soulsilver.us/main.sha1")
 set(hg_image_graph_script "${CMAKE_CURRENT_LIST_DIR}/native_image_graph.py")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${hg_image_graph_script}")
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_image_graph_script}"

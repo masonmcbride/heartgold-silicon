@@ -53,6 +53,24 @@ def collect(build, model, supplemental=()):
     return candidates
 
 
+SPECIAL_CORE_IMAGES = ('main', 'ds_protect', 'ITCM', 'DTCM')
+
+
+def image_accounting(images):
+    nonempty = [i for i in images.values() if i['objects']]
+    linked = [i for i in nonempty if i['link_status']=='linked']
+    overlays = [i for n,i in images.items() if n not in SPECIAL_CORE_IMAGES and i['objects']]
+    return dict(original_nonempty_images=len(nonempty),
+                ordinary_nonempty_overlays=len(overlays),
+                linked_ordinary_nonempty_overlays=sum(i['link_status']=='linked' for i in overlays),
+                linked_nonempty_images=len(linked),
+                verified_empty_original_identities=sum(i['original_membership']['verified_empty'] for i in images.values()),
+                unverified_empty_identities=sum(not i['objects'] and not i['original_membership']['verified_empty'] for i in images.values()),
+                nonempty_images_not_linked=len(nonempty)-len(linked),
+                special_core_images={n: images[n]['link_status'] for n in SPECIAL_CORE_IMAGES if n in images},
+                linked_images_not_fully_runtime_validated=len(linked))
+
+
 def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_images=(), provider_manifests=()):
     model = graph(game,build)
     candidates = collect(build, model, supplemental)
@@ -126,8 +144,8 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_
             image['actual_link_undefined_symbols']=(sorted(set(re.findall(r'^\s+"([^"]+)", referenced from:',chunks[-1],re.M))) if len(chunks)>1 else None)
         path = build/'native-overlays'/f"libheartgold_image_{image['id']}.dylib" if image['kind']=='Overlay' else executable if image['kind']=='Static' else None
         image['linked_artifact'] = None
-        image['link_status'] = 'absent'
-        if path and path.is_file():
+        image['link_status'] = ('verified empty original' if image['original_membership']['verified_empty'] else 'absent')
+        if path and path.is_file() and image['objects']:
             exported = symbols(path,nm=nm)
             missing_exports = sorted(set(image['definitions'])-exported)
             newest = max([game.joinpath('main.lsf').stat().st_mtime]+[
@@ -138,6 +156,7 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_
                 'missing exports' if missing_exports else 'linked')
             image['linked_artifact'] = str(path)
             image['missing_exports'] = missing_exports
+            image['runtime_validation'] = 'not fully runtime-validated'
             if (image['link_status']=='linked' and diagnostic_path.exists() and
                     path.stat().st_mtime_ns>=diagnostic_path.stat().st_mtime_ns):
                 image['superseded_link_diagnostic']=image.pop('link_diagnostic',None)
@@ -165,9 +184,10 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_
                 invalid.append(image['name'])
             else:
                 image['binding_validation']=dict(validated=True,slots=len(slots))
-    summary = dict(original_images=len(images), complete_object_images=sum(bool(i['objects']) and not i['missing_members'] for i in images.values()),
+    accounting = image_accounting(images)
+    summary = dict(**accounting, original_images=len(images), complete_object_images=sum(bool(i['objects']) and not i['missing_members'] for i in images.values()),
                    empty_original_images=sum(not i['objects'] for i in images.values()),
-                   linked_images=sum(i['link_status']=='linked' for i in images.values()),
+                   linked_images=sum(bool(i['objects']) and i['link_status']=='linked' for i in images.values()),
                    represented_original_members=sum(bool(candidates[o]) for o in model['members']),
                    original_members=len(model['members']),
                    original_member_placements=sum(len(i['objects']) for i in images.values()),
@@ -268,11 +288,11 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_
     write(out/'provider-registry.json',json.dumps(inventory,indent=2,sort_keys=True)+'\n')
     write(out/'graph.json' ,json.dumps(result,indent=2,sort_keys=True)+'\n')
     lines = ['# Native whole-image artifact inventory', '', result['scope'], '',
-             'Counts describe this invocation and its explicit object evidence. A TBD is never a linked image.', '',
+             'Counts describe this invocation and its explicit object evidence. A TBD or an empty identity is never a linked executable image. Special core status is reported separately; linked counts include nonempty core images. Runtime validation is separate from link and binding validation.', '',
              *[f'- {k}: {v}' for k,v in summary.items()], '',
-             '| Image | Members missing | Observed imports | Unknown providers | Link status |',
-             '| --- | ---: | ---: | ---: | --- |']
-    lines += [f"| {n} | {len(i['missing_members'])} | {len(i['imports'])} | {len(i['unknown_imports'])} | {i['link_status']} |" for n,i in images.items()]
+             '| Image | Original members | Membership classification | Members missing | Observed imports | Unknown providers | Link status |',
+             '| --- | ---: | --- | ---: | ---: | ---: | --- |']
+    lines += [f"| {n} | {len(i['objects'])} | {i['original_membership']['classification']} | {len(i['missing_members'])} | {len(i['imports'])} | {len(i['unknown_imports'])} | {i['link_status']} |" for n,i in images.items()]
     lines += ['', 'The JSON contains every missing member, emitted definition, reference, provider and symbol dependency.',
               'Binding validation inspects actual Mach-O fixups using the existing validator; JSON records every failure.', '']
     write(out/'report.md','\n'.join(lines))

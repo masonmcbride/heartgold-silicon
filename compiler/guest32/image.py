@@ -23,6 +23,8 @@ def main():
     p.add_argument('--llvm-bin',type=Path,required=True)
     p.add_argument('--lowerer',type=Path,required=True)
     p.add_argument('--report-only',action='store_true')
+    p.add_argument('--plan-only',action='store_true',help='Describe original members and placements without emitting objects')
+    p.add_argument('--shared-catalog',type=Path,help='Use a jointly planned storage and code identity catalog')
     p.add_argument('--image',default='OVY_0',help='Original overlay name from main.lsf')
     a=p.parse_args();a.game=a.game.resolve();a.build=a.build.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     a.lowerer=a.lowerer.resolve();a.llvm_bin=a.llvm_bin.resolve()
@@ -42,11 +44,8 @@ def main():
             except ValueError as e:r.update(parsed=False,represented=False,issues=[dict(kind='guest-data',reason=str(e),source=str(source),line=0,llvm='')])
             return r
         ir=work/'guest.ll'
-        args=[str(a.llvm_bin/'clang'),'-target','armv5-apple-darwin','-ffreestanding','-fno-builtin','-fsigned-char','-fno-short-enums','-std=gnu89',
-              '-DSDK_ARM9','-DSDK_CODE_ARM','-DSDK_FINALROM','-DHEARTGOLD','-DENGLISH','-Wno-error=incompatible-pointer-types',
-              '-I'+str(a.build/'include'),'-I'+str(a.game/'include'),'-I'+str(a.game/'include/library'),
-              '-I'+str(a.game/'lib/include'),'-I'+str(a.game/'lib/NitroSDK/include'),'-I'+str(a.build/'generated/files'),
-              '-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes','-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
+        from frontend import flags as frontend_flags
+        args=[str(a.llvm_bin/'clang'),*frontend_flags(a.game,a.build),'-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
         run=cached_run(args,[ir],inputs=[source],depfile=str(ir)+'.d')
         (work/'frontend.log').write_text(run.stdout+run.stderr);r.update(frontend=run.returncode==0,command=args)
         if run.returncode:
@@ -196,11 +195,22 @@ def main():
         assert max(own_globals[k]['offset']+own_globals[k]['size'] for k in keys)==base+group['extent']
         for k,m in zip(keys,group['members']):own_globals[k]=dict(offset=base+m['offset'],size=m['view_size'])
         for name,off in group['aliases'].items():placements[name]=dict(offset=base+off,size=group['extent']-off)
-    catalog=a.out/'image.json';catalog.write_text(json.dumps(dict(codes=codes,register_edges=register_edges,static_end=position,assembly_globals=placements,c_globals=own_globals,original_assembly_globals=original_placements),indent=2)+'\n')
+    if a.shared_catalog:
+        shared=json.loads(a.shared_catalog.read_text())
+        plan=shared['images'][image['name']]
+        placements=plan['assembly_globals'];own_globals=plan['c_globals']
+        codes=shared['codes'];position=shared['static_end']
+        # Relocations and every translation unit use the same coordinates,
+        # including declarations whose defining member belongs to a peer image.
+        code_values={f['name']:f['address'] for f in codes if not f['local']}
+        register_edges=shared['register_edges']
+    catalog=a.out/('plan.json' if a.plan_only else 'image.json');catalog.write_text(json.dumps(dict(codes=codes,register_edges=register_edges,static_end=position,assembly_globals=placements,c_globals=own_globals,original_assembly_globals=original_placements),indent=2)+'\n')
+    if a.plan_only:return
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
     def lower(r):
         if not r.get('frontend'):return r
         work=a.out/r['object'];globals=dict(placements)
+        if a.shared_catalog:globals.update(shared['globals'])
         for g in r['description']['globals']:
             if g['key'] in own_globals:globals[g['name']]=own_globals[g['key']]
             elif g['name'] in own_globals:globals[g['name']]=own_globals[g['name']]
@@ -218,6 +228,7 @@ def main():
         return r
     with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(lower,members))
     known={n:v['offset'] for n,v in placements.items()};known.update(code_values);known.update({n:v['offset'] for n,v in own_globals.items() if '|' not in n})
+    if a.shared_catalog:known.update({n:v['offset'] for n,v in shared['globals'].items()})
     data_sources={r['object']:[] for r in members if r['kind']=='assembly'}
     for r in members:
         for name in r.get('public_labels',[]):
@@ -228,7 +239,12 @@ def main():
         name=('guest32_data_' if image['id']==0 else 'guest32_image_'+str(image['id'])+'_data_')+str(idx)
         (a.out/s['object']/(s['section'].lstrip('.')+'.bin')).write_bytes(s['data'])
         lines.append('static const unsigned char '+name+'[]={'+','.join(map(str,s['data']))+'};')
-        body=['void '+name+'_load(void *ram){unsigned char *p=g32_resolve(ram,'+str(s['offset'])+','+str(len(s['data']))+',0);memcpy(p,'+name+','+str(len(s['data']))+');']
+        base=s['offset']
+        if a.shared_catalog:
+            if not s['original_placement']:raise ValueError('shared section lacks verified original placement: '+s['object']+s['section'])
+            base=s['original_placement']['address']
+            s['offset']=base
+        body=['void '+name+'_load(void *ram){unsigned char *p=g32_resolve(ram,'+str(base)+','+str(len(s['data']))+',0);memcpy(p,'+name+','+str(len(s['data']))+');']
         for ref in s['references']:
             assert ref['width']==4,ref
             try:value=str(integer(ref['expression'],known)&0xffffffff)
@@ -256,8 +272,10 @@ def main():
     # help once this driver has actually been scheduled.
     dependencies = {Path(__file__).resolve(), Path(__file__).with_name('incremental.py').resolve()}
     dependencies.add(Path(__file__).with_name('original_layout.py').resolve())
+    dependencies.add(Path(__file__).with_name('frontend.py').resolve())
     dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
     dependencies.add(Path(__file__).with_name('ovy38_registers.json' if image['name']=='OVY_38' else 'ovy0_registers.json').resolve())
+    if a.shared_catalog:dependencies.add(a.shared_catalog.resolve())
     for receipt in a.out.rglob('*.receipt.json'):
         dependencies.update(Path(p) for p in json.loads(receipt.read_text())['inputs']
                             if not Path(p).is_relative_to(a.out))
