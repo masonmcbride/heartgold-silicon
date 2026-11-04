@@ -10226,5 +10226,505 @@
     "reviewed": false,
     "expected_blocks": 334,
     "expected_relocations": 323
+  },
+  "asm/footprint_stamp_data.o": {
+    "inputs": {
+      "asm/footprint_stamp_data.s": "8258ec000c0f684f70cbd949d87b693f14bbca17de805df0fe483e30e1ecb223",
+      "include/application/footprint_stamp.h": "f617428042727c153021313419c80742a858fcc289b0bd8624eab439c3b72c30",
+      "src/application/footprint_stamp.c": "ad831b6dca4001b4ed176c1e3adc16d0e7a2b9ef22d3a1f5c12555dcd3e5ffcc",
+      "src/application/footprint_stamp_effects.c": "aa6a4cadb2188647e22a671363806fcd10f6b29959c0abe6ba08c1b73f852f35",
+      "include/wifi_plaza/wifi_plaza_internal.h": "66fed7c31f042be8ef6e395aa076c29c9976fa9a491b806336704f8720e67d58",
+      "src/wifi_plaza/wifi_plaza_lobby_events.c": "12193a9651d7ad1e759ad79c9073783c4ed5020599638963a435de565e042407"
+    },
+    "layouts": {
+      "__native_ovy89_anonymous_prefix": {
+        "source_size": 16,
+        "public": false
+      },
+      "gFootprintStampCameraChainLengths": {
+        "source_size": 20,
+        "public": true
+      },
+      "gFootprintStampBoardYs": {
+        "source_size": 44,
+        "public": true
+      },
+      "gFootprintStampCameraEffectFuncs": {
+        "source_size": 44,
+        "public": true,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40
+        ],
+        "alignment": 8
+      },
+      "gFootprintStampSizeBounds": {
+        "source_size": 48,
+        "public": true
+      },
+      "gFootprintStampBoardXs": {
+        "source_size": 68,
+        "public": true
+      },
+      "gFootprintStampEffectFuncs": {
+        "source_size": 132,
+        "public": true,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128
+        ],
+        "alignment": 8
+      },
+      "gFootprintStampNatureEffects": {
+        "source_size": 28,
+        "public": true
+      },
+      "gFootprintStampPartyHitboxes": {
+        "source_size": 32,
+        "public": true
+      },
+      "gFootprintStampInkColors": {
+        "source_size": 36,
+        "public": true
+      },
+      "gFootprintStampSpeciesFootprints": {
+        "source_size": 1976,
+        "public": true
+      },
+      "gFootprintStampLinkCommands": {
+        "source_size": 24,
+        "public": true,
+        "pointers": [
+          0,
+          8,
+          16
+        ],
+        "alignment": 8,
+        "padding": {
+          "8": 4,
+          "16": 4,
+          "24": 4
+        }
+      }
+    },
+    "expected_blocks": 12,
+    "expected_relocations": 40
+  },
+  "asm/plaza_game_swalot_plop_data.o": {
+    "inputs": {
+      "asm/plaza_game_swalot_plop_data.s": "cbdf69c75339aab8cae672399351bd842047f01bfc28a6462f2c224dbd45f695",
+      "include/application/plaza_game_swalot_plop.h": "25ff6c9a56fbeaaed9b0b3317fe2fe43698f9e727668a4e1273b2f43c883c6a6",
+      "src/application/plaza_game_swalot_plop.c": "d6129742dee86bc88a8755c22d7c8f3aeff1bf91f22585fb7721a0e36a742415"
+    },
+    "layouts": {
+      "gSwalotPlopStageAnimFiles": {
+        "source_size": 6,
+        "public": true
+      },
+      "gSwalotPlopStageAnimModels": {
+        "source_size": 6,
+        "public": true
+      },
+      "gSwalotPlopSceneModelFiles": {
+        "source_size": 6,
+        "public": true
+      },
+      "gSwalotPlopStageFiles": {
+        "source_size": 8,
+        "public": true
+      },
+      "gSwalotPlopSpecialAnimRanges": {
+        "source_size": 10,
+        "public": true
+      },
+      "gSwalotPlopSceneAnimFiles": {
+        "source_size": 12,
+        "public": true
+      },
+      "gSwalotPlopBodyOffset": {
+        "source_size": 12,
+        "public": true
+      },
+      "gSwalotPlopHitPoints": {
+        "source_size": 16,
+        "public": true
+      },
+      "gSwalotPlopPhaseFrames": {
+        "source_size": 8,
+        "public": true
+      },
+      "gSwalotPlopBodyBaseNormal": {
+        "source_size": 12,
+        "public": true
+      },
+      "gSwalotPlopTiltFuncs": {
+        "source_size": 12,
+        "public": true,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "alignment": 8
+      },
+      "gSwalotPlopObjCharTransfer": {
+        "source_size": 16,
+        "public": true
+      },
+      "gSwalotPlopGraphicsModes": {
+        "source_size": 16,
+        "public": true
+      },
+      "gSwalotPlopDemoCursorYs": {
+        "source_size": 24,
+        "public": true
+      },
+      "gSwalotPlopMain1BgTemplate": {
+        "source_size": 28,
+        "public": true
+      },
+      "gSwalotPlopMain2BgTemplate": {
+        "source_size": 28,
+        "public": true
+      },
+      "gSwalotPlopSub0BgTemplate": {
+        "source_size": 28,
+        "public": true
+      },
+      "gSwalotPlopSub1BgTemplate": {
+        "source_size": 28,
+        "public": true
+      },
+      "gSwalotPlopSub2BgTemplate": {
+        "source_size": 28,
+        "public": true
+      },
+      "gSwalotPlopSub3BgTemplate": {
+        "source_size": 20,
+        "public": true
+      },
+      "gSwalotPlopSeatAngles": {
+        "source_size": 32,
+        "public": true
+      },
+      "gSwalotPlopCameraAngles": {
+        "source_size": 8,
+        "public": true
+      },
+      "gSwalotPlopStageRotations": {
+        "source_size": 32,
+        "public": true
+      },
+      "gSwalotPlopBanks": {
+        "source_size": 40,
+        "public": true
+      },
+      "gSwalotPlopIntroNamePositions": {
+        "source_size": 480,
+        "public": true
+      },
+      "gSwalotPlopPopupPosX": {
+        "source_size": 4,
+        "public": true
+      },
+      "gSwalotPlopPopupPosY": {
+        "source_size": 540,
+        "public": true
+      },
+      "gSwalotPlopSceneNodeNames": {
+        "source_size": 1440,
+        "public": true
+      },
+      "gSwalotPlopSceneAnimModels": {
+        "source_size": 8,
+        "public": true
+      },
+      "gSwalotPlopCommands": {
+        "source_size": 96,
+        "public": true,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92
+        ],
+        "alignment": 8
+      }
+    },
+    "expected_blocks": 30,
+    "expected_relocations": 19
+  },
+  "asm/plaza_game_mime_jr_top_data.o": {
+    "inputs": {
+      "asm/plaza_game_mime_jr_top_data.s": "ed0c6d0216998e45644012be954d7c01f66da9b61a26454b44c967928dab602d",
+      "include/application/plaza_game_mime_jr_top.h": "bffebedbadb99862d35818088ef36d805a2c9c0543bbd00fcb046d31cefd8311",
+      "src/application/plaza_game_mime_jr_top.c": "83ec77662a263f8b8731a1ce6d2b9de13648b6e07ca5cc3bc274a9cc4c334dfc"
+    },
+    "layouts": {
+      "gMimeJrTopDemoTurnTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopDemoSpinTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopGraphicsModes": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopTopModels": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopEdgeColors": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopOamCharTransferParam": {
+        "source_size": 20,
+        "public": true
+      },
+      "gMimeJrTopSpriteResourceCounts": {
+        "source_size": 24,
+        "public": true
+      },
+      "gMimeJrTopOamManagerParam": {
+        "source_size": 32,
+        "public": true
+      },
+      "gMimeJrTopBanks": {
+        "source_size": 40,
+        "public": true
+      },
+      "gMimeJrTopMainBgTemplates": {
+        "source_size": 112,
+        "public": true
+      },
+      "gMimeJrTopSubBgTemplates": {
+        "source_size": 112,
+        "public": true
+      },
+      "gMimeJrTopAudienceModelFiles": {
+        "source_size": 128,
+        "public": true
+      },
+      "gMimeJrTopDemoPath": {
+        "source_size": 192,
+        "public": true
+      },
+      "gMimeJrTopPopupPositions": {
+        "source_size": 8,
+        "public": true
+      },
+      "gMimeJrTopCameraPosition": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopLightVector": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopRivalSpriteX": {
+        "source_size": 24,
+        "public": true
+      },
+      "gMimeJrTopRivalAnims": {
+        "source_size": 64,
+        "public": true
+      },
+      "gMimeJrTopRivalSetAnims": {
+        "source_size": 32,
+        "public": true
+      },
+      "gMimeJrTopRivalNamePositions": {
+        "source_size": 72,
+        "public": true
+      },
+      "gMimeJrTopTouchData": {
+        "source_size": 8,
+        "public": true
+      },
+      "gMimeJrTopSelectionHitboxes": {
+        "source_size": 32,
+        "public": true
+      },
+      "gMimeJrTopSpinTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopTurnTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopSettleTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopSettleTouchTiltAxis": {
+        "source_size": 12,
+        "public": true
+      },
+      "gMimeJrTopWobbleTiltAxis": {
+        "source_size": 68,
+        "public": true
+      },
+      "gMimeJrTopTierModels": {
+        "source_size": 4,
+        "public": true
+      },
+      "gMimeJrTopTierChangeModels": {
+        "source_size": 176,
+        "public": true
+      },
+      "gMimeJrTopWobbleChoices": {
+        "source_size": 4,
+        "public": true
+      },
+      "gMimeJrTopWobbleWeights": {
+        "source_size": 124,
+        "public": true
+      },
+      "gMimeJrTopPopupLimits": {
+        "source_size": 8,
+        "public": true
+      },
+      "gMimeJrTopDance3DoneFlags": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopDance2DoneFlags": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopDance4DoneFlags": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopPopupDoneFlags": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopDance5DoneFlags": {
+        "source_size": 16,
+        "public": true
+      },
+      "gMimeJrTopStarOrigins": {
+        "source_size": 20,
+        "public": true
+      },
+      "gMimeJrTopBurstOffsetsX": {
+        "source_size": 24,
+        "public": true
+      },
+      "gMimeJrTopBurstOffsetsY": {
+        "source_size": 24,
+        "public": true
+      },
+      "gMimeJrTopRoutines": {
+        "source_size": 4,
+        "public": true
+      },
+      "gMimeJrTopRoutineCounts": {
+        "source_size": 4,
+        "public": true
+      },
+      "gMimeJrTopRoutineSpeeds": {
+        "source_size": 28,
+        "public": true
+      },
+      "gMimeJrTopRoutineTasks": {
+        "source_size": 324,
+        "public": true,
+        "pointers": [
+          0,
+          40,
+          80,
+          120,
+          160,
+          200,
+          240,
+          280,
+          320
+        ],
+        "alignment": 8,
+        "padding": {
+          "40": 4,
+          "80": 4,
+          "120": 4,
+          "160": 4,
+          "200": 4,
+          "240": 4,
+          "280": 4,
+          "320": 4
+        }
+      },
+      "gMimeJrTopPlayerPalettes": {
+        "source_size": 320,
+        "public": true
+      }
+    },
+    "expected_blocks": 45,
+    "expected_relocations": 8
   }
 }

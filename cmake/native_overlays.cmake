@@ -132,6 +132,40 @@ add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overla
         "${CMAKE_CURRENT_LIST_DIR}/native_provider_registry.py" "${PROJECT_BINARY_DIR}/native-graph/images.json"
     VERBATIM)
 add_custom_target(heartgold_overlay_link_contract DEPENDS ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}")
+
+# OVY_0 original-code partial provider: independently closed Wi-Fi exports.
+# Do not duplicate these identities if full OVY_0 is selected.
+if("0" IN_LIST hg_selected_overlay_ids)
+    message(FATAL_ERROR
+        "OVY_0 Wi-Fi subset conflicts with complete OVY_0 ownership")
+endif()
+
+set(hg_ovy0_wifi_source "${native_root}/src/wifi_connection.c")
+add_library(hg_ovy0_wifi_subset SHARED "${hg_ovy0_wifi_source}")
+target_compile_definitions(hg_ovy0_wifi_subset PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
+target_include_directories(hg_ovy0_wifi_subset PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+target_compile_options(hg_ovy0_wifi_subset PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
+target_link_libraries(hg_ovy0_wifi_subset PRIVATE
+    nitro_config "${overlay_link_dir}/interfaces/main.tbd")
+target_link_options(hg_ovy0_wifi_subset PRIVATE
+    "LINKER:-dead_strip"
+    "LINKER:-exported_symbol,_WifiConnection_GetTargetFriendIndex"
+    "LINKER:-exported_symbol,_WifiConnection_ClassifyErrorCode"
+    "LINKER:-exported_symbol,_WifiConnection_SetDisconnectCallback")
+set_target_properties(hg_ovy0_wifi_subset PROPERTIES
+    OUTPUT_NAME "heartgold_ovy0_wifi_subset"
+    LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
+    INSTALL_NAME_DIR "@rpath"
+    BUILD_WITH_INSTALL_NAME_DIR TRUE)
+add_dependencies(hg_ovy0_wifi_subset
+    heartgold_overlay_native_sources
+    heartgold_native_headers
+    fx_constants
+    heartgold_overlay_link_contract)
+
 set(hg_native_image_targets)
 set(hg_native_binding_args)
 set(hg_native_binding_dependencies)
@@ -148,6 +182,11 @@ foreach(id IN LISTS hg_selected_overlay_ids)
         INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE
         LINK_DEPENDS "${hg_interface_outputs};$<TARGET_FILE:${archive}>")
     add_dependencies(heartgold_image_${id} heartgold_overlay_link_contract)
+
+    if(id EQUAL 80)
+        target_link_libraries(heartgold_image_80 PRIVATE
+            hg_ovy0_wifi_subset)
+    endif()
     add_custom_command(TARGET heartgold_image_${id} POST_BUILD
         COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_preflight.py"
             --otool "${HG_NATIVE_OTOOL}" $<TARGET_FILE:heartgold_image_${id}>
