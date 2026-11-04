@@ -22,10 +22,70 @@ from native_data_ir import parse,raw_layout,integer
 from native_overlay_link import symbols as emitted_symbols
 
 
+
+def original_root_owners(descriptions, names):
+    """Resolve new demands to unique original main-image C definitions."""
+    owners = {}
+    for name in names:
+        matches = sorted(
+            member for member, desc in descriptions.items()
+            if any(
+                f['name'] == name
+                and f['definition']
+                and not f['local']
+                for f in desc['functions']
+            )
+        )
+        if len(matches) != 1:
+            raise ValueError(
+                'expected exactly one original main provider for '
+                + name + ': ' + repr(matches)
+            )
+        owners[name] = matches[0]
+    return owners
+
+
+
+def merge_main_overlay_pins(main_codes, overlay_codes):
+    """Merge identical identities while retaining definition ABI metadata."""
+    pinned = {f['key']: dict(f) for f in main_codes}
+    fields = ('params', 'return', 'local', 'varargs')
+
+    for incoming in overlay_codes:
+        key = incoming['key']
+        previous = pinned.get(key)
+
+        if previous is None:
+            pinned[key] = dict(incoming)
+            continue
+
+        if previous['address'] != incoming['address']:
+            raise ValueError('shared code address changed: ' + key)
+
+        previous_definition = bool(previous.get('definition'))
+        incoming_definition = bool(incoming.get('definition'))
+
+        if previous_definition == incoming_definition:
+            if any(
+                previous.get(field) != incoming.get(field)
+                for field in fields
+            ):
+                raise ValueError(
+                    'conflicting same-kind guest ABI: ' + key
+                )
+        elif previous_definition and not incoming_definition:
+            continue
+
+        pinned[key] = dict(incoming)
+
+    return pinned
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('game','build','out','llvm-bin','lowerer','image-root'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--discover-only',action='store_true')
+    p.add_argument('--root-symbol',action='append',default=[])
     p.add_argument('--reuse-discovery',action='store_true',help='Refresh effective changed inputs in the existing census, retaining unaffected original discovery')
     a=p.parse_args()
     for n in ('game','build','out','llvm_bin','lowerer','image_root'):setattr(a,n,getattr(a,n).resolve())
@@ -104,9 +164,14 @@ def main():
                 updated['address']=old['address'] if old else 0
                 functions[f['key']]=updated
             functions[f['key']]['address_taken']|=bool(old and old['address_taken'])
-    next_code=max(f['address'] for f in shared['codes'])+4
+    from code_ids import allocate as allocate_code_addresses
+    old_catalog=a.out/'catalog.json'
+    earlier=(json.loads(old_catalog.read_text()).get('codes', [])
+             if old_catalog.is_file() else [])
+    pinned=merge_main_overlay_pins(earlier,shared['codes'])
+    addresses=allocate_code_addresses(functions, pinned.values())
     for key,f in sorted(functions.items()):
-        if not f['address']:f['address']=next_code;next_code+=4
+        f['address']=addresses[key]
         if 'native' not in f:f['native']='guest32_'+(hashlib.sha256(key.encode()).hexdigest()[:16]+'_' if f['local'] else '')+f['name']
         f['coalesce']=f['definition'] and not f['local'] and Path(f.get('origin','')).suffix=='.h'
     # Whole-member dependencies, including declarations referenced by inline
@@ -114,6 +179,13 @@ def main():
     inv=json.loads((ROOT/'docs/provider-closure/provider-176.json').read_text())['unresolved_provider_demands']
     selected={d['member'] for v in inv.values() for d in v['original_definitions'] if d['owner']=='main' and d['kind']=='C function definition text'}
     selected.update(m for v in inv.values() for d in v['original_definitions'] for m in [d['member']] if d['owner']=='main' and m in descriptions)
+    extra_owners=original_root_owners(
+        descriptions, a.root_symbol
+    )
+    selected.update(extra_owners.values())
+    if extra_owners:
+        print('additional original main providers:',
+              json.dumps(extra_owners,sort_keys=True),flush=True)
     changed=True
     while changed:
         changed=False

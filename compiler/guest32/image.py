@@ -131,6 +131,8 @@ def main():
         register_spec=json.loads((Path(__file__).with_name('ovy38_registers.json')).read_text())
     for relative,digest in register_spec['source_hashes'].items():
         assert hashlib.sha256((a.game/relative).read_bytes()).hexdigest()==digest,('register contract source changed',relative)
+    from registration_scope import scoped_spec
+    register_spec=scoped_spec(image['name'], register_spec)
     register_edges=[]
     for edge in register_spec['edges']:
         edge=dict(edge)
@@ -272,6 +274,7 @@ def main():
     # help once this driver has actually been scheduled.
     dependencies = {Path(__file__).resolve(), Path(__file__).with_name('incremental.py').resolve()}
     dependencies.add(Path(__file__).with_name('original_layout.py').resolve())
+    dependencies.add(Path(__file__).with_name('registration_scope.py').resolve())
     dependencies.add(Path(__file__).with_name('frontend.py').resolve())
     dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
     dependencies.add(Path(__file__).with_name('ovy38_registers.json' if image['name']=='OVY_38' else 'ovy0_registers.json').resolve())

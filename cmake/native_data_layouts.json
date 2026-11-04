@@ -9357,9 +9357,196 @@
         "member_pointers": [
           8
         ]
+      },
+      "gPPWLobbyPlayersVtable": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gPPWLobbyPlayerVtable": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gPPWLobbyWebRequestVtable": {
+        "source_size": 8,
+        "pointers": [
+          0,
+          4
+        ]
+      },
+      "gLobbyRequestVtable": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gLobbyGetChannelModeRequestVtable": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gLobbyGetChannelKeysRequestVtable": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gLobbyEnterChannelRequestVtable": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gLobbyEnumUsersRequestVtable": {
+        "source_size": 24,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "gLobbyEnumChannelsRequestVtable": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ]
+      },
+      "ciServerMessageHandlers": {
+        "source_size": 432,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224,
+          228,
+          232,
+          236,
+          240,
+          244,
+          248,
+          252,
+          256,
+          260,
+          264,
+          268,
+          272,
+          276,
+          280,
+          284,
+          288,
+          292,
+          296,
+          300,
+          304,
+          308,
+          312,
+          316,
+          320,
+          324,
+          328,
+          332,
+          336,
+          340,
+          344,
+          348,
+          352,
+          356,
+          360,
+          364,
+          368,
+          372,
+          376,
+          380,
+          384,
+          388,
+          392,
+          396,
+          400,
+          404,
+          408,
+          412,
+          416,
+          420,
+          424,
+          428
+        ]
       }
     },
-    "blocker": "Direct zero-adjustment member constants have a reusable native ARM64 encoding, with original scalar prefixes preserved. The complete chat member remains blocked: private MapNode count/root/first coordinates are 28/32/40 versus native canonical 48/56/64; Root.channels is 128 versus canonical channelMap 184. Data-only member-pointer conversion cannot repair these compiled consumer views.",
     "abi_views": [
       {
         "object": "LobbyChannelMapNode",
@@ -9410,7 +9597,7 @@
               4
             ],
             "native": [
-              28,
+              48,
               4
             ],
             "kind": "integer"
@@ -9421,7 +9608,7 @@
               4
             ],
             "native": [
-              32,
+              56,
               8
             ],
             "kind": "pointer"
@@ -9432,7 +9619,7 @@
               4
             ],
             "native": [
-              40,
+              64,
               8
             ],
             "kind": "pointer"
@@ -9466,7 +9653,7 @@
               4
             ],
             "native": [
-              128,
+              184,
               4
             ],
             "kind": "integer"

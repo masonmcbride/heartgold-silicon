@@ -22,7 +22,55 @@ execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_overlay_manifest}"
     --game "${game_source}" --adapted-dir "${native_root}" --out "${overlay_link_dir}" ${hg_overlay_select}
     COMMAND_ERROR_IS_FATAL ANY)
 include("${overlay_link_dir}/selection.cmake")
+if("45" IN_LIST hg_selected_overlay_ids)
+
+# HEARTGOLD_OVY45_NATIVE_SOURCE_OVERRIDE
+# Retain pristine pinned source; compile this explicitly reviewed
+# native ABI adaptation for OVY_45 only.
+set(_hg_ovy45_adaptation
+    "${CMAKE_SOURCE_DIR}/native-adaptations/OVY_45/lobby_chat_remove_channel.cpp"
+)
+if(NOT EXISTS "${_hg_ovy45_adaptation}")
+    message(FATAL_ERROR "OVY_45 native C++ adaptation is missing")
+endif()
+set(_hg_ovy45_original_found FALSE)
+foreach(_hg_ovy45_source IN LISTS hg_overlay_45_sources)
+    if("${_hg_ovy45_source}" MATCHES
+       "(^|/)src/lobby/lobby_chat_remove_channel[.]cpp$")
+        list(REMOVE_ITEM hg_overlay_45_sources "${_hg_ovy45_source}")
+        list(APPEND hg_overlay_45_sources "${_hg_ovy45_adaptation}")
+        set(_hg_ovy45_original_found TRUE)
+    endif()
+endforeach()
+if(NOT _hg_ovy45_original_found)
+    message(FATAL_ERROR
+        "OVY_45 source override failed: original member not located"
+    )
+endif()
+endif()
+
 set(overlay_archives)
+
+# HEARTGOLD_OVY45_NATIVE_GET_WORK_WRAPPER
+# Select the original C implementation through a native-only
+# translation-unit wrapper; leave the pinned checkout untouched.
+if("45" IN_LIST hg_selected_overlay_ids)
+    set(_hg_ovy45_get_work_original_found FALSE)
+    foreach(_hg_ovy45_source IN LISTS hg_overlay_45_sources)
+        if("${_hg_ovy45_source}" MATCHES
+           "(^|/)src/lobby/ppw_lobby_get_work[.]c$")
+            list(REMOVE_ITEM hg_overlay_45_sources "${_hg_ovy45_source}")
+            list(APPEND hg_overlay_45_sources
+                "${CMAKE_SOURCE_DIR}/native-adaptations/OVY_45/ppw_lobby_get_work_native.c")
+            set(_hg_ovy45_get_work_original_found TRUE)
+        endif()
+    endforeach()
+    if(NOT _hg_ovy45_get_work_original_found)
+        message(FATAL_ERROR
+            "OVY_45 native get-work wrapper: original member not found")
+    endif()
+endif()
+
 foreach(id IN LISTS hg_selected_overlay_ids)
     set(target ${hg_overlay_${id}_target})
     if(TARGET ${target})
@@ -207,3 +255,27 @@ add_test(NAME native_follow_data COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_follow_data.py")
 set_tests_properties(native_overlay_manifest native_overlay_data native_link_evidence native_follow_data
     PROPERTIES ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+
+
+# HEARTGOLD_OVY45_NATIVE_ITERATOR_ABI
+# Scope the original pointer-sized iterator ABI to one native C member.
+# Do not modify or relax the pinned Nintendo DS header.
+if(TARGET heartgold_overlay_45)
+    set_property(
+        SOURCE "${game_source}/src/lobby/ppw_lobby_get_work.c"
+        APPEND PROPERTY COMPILE_OPTIONS
+        "-include"
+        "${CMAKE_SOURCE_DIR}/native-adaptations/OVY_45/tree-iterator-native.h"
+    )
+endif()
+
+
+# HEARTGOLD_OVY45_TARGET_ITERATOR_ABI
+# OVY_45-wide native representation of the original DS iterator.
+# Only C/C++ translation units receive this header; assembly does not.
+# The pinned upstream sources and their DS assertions are unchanged.
+if(TARGET heartgold_overlay_45)
+    target_compile_options(heartgold_overlay_45 PRIVATE
+        "$<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:SHELL:-include ${CMAKE_SOURCE_DIR}/native-adaptations/OVY_45/tree-iterator-native.h>"
+    )
+endif()

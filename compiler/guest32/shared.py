@@ -14,19 +14,31 @@ import subprocess
 import sys
 
 from original_layout import MAIN_BASE, MAIN_SIZE
+from code_ids import allocate as allocate_code_addresses
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'cmake'))
 from native_data_layouts import contracts,validate_inputs
 from native_image_graph import parse_manifest
 
 
-def plan(catalogs):
+def plan(catalogs, previous=None):
     result = dict(images={}, globals={}, codes=[], register_edges=[])
+    previous = previous or {}
     occupied = []
     pending = []
     functions = {}
+    seen_register_edges = set()
     for owner, original in sorted(catalogs.items()):
         c = copy.deepcopy(original)
-        result['register_edges'].extend(c['register_edges'])
+        # Repeated identical original registration metadata is one edge.
+        # Distinct records remain visible to the lowerer's conflict checks.
+        for edge in c['register_edges']:
+            fingerprint = json.dumps(
+                edge, sort_keys=True, separators=(',', ':')
+            )
+            if fingerprint in seen_register_edges:
+                continue
+            seen_register_edges.add(fingerprint)
+            result['register_edges'].append(edge)
         assembly = c['original_assembly_globals']
         # C aliases are grouped by overlapping ORIGINAL-plan extents, never by
         # spelling or adjacency. Existing source-validated groups provide these.
@@ -39,14 +51,24 @@ def plan(catalogs):
             else:
                 groups.append(dict(start=start, end=end, views={key:view}))
         projected = {}
+        prior_views = previous.get('images', {}).get(owner, {}).get('c_globals', {})
         for group in groups:
             anchors = set()
+            pinned = set()
             for key, view in group['views'].items():
                 m = re.fullmatch(r'ov\d+_([0-9A-Fa-f]{8})', key)
                 if m:anchors.add(int(m[1],16) - (view['offset']-group['start']))
+                old = prior_views.get(key)
+                if old is not None:
+                    if old['size'] != view['size']:
+                        raise ValueError('changed guest C object extent: '+owner+' / '+key)
+                    pinned.add(old['offset'] - (view['offset']-group['start']))
             if len(anchors)>1:raise ValueError('inconsistent C address anchors: '+owner)
-            if anchors:
-                base=anchors.pop()
+            if len(pinned)>1:raise ValueError('inconsistent pinned C coordinates: '+owner)
+            if anchors and pinned and anchors != pinned:
+                raise ValueError('original anchor conflicts with pinned C storage: '+owner)
+            if anchors or pinned:
+                base=next(iter(anchors or pinned))
                 for key, view in group['views'].items():
                     projected[key]=dict(offset=base+view['offset']-group['start'],size=view['size'])
                 occupied.append((base,base+group['end']-group['start'],owner))
@@ -84,7 +106,8 @@ def plan(catalogs):
         for other_start,other_end,peer in occupied:
             if peer!=owner and start<other_end and other_start<end:
                 raise ValueError('overlapping image storage: '+owner+' / '+peer)
-    cursor=(max(end for _,end,_ in occupied)+15)&~15
+    cursor=(max([MAIN_BASE, *[end for _,end,_ in occupied],
+                 previous.get('static_end', MAIN_BASE)])+15)&~15
     for owner,group in pending:
         for key,view in group['views'].items():
             result['images'][owner]['c_globals'][key]=dict(offset=cursor+view['offset']-group['start'],size=view['size'])
@@ -95,8 +118,9 @@ def plan(catalogs):
             if '|' in name:continue
             if name in result['globals']:raise ValueError('multiple storage owners: '+name)
             result['globals'][name]=view
-    for i,key in enumerate(sorted(functions)):
-        f=functions[key];f['address']=0x10000000+4*i
+    code_addresses=allocate_code_addresses(functions, previous.get('codes', []))
+    for key in sorted(functions):
+        f=functions[key];f['address']=code_addresses[key]
         result['codes'].append(f)
     result['static_end']=cursor
     result['scope']='joint original data coordinates and relocatable C constants; separate explicit initializers; residency and native boundaries require admission'
@@ -107,6 +131,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('game','build','out','llvm-bin','lowerer'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--images',nargs='+',default=['OVY_0','OVY_38'])
+    p.add_argument('--prior-catalog',type=Path)
     a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     (a.out/'complete.stamp').unlink(missing_ok=True)
     driver=Path(__file__).with_name('image.py');archive=driver.with_name('archive.py')
@@ -116,7 +141,12 @@ def main():
         directory=a.out/owner
         subprocess.run([sys.executable,'-B',str(driver),*common,'--image',owner,'--out',str(directory),'--plan-only'],check=True)
         catalogs[owner]=json.loads((directory/'plan.json').read_text())
-    merged=plan(catalogs);catalog=a.out/'shared.json'
+    catalog=a.out/'shared.json'
+    prior_path=a.prior_catalog or catalog
+    if a.prior_catalog and not prior_path.is_file():
+        raise ValueError('prior shared catalog missing: '+str(prior_path))
+    previous=json.loads(prior_path.read_text()) if prior_path.is_file() else None
+    merged=plan(catalogs, previous)
     # These are native-layout blockers, not permission to widen guest memory.
     # Reuse their source guards while leaving native recipe admission blocked.
     guarded={}
@@ -133,7 +163,9 @@ def main():
         subprocess.run([sys.executable,'-B',str(archive),'--coverage',str(directory/'coverage.json'),
                         '--image-dir',str(directory),'--archive',str(directory/f'libheartgold_overlay_{manifest[owner]["id"]}.a'),
                         '--ar',str(a.llvm_bin/'llvm-ar'),'--image-name',owner],check=True)
-    dependencies={Path(__file__).resolve(),driver,archive,a.game.resolve()/'main.lsf'}
+    dependencies={Path(__file__).resolve(),Path(__file__).with_name('code_ids.py').resolve(),driver,archive,a.game.resolve()/'main.lsf'}
+    if a.prior_catalog and prior_path.resolve()!=catalog.resolve():
+        dependencies.add(prior_path.resolve())
     dependencies.update(a.game.resolve()/path for path in guarded)
     for receipt in a.out.rglob('*.receipt.json'):
         dependencies.update(Path(path) for path in json.loads(receipt.read_text())['inputs']

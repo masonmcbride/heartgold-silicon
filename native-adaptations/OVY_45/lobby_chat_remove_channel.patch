@@ -1,0 +1,91 @@
+diff --git a/src/lobby/lobby_chat_remove_channel.cpp b/src/lobby/lobby_chat_remove_channel.cpp
+index e0cb92964..56d7b6b43 100644
+--- a/src/lobby/lobby_chat_remove_channel.cpp
++++ b/src/lobby/lobby_chat_remove_channel.cpp
+@@ -3,8 +3,9 @@
+ #include <nitro/code32.h>
+ 
+ #include "lobby_cpp_types.h"
++#include "lobby_chat_manager.h"
++#include <cstddef>
+ 
+-struct Str;
+ struct SetNode;
+ 
+ struct SetIt {
+@@ -91,18 +92,10 @@ struct Vec {
+     }
+ };
+ 
+-struct MapNode {
+-    u8 pad[0x1c];
+-    u32 isize;
+-    SetNode *hdr;
+-    SetNode *first;
+-};
++using MapNode = LobbyChannelMapNode;
+ 
+-struct MapIt {
+-    MapNode *n;
+-};
+-struct Root;
+-typedef void (Root::*Method)(int);
++using Root = LobbyChatManager;
++typedef BOOL (*Method)(Root *, int);
+ 
+ struct MemberTable {
+     u32 header[2];
+@@ -111,18 +104,9 @@ struct MemberTable {
+ 
+ extern "C" const MemberTable ov45_02255358;
+ 
+-struct ChannelMap {
+-    u32 count;
+-    MapNode header;
+-};
+-
+-struct Root {
+-    u8 pad[0x80];
+-    ChannelMap channels;
+-};
++static_assert(sizeof(MemberTable) == 16, "Native callback record size");
++static_assert(offsetof(MemberTable, method) == 8, "Native callback offset");
+ 
+-extern "C" void LobbyChannelMap_Find(MapIt *, void *, Str *);
+-extern "C" void LobbyChannelMap_EraseKey(void *, Str *);
+ 
+ struct Bound {
+     Method m;
+@@ -134,7 +118,7 @@ struct Bound {
+     }
+ 
+     void operator()(int v) const {
+-        (obj->*m)(v);
++        (void)m(obj, v);
+     }
+ };
+ 
+@@ -149,14 +133,18 @@ inline F ForEach(It first, It last, F f) {
+ extern "C" BOOL LobbyChat_RemoveChannel(Root *root, Str *key);
+ 
+ extern "C" BOOL LobbyChat_RemoveChannel(Root *root, Str *key) {
+-    MapIt it;
+-    LobbyChannelMap_Find(&it, &root->channels, key);
+-    if (it.n == &root->channels.header) {
++    Iterator it;
++    LobbyChannelMap_Find(&it, &root->channelMap, key);
++    if (it.current == &root->channelMap.root) {
+         return FALSE;
+     }
+     Vec values;
+-    values.Build(SetIt(it.n->first), SetIt((SetNode *)&it.n->hdr));
+-    LobbyChannelMap_EraseKey(&root->channels, key);
++    LobbyUserIdSet *users = &static_cast<LobbyChannelMapNode *>(it.current)->entry.channel.users;
++    values.Build(
++        SetIt(reinterpret_cast<SetNode *>(users->first)),
++        SetIt(reinterpret_cast<SetNode *>(&users->root))
++    );
++    LobbyChannelMap_EraseKey(&root->channelMap, key);
+     ForEach(values.begin(), values.end(), Bound(ov45_02255358.method, root));
+     values.Destroy();
+     return TRUE;
