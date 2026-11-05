@@ -166,6 +166,87 @@ add_dependencies(hg_ovy0_wifi_subset
     fx_constants
     heartgold_overlay_link_contract)
 
+
+# Original NitroDWC OVY_0 state and two independently closed exports.
+# Preserve a single runtime instance of gDwcNetError across consumers.
+if("0" IN_LIST hg_selected_overlay_ids)
+    message(FATAL_ERROR
+        "NitroDWC status provider conflicts with complete OVY_0 ownership")
+endif()
+
+set(hg_dwc_status_storage
+    "${PROJECT_BINARY_DIR}/native-overlays/dwc_net_error_state.c")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/native-overlays")
+file(WRITE "${hg_dwc_status_storage}" [=[
+#include <stddef.h>
+#include <nitro/rtc.h>
+#include <dwc/net_common_internal.h>
+
+_Static_assert(sizeof(NetErrorState) == 8, "NetErrorState size");
+_Static_assert(_Alignof(NetErrorState) == 4, "NetErrorState alignment");
+_Static_assert(offsetof(NetErrorState, type) == 0, "error type offset");
+_Static_assert(offsetof(NetErrorState, code) == 4, "error code offset");
+
+NetErrorState gDwcNetError;
+]=])
+
+add_library(hg_dwc_status SHARED
+    "${native_root}/lib/NitroDWC/src/net_common.c"
+    "${hg_dwc_status_storage}")
+target_compile_definitions(hg_dwc_status PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
+target_include_directories(hg_dwc_status PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+target_compile_options(hg_dwc_status PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
+target_link_libraries(hg_dwc_status PRIVATE
+    nitro_config "${overlay_link_dir}/interfaces/main.tbd")
+target_link_options(hg_dwc_status PRIVATE
+    "LINKER:-dead_strip"
+    "LINKER:-exported_symbol,_DWC_ClearError"
+    "LINKER:-exported_symbol,_DWC_GetLinkLevel"
+    "LINKER:-exported_symbol,_DWCi_SetError"
+    "LINKER:-exported_symbol,_DWCi_IsError"
+    "LINKER:-exported_symbol,_DWC_GetLastErrorEx"
+    "LINKER:-exported_symbol,_DWC_GetLastError")
+set_target_properties(hg_dwc_status PROPERTIES
+    OUTPUT_NAME "heartgold_dwc_status"
+    LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
+    INSTALL_NAME_DIR "@rpath"
+    BUILD_WITH_INSTALL_NAME_DIR TRUE)
+add_dependencies(hg_dwc_status
+    heartgold_overlay_native_sources
+    heartgold_native_headers
+    fx_constants
+    heartgold_overlay_link_contract)
+
+set(hg_dwc_status_consumer_ids 12 39 45 73 75)
+
+# Original ARM9 Wireless Manager link-level implementation and native state.
+add_library(hg_wm_arm9 SHARED
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless/wm_arm9_provider.c")
+target_compile_definitions(hg_wm_arm9 PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
+target_include_directories(hg_wm_arm9 PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+target_compile_options(hg_wm_arm9 PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
+target_link_libraries(hg_wm_arm9 PRIVATE
+    nitro_config "${overlay_link_dir}/interfaces/main.tbd")
+target_link_options(hg_wm_arm9 PRIVATE
+    "LINKER:-dead_strip"
+    "LINKER:-exported_symbol,_WM_GetLinkLevel")
+set_target_properties(hg_wm_arm9 PROPERTIES
+    OUTPUT_NAME "heartgold_wm_arm9"
+    LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
+    INSTALL_NAME_DIR "@rpath"
+    BUILD_WITH_INSTALL_NAME_DIR TRUE)
+add_dependencies(hg_wm_arm9
+    heartgold_native_headers
+    fx_constants
+    heartgold_overlay_link_contract)
+
+
 set(hg_native_image_targets)
 set(hg_native_binding_args)
 set(hg_native_binding_dependencies)
@@ -186,6 +267,12 @@ foreach(id IN LISTS hg_selected_overlay_ids)
     if(id EQUAL 80)
         target_link_libraries(heartgold_image_80 PRIVATE
             hg_ovy0_wifi_subset)
+    endif()
+    if(id IN_LIST hg_dwc_status_consumer_ids)
+        target_link_libraries(heartgold_image_${id} PRIVATE hg_dwc_status)
+    endif()
+    if(id EQUAL 12)
+        target_link_libraries(heartgold_image_12 PRIVATE hg_wm_arm9)
     endif()
     add_custom_command(TARGET heartgold_image_${id} POST_BUILD
         COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_preflight.py"

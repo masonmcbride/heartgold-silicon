@@ -5,7 +5,7 @@ project(heartgold_silicon LANGUAGES C CXX)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d94f9137ced9db12d9ce827a8127c97b779bbeb)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT 4cfdd66fdca9a1f8f8e6688799f927c7fe3c3700)
+set(LIBNTR_COMMIT 51c868593a7098b6912406d4638b990d28916a76)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"
@@ -295,3 +295,45 @@ target_link_libraries(test_g3_native PRIVATE nitro_sdk)
 target_compile_options(test_g3_native PRIVATE -UNDEBUG)
 add_test(NAME native_g3_commands_metal COMMAND test_g3_native)
 set_tests_properties(native_g3_commands_metal PROPERTIES TIMEOUT 30)
+
+
+# HEARTGOLD_NATIVE_MIC_PROVIDER_V1
+if(TARGET ntr_spi AND APPLE)
+    get_target_property(_hg_spi_sources ntr_spi SOURCES)
+    if(NOT _hg_spi_sources)
+        message(FATAL_ERROR "ntr_spi has no source list")
+    endif()
+
+    set(_hg_spi_kept_sources "")
+    set(_hg_spi_removed 0)
+
+    foreach(_hg_source IN LISTS _hg_spi_sources)
+        if(_hg_source MATCHES "(^|/)libraries/spi/src/mic\\.c$")
+            math(EXPR _hg_spi_removed "${_hg_spi_removed} + 1")
+        else()
+            list(APPEND _hg_spi_kept_sources "${_hg_source}")
+        endif()
+    endforeach()
+
+    if(NOT _hg_spi_removed EQUAL 1)
+        message(FATAL_ERROR
+            "Expected one original ntr_spi mic.c source; found ${_hg_spi_removed}")
+    endif()
+
+    set_property(TARGET ntr_spi PROPERTY
+        SOURCES "${_hg_spi_kept_sources}")
+
+    target_sources(ntr_spi PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio/hg_mic_spi.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio/hg_mic_capture.c")
+
+    target_include_directories(ntr_spi PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio")
+
+    target_link_libraries(ntr_spi PUBLIC
+        "-framework AudioToolbox"
+        "-framework CoreAudio"
+        "-framework CoreFoundation")
+
+    message(STATUS "HeartGold native Core Audio MIC provider selected")
+endif()

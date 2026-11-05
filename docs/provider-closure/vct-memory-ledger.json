@@ -1,0 +1,1845 @@
+{
+  "conflicts": [
+    {
+      "declarations": [
+        {
+          "source": "lib/libVCT/src/vct_audio.c",
+          "type": "u16"
+        },
+        {
+          "source": "lib/libVCT/src/vct_audio_send.c",
+          "type": "AudioPool"
+        }
+      ],
+      "id": "vct.audio._021D6040.incompatible_views",
+      "kind": "cross-translation-unit-type-conflict",
+      "repair": "Source-validated mapping to real audio globals; preserve original algorithm",
+      "status": "unresolved",
+      "symbol": "__021D6040"
+    }
+  ],
+  "definitions": {
+    "_VCT_AddConferenceClient": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_VCT_Cleanup": [
+      {
+        "kind": "T",
+        "member": "vct_main.c.o"
+      }
+    ],
+    "_VCT_CreateSession": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_VCT_DeleteSession": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_VCT_EnableEchoCancel": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_EnableVAD": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_GetVADInfo": [
+      {
+        "kind": "T",
+        "member": "vct_vad.c.o"
+      }
+    ],
+    "_VCT_HandleData": [
+      {
+        "kind": "T",
+        "member": "vct_main.c.o"
+      }
+    ],
+    "_VCT_Init": [
+      {
+        "kind": "T",
+        "member": "vct_main.c.o"
+      }
+    ],
+    "_VCT_Main": [
+      {
+        "kind": "T",
+        "member": "vct_main.c.o"
+      }
+    ],
+    "_VCT_ReceiveAudio": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_Request": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_VCT_ResetVAD": [
+      {
+        "kind": "T",
+        "member": "vct_vad.c.o"
+      }
+    ],
+    "_VCT_Response": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_VCT_SendAudio": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_SetCodec": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_StartStreaming": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_VCT_StopStreaming": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_gVctAudioQueueCount": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctAudioQueueHead": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctAudioQueueTail": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctControl": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctDecoderCount": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctDecoderList": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctPacketBuffers": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctRejectSession": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctServerSession": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctSsp": [
+      {
+        "kind": "B",
+        "member": "vct_native_bss.S.o"
+      }
+    ],
+    "_gVctVadThreshold": [
+      {
+        "kind": "S",
+        "member": "vct_vad.c.o"
+      }
+    ],
+    "_sSendInfo": [
+      {
+        "kind": "S",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_add_notify_aid_list": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_alloc_packet_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_packet_buffer.c.o"
+      }
+    ],
+    "_vct_build_request_data": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_build_response_data": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_build_ssp_header": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_calc_jitter_and_skew": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_check_multisession": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_check_recv_state": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_check_send_state": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_check_timeout": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_cleanup_packet_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_packet_buffer.c.o"
+      }
+    ],
+    "_vct_count_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_count_decoder_queue": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_create_session_impl": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_decode_8bit_raw": [
+      {
+        "kind": "T",
+        "member": "vct_codec.c.o"
+      }
+    ],
+    "_vct_decode_adpcm": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_decode_adpcm_16": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_decode_adpcm_24": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_decode_adpcm_32": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_decode_audio_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_decode_g711_ulaw": [
+      {
+        "kind": "T",
+        "member": "vct_codec.c.o"
+      }
+    ],
+    "_vct_dispatch_session": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_encode_8bit_raw": [
+      {
+        "kind": "T",
+        "member": "vct_codec.c.o"
+      }
+    ],
+    "_vct_encode_adpcm": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_encode_adpcm_16": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_encode_adpcm_24": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_encode_adpcm_32": [
+      {
+        "kind": "T",
+        "member": "vct_adpcm.c.o"
+      }
+    ],
+    "_vct_encode_g711_ulaw": [
+      {
+        "kind": "T",
+        "member": "vct_codec.c.o"
+      }
+    ],
+    "_vct_find_session": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_finish_audio": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_finish_ssp": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_flush_all_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_flush_all_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_flush_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_flush_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_flush_send_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_audio_send.c.o"
+      }
+    ],
+    "_vct_free_packet_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_packet_buffer.c.o"
+      }
+    ],
+    "_vct_get_packet_from_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_handle_audio": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_handle_notify": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_handle_ssp": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_handle_ssp_client": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_handle_ssp_server": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_init_audio": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_init_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_init_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_init_packet_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_packet_buffer.c.o"
+      }
+    ],
+    "_vct_init_sequence": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_init_session": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_init_ssp": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_init_stream": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_init_vad": [
+      {
+        "kind": "T",
+        "member": "vct_vad.c.o"
+      }
+    ],
+    "_vct_insert_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_insert_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_mix_audio": [
+      {
+        "kind": "T",
+        "member": "vct_mix.c.o"
+      }
+    ],
+    "_vct_pop_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_prepare_send_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_audio.c.o"
+      }
+    ],
+    "_vct_process_fir": [
+      {
+        "kind": "T",
+        "member": "vct_fir.c.o"
+      }
+    ],
+    "_vct_remove_packet_from_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_request_impl": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_reset_stream": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_response_impl": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_response_reject": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_save_previous_buffer": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_send_notify": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_send_notify_impl": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_send_ssp": [
+      {
+        "kind": "T",
+        "member": "vct_ssp.c.o"
+      }
+    ],
+    "_vct_set_speaker_samples": [
+      {
+        "kind": "T",
+        "member": "vct_fir.c.o"
+      }
+    ],
+    "_vct_top_audio_queue": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ],
+    "_vct_top_decoder": [
+      {
+        "kind": "T",
+        "member": "vct_decoder.c.o"
+      }
+    ],
+    "_vct_update_sequence": [
+      {
+        "kind": "T",
+        "member": "vct_audio_queue.c.o"
+      }
+    ]
+  },
+  "members": {
+    "lib/asm/vct_bss.o": {
+      "archive_member_count": 0,
+      "conversion": "unavailable assembly representation",
+      "native_exists": false,
+      "native_source": null,
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {}
+    },
+    "lib/asm/vct_control_bss.o": {
+      "archive_member_count": 0,
+      "conversion": "unavailable assembly representation",
+      "native_exists": false,
+      "native_source": null,
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {}
+    },
+    "lib/asm/vct_data.o": {
+      "archive_member_count": 1,
+      "conversion": "source-validated data",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/build/native-data/lib/asm/vct_data.S",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/asm/vct_data.s": "303a679ef5271fd0396254933558a5e744398e05e61201e70931347a63a04569"
+      }
+    },
+    "lib/libVCT/src/vct_adpcm.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_adpcm.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_adpcm.c": "861f2ce161bb1e145be7fb54e79c7c8b03b79119bda0b826528270ec784b271b"
+      }
+    },
+    "lib/libVCT/src/vct_audio.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_audio.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_audio.c": "218f336119fe79569f1f805cd0ee1a9c0b3a8b44e3cde4c72650bdc603cc24bc"
+      }
+    },
+    "lib/libVCT/src/vct_audio_queue.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_audio_queue.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_audio_queue.c": "693c97808ea81043abc22686fe80854c9c1aa7ee139bd15010eb6322e7a11355"
+      }
+    },
+    "lib/libVCT/src/vct_audio_send.o": {
+      "archive_member_count": 1,
+      "conversion": "validated C adaptation",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/build/native/lib/libVCT/src/vct_audio_send.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_audio_send.c": "925b1058ca37e30a683064296d33b7b6c8e78c565e3bd6e163a39c0631806122"
+      }
+    },
+    "lib/libVCT/src/vct_codec.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_codec.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_codec.c": "be5fca355bee58351e33f485e239061face9c5c221de3abfc511173351f0bd77"
+      }
+    },
+    "lib/libVCT/src/vct_decoder.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_decoder.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_decoder.c": "b9322919e5ce53f2b30d1a0293e736a9e597b4dd2119090de1be0ca32570d4df"
+      }
+    },
+    "lib/libVCT/src/vct_fir.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_fir.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_fir.c": "de55e3caf104013b0011755f3df01976652e8aec93f3ab686b67ea60b5fdc4cc"
+      }
+    },
+    "lib/libVCT/src/vct_main.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_main.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_main.c": "02120e7a5c09a97520e9a037e1343abec569272068ea8adff1705396240ee21d"
+      }
+    },
+    "lib/libVCT/src/vct_mix.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_mix.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_mix.c": "853204b952f69915e25abb076b43d3ecafa24a7074c3f8c8501100f395457189"
+      }
+    },
+    "lib/libVCT/src/vct_packet_buffer.o": {
+      "archive_member_count": 1,
+      "conversion": "validated C adaptation",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/build/native/lib/libVCT/src/vct_packet_buffer.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_packet_buffer.c": "c7788d610db1c84aa061aaae0a003d44d501b71ffa36c2facab234ff847c54d3"
+      }
+    },
+    "lib/libVCT/src/vct_ssp.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_ssp.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_ssp.c": "1dc2ab85220f667575627b3b4455b2399011fe34cc41fca3fc6dd53fdc424a1c"
+      }
+    },
+    "lib/libVCT/src/vct_vad.o": {
+      "archive_member_count": 1,
+      "conversion": "original C",
+      "native_exists": true,
+      "native_source": "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/lib/libVCT/src/vct_vad.c",
+      "owners": [
+        "main"
+      ],
+      "source_hashes": {
+        "lib/libVCT/src/vct_vad.c": "53951299032d28c65cf8e58333a0ab4bf1e65ea9c4103cf90bf132f6a17064f3"
+      }
+    }
+  },
+  "memory_constraints": {
+    "audio_pool": {
+      "mapping_edges": [
+        {
+          "candidate_target": "sSendInfo.packet",
+          "consumer_count": 4,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 46,
+              "text": "if (!_021D6040.sendPacket) {"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 49,
+              "text": "_021D6040.sendPacket = packet;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 70,
+              "text": "DWC_SendUnreliable((u8)(31 - leading), _021D6040.sendPacket, _021D6040.packetSize);"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 73,
+              "text": "_021D6040.sendPacket = NULL;"
+            }
+          ],
+          "legacy_access": "_021D6040.sendPacket",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 54,
+              "text": "sSendInfo.packet = NULL;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 113,
+              "text": "sSendInfo.packet = NULL;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        },
+        {
+          "candidate_target": "sSendInfo.mask",
+          "consumer_count": 4,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 63,
+              "text": "u32 mask = _021D6040.sendMask;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 69,
+              "text": "_021D6040.sendMask = mask & ~(0x80000000u >> leading);"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 71,
+              "text": "if (!_021D6040.sendMask) {"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 74,
+              "text": "_021D6040.sendMask = 0;"
+            }
+          ],
+          "legacy_access": "_021D6040.sendMask",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 53,
+              "text": "sSendInfo.mask = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 112,
+              "text": "sSendInfo.mask = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 401,
+              "text": "sSendInfo.mask = mask;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 403,
+              "text": "sSendInfo.mask = mask;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        },
+        {
+          "candidate_target": "sSendInfo.read",
+          "consumer_count": 1,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 72,
+              "text": "_021D6040.sendRead++;"
+            }
+          ],
+          "legacy_access": "_021D6040.sendRead",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 51,
+              "text": "sSendInfo.read = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 110,
+              "text": "sSendInfo.read = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 332,
+              "text": "pending = sSendInfo.write - sSendInfo.read;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 334,
+              "text": "sSendInfo.read = sSendInfo.write - 1;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 340,
+              "text": "packet = (AudioHeader *)(sSendInfo.buffer + ((sSendInfo.read & 1) ? 0 : 0x460));"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 360,
+              "text": "sSendInfo.read++;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        },
+        {
+          "candidate_target": "sSendInfo.write",
+          "consumer_count": 0,
+          "consumer_evidence": [],
+          "legacy_access": "_021D6040.sendWrite",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 52,
+              "text": "sSendInfo.write = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 111,
+              "text": "sSendInfo.write = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 166,
+              "text": "send = (AudioHeader *)(sSendInfo.buffer + ((sSendInfo.write & 1) ? 0 : 0x460));"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 180,
+              "text": "sSendInfo.write++;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 332,
+              "text": "pending = sSendInfo.write - sSendInfo.read;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 334,
+              "text": "sSendInfo.read = sSendInfo.write - 1;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "declared-unused"
+        },
+        {
+          "candidate_target": "sSendInfo.balanceIndex",
+          "consumer_count": 2,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 57,
+              "text": "u32 slot = _021D6040.sendSlot;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 59,
+              "text": "_021D6040.sendSlot = slot + 1;"
+            }
+          ],
+          "legacy_access": "_021D6040.sendSlot",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 55,
+              "text": "sSendInfo.balanceIndex = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 114,
+              "text": "sSendInfo.balanceIndex = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 409,
+              "text": "sSendInfo.balanceIndex = 0;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        },
+        {
+          "candidate_target": "sSendInfo.balance",
+          "consumer_count": 1,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 60,
+              "text": "limit = sTransceiverBalance[_021D6040.sendBalance][slot];"
+            }
+          ],
+          "legacy_access": "_021D6040.sendBalance",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 56,
+              "text": "sSendInfo.balance = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 115,
+              "text": "sSendInfo.balance = 0;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 404,
+              "text": "sSendInfo.balance = MATH_CountPopulation(mask) - 1;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 406,
+              "text": "if (sSendInfo.balance > 7) {"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        },
+        {
+          "candidate_target": "sAudioPacketSize",
+          "consumer_count": 1,
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 70,
+              "text": "DWC_SendUnreliable((u8)(31 - leading), _021D6040.sendPacket, _021D6040.packetSize);"
+            }
+          ],
+          "legacy_access": "_021D6040.packetSize",
+          "producer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 14,
+              "text": "static u32 sAudioPacketSize;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 50,
+              "text": "sAudioPacketSize = ((const Codec *)sCodecInfo)[sAudioCodec].blocks * 0x44 + ((const Codec *)sCodecInfo)[sAudioCodec].header + AUDIO_HEADER_SIZE;"
+            },
+            {
+              "file": "lib/libVCT/src/vct_audio.c",
+              "line": 306,
+              "text": "sAudioPacketSize = sCodecInfo[codec].blocks * 0x44 + sCodecInfo[codec].header + AUDIO_HEADER_SIZE;"
+            }
+          ],
+          "requires": [
+            "source-validated storage identity",
+            "type and field-width compatibility",
+            "equivalent read/write behavior",
+            "native runtime validation"
+          ],
+          "status": "candidate"
+        }
+      ],
+      "native_consumer": "lib/libVCT/src/vct_audio_send.c",
+      "native_producer": "lib/libVCT/src/vct_audio.c",
+      "original_owner": "main",
+      "status": "incomplete",
+      "storage_candidates": [
+        {
+          "declaration_line": 10,
+          "evidence": [
+            {
+              "line": 9,
+              "text": "// files reach parts of it through _021D6040 + offset.",
+              "write_candidate": false
+            },
+            {
+              "line": 39,
+              "text": "_021D6040 = OS_GetTickLo();",
+              "write_candidate": true
+            },
+            {
+              "line": 106,
+              "text": "_021D6040 = OS_GetTickLo();",
+              "write_candidate": true
+            },
+            {
+              "line": 174,
+              "text": "u16 sequence = _021D6040;",
+              "write_candidate": false
+            },
+            {
+              "line": 176,
+              "text": "_021D6040 = sequence + 1;",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "_021D6040"
+        },
+        {
+          "declaration_line": 11,
+          "evidence": [
+            {
+              "line": 357,
+              "text": "sAudioVad = status;",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioVad"
+        },
+        {
+          "declaration_line": 12,
+          "evidence": [
+            {
+              "line": 109,
+              "text": "sAudioReset = 1;",
+              "write_candidate": true
+            },
+            {
+              "line": 138,
+              "text": "sAudioReset = 1;",
+              "write_candidate": true
+            },
+            {
+              "line": 380,
+              "text": "if (sAudioReset) {",
+              "write_candidate": false
+            },
+            {
+              "line": 384,
+              "text": "sAudioReset = zero;",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioReset"
+        },
+        {
+          "declaration_line": 13,
+          "evidence": [
+            {
+              "line": 293,
+              "text": "if (sAudioEcho) {",
+              "write_candidate": false
+            },
+            {
+              "line": 322,
+              "text": "sAudioEcho = enable;",
+              "write_candidate": true
+            },
+            {
+              "line": 351,
+              "text": "if (sAudioEcho) {",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioEcho"
+        },
+        {
+          "declaration_line": 14,
+          "evidence": [
+            {
+              "line": 50,
+              "text": "sAudioPacketSize = ((const Codec *)sCodecInfo)[sAudioCodec].blocks * 0x44 + ((const Codec *)sCodecInfo)[sAudioCodec].header + AUDIO_HEADER_SIZE;",
+              "write_candidate": true
+            },
+            {
+              "line": 306,
+              "text": "sAudioPacketSize = sCodecInfo[codec].blocks * 0x44 + sCodecInfo[codec].header + AUDIO_HEADER_SIZE;",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioPacketSize"
+        },
+        {
+          "declaration_line": 15,
+          "evidence": [
+            {
+              "line": 42,
+              "text": "sAudioMask = 0;",
+              "write_candidate": true
+            },
+            {
+              "line": 98,
+              "text": "sAudioMask |= s->mask;",
+              "write_candidate": true
+            },
+            {
+              "line": 131,
+              "text": "sAudioMask &= ~session->mask;",
+              "write_candidate": true
+            },
+            {
+              "line": 140,
+              "text": "sAudioMask = 0;",
+              "write_candidate": true
+            },
+            {
+              "line": 400,
+              "text": "u32 mask = sAudioMask;",
+              "write_candidate": false
+            },
+            {
+              "line": 449,
+              "text": "if (!(sAudioMask & (sender ? (1 << sender) : 1))) {",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioMask"
+        },
+        {
+          "declaration_line": 16,
+          "evidence": [
+            {
+              "line": 107,
+              "text": "sAdpcmState.sample = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 108,
+              "text": "sAdpcmState.index = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 308,
+              "text": "sAdpcmState.sample = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 309,
+              "text": "sAdpcmState.index = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 390,
+              "text": "sAdpcmState.sample = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 391,
+              "text": "sAdpcmState.index = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 393,
+              "text": "vct_encode_adpcm((u8 *)audio - sizeof(AdpcmState), (s16 *)audio, sAudioSize >> 1, &sAdpcmState, mode);",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAdpcmState"
+        },
+        {
+          "declaration_line": 17,
+          "evidence": [
+            {
+              "line": 317,
+              "text": "sAudioFlag = 1;",
+              "write_candidate": true
+            },
+            {
+              "line": 372,
+              "text": "if (!sEnableVAD && sAudioFlag) {",
+              "write_candidate": false
+            },
+            {
+              "line": 376,
+              "text": "sAudioFlag = zero;",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioFlag"
+        },
+        {
+          "declaration_line": 18,
+          "evidence": [
+            {
+              "line": 44,
+              "text": "sAudioCodec = 0;",
+              "write_candidate": true
+            },
+            {
+              "line": 46,
+              "text": "sAudioCodec = 4;",
+              "write_candidate": true
+            },
+            {
+              "line": 50,
+              "text": "sAudioPacketSize = ((const Codec *)sCodecInfo)[sAudioCodec].blocks * 0x44 + ((const Codec *)sCodecInfo)[sAudioCodec].header + AUDIO_HEADER_SIZE;",
+              "write_candidate": false
+            },
+            {
+              "line": 168,
+              "text": "if (sAudioCodec >= 2) {",
+              "write_candidate": false
+            },
+            {
+              "line": 307,
+              "text": "sAudioCodec = codec;",
+              "write_candidate": true
+            },
+            {
+              "line": 331,
+              "text": "mode = sAudioCodec;",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioCodec"
+        },
+        {
+          "declaration_line": 19,
+          "evidence": [
+            {
+              "line": 41,
+              "text": "sAudioSessions = 0;",
+              "write_candidate": true
+            },
+            {
+              "line": 67,
+              "text": "sAudioSessions = 0;",
+              "write_candidate": true
+            },
+            {
+              "line": 79,
+              "text": "if (sAudioSessions == 3) {",
+              "write_candidate": false
+            },
+            {
+              "line": 97,
+              "text": "sAudioSessions++;",
+              "write_candidate": true
+            },
+            {
+              "line": 104,
+              "text": "if (sAudioSessions == 1) {",
+              "write_candidate": false
+            },
+            {
+              "line": 127,
+              "text": "sAudioSessions--;",
+              "write_candidate": true
+            },
+            {
+              "line": 135,
+              "text": "if (sAudioSessions != 0) {",
+              "write_candidate": false
+            },
+            {
+              "line": 154,
+              "text": "if (!sAudioSessions) {",
+              "write_candidate": false
+            },
+            {
+              "line": 268,
+              "text": "if (size == sAudioSize && sAudioSessions) {",
+              "write_candidate": false
+            },
+            {
+              "line": 420,
+              "text": "if (!sAudioSessions) {",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioSessions"
+        },
+        {
+          "declaration_line": 20,
+          "evidence": [
+            {
+              "line": 48,
+              "text": "sAudioSize = 0x440;",
+              "write_candidate": true
+            },
+            {
+              "line": 151,
+              "text": "if (size != sAudioSize) {",
+              "write_candidate": false
+            },
+            {
+              "line": 268,
+              "text": "if (size == sAudioSize && sAudioSessions) {",
+              "write_candidate": false
+            },
+            {
+              "line": 345,
+              "text": "power = HPFFilter((s16 *)audio, sAudioSize);",
+              "write_candidate": false
+            },
+            {
+              "line": 352,
+              "text": "vct_process_fir(audio, sAudioSize, root);",
+              "write_candidate": false
+            },
+            {
+              "line": 393,
+              "text": "vct_encode_adpcm((u8 *)audio - sizeof(AdpcmState), (s16 *)audio, sAudioSize >> 1, &sAdpcmState, mode);",
+              "write_candidate": false
+            },
+            {
+              "line": 395,
+              "text": "vct_encode_g711_ulaw((u8 *)audio, (s16 *)audio, sAudioSize >> 1);",
+              "write_candidate": false
+            },
+            {
+              "line": 397,
+              "text": "vct_encode_8bit_raw((u8 *)audio, (s16 *)audio, sAudioSize >> 1);",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sAudioSize"
+        },
+        {
+          "declaration_line": 23,
+          "evidence": [
+            {
+              "line": 281,
+              "text": "if (VCTi_ReceiveAudioData(_021D6234, size, j, mask) == 1) {",
+              "write_candidate": false
+            },
+            {
+              "line": 282,
+              "text": "vct_mix_audio(data, (s16 *)_021D6234, data, size);",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "_021D6234"
+        },
+        {
+          "declaration_line": 24,
+          "evidence": [
+            {
+              "line": 51,
+              "text": "sSendInfo.read = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 52,
+              "text": "sSendInfo.write = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 53,
+              "text": "sSendInfo.mask = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 54,
+              "text": "sSendInfo.packet = NULL;",
+              "write_candidate": false
+            },
+            {
+              "line": 55,
+              "text": "sSendInfo.balanceIndex = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 56,
+              "text": "sSendInfo.balance = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 110,
+              "text": "sSendInfo.read = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 111,
+              "text": "sSendInfo.write = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 112,
+              "text": "sSendInfo.mask = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 113,
+              "text": "sSendInfo.packet = NULL;",
+              "write_candidate": false
+            },
+            {
+              "line": 114,
+              "text": "sSendInfo.balanceIndex = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 115,
+              "text": "sSendInfo.balance = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 166,
+              "text": "send = (AudioHeader *)(sSendInfo.buffer + ((sSendInfo.write & 1) ? 0 : 0x460));",
+              "write_candidate": false
+            },
+            {
+              "line": 180,
+              "text": "sSendInfo.write++;",
+              "write_candidate": false
+            },
+            {
+              "line": 332,
+              "text": "pending = sSendInfo.write - sSendInfo.read;",
+              "write_candidate": false
+            },
+            {
+              "line": 334,
+              "text": "sSendInfo.read = sSendInfo.write - 1;",
+              "write_candidate": false
+            },
+            {
+              "line": 340,
+              "text": "packet = (AudioHeader *)(sSendInfo.buffer + ((sSendInfo.read & 1) ? 0 : 0x460));",
+              "write_candidate": false
+            },
+            {
+              "line": 360,
+              "text": "sSendInfo.read++;",
+              "write_candidate": false
+            },
+            {
+              "line": 401,
+              "text": "sSendInfo.mask = mask;",
+              "write_candidate": false
+            },
+            {
+              "line": 403,
+              "text": "sSendInfo.mask = mask;",
+              "write_candidate": false
+            },
+            {
+              "line": 404,
+              "text": "sSendInfo.balance = MATH_CountPopulation(mask) - 1;",
+              "write_candidate": false
+            },
+            {
+              "line": 406,
+              "text": "if (sSendInfo.balance > 7) {",
+              "write_candidate": false
+            },
+            {
+              "line": 409,
+              "text": "sSendInfo.balanceIndex = 0;",
+              "write_candidate": false
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "sSendInfo"
+        },
+        {
+          "declaration_line": 27,
+          "evidence": [
+            {
+              "line": 28,
+              "text": "for (i = 0; i < 3; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 29,
+              "text": "sAudioSession[i] = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 30,
+              "text": "vct_init_audio_queue(i);",
+              "write_candidate": false
+            },
+            {
+              "line": 31,
+              "text": "vct_init_stream(&sStream[i], i, (u32)-1);",
+              "write_candidate": false
+            },
+            {
+              "line": 74,
+              "text": "u32 i;",
+              "write_candidate": false
+            },
+            {
+              "line": 86,
+              "text": "for (i = 0; i < n; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 87,
+              "text": "if (sAudioSession[i] == s) {",
+              "write_candidate": false
+            },
+            {
+              "line": 91,
+              "text": "for (i = 0; i < n; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 92,
+              "text": "if (sAudioSession[i] == 0) {",
+              "write_candidate": false
+            },
+            {
+              "line": 93,
+              "text": "sAudioSession[i] = s;",
+              "write_candidate": false
+            },
+            {
+              "line": 99,
+              "text": "vct_init_stream(&sStream[i], i, s->other);",
+              "write_candidate": false
+            },
+            {
+              "line": 100,
+              "text": "vct_init_audio_queue(i);",
+              "write_candidate": false
+            },
+            {
+              "line": 123,
+              "text": "u32 i;",
+              "write_candidate": false
+            },
+            {
+              "line": 124,
+              "text": "for (i = 0; i < 3; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 125,
+              "text": "if (sAudioSession[i] == session) {",
+              "write_candidate": false
+            },
+            {
+              "line": 126,
+              "text": "sAudioSession[i] = 0;",
+              "write_candidate": false
+            },
+            {
+              "line": 128,
+              "text": "vct_reset_stream(&sStream[i]);",
+              "write_candidate": false
+            },
+            {
+              "line": 129,
+              "text": "vct_flush_audio_queue(i);",
+              "write_candidate": false
+            },
+            {
+              "line": 130,
+              "text": "vct_flush_decoder(i);",
+              "write_candidate": false
+            },
+            {
+              "line": 148,
+              "text": "register u32 i;",
+              "write_candidate": false
+            },
+            {
+              "line": 157,
+              "text": "for (i = 0; i < 3; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 158,
+              "text": "if (sAudioSession[i] && sAudioSession[i]->mode == 2) {",
+              "write_candidate": false
+            },
+            {
+              "line": 262,
+              "text": "u32 i, j;",
+              "write_candidate": false
+            },
+            {
+              "line": 269,
+              "text": "for (i = 0; i < 3; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 270,
+              "text": "if (VCTi_ReceiveAudioData(data, size, i, mask) == 1) {",
+              "write_candidate": false
+            },
+            {
+              "line": 276,
+              "text": "j = i + 1;",
+              "write_candidate": false
+            },
+            {
+              "line": 417,
+              "text": "u32 i;",
+              "write_candidate": false
+            },
+            {
+              "line": 423,
+              "text": "for (i = 0; i < 3; i++) {",
+              "write_candidate": true
+            },
+            {
+              "line": 424,
+              "text": "if (sender == sStream[i].session) {",
+              "write_candidate": false
+            },
+            {
+              "line": 425,
+              "text": "stream = &sStream[i];",
+              "write_candidate": false
+            },
+            {
+              "line": 486,
+              "text": "int i, count, owner;",
+              "write_candidate": false
+            },
+            {
+              "line": 495,
+              "text": "for (i = 0; i < count; i++) {",
+              "write_candidate": true
+            }
+          ],
+          "status": "unresolved-candidate",
+          "symbol": "i"
+        }
+      ],
+      "unresolved_fields": [
+        {
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 50,
+              "text": "if (packet && _021D6040.unk_18) {"
+            }
+          ],
+          "legacy_access": "_021D6040.unk_18",
+          "reason": "No verified native storage identity",
+          "status": "unresolved"
+        },
+        {
+          "consumer_evidence": [
+            {
+              "file": "lib/libVCT/src/vct_audio_send.c",
+              "line": 43,
+              "text": "if (!_021D6040.unk_20) {"
+            }
+          ],
+          "legacy_access": "_021D6040.unk_20",
+          "reason": "No verified native storage identity",
+          "status": "unresolved"
+        }
+      ]
+    }
+  },
+  "native_bss_offsets": {
+    "___vct": 280,
+    "_gVctAudioQueueCount": 56,
+    "_gVctAudioQueueHead": 32,
+    "_gVctAudioQueueTail": 72,
+    "_gVctControl": 224,
+    "_gVctDecoderCount": 16,
+    "_gVctDecoderList": 0,
+    "_gVctPacketBuffers": 208,
+    "_gVctRejectSession": 144,
+    "_gVctServerSession": 176,
+    "_gVctSsp": 96,
+    "_hg_vct_arena_end": 320,
+    "ltmp0": 0,
+    "ltmp1": 0
+  },
+  "original_manifest": "upstream/pokeheartgold/main.lsf",
+  "schema": 1,
+  "scope": "original main-owned libVCT",
+  "unknowns": [
+    "AudioPool unk_18 / unk_20 source-validated mapping",
+    "Native shared audio-state layout across translation units",
+    "VCT_Init pointer-alignment cast and lifecycle",
+    "Runtime heap allocation and pointer lifetime relationships",
+    "Graph representations of original VCT BSS members"
+  ]
+}

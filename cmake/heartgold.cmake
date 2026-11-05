@@ -64,7 +64,7 @@ set(native_headers
     lib/include/dwc/http_internal.h lib/include/dwc/chat_internal.h
     src/comm_state_private.h include/orbit_cursor.h include/field/field_fog.h
     include/drawing_session_link_internal.h include/record_mixing/record_mixing_link_internal.h
-    lib/include/nitro/os/printf.h lib/include/vct/vct_audio_internal.h
+    include/voice_chat.h lib/include/nitro/os/printf.h lib/include/vct/vct_audio_internal.h
     lib/include/nitro/wm/wm_internal.h lib/include/nitro/os/ownerInfo.h
     lib/include/nnsys/g3d_render_internal.h lib/include/nnsys/snd_internal.h
     lib/include/nnsys/snd_arc_internal.h lib/include/nnsys/snd_arc_strm_internal.h
@@ -236,6 +236,55 @@ add_test(NAME coordinated_sources COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_coordinated_sources.py")
 
 add_library(heartgold_main STATIC ${game_sources})
+# Native implementation of the original main-owned VCT packet allocator.
+# The generated C retains the original free-list algorithm with ARM64 slot geometry.
+# Fail closed if the original or adapted member has already entered game_sources.
+list(FIND game_sources
+    "${game_source}/lib/libVCT/src/vct_packet_buffer.c" hg_vct_original_index)
+list(FIND game_sources
+    "${native_root}/lib/libVCT/src/vct_packet_buffer.c" hg_vct_native_index)
+if(NOT hg_vct_original_index EQUAL -1 OR NOT hg_vct_native_index EQUAL -1)
+    message(FATAL_ERROR "VCT packet allocator already owned by heartgold_main")
+endif()
+target_sources(heartgold_main PRIVATE
+    "${native_root}/lib/libVCT/src/vct_packet_buffer.c")
+# Permanent native storage for the two original main-owned VCT BSS members.
+# ARM64 structure widths require expanded storage and preserved SSP aliases.
+# The Nintendo assembly sources remain unchanged.
+target_sources(heartgold_main PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/audio/vct_native_bss.S")
+
+
+# HG_VCT_COMPLETE_NATIVE_C
+# Original main-owned VCT C members.
+# The packet allocator is registered separately.
+# Audio send uses the existing native-source generation rule.
+set(hg_vct_other_members
+    "lib/libVCT/src/vct_adpcm.c"
+    "lib/libVCT/src/vct_audio.c"
+    "lib/libVCT/src/vct_audio_queue.c"
+    "lib/libVCT/src/vct_audio_send.c"
+    "lib/libVCT/src/vct_codec.c"
+    "lib/libVCT/src/vct_decoder.c"
+    "lib/libVCT/src/vct_fir.c"
+    "lib/libVCT/src/vct_main.c"
+    "lib/libVCT/src/vct_mix.c"
+    "lib/libVCT/src/vct_ssp.c"
+    "lib/libVCT/src/vct_vad.c"
+)
+foreach(hg_vct_member IN LISTS hg_vct_other_members)
+    list(FIND game_sources "${game_source}/${hg_vct_member}" hg_vct_original)
+    list(FIND game_sources "${native_root}/${hg_vct_member}" hg_vct_native)
+    if(NOT hg_vct_original EQUAL -1 OR NOT hg_vct_native EQUAL -1)
+        message(FATAL_ERROR "Duplicate main VCT member: ${hg_vct_member}")
+    endif()
+    if(hg_vct_member STREQUAL "lib/libVCT/src/vct_audio_send.c" OR hg_vct_member STREQUAL "lib/libVCT/src/vct_audio.c" OR hg_vct_member STREQUAL "lib/libVCT/src/vct_fir.c" OR hg_vct_member STREQUAL "lib/libVCT/src/vct_vad.c")
+        target_sources(heartgold_main PRIVATE "${native_root}/${hg_vct_member}")
+    else()
+        target_sources(heartgold_main PRIVATE "${game_source}/${hg_vct_member}")
+    endif()
+endforeach()
+
 # Native storage for the original main-owned SPL members selected by the graph.
 target_sources(heartgold_main PRIVATE
     "${PROJECT_SOURCE_DIR}/hardware_drivers/graphics/native_spl_data.c")

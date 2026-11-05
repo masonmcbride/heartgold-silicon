@@ -311,11 +311,13 @@ COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLB
     "src/application/pokedex/pokedex_main_seq.c", "src/field/weather_manager.c")
 
 
-OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
+OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c", "lib/libVCT/src/vct_packet_buffer.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c",)))
+
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("lib/libVCT/src/vct_audio_send.c",)))
 
 def native_libc(relative, text):
     for declaration in LIBC_DECLARATIONS[relative]:
@@ -455,6 +457,56 @@ OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + (
 )))
 
 
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("lib/libVCT/src/vct_audio.c", "lib/libVCT/src/vct_fir.c", "lib/libVCT/src/vct_vad.c",)))
+
+
+def adapt_vct_fir_hw(text):
+    text = replace_regex_native(
+        text,
+        r"reg_CP_DIVCNT = 1;\s*"
+        r"\*\(s64 \*\)REG_DIV_NUMER_ADDR = energy;\s*"
+        r"\*\(s64 \*\)REG_DIV_DENOM_ADDR = bytes;\s*"
+        r"while \(reg_CP_DIVCNT & 0x8000\)\s*\{\s*\}\s*"
+        r"return reg_CP_DIV_RESULT_L;",
+        "return hg_vct_div64_32(energy, bytes);"
+    )
+    text = replace_regex_native(
+        text,
+        r"reg_CP_DIVCNT = 1;\s*"
+        r"\*\(s64 \*\)REG_DIV_NUMER_ADDR = energy;\s*"
+        r"\*\(s64 \*\)REG_DIV_DENOM_ADDR = length;\s*"
+        r"while \(reg_CP_DIVCNT & 0x8000\)\s*\{\s*\}\s*"
+        r"\{\s*u32 avg = reg_CP_DIV_RESULT_L;\s*"
+        r"reg_CP_SQRTCNT = 0;\s*"
+        r"reg_CP_SQRT_PARAM_L = avg;\s*\}\s*"
+        r"while \(reg_CP_SQRTCNT & 0x8000\)\s*\{\s*\}\s*"
+        r"root = reg_CP_SQRT_RESULT;",
+        "root = hg_vct_isqrt32(hg_vct_div64_32(energy, length));"
+    )
+    return text
+
+def adapt_vct_vad_hw(text):
+    pattern = (
+        r"reg_CP_SQRTCNT = 0;\s*"
+        r"reg_CP_SQRT_PARAM_L = ([^;]+);\s*"
+        r"while \(reg_CP_SQRTCNT & 0x8000\)\s*\{\s*\}\s*"
+        r"(return|r =)\s*reg_CP_SQRT_RESULT;"
+    )
+    def substitute(m):
+        expr, op = m.group(1), m.group(2)
+        return ("return " if op == "return" else "r = ") + (
+            f"hg_vct_isqrt32({expr});"
+        )
+    return replace_regex_native(text, pattern, substitute, 2)
+
+def replace_regex_native(text, pattern, replacement, expected=1):
+    result, count = re.subn(pattern, replacement, text, flags=re.M)
+    if count != expected:
+        raise ValueError(
+            f"VCT hardware contract changed: {pattern[:75]}: {count}"
+        )
+    return result
+
 def _adapt(relative, text, root):
     if relative in POKEWALKER_ABI_INPUTS:
         return pokewalker_abi(relative,text,root)
@@ -556,6 +608,78 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
             raise ValueError("HTTP comparison length contract changed")
         return replace(text, "extern int STD_CompareNString(const char *a, const char *b, u32 n);",
                        "#include <nitro/std/string.h>")
+    if relative == "lib/libVCT/src/vct_fir.c":
+        return '\n#include <stdint.h>\n\nstatic uint32_t hg_vct_isqrt32(uint32_t n) {\n    uint32_t r = 0, bit = UINT32_C(1) << 30;\n    while (bit > n) bit >>= 2;\n    while (bit) {\n        if (n >= r + bit) {\n            n -= r + bit;\n            r = (r >> 1) + bit;\n        } else {\n            r >>= 1;\n        }\n        bit >>= 2;\n    }\n    return r;\n}\n\n\nstatic uint32_t hg_vct_div64_32(int64_t numerator, int32_t denominator) {\n    return (uint32_t)(numerator / denominator);\n}\n\n' + adapt_vct_fir_hw(text)
+    if relative == "lib/libVCT/src/vct_vad.c":
+        return '\n#include <stdint.h>\n\nstatic uint32_t hg_vct_isqrt32(uint32_t n) {\n    uint32_t r = 0, bit = UINT32_C(1) << 30;\n    while (bit > n) bit >>= 2;\n    while (bit) {\n        if (n >= r + bit) {\n            n -= r + bit;\n            r = (r >> 1) + bit;\n        } else {\n            r >>= 1;\n        }\n        bit >>= 2;\n    }\n    return r;\n}\n\n' + adapt_vct_vad_hw(text)
+    if relative == "lib/libVCT/src/vct_audio.c":
+        text = replace(text, '    reg_CP_SQRTCNT = 0;\n    reg_CP_SQRT_PARAM_L = power;\n    while (reg_CP_SQRTCNT & 0x8000) {}\n    root = reg_CP_SQRT_RESULT;', '    root = hg_vct_isqrt32(power);')
+        text = '#include <stdint.h>\nstatic uint32_t hg_vct_isqrt32(uint32_t n) {\n    uint32_t r = 0, bit = UINT32_C(1) << 30;\n    while (bit > n) bit >>= 2;\n    while (bit) {\n        if (n >= r + bit) {\n            n -= r + bit;\n            r = (r >> 1) + bit;\n        } else r >>= 1;\n        bit >>= 2;\n    }\n    return r;\n}\n' + text
+
+        return text + '\nu32 hg_vct_audio_flag(void) { return sAudioFlag; }\nu32 hg_vct_audio_sessions(void) { return sAudioSessions; }\nu32 hg_vct_audio_packet_size(void) { return sAudioPacketSize; }\n'
+    if relative == "lib/libVCT/src/vct_audio_send.c":
+        text = replace(
+            text,
+            "asm { clz x, x }",
+            "x = x == 0 ? 32u : (u32)__builtin_clz(x);"
+        )
+        begin = "// View of the audio TU's pooled .bss"
+        end_marker = "extern AudioPool _021D6040;"
+        if text.count(begin) != 1 or text.count(end_marker) != 1:
+            raise ValueError("Original AudioPool declaration drift")
+        a = text.index(begin)
+        b = text.index(end_marker) + len(end_marker)
+        declarations = (
+            '#include "vct/vct_audio_internal.h"\n'
+            "extern u32 hg_vct_audio_flag(void);\n"
+            "extern u32 hg_vct_audio_sessions(void);\n"
+            "extern u32 hg_vct_audio_packet_size(void);\n"
+        )
+        text = text[:a] + declarations + text[b:]
+        if text.count('_021D6040.unk_18') != 1:
+            raise ValueError("VCT access drift: _021D6040.unk_18")
+        text = text.replace('_021D6040.unk_18', 'hg_vct_audio_flag()')
+        if text.count('_021D6040.unk_20') != 1:
+            raise ValueError("VCT access drift: _021D6040.unk_20")
+        text = text.replace('_021D6040.unk_20', 'hg_vct_audio_sessions()')
+        if text.count('_021D6040.packetSize') != 1:
+            raise ValueError("VCT access drift: _021D6040.packetSize")
+        text = text.replace('_021D6040.packetSize', 'hg_vct_audio_packet_size()')
+        if text.count('_021D6040.sendRead') != 1:
+            raise ValueError("VCT access drift: _021D6040.sendRead")
+        text = text.replace('_021D6040.sendRead', 'sSendInfo.read')
+        if text.count('_021D6040.sendPacket') != 4:
+            raise ValueError("VCT access drift: _021D6040.sendPacket")
+        text = text.replace('_021D6040.sendPacket', 'sSendInfo.packet')
+        if text.count('_021D6040.sendMask') != 4:
+            raise ValueError("VCT access drift: _021D6040.sendMask")
+        text = text.replace('_021D6040.sendMask', 'sSendInfo.mask')
+        if text.count('_021D6040.sendSlot') != 2:
+            raise ValueError("VCT access drift: _021D6040.sendSlot")
+        text = text.replace('_021D6040.sendSlot', 'sSendInfo.balanceIndex')
+        if text.count('_021D6040.sendBalance') != 1:
+            raise ValueError("VCT access drift: _021D6040.sendBalance")
+        text = text.replace('_021D6040.sendBalance', 'sSendInfo.balance')
+        if "_021D6040." in text:
+            raise ValueError("Unmapped AudioPool field")
+        return text
+    if relative == "lib/libVCT/src/vct_packet_buffer.c":
+        # ARM64 physical slot geometry; retain the original algorithm.
+        for old, new in (
+            ('count * sizeof(PacketBuffer)', 'count * HG_VCT_NATIVE_SLOT_SIZE'),
+            ('current->next = base + index;', 'current->next = (PacketBuffer *)((u8 *)base + index * HG_VCT_NATIVE_SLOT_SIZE);'),
+            ('offset += sizeof(PacketBuffer);', 'offset += HG_VCT_NATIVE_SLOT_SIZE;'),
+            ('gVctPacketBuffers[1][count - 1].next = NULL;', '((PacketBuffer *)((u8 *)gVctPacketBuffers[1] + (count - 1) * HG_VCT_NATIVE_SLOT_SIZE))->next = NULL;'),
+            ('u32 count = bytes / sizeof(PacketBuffer);', 'u32 count = bytes / HG_VCT_NATIVE_SLOT_SIZE;'),
+            ('if ((u32)buffer & 31)', 'if ((uintptr_t)buffer & 31)'),
+        ):
+            text = replace(text, old, new)
+        return '#include <stdint.h>\n#include <vct/vct_ssp_internal.h>\n#include <vct/vct_audio_internal.h>\n#define HG_VCT_NATIVE_SLOT_SIZE ((sizeof(AudioPacket) > sizeof(PacketBuffer)) ? sizeof(AudioPacket) : sizeof(PacketBuffer))\n' + text
+
+    if relative == "include/voice_chat.h":
+        # Native storage capacity, not a gameplay/session-count change.
+        return replace(text, "VctSession sessions[3];",
+                       "VctSession sessions[8];")
     if relative == "src/voice_chat.c":
         for declaration in (
             "extern void MIC_StartAutoSamplingAsync(MICAutoParam *param, void (*callback)(MICResult, void *), void *arg);",
@@ -569,7 +693,25 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
             "    if ((u32)(MIC_GetLastSamplingAddress() - address) < size) {",
             "    u8 *lastSamplingAddress = MIC_GetLastSamplingAddress();\n"
             "    if ((u32)(lastSamplingAddress - address) < size) {")
-        return '#include <nitro/spi/ARM9/mic.h>\n' + text
+
+        # Preserve eight packet slots per participant with native stride.
+        if text.count("count * 0x23C0 + 32") != 2:
+            raise ValueError("Voice-chat packet capacity source drift")
+        text = text.replace(
+            "count * 0x23C0 + 32",
+            "count * (8 * HG_VCT_NATIVE_SLOT_SIZE) + 32")
+        # Native ARM64 storage-width adaptation. Preserve the original
+        # allocation algorithm; only remove the DS 32-bit pointer assumptions.
+        text = replace(text,
+            "    u32 allocation;",
+            "    void *allocation;")
+        text = replace(text,
+            "VoiceChat_AllocAligned((void **)&allocation,",
+            "VoiceChat_AllocAligned(&allocation,")
+        text = replace(text,
+            "    *aligned = (void *)(((u32)*allocation + 0x1F) & ~0x1F);",
+            "    *aligned = (void *)(((uintptr_t)*allocation + 0x1F) & ~(uintptr_t)0x1F);")
+        return '#include <nitro/spi/ARM9/mic.h>\n#include <stdint.h>\n#include <vct/vct_ssp_internal.h>\n#include <vct/vct_audio_internal.h>\n#define HG_VCT_NATIVE_SLOT_SIZE ((sizeof(AudioPacket) > sizeof(PacketBuffer)) ? sizeof(AudioPacket) : sizeof(PacketBuffer))\n' + text
     if relative in PRINTF_DECLARATIONS:
         if relative in LIBC_DECLARATIONS:
             text = native_libc(relative, text)
@@ -1556,6 +1698,25 @@ def guest32_frontend(relative, text, root):
     raise ValueError('Unapproved guest32 frontend adaptation: '+relative)
 
 
+
+def adapt_dwc_nas_native_allocation(text):
+    """Adapt only the five original NAS allocation-size references."""
+    changes = {
+        "DWC_Alloc(4, 7712)": (1, "DWC_Alloc(4, sizeof(NetAuthWork))"),
+        "MI_CpuFill8(allocated, 0, 7712)": (1, "MI_CpuFill8(allocated, 0, sizeof(NetAuthWork))"),
+        "DWC_Free(4, gDwcNasLoginWork, 7712)": (3, "DWC_Free(4, gDwcNasLoginWork, sizeof(NetAuthWork))"),
+    }
+    for old, (expected, new) in changes.items():
+        count = text.count(old)
+        if count != expected:
+            raise ValueError(
+                f"NAS source contract changed: {old}: "
+                f"expected {expected}, found {count}"
+            )
+        text = text.replace(old, new)
+    return text
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--list-overlay-sources", action="store_true")
@@ -1575,7 +1736,10 @@ def main():
         raise ValueError("Native outputs must not overwrite original upstream files")
     original = source.read_text()
     if args.kind == "native":
-        result = adapt(source.relative_to(root).as_posix(), original, root)
+        relative = source.relative_to(root).as_posix()
+        result = adapt(relative, original, root)
+        if relative == "lib/NitroDWC/src/net_common.c":
+            result = adapt_dwc_nas_native_allocation(result)
     elif args.kind == 'guest32-frontend':
         result = guest32_frontend(source.relative_to(root).as_posix(), original, root)
     elif args.kind == "coordinated-msl":

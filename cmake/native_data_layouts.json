@@ -10726,5 +10726,13 @@
     },
     "expected_blocks": 45,
     "expected_relocations": 8
+  },
+  "lib/asm/vct_data.o": {
+    "inputs": {
+      "lib/asm/vct_data.s": "303a679ef5271fd0396254933558a5e744398e05e61201e70931347a63a04569"
+    },
+    "expected_blocks": 17,
+    "expected_relocations": 0,
+    "layouts": {}
   }
 }
