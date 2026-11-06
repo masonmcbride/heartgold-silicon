@@ -1,4 +1,5 @@
 #include "ntr_host.h"
+#include "overlay_native.h"
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdint.h>

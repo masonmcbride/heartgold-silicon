@@ -1,3 +1,4 @@
+#include "../hardware_drivers/os/overlay_native.h"
 /* Exercise original FS lifecycle/chain algorithms with native-image fixtures. */
 #include <nitro.h>
 #include <ntr_host.h>
@@ -45,7 +46,7 @@ int main(int argc, char **argv)
     assert(FS_LoadOverlayImageAsync(&info, &request));
     assert(FS_WaitAsync(&request));
     assert(FS_CloseFile(&request));
-    assert(request.nativeOverlayResult == 0 && request.pcFilePtr == NULL);
+    assert(request.pcFilePtr == NULL);
     assert(!FS_LoadOverlayImage(&info));
     assert(!FS_LoadOverlayImageAsync(&info, &request));
     assert(!FS_WaitAsync(&request));

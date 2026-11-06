@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 /* CMake supplies the selected source and binary directories, never a developer's

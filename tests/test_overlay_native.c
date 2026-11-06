@@ -1,4 +1,5 @@
 #include "ntr_host.h"
+#include "../hardware_drivers/os/overlay_native.h"
 #include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>

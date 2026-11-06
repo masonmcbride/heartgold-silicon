@@ -43,6 +43,7 @@ for ident,source in sources.items():
 (work/'registry.inc').write_text('HG_NATIVE_OVERLAY(1)\nHG_NATIVE_OVERLAY(2)\n')
 main=work/'main.c'
 main.write_text('''#include "ntr_host.h"
+#include "overlay_native.h"
 #include <assert.h>
 extern int HG_PrepareGameOverlays(void);
 extern int A_read(void), A_step(void);
@@ -70,7 +71,7 @@ archives=[]
 for ident in sources:
     archive=work/f'libheartgold_overlay_{ident}.a'
     run(['ar','rcs',archive,work/f'image_{ident}.o']); archives.append(archive)
-run([a.compiler,'-arch','arm64','-c',main,'-I'+str(a.sdk.resolve()/'include'),'-o',work/'main.o'])
+run([a.compiler,'-arch','arm64','-c',main,'-I'+str(a.sdk.resolve()/'include'),'-I'+str(root/'hardware_drivers/os'),'-o',work/'main.o'])
 providers=generate_contracts([work/'main.o'],archives,work)
 for ident in sources:
     images[ident]=work/f'libheartgold_image_{ident}.dylib'
@@ -83,7 +84,7 @@ for ident in sources:
 binding.generate(images,providers,work/'bindings.inc',work/'bindings.json')
 def compile_main():
     run([a.compiler,'-arch','arm64','-std=c11','-UNDEBUG',
-         '-I'+str(a.sdk.resolve()/'include'),'-I'+str(work),
+         '-I'+str(a.sdk.resolve()/'include'),'-I'+str(root/'hardware_drivers/os'),'-I'+str(work),
          root/'hardware_drivers/os/game_overlays.c',root/'hardware_drivers/os/overlay_native.c',main,
          *images.values(),'-Wl,-export_dynamic,-rpath,@executable_path','-o',work/'heartgold'])
 compile_main()

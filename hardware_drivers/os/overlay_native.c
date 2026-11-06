@@ -1,3 +1,4 @@
+#include "overlay_native.h"
 #include "ntr_host.h"
 
 #include <dlfcn.h>
@@ -6,6 +7,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct HG_OverlayImage HG_OverlayImage;
 
 typedef struct HG_OverlayRange {
     uintptr_t start;

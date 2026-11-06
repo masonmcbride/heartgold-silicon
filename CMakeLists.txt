@@ -5,7 +5,7 @@ project(heartgold_silicon LANGUAGES C CXX)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d94f9137ced9db12d9ce827a8127c97b779bbeb)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT 51c868593a7098b6912406d4638b990d28916a76)
+set(LIBNTR_COMMIT f4f9905803df9dc8aeffada2cf4a81842b70b256)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"
