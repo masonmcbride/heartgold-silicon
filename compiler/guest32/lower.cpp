@@ -2,6 +2,7 @@
 // Input is unoptimized, 32-bit Clang IR. Output uses a private native ABI:
 // guest pointers become i32 offsets; the first argument is the host RAM base.
 #include "llvm/ADT/MapVector.h"
+#include "llvm/ADT/PostOrderIterator.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Module.h"
 #include "llvm/TargetParser/Triple.h"
@@ -37,19 +38,31 @@ static Type *valueType(Type *T) {
 #include "abi.h"
 #include "image.h"
 #include "coverage.h"
+#include "rules.h"
+#include "storage_contract.h"
 
+int semanticSlotsMain(int argc, char **argv);
 int main(int argc, char **argv) {
+  if(argc==3 && StringRef(argv[1])=="--check-rules") {
+    auto B=MemoryBuffer::getFile(argv[2]);if(!B)reject("cannot read rule catalog");
+    Rules Checked((*B)->getBuffer());return 0;
+  }
+  if(argc==4 && StringRef(argv[1])=="--storage-contract")return storageContract(argv[2],argv[3]);
+  if (argc > 1 && StringRef(argv[1]) == "--semantic-slots")
+    return semanticSlotsMain(argc - 1, argv + 1);
   if (argc < 3) { errs() << "usage: guest32-lower input.ll output.ll [--asan] [--abi file --native-ir file] [--entry symbol] [--prefix text]\n"; return 2; }
-  bool Asan = false, GuestExternals=false; std::string AbiPath, NativePath, Prefix, Report, ImagePath;
-  std::set<std::string> Entries;
+  bool Asan = false, GuestExternals=false, TypedState=false; std::string AbiPath, NativePath, Prefix, Report, ImagePath;
+  std::set<std::string> Entries,PrivateInlines;
   for (int I = 3; I < argc; ++I) {
     StringRef Flag(argv[I]);
+    if (Flag == "--typed-state") {TypedState=true;continue;}
     if (Flag == "--asan") { Asan = true; continue; }
     if (Flag == "--guest-externals") { GuestExternals=true;continue; }
     if (++I == argc) reject("missing option value");
     if (Flag == "--abi") AbiPath = argv[I];
     else if (Flag == "--native-ir") NativePath = argv[I];
     else if (Flag == "--entry") Entries.insert(argv[I]);
+    else if (Flag == "--private-inline") PrivateInlines.insert(argv[I]);
     else if (Flag == "--prefix") Prefix = argv[I];
     else if (Flag == "--diagnose") Report = argv[I];
     else if (Flag == "--image") ImagePath = argv[I];
@@ -60,6 +73,13 @@ int main(int argc, char **argv) {
   auto In = parseIRFile(argv[1], E, C);
   if (!In) { E.print(argv[0], errs()); return 1; }
   if (verifyModule(*In, &errs())) return 1;
+  for(const auto &Name:PrivateInlines){
+    Function *F=In->getFunction(Name);
+    if(!F || !privateInlineEligible(*F))reject("unproved translation-unit inline identity: "+Name);
+    F->setLinkage(GlobalValue::InternalLinkage);
+    F->setVisibility(GlobalValue::DefaultVisibility);
+    F->setMetadata("guest32.private.inline",MDNode::get(C,{}));
+  }
   ABI Interfaces;
   Image Img;if(!ImagePath.empty())Img.read(ImagePath,C);
   if (!AbiPath.empty()) {
@@ -96,6 +116,10 @@ int main(int argc, char **argv) {
         {"origin",Origin},{"origin_line",(int64_t)OriginLine},{"body_hash",F.isDeclaration()?"":formatv("{0:x}",StructuralHash(F,true)).str()}});
       Functions.back().getAsObject()->try_emplace("returns_twice",F.hasFnAttribute(Attribute::ReturnsTwice));
       Functions.back().getAsObject()->try_emplace("noreturn",F.hasFnAttribute(Attribute::NoReturn));
+      Functions.back().getAsObject()->try_emplace("referenced",!F.use_empty());
+      Functions.back().getAsObject()->try_emplace("private_inline_eligible",privateInlineEligible(F));
+      Functions.back().getAsObject()->try_emplace("private_inline",F.getMetadata("guest32.private.inline")!=nullptr);
+      Functions.back().getAsObject()->try_emplace("inline_definition",sourceInlineDefinition(F,false));
     }
     for(GlobalVariable &G:In->globals())if(G.getValueType()->isSized())Globals.push_back(json::Object{{"name",G.getName()},{"key",symbolKey(G)},
       {"size",(int64_t)In->getDataLayout().getTypeAllocSize(G.getValueType()).getFixedValue()},
@@ -174,6 +198,10 @@ int main(int argc, char **argv) {
   Module Out("guest32", C);
   Out.setTargetTriple(Triple("arm64-apple-macosx14.0.0"));
   Out.setDataLayout("e-m:o-i64:64-i128:128-n32:64-S128");
+  Rules Contracts(Guest32Rules);
+  std::set<std::string> RepresentationFacts;
+  Contracts.layout(DL,Out,RepresentationFacts);
+  if(!ImagePath.empty())RepresentationFacts.insert("image-catalog");
   std::map<const Value *, Value *> V;
   std::map<const Function *, Function *> Functions;
   std::map<FunctionType*,Function*> Dispatchers;
@@ -185,14 +213,36 @@ int main(int argc, char **argv) {
     Next = std::max(Next,(uint64_t)G.second.offset + G.second.size);
   for (GlobalVariable &G : In->globals()) {
     if (!Globals.count(&G)) continue;
+    auto Absolute = Interfaces.absoluteSymbols.find(G.getName().str());
+    if (Absolute != Interfaces.absoluteSymbols.end()) {
+      if (!G.isDeclaration() || G.isThreadLocal() || G.getAddressSpace())
+        reject("absolute symbol must be an ordinary external declaration: " + G.getName());
+      for (User *U : G.users()) {
+        auto *Expression = dyn_cast<ConstantExpr>(U);
+        if (!Expression || Expression->getOpcode() != Instruction::PtrToInt ||
+            !Expression->getType()->isIntegerTy(32))
+          reject("absolute symbol requires a 32-bit address value, not storage: " + G.getName());
+      }
+      V[&G] = ConstantInt::get(Type::getInt32Ty(C), Absolute->second);
+      continue;
+    }
     auto Placement = Interfaces.globals.find(G.getName().str());
+    if (G.getAddressSpace()) reject("nondefault global address space");
+    if (G.isThreadLocal()) reject("TLS global requires guest thread ownership");
     if (G.isDeclaration() && Placement == Interfaces.globals.end()) {
       if(!GuestExternals)reject("external global image placement: " + G.getName());
       ExternalAddresses[&G]=new GlobalVariable(Out,Type::getInt32Ty(C),true,GlobalValue::ExternalLinkage,nullptr,Prefix+"address_"+G.getName());
       continue;
     }
-    if (G.getAddressSpace()) reject("nondefault global address space");
-    if (G.isThreadLocal() || !G.getValueType()->isSized()) reject("unsized/TLS global");
+    if (!G.getValueType()->isSized()) {
+      // Taking the address of an incomplete external type requires no guessed
+      // layout or allocation. Only its owning image's verified coordinate is
+      // consumed; typed dereferences still require a concrete LLVM type.
+      if(!GuestExternals || !G.isDeclaration() || Placement==Interfaces.globals.end())
+        reject("unproved unsized global definition");
+      V[&G]=ConstantInt::get(Type::getInt32Ty(C),Placement->second.offset);
+      continue;
+    }
     if (G.hasInitializer() && !G.getInitializer()->isNullValue() && !GuestExternals)
       reject("nonzero static initializer/relocation");
     Next = alignTo(Next, DL.getABITypeAlign(G.getValueType()));
@@ -214,6 +264,21 @@ int main(int argc, char **argv) {
     Next += Size;
   }
   for (Function &F : *In) {
+    auto Absolute = Interfaces.absoluteSymbols.find(F.getName().str());
+    if (Absolute != Interfaces.absoluteSymbols.end()) {
+      if (!F.isDeclaration() || F.isIntrinsic() || F.hasLocalLinkage())
+        reject("absolute function symbol must be an external declaration: " + F.getName());
+      if (Img.codes.count(symbolKey(F)))
+        reject("absolute function symbol also has code identity: " + F.getName());
+      for (User *U : F.users()) {
+        auto *Expression = dyn_cast<ConstantExpr>(U);
+        if (!Expression || Expression->getOpcode() != Instruction::PtrToInt ||
+            !Expression->getType()->isIntegerTy(32))
+          reject("absolute function symbol requires a 32-bit address value, not a call: " + F.getName());
+      }
+      V[&F] = ConstantInt::get(Type::getInt32Ty(C), Absolute->second);
+      continue;
+    }
     if (!Selected.count(&F) && !(GuestExternals && F.isDeclaration() && !F.isIntrinsic())) continue;
     if (F.isVarArg() && !GuestExternals) reject("varargs");
     SmallVector<Type *> Args{PointerType::getUnqual(C)};
@@ -248,13 +313,31 @@ int main(int argc, char **argv) {
     for (BasicBlock &BB : F) Blocks[&BB] = BasicBlock::Create(C, BB.getName(), NF);
     IRBuilder<> Arguments(Blocks.at(&F.getEntryBlock()));
     for(Argument &A:F.args())V[&A]=rebuildArgument(Arguments,A.getType(),Arg);
+    auto Owner=Img.codes.find(symbolKey(F));
+    if(GuestExternals && Owner!=Img.codes.end() && Owner->second.overlayOwner>=0){
+      if(!Owner->second.address)reject("overlay entry requires stable code identity");
+      runtime(Arguments,Out,"g32_check_code_image",Arguments.getVoidTy(),
+        {Base,Arguments.getInt32(Owner->second.address),Arguments.getInt32(Owner->second.overlayOwner),NF});
+    }
     Value *Homes=hasArgumentHomes(F.getFunctionType())?&*Arg:nullptr;
     Value *ImplicitR0=!Homes && Arg!=NF->arg_end()?&*Arg:nullptr;
     bool HasFrame=false;
     for(BasicBlock &BB:F)for(Instruction &I:BB)if(isa<AllocaInst>(I))HasFrame=true;
     for(Argument &A:F.args())HasFrame|=A.hasByValAttr();
+    for(const auto &E:Img.registerEdges)if(E.mode=="indirect-result" && E.source==In->getSourceFileName() && E.function==F.getName())HasFrame=true;
     Value *Frame=nullptr;
     if(HasFrame){IRBuilder<> B(Blocks.at(&F.getEntryBlock()));Frame=runtime(B,Out,"g32_frame_enter",B.getPtrTy(),{Base});}
+    // One original result home per static call, allocated once per invocation.
+    // Repeated calls in loops reuse this home instead of growing guest RAM.
+    std::map<const Instruction*,Value*> ResultHomes;
+    for(BasicBlock &BB:F)for(Instruction &I:BB)if(auto *Call=dyn_cast<CallInst>(&I)){
+      auto *Callee=directCallee(*Call);if(!Callee || !I.getDebugLoc())continue;
+      for(const auto &E:Img.registerEdges)if(E.mode=="indirect-result" && E.source==In->getSourceFileName() && E.function==F.getName() && E.target==Callee->getName() && E.line==I.getDebugLoc().getLine()){
+        if(ResultHomes.count(&I) || E.resultBytes!=4 || !Call->getType()->isIntegerTy(32))reject("indirect result home shape");
+        IRBuilder<> B(Blocks.at(&F.getEntryBlock()));
+        ResultHomes[&I]=runtime(B,Out,"g32_stack_alloc",B.getInt32Ty(),{Base,Frame,B.getInt64(E.resultBytes),B.getInt32(4)});
+      }
+    }
     for(Argument &A:F.args())if(A.hasByValAttr()){
       IRBuilder<> B(Blocks.at(&F.getEntryBlock()));Type *T=A.getParamByValType();
       uint64_t Size=DL.getTypeAllocSize(T).getFixedValue();
@@ -268,10 +351,22 @@ int main(int argc, char **argv) {
     // Create all PHIs before translating edges, including loop backedges.
     for (BasicBlock &BB : F) for (PHINode &P : BB.phis())
       V[&P] = PHINode::Create(valueType(P.getType()), P.getNumIncomingValues(), "", Blocks.at(&BB));
-    for (BasicBlock &BB : F) {
+    // LLVM block layout is not dominance order. Lower reachable definitions
+    // before their non-PHI uses; PHIs/backedges remain resolved in the final
+    // edge pass. Keep original unreachable blocks as well, without inventing
+    // reachability or changing the original CFG.
+    SmallVector<BasicBlock *> Order;
+    std::set<BasicBlock *> Visited;
+    for(BasicBlock *BB:ReversePostOrderTraversal<Function *>(&F)){
+      Order.push_back(BB);Visited.insert(BB);
+    }
+    for(BasicBlock &BB:F)if(!Visited.count(&BB))Order.push_back(&BB);
+    for (BasicBlock *Original : Order) {
+      BasicBlock &BB=*Original;
       IRBuilder<> B(Blocks.at(&BB));
       Current=&B;
       Value *PreviousResult=nullptr;std::string PreviousTarget;
+      bool PreviousSign=false,PreviousZero=false;
       auto Address = [&](Value *P, Type *T) {
         // i32 arithmetic wraps before zero-extension. No host inbounds promise.
         if (!AbiPath.empty()) return runtime(B,Out,"g32_resolve",B.getPtrTy(),
@@ -294,6 +389,11 @@ int main(int argc, char **argv) {
             Result=B.CreateInsertValue(Result,LoadGuest(E,B.CreateAdd(Offset,B.getInt32(N)),Volatile),{J});
           }return Result;
         }
+        if(TypedState && DL.getTypeStoreSize(T).getFixedValue()<=8){
+          Value *Bits=runtime(B,Out,"g32_read_bits",B.getInt64Ty(),{Base,Offset,B.getInt32(DL.getTypeStoreSize(T).getFixedValue()),B.getInt32(Volatile)});
+          Type *VT=valueType(T);if(VT->isIntegerTy())return B.CreateZExtOrTrunc(Bits,VT);
+          return B.CreateBitCast(B.CreateTrunc(Bits,IntegerType::get(C,VT->getPrimitiveSizeInBits().getFixedValue())),VT);
+        }
         auto *L=B.CreateAlignedLoad(valueType(T),Span(Offset,T),Align(1));L->setVolatile(Volatile);return L;
       };
       StoreGuest=[&](Type *T,Value *Offset,Value *Value,bool Volatile){
@@ -305,10 +405,17 @@ int main(int argc, char **argv) {
             StoreGuest(E,B.CreateAdd(Offset,B.getInt32(N)),B.CreateExtractValue(Value,{J}),Volatile);
           }return;
         }
+        if(TypedState && DL.getTypeStoreSize(T).getFixedValue()<=8){
+          llvm::Value *Bits=Value;
+          if(!Bits->getType()->isIntegerTy())Bits=B.CreateBitCast(Bits,IntegerType::get(C,Bits->getType()->getPrimitiveSizeInBits().getFixedValue()));
+          Bits=B.CreateZExtOrTrunc(Bits,B.getInt64Ty());
+          runtime(B,Out,"g32_write_bits",B.getVoidTy(),{Base,Offset,B.getInt32(DL.getTypeStoreSize(T).getFixedValue()),Bits,B.getInt32(Volatile)});return;
+        }
         auto *S=B.CreateAlignedStore(Value,Span(Offset,T),Align(1));S->setVolatile(Volatile);
       };
       for (Instruction &I : BB) {
         if (isa<PHINode>(I)) continue;
+        Contracts.instruction(I,Out,RepresentationFacts);
         Value *R = nullptr;
         if (auto *A = dyn_cast<AllocaInst>(&I)) {
           if(ArgumentHomes.count(A)){
@@ -416,6 +523,8 @@ int main(int argc, char **argv) {
           if (Boundary != Interfaces.calls.end()) {
             const auto &S = Boundary->second; SmallVector<Value *> GuestArgs, NativeArgs{Base};
             if(X->arg_size()!=S.args.size() || X->getType()!=ABI::nativeType(C,S.result))reject("callsite ABI signature: "+Callee->getName());
+            auto BoundaryFacts=RepresentationFacts;BoundaryFacts.insert("typed-boundary");
+            Contracts.apply("boundary",Out,BoundaryFacts);
             for (Value *A : X->args()) GuestArgs.push_back(Get(A));
             Value *Epoch = S.result.role == "owned" ? runtime(B,Out,"g32_epoch",B.getInt64Ty(),{Base}) : nullptr;
             for (unsigned J = 0; J < S.args.size(); ++J)
@@ -437,10 +546,44 @@ int main(int argc, char **argv) {
             if(Edge)reject("duplicate register edge");Edge=&E;
           }
           if(Edge && Edge->mode=="previous-result"){
+            if(X->arg_size()!=0 || Edge->argument!=0)reject("register result edge argument shape");
             if(PreviousTarget!=Edge->previous || !PreviousResult || !PreviousResult->getType()->isIntegerTy())reject("register edge producer mismatch in "+F.getName());
-            Args.push_back(PreviousResult);
+            if(PreviousResult->getType()->getIntegerBitWidth()>32)reject("register result exceeds one ARM register");
+            Value *Word=PreviousResult;
+            if(Word->getType()->getIntegerBitWidth()<32){
+              if(PreviousSign==PreviousZero)reject("unproved upper ARM result bits");
+              Word=PreviousSign?B.CreateSExt(Word,B.getInt32Ty()):B.CreateZExt(Word,B.getInt32Ty());
+            }
+            Args.push_back(Word);
           }else if(Edge && Edge->mode=="live-in"){
             if(!ImplicitR0)reject("missing register live-in");Args.push_back(ImplicitR0);
+          }else if(Edge && Edge->mode=="dominating-global"){
+            if(X->arg_size()!=0 || Edge->global.empty())reject("register global-value call shape");
+            // Recover the original tested load through a linear predecessor
+            // chain. Never reload mutable storage or guess a register value.
+            BasicBlock *Next=&BB;LoadInst *Saved=nullptr;std::set<BasicBlock*> Seen;
+            for(Instruction &Before:BB){
+              if(&Before==&I)break;
+              if(auto *Call=dyn_cast<CallInst>(&Before);Call && (!Call->getCalledFunction() || !Call->getCalledFunction()->isIntrinsic()))
+                reject("register global-value has intervening call");
+            }
+            while(Seen.insert(Next).second){
+              BasicBlock *Pred=Next->getSinglePredecessor();if(!Pred)break;
+              auto *Branch=dyn_cast<CondBrInst>(Pred->getTerminator());
+              auto *Cmp=Branch?dyn_cast<ICmpInst>(Branch->getCondition()):nullptr;
+              auto *Zero=Cmp?dyn_cast<Constant>(Cmp->getOperand(1)):nullptr;
+              auto *Load=Cmp?dyn_cast<LoadInst>(Cmp->getOperand(0)):nullptr;
+              if(Load && (Load->getType()->isIntegerTy(32) || Load->getType()->isPointerTy()) && Zero && Zero->isNullValue() &&
+                 Cmp->getPredicate()==ICmpInst::ICMP_NE && Branch->getSuccessor(0)==Next){
+                int64_t Offset=0;auto *Global=dyn_cast<GlobalVariable>(GetPointerBaseWithConstantOffset(Load->getPointerOperand(),Offset,DL));
+                if(Global && Global->getName()==Edge->global && Offset==Edge->offset){Saved=Load;break;}
+              }
+              for(Instruction &Before:*Pred)if(auto *Call=dyn_cast<CallInst>(&Before))
+                if(!Call->getCalledFunction() || !Call->getCalledFunction()->isIntrinsic())reject("register global-value has intervening call");
+              Next=Pred;
+            }
+            if(!Saved)reject("register global-value producer mismatch");
+            Args.push_back(Get(Saved));
           }else if(Edge && Edge->mode=="branch-value"){
             // Original r0 is the saved field tested by the incoming branch.
             // Require that exact SSA load, not a later reload after callbacks.
@@ -461,11 +604,24 @@ int main(int argc, char **argv) {
           }
           Type *ResultType=X->use_empty()?B.getVoidTy():valueType(X->getType());
           bool Preserved=Edge && Edge->mode=="preserved-argument";
-          R = guestCall(B,Functions.at(Callee),Args,Preserved?B.getVoidTy():ResultType,K!=Img.codes.end() && K->second.signReturn,
+          bool IndirectResult=Edge && Edge->mode=="indirect-result";
+          if(IndirectResult){
+            if(!Known || !K->second.type->getReturnType()->isVoidTy() ||
+               K->second.type->getNumParams()==0 || !K->second.type->getParamType(0)->isPointerTy() ||
+               !ResultHomes.count(&I))reject("indirect result provider shape");
+            Args.insert(Args.begin()+1,ResultHomes.at(&I));
+          }
+          R = guestCall(B,Functions.at(Callee),Args,(Preserved || IndirectResult)?B.getVoidTy():ResultType,K!=Img.codes.end() && K->second.signReturn,
                         X->getFunctionType()->isVarArg() || (GuestExternals && Known),Known?&K->second.used:nullptr,
                         hasArgumentHomes(Known?K->second.type:Callee->getFunctionType()));
+          if(IndirectResult){
+            Value *Address=runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,ResultHomes.at(&I),B.getInt32(4),B.getInt32(0)});
+            auto *Loaded=B.CreateLoad(B.getInt32Ty(),Address);Loaded->setAlignment(Align(4));R=Loaded;
+          }
           if(Preserved){if(Edge->argument+1>=Args.size())reject("register return argument index");R=adaptScalar(B,Args[Edge->argument+1],ResultType);}
           PreviousResult=R;PreviousTarget=Callee->getName().str();
+          PreviousSign=X->hasRetAttr(Attribute::SExt) || Callee->hasRetAttribute(Attribute::SExt);
+          PreviousZero=X->hasRetAttr(Attribute::ZExt) || Callee->hasRetAttribute(Attribute::ZExt);
         } else reject("instruction " + Twine(I.getOpcodeName()));
         V[&I] = R;
       }
@@ -483,6 +639,7 @@ int main(int argc, char **argv) {
       Prefix+"initialize_"+Twine(hash_value(In->getSourceFileName())).str(),Out);
     IRBuilder<> B(BasicBlock::Create(C,"entry",Init));Value *Base=Init->getArg(0);
     for(GlobalVariable &G:In->globals())if(G.hasInitializer() && V.count(&G)){
+      Contracts.apply("static-data",Out,RepresentationFacts);
       uint32_t Offset=(uint32_t)cast<ConstantInt>(V.at(&G))->getZExtValue();
       Value *P=runtime(B,Out,"g32_resolve",B.getPtrTy(),{Base,B.getInt32(Offset),B.getInt32(DL.getTypeAllocSize(G.getValueType()).getFixedValue()),B.getInt32(0)});
       B.CreateMemSet(P,B.getInt8(0),DL.getTypeAllocSize(G.getValueType()).getFixedValue(),Align(1));
@@ -491,12 +648,25 @@ int main(int argc, char **argv) {
     B.CreateRetVoid();
   }
   for (const auto &Entry : Interfaces.exports) {
+    auto BoundaryFacts=RepresentationFacts;BoundaryFacts.insert("typed-boundary");
+    Contracts.apply("boundary",Out,BoundaryFacts);
     const auto &S = Entry.second;
+    if(S.entryOwner>=0){
+      if(S.result.type=="ptr")reject("owner-bound pointer export requires a verified data lifetime contract");
+      auto Code=Img.codes.find(symbolKey(*In->getFunction(Entry.first)));
+      if(Code==Img.codes.end() || Code->second.overlayOwner!=S.entryOwner)
+        reject("native export lacks matching original image owner: "+Entry.first);
+    }
     if (Out.getFunction(S.native)) reject("export symbol collision: " + S.native);
     auto *Wrapper = Function::Create(ABI::nativeSignature(C,S),GlobalValue::ExternalLinkage,S.native,Out);
     if (Asan) Wrapper->addFnAttr(Attribute::SanitizeAddress);
     IRBuilder<> B(BasicBlock::Create(C,"entry",Wrapper));
     auto A = Wrapper->arg_begin(); Value *Base = &*A++;
+    Value *Scope=nullptr;
+    if(S.entryOwner>=0){
+      Scope=runtime(B,Out,"g32_begin_entry_context",B.getPtrTy(),{Base,B.getInt32(S.entryOwner),Wrapper});
+      Base=runtime(B,Out,"g32_entry_context_arena",B.getPtrTy(),{Scope});
+    }
     SmallVector<Value *> NativeArgs, GuestArgs, CallArgs{Base};
     for (; A != Wrapper->arg_end(); ++A) NativeArgs.push_back(&*A);
     Value *Epoch = S.result.role == "owned" ? runtime(B,Out,"g32_epoch",B.getInt64Ty(),{Base}) : nullptr;
@@ -507,8 +677,10 @@ int main(int argc, char **argv) {
     Value *R = B.CreateCall(Functions.at(In->getFunction(Entry.first)),CallArgs);
     postconditions(B,Out,Base,S,GuestArgs,R,Epoch);
     if (S.result.type == "ptr") R = decode(B,Out,Base,R,S.result,GuestArgs);
+    if(Scope)runtime(B,Out,"g32_end_entry_context",B.getVoidTy(),{Scope});
     if (S.result.type == "void") B.CreateRetVoid(); else B.CreateRet(R);
   }
+  Contracts.evidence(Out);
   if (verifyModule(Out, &errs())) return 1;
   std::error_code EC; raw_fd_ostream OS(argv[2], EC);
   if (EC) { errs() << EC.message() << '\n'; return 1; }

@@ -138,7 +138,7 @@ def read_object(path):
                 fields = struct.unpack_from('<16s16sQQ8I', data, cursor+72+i*80)
                 name, segment = (v.rstrip(b'\0').decode() for v in fields[:2])
                 sections.append(dict(name=name, segment=segment, address=fields[2], size=fields[3],
-                                     offset=fields[4], align=fields[5], reloc=fields[6], nreloc=fields[7]))
+                                     offset=fields[4], align=fields[5], reloc=fields[6], nreloc=fields[7], flags=fields[8]))
         elif command == 2:
             symtab = struct.unpack_from('<4I', data, cursor+8)
         cursor += size
@@ -228,6 +228,9 @@ def validate_reviewed(data, sections, symbols, blocks):
         section=find_section(key)
         if section['size']!=len(want['data']) or section['align']!=want['align']:
             raise ValueError('Native record size/alignment mismatch: '+key)
+        zero_fill=section['name']=='__bss'
+        if 'flags' in section and (section['flags'] & 0xff) != int(zero_fill):
+            raise ValueError('Native storage section type mismatch: '+key)
         expected_bytes=bytearray(want['data'])
         relocs={}
         for i in range(section['nreloc']):
@@ -250,7 +253,7 @@ def validate_reviewed(data, sections, symbols, blocks):
                 expected_bytes[offset:offset+8]=((target_section['address']+target_offset+addend) % (1<<64)).to_bytes(8,'little')
                 relocs[offset]=name
             else: raise ValueError('Expected 64-bit ARM64_RELOC_UNSIGNED')
-        if key!='__bss' and data[section['offset']:section['offset']+section['size']]!=expected_bytes:
+        if not zero_fill and data[section['offset']:section['offset']+section['size']]!=expected_bytes:
             raise ValueError('Original numeric data changed or pointer addend changed: '+key)
         if relocs!=want['relocations']: raise ValueError('Original relocation target/order mismatch: '+key)
         relocations[key]=relocs

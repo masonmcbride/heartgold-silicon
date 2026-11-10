@@ -70,6 +70,9 @@ set(native_headers
     lib/include/nnsys/snd_arc_internal.h lib/include/nnsys/snd_arc_strm_internal.h
     lib/include/nnsys/g2d/g2d_CellTransferManager.h lib/NitroDWC/src/tree-iterator4.h)
 list(APPEND native_headers
+    lib/include/dwc/auth_internal.h
+    lib/include/dwc/net_common_internal.h
+    include/wifi_setup/wifi_setup_connection_screens.h
     include/application/pokewalker/pokewalker_ir.h
     include/application/pokewalker/pokewalker_ir_internal.h
     lib/include/nitro/card/card_spi_wait_internal.h)
@@ -162,10 +165,17 @@ add_library(heartgold_runtime STATIC ${msl_runtime}
     "${native_hash1}"
     "${game_source}/lib/NitroWiFi/src/stubsmd5.c"
     "${native_root}/lib/src/nitrocrypto_rc4.c"
-    "${game_source}/lib/src/nitrocrypto_rc4_init.c")
+    "${game_source}/lib/src/nitrocrypto_rc4_init.c"
+    "${game_source}/lib/MSL_C/src/msl_string_extras.c")
 target_include_directories(heartgold_runtime PRIVATE "${game_source}/include/library")
 target_compile_options(heartgold_runtime PRIVATE "-iquote${game_source}/include")
 target_link_libraries(heartgold_runtime PUBLIC nitro_config PRIVATE ntr_dgt)
+# Original resident MSL assertion and middleware version providers.
+target_sources(heartgold_runtime PRIVATE
+    "${game_source}/lib/MSL_C/src/msl_assert.c"
+    "${PROJECT_SOURCE_DIR}/cmake/native_msl_assert_data.S"
+    "${PROJECT_SOURCE_DIR}/cmake/native_middleware_version.S")
+
 target_include_directories(heartgold_runtime PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/os")
 
 # Overlay sources are prepared without merging overlay code into the main image.
@@ -236,6 +246,8 @@ add_test(NAME coordinated_sources COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_coordinated_sources.py")
 
 add_library(heartgold_main STATIC ${game_sources})
+include("${CMAKE_CURRENT_LIST_DIR}/wifi_constants.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/wifi_bss_safe.cmake")
 # Native implementation of the original main-owned VCT packet allocator.
 # The generated C retains the original free-list algorithm with ARM64 slot geometry.
 # Fail closed if the original or adapted member has already entered game_sources.
@@ -321,6 +333,21 @@ native_generate(native-card-spi-storage "${game_source}/lib/asm/nitro_sdk_data.s
 target_sources(heartgold_runtime PRIVATE "${card_storage}")
 target_include_directories(heartgold_runtime BEFORE PRIVATE "${native_root}/lib/include")
 add_dependencies(heartgold_runtime heartgold_native_headers)
+# main.lsf:677 assigns the complete original WM request member to resident.
+# Audit the complete member without admitting widened ARM7 wire records into
+# the resident link. A guest32 WM boundary is required before admission.
+set(native_wm_requests "${native_root}/lib/NitroSDK/src/wm_requests.c")
+# The coordinated source list above already declares its single output.
+add_library(heartgold_wm_requests_audit OBJECT EXCLUDE_FROM_ALL "${native_wm_requests}")
+target_compile_definitions(heartgold_wm_requests_audit PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
+target_include_directories(heartgold_wm_requests_audit PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
+target_compile_options(heartgold_wm_requests_audit PRIVATE
+    "$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>")
+target_link_libraries(heartgold_wm_requests_audit PRIVATE nitro_config)
+add_dependencies(heartgold_wm_requests_audit
+    heartgold_overlay_native_sources heartgold_native_headers fx_constants)
 add_test(NAME linker_contracts COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_linker_contracts.py"
     --root "${PROJECT_SOURCE_DIR}" --build "${PROJECT_BINARY_DIR}"
@@ -368,6 +395,12 @@ set_property(SOURCE "${game_source}/src/colosseum.c" APPEND PROPERTY COMPILE_OPT
     -include "${game_source}/lib/include/cw/function_target.h")
 
 include("${CMAKE_CURRENT_LIST_DIR}/assets.cmake")
+add_test(NAME resident_wifi_constants COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_wifi_constants.py"
+    --game "${game_source}" --build "${PROJECT_BINARY_DIR}"
+    --object "$<TARGET_OBJECTS:heartgold_wifi_constants>"
+    --compiler "${CMAKE_C_COMPILER}" --objcopy "${HG_ASSET_OBJCOPY}"
+    --readelf "${HG_ASSET_READELF}")
 add_dependencies(heartgold_main ${heartgold_asset_targets})
 add_dependencies(heartgold_intro_title ${heartgold_asset_targets})
 add_executable(heartgold "${PROJECT_SOURCE_DIR}/tests/start_game.c")

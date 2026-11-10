@@ -8,10 +8,41 @@
 
 static int initializer_calls;
 static void observe(void) { ++initializer_calls; }
+static void resident_a(void) {}
+static void resident_b(void) {}
+static void resident_start(void *context) { ++*(unsigned *)context; }
+
+static void resident_lifecycle(void)
+{
+    unsigned arena, other_arena, state = 99, initial_a = 7, initial_b = 8, starts = 0;
+    const void *a_entries[] = {resident_a}, *b_entries[] = {resident_b};
+    HG_OverlayData a_data = {&state, &initial_a, sizeof(state)};
+    HG_OverlayData b_data = {&state, &initial_b, sizeof(state)};
+    HG_OverlayImage *a = HG_RegisterResidentOverlay(&arena, a_entries, 1, &a_data, 1, resident_start, &starts);
+    HG_OverlayImage *b = HG_RegisterResidentOverlay(&arena, b_entries, 1, &b_data, 1, NULL, NULL);
+    assert(a && b && state == 99);
+    assert(HG_BindOverlayID(1000, a) && HG_BindOverlayID(1001, b));
+    assert(!HG_RegisterResidentOverlay(&arena, a_entries, 1, NULL, 0, NULL, NULL));
+    assert(HG_OverlayAcceptsArena(a, &arena) && !HG_OverlayAcceptsArena(a, &other_arena));
+    assert(HG_OverlayOwnsAddress(a, resident_a) && !HG_OverlayOwnsAddress(a, resident_b));
+    assert(!HG_OverlayOwnsAddress(a, (const char *)a_entries[0] + 1));
+    assert(HG_LoadOverlayImage(a) && state == 7);
+    assert(!HG_LoadOverlayImage(b) && errno == EBUSY && state == 7);
+    assert(HG_StartOverlayImage(a) && starts == 1);
+    state = 42;
+    assert(HG_UnloadOverlayImage(a) && !HG_OverlayIsResident(a));
+    assert(HG_LoadOverlayImage(b) && state == 8 && HG_StartOverlayImage(b));
+    assert(!HG_LoadOverlayImage(a) && errno == EBUSY);
+    assert(HG_UnloadOverlayImage(b));
+    assert(HG_LoadOverlayImage(a) && state == 7 && HG_StartOverlayImage(a) && starts == 2);
+    assert(HG_UnloadOverlayImage(a));
+    assert(HG_ReleaseOverlayImage(a) && HG_ReleaseOverlayImage(b));
+}
 
 int main(int argc, char **argv)
 {
     assert(argc == 3);
+    resident_lifecycle();
     assert(!HG_InspectOverlayImage(NULL) && errno == ENOENT);
     assert(!HG_InspectOverlayImage(&initializer_calls) && errno == ENOTSUP);
     void *library = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);

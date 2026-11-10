@@ -30,7 +30,7 @@ class Block:
 def integer(value, names=None):
     value = value.strip()
     import operator
-    operators = {ast.Add:operator.add, ast.Sub:operator.sub, ast.BitOr:operator.or_,
+    operators = {ast.Add:operator.add, ast.Sub:operator.sub, ast.Mult:operator.mul, ast.BitOr:operator.or_,
                  ast.BitAnd:operator.and_, ast.LShift:operator.lshift, ast.RShift:operator.rshift}
     def visit(node):
         if isinstance(node, ast.Name) and names is not None and node.id in names:
@@ -160,6 +160,8 @@ def raw_layout(blocks):
     """Original bytes/offsets and symbolic fixups; no native ABI decisions."""
     sections, labels, references = {}, {}, {}
     for block in blocks:
+        if block.symbol in labels:
+            raise ValueError('duplicate original data label: '+block.symbol)
         data = sections.setdefault(block.section, bytearray())
         data.extend(bytes((-len(data)) % block.before_alignment))
         labels[block.symbol] = (block.section, len(data))

@@ -40,7 +40,7 @@ def main():
     for m in members:
         complete = (
             m.get("compiled", False)
-            if m["kind"] == "C"
+            if m["kind"] in ("C", "C++")
             else m.get("represented", False)
         )
         if not complete:

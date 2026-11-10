@@ -45,7 +45,7 @@ def build_code(root, build):
         void *p = malloc(n ? n : 1); assert(p); assert((uintptr_t)p > UINT32_MAX);
         assert(live.insert(p).second); return p;
     }
-    extern "C" void DWC_Free(int, void *p, u32) { assert(live.erase(p) == 1); free(p); }
+    extern "C" void DWC_Free(uintptr_t, void *p, u32) { assert(live.erase(p) == 1); free(p); }
     extern "C" void _ZNSt15__vector_commonILb1EE18throw_length_errorEv(void) { abort(); }
     extern "C" {
     char gLobbyStr_BasicStringReserveLengthError[] = "reserve";

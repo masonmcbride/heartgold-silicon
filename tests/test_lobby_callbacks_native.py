@@ -82,7 +82,7 @@ c_code = '#include <nitro/types.h>\n#include <string.h>\n#include "lobby_vector.
 c_code += '#include "lobby_chat_manager.h"\n'
 c_code += block((game / 'include/lobby_chat_internal.h').read_text(), 'static inline void TagTemp(')
 c_code += block(m, 'void LobbyChat_StripChannelPrefix(') + block(m, 'void LobbyChat_StripChannelPrefixes(')
-c_code += 'void DWC_Free(int, void *, u32);\nvoid _ZNSt15__vector_commonILb1EE18throw_length_errorEv(void);\n'
+c_code += 'void DWC_Free(uintptr_t, void *, u32);\nvoid _ZNSt15__vector_commonILb1EE18throw_length_errorEv(void);\n'
 s = (game / 'include/ppw_lobby_internal.h').read_text()
 for sig in ['static inline void TouchTag(', 'static inline void SwapPtr(', 'static inline void SwapU32(']:
     c_code += block(s, sig)

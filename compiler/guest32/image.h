@@ -24,6 +24,46 @@ static Type *readType(LLVMContext &C,const json::Value &V){
 static std::string symbolKey(const GlobalValue &G){
   return G.hasLocalLinkage()?G.getParent()->getSourceFileName()+"|"+G.getName().str():G.getName().str();
 }
+static bool sourceInlineDefinition(const Function &F,bool Local){
+  if(F.isDeclaration() || !F.hasLinkOnceODRLinkage() || F.hasComdat())return false;
+  auto *SP=F.getSubprogram();if(!SP || !SP->getLine())return false;
+  std::string Origin=(SP->getDirectory()+"/"+SP->getFilename()).str();
+  StringRef Source=F.getParent()->getSourceFileName();
+  if(Local && (Origin!=Source || !(Source.ends_with(".cpp") || Source.ends_with(".cc") || Source.ends_with(".cxx"))))return false;
+  auto File=MemoryBuffer::getFile(Origin);if(!File)return false;
+  StringRef Text=(*File)->getBuffer();unsigned Line=1;
+  while(Line<SP->getLine() && Text.contains('\n')){Text=Text.split('\n').second;++Line;}
+  Text=Text.split('\n').first.ltrim();
+  if(Line!=SP->getLine())return false;
+  StringRef Explicit=Text;
+  bool Inline=Explicit.consume_front("inline") && !Explicit.empty() &&
+              (Explicit.front()==' ' || Explicit.front()=='\t');
+  // C++ definitions at their in-class declaration are implicitly inline.
+  // Out-of-class definitions, headers and qualified same-line definitions
+  // are excluded; merely having a class scope is not sufficient evidence.
+  auto *Class=dyn_cast<DICompositeType>(SP->getScope());
+  auto *Declaration=SP->getDeclaration();
+  bool InClass=Class && !Class->isForwardDecl() && Declaration &&
+      Declaration->getLine()==SP->getLine() && Declaration->getFile()==SP->getFile() &&
+      Declaration->getScope()==SP->getScope() && !Text.split('(').first.contains("::");
+  bool Generated=Class && SP->isArtificial() && Declaration &&
+      Declaration->getScope()==SP->getScope() && Class->getFile()==SP->getFile();
+  StringRef Friend=Text;
+  bool FriendDefinition=Friend.consume_front("friend") && !Friend.empty() &&
+      (Friend.front()==' ' || Friend.front()=='\t');
+  if(!Inline && !InClass && !Generated && !FriendDefinition)return false;
+  return true;
+}
+static bool privateInlineEligible(const Function &F){
+  if(!sourceInlineDefinition(F,false))return false;
+  StringRef Source=F.getParent()->getSourceFileName();
+  if(!(Source.ends_with(".cpp") || Source.ends_with(".cc") || Source.ends_with(".cxx")))return false;
+  for(const Use &U:F.uses()){
+    auto *Call=dyn_cast<CallBase>(U.getUser());
+    if(!Call || &U!=&Call->getCalledOperandUse())return false;
+  }
+  return true;
+}
 struct CodeSymbol {
   uint32_t address;
   std::string key,name,source,native;
@@ -33,9 +73,12 @@ struct CodeSymbol {
   bool returnsTwice=false,noReturn=false,executable=true,nativeBoundary=false;
   std::string returnHook;
   std::vector<unsigned> returnArguments;
+  // Optional original overlay owner; absent for resident/legacy catalogs.
+  int64_t overlayOwner=-1;
 };
 struct RegisterEdge {
-  std::string source,function,target,previous,mode; unsigned line,argument,offset;
+  std::string source,function,target,previous,mode; unsigned line,argument,offset,resultBytes;
+  std::string global;
 };
 struct Image {
   std::vector<RegisterEdge> registerEdges;
@@ -44,10 +87,18 @@ struct Image {
     auto B=MemoryBuffer::getFile(Path);if(!B)reject("image catalog file");
     auto J=json::parse((*B)->getBuffer());if(!J){consumeError(J.takeError());reject("image catalog JSON");}
     if(auto *E=J->getAsObject()->getArray("register_edges"))for(auto &V:*E){auto &O=*V.getAsObject();
-      registerEdges.push_back({O.getString("source")->str(),O.getString("function")->str(),O.getString("target")->str(),O.getString("previous").value_or("").str(),O.getString("mode")->str(),(unsigned)*O.getInteger("line"),(unsigned)O.getInteger("argument").value_or(0),(unsigned)O.getInteger("offset").value_or(0)});
+      registerEdges.push_back({O.getString("source")->str(),O.getString("function")->str(),O.getString("target")->str(),O.getString("previous").value_or("").str(),O.getString("mode")->str(),(unsigned)*O.getInteger("line"),(unsigned)O.getInteger("argument").value_or(0),(unsigned)O.getInteger("offset").value_or(0),(unsigned)O.getInteger("result_bytes").value_or(0),O.getString("global").value_or("").str()});
     }
     auto *A=J->getAsObject()->getArray("codes");if(!A)reject("image code catalog");
+    std::map<uint32_t,std::string> Addresses;
     for(auto &V:*A){auto &O=*V.getAsObject();SmallVector<Type*> Args;
+      auto Address=O.getInteger("address");
+      if(!Address || *Address<0 || (uint64_t)*Address>UINT32_MAX)
+        reject("guest code identity is not a 32-bit value");
+      // Direct-only header definitions have no pointer identity assigned yet.
+      // Zero is not an executable callback identity or permission to invent one.
+      if(!*Address && O.getBoolean("address_taken").value_or(false))
+        reject("addressable guest code identity must be nonzero");
       for(auto &T:*O.getArray("params"))Args.push_back(readType(C,T));
       CodeSymbol S{(uint32_t)*O.getInteger("address"),O.getString("key")->str(),O.getString("name")->str(),O.getString("source")->str(),O.getString("native")->str(),
         FunctionType::get(readType(C,*O.get("return")),Args,O.getBoolean("varargs").value_or(false)),O.getBoolean("local").value_or(false),O.getBoolean("sign_return").value_or(false),O.getBoolean("address_taken").value_or(false),O.getBoolean("definition").value_or(false),O.getBoolean("coalesce").value_or(false),{}};
@@ -55,12 +106,24 @@ struct Image {
       S.returnsTwice=O.getBoolean("returns_twice").value_or(false);
       S.noReturn=O.getBoolean("noreturn").value_or(false);
       S.executable=O.getBoolean("executable").value_or(true);
+      if(O.get("overlay_owner")){
+        auto Owner=O.getInteger("overlay_owner");
+        if(!Owner || *Owner<0 || (uint64_t)*Owner>UINT32_MAX)
+          reject("invalid guest callback overlay owner");
+        S.overlayOwner=*Owner;
+      }
       S.returnHook=O.getString("return_hook").value_or("").str();
       if(auto *Arguments=O.getArray("return_arguments"))for(auto &V:*Arguments){
         auto Index=V.getAsInteger();if(!Index || *Index<0 || (uint64_t)*Index>=S.type->getNumParams())reject("return hook argument index");
         S.returnArguments.push_back(*Index);
       }
       if(auto *U=O.getArray("used_flat"))for(auto &V:*U)S.used.push_back(V.getAsBoolean().value_or(true));
+      if(codes.count(S.key))reject("duplicate guest code key: "+S.key);
+      if(S.address){
+        auto Prior=Addresses.find(S.address);
+        if(Prior!=Addresses.end())reject("duplicate guest code identity: "+Prior->second+" / "+S.key);
+        Addresses.emplace(S.address,S.key);
+      }
       codes.emplace(S.key,std::move(S));
     }
   }
@@ -205,11 +268,15 @@ static Function *indirectDispatcher(Module &Out,Image &Img,ABI &Interfaces,Modul
     Value *R=nullptr;
     auto Boundary=Interfaces.calls.find(K.name);
     if(!K.local && Boundary!=Interfaces.calls.end()){
+      if(K.overlayOwner>=0)reject("overlay callback cannot use a native boundary: "+K.name);
       if(Values.size()!=Boundary->second.args.size()+1)reject("indirect native boundary shape");
       R=bridgeCall(D,Out,Values[0],Boundary->second,ArrayRef<Value*>(Values).drop_front());
       if(!Site->getReturnType()->isVoidTy())R=adaptScalar(D,R,Site->getReturnType(),K.signReturn);
     }else{
       auto Target=Out.getOrInsertFunction(K.native,T);
+      if(K.overlayOwner>=0)
+        runtime(D,Out,"g32_check_code_image",D.getVoidTy(),
+          {Values[0],D.getInt32(K.address),D.getInt32(K.overlayOwner),Target.getCallee()});
       // Address-taken local functions have globally unique generated identities.
       // Their guest-ABI entry must remain bindable by a peer image dispatcher.
       R=guestCall(D,Target,Values,Site->getReturnType(),K.signReturn,true,nullptr,hasArgumentHomes(K.type));
@@ -237,6 +304,7 @@ static Value *constantValue(Value *X,IRBuilder<> &B,const DataLayout &DL,
       if(!Coordinate)Coordinate=new GlobalVariable(M,B.getInt32Ty(),true,GlobalValue::ExternalLinkage,nullptr,Name);
       return B.CreateLoad(B.getInt32Ty(),Coordinate);
     }
+    if(!I->second.address)reject("addressable guest code identity must be nonzero");
     return B.getInt32(I->second.address);
   }
   if(isa<ConstantPointerNull>(X))return B.getInt32(0);

@@ -1,5 +1,9 @@
 """Provider identity is distinct from representation and overlay ownership."""
 import sys
+import json
+import os
+import subprocess
+import tempfile
 from pathlib import Path
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'cmake'))
@@ -35,6 +39,47 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(result['imports'][0]['status'], 'emitted-provider')
         self.assertEqual(result['definitions'][0]['original_identity'], 'shared')
         self.assertEqual(result['definitions'][0]['native_exported_identity'], '_guest32_shared')
+
+
+@unittest.skipUnless(sys.platform == 'darwin', 'Mach-O contract test')
+class ResidentContractsTests(unittest.TestCase):
+    def test_resident_code_uses_main_interface_and_original_logical_owner(self):
+        from native_overlay_link import generate_contracts
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR', root/'build')) as temporary:
+            work = Path(temporary)
+            resident = work/'resident.a'
+            consumer = work/'libheartgold_overlay_44.a'
+            for name, source, archive in (
+                ('resident', 'int dwc(void){return 7;} int callback(void){return 8;}', resident),
+                ('consumer', 'extern int dwc(void); int call(void){return dwc();}', consumer),
+            ):
+                path = work/(name+'.c')
+                obj = path.with_suffix('.o')
+                path.write_text(source)
+                subprocess.run(['clang', '-arch', 'arm64', '-c', str(path), '-o', str(obj)], check=True)
+                subprocess.run(['ar', 'rcs', str(archive), str(obj)], check=True)
+            partial = work/'partial.c'
+            partial.write_text('extern int callback(void); int partial(void){return callback();}')
+            partial_object = partial.with_suffix('.o')
+            subprocess.run(['clang', '-arch', 'arm64', '-c', str(partial), '-o', str(partial_object)], check=True)
+            out = work/'contracts'
+            exports = out/'exports.txt'
+            generate_contracts([resident], [consumer], out, exports_path=exports,
+                               resident_owners={resident: 'OVY_0'}, resident_consumers=[partial_object])
+            report = json.loads((out/'provider-registry.json').read_text())
+            row = next(r for r in report['definitions'] if r['native_exported_identity'] == '_dwc')
+            self.assertEqual(row['image_owner'], 'OVY_0')
+            self.assertEqual(row['abi_representation'], 'native-arm64')
+            edge = next(r for r in report['imports'] if r['native_exported_identity'] == '_dwc')
+            self.assertEqual(edge['status'], 'emitted-provider')
+            self.assertIn('interfaces/main.tbd', (out/'image_44.rsp').read_text())
+            self.assertIn('_callback', exports.read_text().splitlines())
+            duplicate = work/'duplicate.a'
+            duplicate.write_bytes(resident.read_bytes())
+            with self.assertRaisesRegex(ValueError, 'Competing resident providers'):
+                generate_contracts([resident, duplicate], [], out,
+                                   resident_owners={resident:'OVY_0'})
 
 
 if __name__ == '__main__':

@@ -15,10 +15,13 @@ def main():
  def run(args):
   r=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=60);commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr));(out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n');assert r.returncode==0,r.stdout+r.stderr;return r.stdout
  vfs=[]
- for relative in ('lib/include/nitro/os/context.h','lib/include/nitro/os/thread.h','lib/src/nitrocrypto_rc4_fast.c'):
+ for relative in ('lib/include/nitro/os/context.h','lib/include/nitro/os/thread.h','lib/src/nitrocrypto_rc4_fast.c',
+                  'lib/NitroSDK/src/os/os_alarm_before_handler.c','lib/NitroSDK/src/os/os_alarm_after_handler.c'):
   source=game/relative;adapted=out/'frontend'/relative;write_if_changed(adapted,guest32_frontend(relative,source.read_text(),game));vfs.append({'type':'file','name':str(source),'external-contents':str(adapted),'use-external-name':False})
  overlay=out/'frontend.json';overlay.write_text(json.dumps(dict(version=0,roots=vfs)))
  for name,source_list in [('crypto',[ROOT/'tests/guest32_crypto_guest.c',game/'lib/src/nitrocrypto_rc4_init.c',game/'lib/src/nitrocrypto_rc4_fast.c']),
+                          ('dhcp',[game/'lib/libCPS/src/cps_dhcp.c']),
+                          ('alarm',[game/'lib/NitroSDK/src/os/os_alarm_before_handler.c',game/'lib/NitroSDK/src/os/os_alarm_after_handler.c']),
                           ('scheduler',[ROOT/'tests/guest32_scheduler_guest.c',*[game/'lib/NitroSDK/src/os'/n for n in ('os_thread.c','os_message.c','os_mutex.c','os_terminate_arm9.c')],game/'lib/NitroWiFi/src/socl_command.c'])]:
   work=out/name;work.mkdir(exist_ok=True);descriptions=[];codes={};placements={};cursor=0x02200000
   data=json.loads((b/'provider-closure170/data/data.json').read_text()) if name=='scheduler' else None
@@ -32,6 +35,12 @@ def main():
    for g in d['globals']:
     if not g['definition'] or g['key'] in placements:continue
     cursor=(cursor+g['alignment']-1)&~(g['alignment']-1);placements[g['key']]=dict(offset=cursor,size=g['size']);cursor+=g['size']
+  if name=='alarm':
+   expected=['OSi_SetTimer','OS_InitAlarm','OS_IsAlarmAvailable','OS_CreateAlarm','OSi_InsertAlarm','OS_SetAlarm','OS_SetPeriodicAlarm','OS_CancelAlarm','OSi_ArrangeTimer']
+   owners={symbol:[i for i,d in enumerate(descriptions) if any(f['name']==symbol and f['definition'] for f in d['functions'])] for symbol in expected}
+   assert owners=={s:[1 if s=='OSi_ArrangeTimer' else 0] for s in expected},owners
+   for symbol in ('OSi_UseAlarm','OSi_AlarmQueue'):
+    assert [i for i,d in enumerate(descriptions) if any(g['name']==symbol and g['definition'] for g in d['globals'])]==[0]
   for i,(key,f) in enumerate(codes.items()):
    f.update(address=0x18000000+4*i,native='guest32_'+(hashlib.sha256(key.encode()).hexdigest()[:16]+'_' if f['local'] else '')+f['name'],coalesce=f['definition'] and Path(f.get('origin','')).suffix=='.h',used_flat=[True]*len(f['params']))
   apply(codes.values(),game)
@@ -50,11 +59,17 @@ def main():
      inits+=data['loaders']
      prefix+='\n#include "guest32_context.h"\nextern int guest32_ProbeScheduler(void*);'
      body='int result=guest32_ProbeScheduler(ram);if(result){fprintf(stderr,"original scheduler line %d\\n",result);return 1;}assert(g32_live_allocations(ram)==0);unsigned char *contexts=g32_allocate(ram,100,4);unsigned char *other=g32_allocate(ram,100,4);unsigned ca=g32_encode(ram,contexts,100,0),cb=g32_encode(ram,other,100,0);guest32_OS_InitContext(ram,ca,0,0x023ff000);guest32_OS_InitContext(ram,cb,0,0x023ff000);volatile int stage=0;if(!guest32_OS_SaveContext(ram,ca)){stage=1;if(!guest32_OS_SaveContext(ram,cb))guest32_OS_LoadContext(ram,ca);assert(0);}assert(stage==1);g32_release(ram,contexts,100);g32_release(ram,other,100);'
-    else:
+    elif name=='crypto':
      prefix+='\nextern void guest32_ProbeCrypto(void*,unsigned,unsigned,unsigned,unsigned,unsigned,unsigned);'
      body='''unsigned char *p=g32_allocate(ram,8192,16);unsigned addr=g32_encode(ram,p,8192,0);memcpy(p+2048,"Key",3);memcpy(p+3072,"Plaintext",9);guest32_ProbeCrypto(ram,addr,addr+2048,3,addr+3072,9,addr+4096);static const unsigned char expected[]={0xbb,0xf3,0x16,0xe8,0xd9,0x40,0xaf,0x0a,0xd3};assert(!memcmp(p+4096,expected,9));for(unsigned n=0;n<=65;n++){memset(p+4096,0xa5,128);guest32_ProbeCrypto(ram,addr,addr+2048,3,addr+3072,n,addr+4096);memcpy(p+5120,p+3072,n);guest32_ProbeCrypto(ram,addr+6144,addr+2048,3,addr+5120,n,addr+5120);assert(!memcmp(p+5120,p+4096,n));assert(p[4096+n]==0xa5);}'''
+    elif name=='alarm':
+     prefix+='\nextern void guest32_OS_CreateAlarm(void*,unsigned);extern int guest32_OS_IsAlarmAvailable(void*);'
+     body='''unsigned char *p=g32_allocate(ram,64,8);assert(p);memset(p,0xa5,64);unsigned addr=g32_encode(ram,p,64,0);guest32_OS_CreateAlarm(ram,addr);unsigned word;memcpy(&word,p,4);assert(word==0);memcpy(&word,p+8,4);assert(word==0);for(unsigned i=0;i<64;i++)if(i>=4 && (i<8 || i>=12))assert(p[i]==0xa5);assert(!guest32_OS_IsAlarmAvailable(ram));g32_release(ram,p,64);'''
+    else:
+     prefix+='\nextern unsigned guest32_pad_mem(void*,unsigned char,unsigned,unsigned,unsigned);'
+     body='''unsigned char *p=g32_allocate(ram,512,16);assert(p && (uintptr_t)p>UINT32_MAX);unsigned addr=g32_encode(ram,p,512,0);for(unsigned size=0;size<=320;size++){for(unsigned length=0;length<=340;length+=17){memset(p,0xa5,512);unsigned char value=(unsigned char)(size+length);unsigned count=length<size?size-length:0;assert(guest32_pad_mem(ram,value,size,addr+64,length)==addr+64+count);for(unsigned i=0;i<512;i++)assert(p[i]==(i>=64 && i<64+count?value:0xa5));}}g32_release(ram,p,512);'''
     host.write_text(prefix+'\nint main(int argc,char **argv){void *ram=g32_create_ds('+str(cursor)+');assert(ram);'+''.join(n+'(ram);' for n in inits)+('if(argc>1)guest32_thread_entry(ram,(unsigned)strtoul(argv[1],0,0),0);' if name=='scheduler' else '')+body+'g32_destroy(ram);return 0;}')
-    extra=[ROOT/'hardware_drivers/guest32_context.c',ROOT/'hardware_drivers/guest32_context.S',b/'libheartgold_guest32_mi.a',b/'provider-closure170/data/provider.a'] if name=='scheduler' else []
+    extra=[ROOT/'hardware_drivers/guest32_context.c',ROOT/'hardware_drivers/guest32_context.S',b/'libheartgold_guest32_mi.a',b/'provider-closure170/data/provider.a'] if name=='scheduler' else [b/'libheartgold_guest32_mi.a'] if name=='dhcp' else []
     exe=work/('test.'+tag);run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,ROOT/'hardware_drivers/guest32.c',*extra,*objects,'-Wl,-dead_strip','-o',exe]);run([exe])
     if name=='scheduler':
      incompatible=next(f['address'] for f in codes.values() if f['definition'] and f['address_taken'] and f['return']!='void')

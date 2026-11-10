@@ -3,15 +3,17 @@
 #include "guest32_dwc.h"
 #include <stdio.h>
 #include <stdlib.h>
-extern void DWC_SetMemFunc(void *(*)(int, uint32_t, int), void (*)(int, void *, uint32_t));
-extern void *DWC_AllocEx(int, uint32_t, int);
-extern void DWC_Free(int, void *, uint32_t);
+/* Match the source-verified native NAS allocator identifier ABI. Guest entry
+ * arguments below retain their original signed 32-bit representation. */
+extern void DWC_SetMemFunc(void *(*)(uintptr_t, uint32_t, int), void (*)(uintptr_t, void *, uint32_t));
+extern void *DWC_AllocEx(uintptr_t, uint32_t, int);
+extern void DWC_Free(uintptr_t, void *, uint32_t);
 extern void MIi_CpuClear32(uint32_t, void *, uint32_t);
-static void *allocate(int heap, uint32_t bytes, int alignment) {
+static void *allocate(uintptr_t heap, uint32_t bytes, int alignment) {
     (void)heap;
     return g32_allocate(g32_current(), bytes, (uint32_t)alignment);
 }
-static void release(int heap, void *p, uint32_t bytes) {
+static void release(uintptr_t heap, void *p, uint32_t bytes) {
     (void)heap;
     g32_release(g32_current(), p, bytes);
 }

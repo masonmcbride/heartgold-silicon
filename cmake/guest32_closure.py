@@ -29,6 +29,65 @@ def main():
             assert c['codes']==shared['codes'] and c['static_end']==shared['static_end']
             assert all(c[k]==shared['images'][f'OVY_{ident}'][k] for k in ('assembly_globals','c_globals'))
     runtime=[]
+    hardware=[
+        b/'libheartgold_guest32_context.a',
+        b/'libheartgold_guest32_cache.a',
+    ]
+    for archive in hardware:
+        if not archive.is_file():
+            raise ValueError('required Guest32 hardware archive missing: '+str(archive))
+    # Source-verified, hardware-owned Guest32 identities. These are not
+    # claims of original ARM instruction compilation.
+    original_root=Path(__file__).resolve().parents[1]/'upstream/pokeheartgold/lib/NitroSDK/src/os'
+    hardware_contract={
+        'os_system.c':(
+            '1a7a0943c47895f84168d6718fdf9a75ccdd4e8e612367d2850659b33eeaef28',
+            {
+                '_guest32_OS_DisableInterrupts':((), 'i32'),
+                '_guest32_OS_RestoreInterrupts':(('i32',), 'i32'),
+            },
+        ),
+        'os_cache.c':(
+            '2cebb06f7ac51377299cac72bbeb29e0f1d624e1854905314ac993d123d29ccc',
+            {'_guest32_DC_InvalidateRange':(('ptr','i32'), 'void')},
+        ),
+    }
+    frontier_path=b/'guest32-greedy-163.json'
+    if not frontier_path.is_file():
+        raise ValueError('hardware admission requires original frontier manifest')
+    frontier=json.loads(frontier_path.read_text())
+    required=set()
+    for filename,(digest,identities) in hardware_contract.items():
+        source=original_root/filename
+        if hashlib.sha256(source.read_bytes()).hexdigest()!=digest:
+            raise ValueError('hardware original source drift: '+str(source))
+        required.update(identities)
+    if not required.issubset(set(frontier['frontier'])):
+        raise ValueError('hardware identities absent from original frontier')
+    owners={}
+    for member in frontier['members']:
+        for symbol in member.get('symbols',[]):
+            if symbol not in required:continue
+            if symbol in owners:raise ValueError('duplicate original hardware owner: '+symbol)
+            owners[symbol]=member
+    for filename,(_,identities) in hardware_contract.items():
+        for symbol,(params,result) in identities.items():
+            if symbol not in owners:
+                raise ValueError('missing original hardware owner: '+symbol)
+            signature=owners[symbol]['guest_signatures'][symbol]
+            if (tuple(signature['params']),signature['return'],signature['varargs'])!=(params,result,False):
+                raise ValueError('hardware signature drift: '+symbol)
+    exported={}
+    for archive in hardware:
+        result=subprocess.run(['nm','-gU',str(archive)],capture_output=True,text=True,check=True)
+        for line in result.stdout.splitlines():
+            fields=line.split()
+            if len(fields)>=3 and fields[-1] in required and fields[-2] in ('T','D','S'):
+                exported.setdefault(fields[-1],[]).append(str(archive))
+    for symbol in sorted(required):
+        if len(exported.get(symbol,[]))!=1:
+            raise ValueError('hardware export ownership violation: '+symbol+' '+str(exported.get(symbol,[])))
+    print('PASS source-verified hardware provider contract:',len(required),'unique identities')
     common=[str(b/'libheartgold_guest32_runtime.a'),str(b/'libheartgold_guest32_scalar_bridges.a'),str(b/'libheartgold_guest32_libc_memory.a')]
     native_interface=out/'native-main.tbd';interface(native_interface,'@executable_path/heartgold',set().union(*(symbols(path) for path in native_paths)))
     manifests=[b/'guest32-account/providers.json',b/'guest32-crc/providers.json',b/'guest32-std/providers.json',b/'guest32-mi/providers.json'];catalogs=[]
@@ -40,6 +99,7 @@ def main():
             if family['abi_representation']!='guest32':raise ValueError('experimental manifest requires guest32 representation')
             additional.append(Path(family['archive']).resolve())
     runtime.sort(key=lambda path: 'thread-entry' in path)
+    runtime.extend(str(archive.resolve()) for archive in hardware)
     for ident,archive in zip((0,38),archives):
         directory=archive.parent;coverage=json.loads((directory/'coverage.json').read_text());catalog=json.loads((directory/'image.json').read_text());catalogs.append(catalog)
         assert coverage['summary']['complete_compilation'] and [m['object'] for m in coverage['members']]==coverage['image']['objects']
@@ -66,8 +126,66 @@ def main():
             assert all(abi(x)==abi(y) for x,y in zip(f['params'],d['params'])),('incompatible cross-image register classes',f['name'])
             assert len(f['params'])>=len(d['params']),('missing cross-image argument',f['name'])
             assert f['return']=='void' or abi(f['return'])==abi(d['return']),('incompatible cross-image result',f['name'])
+    # Reject competing definitions across every admitted provider archive.
+    # A hardware-owned identity must have exactly one authoritative definition.
+    candidate_archives=set(hardware)
+    candidate_archives.update((account,crc,mi,std))
+    candidate_archives.update(additional)
+    candidate_archives.update(archives)
+    candidate_archives.update(Path(path) for path in common)
+    candidate_archives.update(Path(path) for path in runtime)
+    candidate_archives.update(native_paths)
+
+    def hardware_definitions(paths):
+        found={}
+        for archive in sorted({Path(path).resolve() for path in paths}):
+            if not archive.is_file():
+                continue
+            result=subprocess.run(
+                ['nm','-gU',str(archive)],
+                capture_output=True,text=True,check=True
+            )
+            for line in result.stdout.splitlines():
+                fields=line.split()
+                if len(fields)<3:
+                    continue
+                symbol=fields[-1]
+                kind=fields[-2]
+                if symbol in required and kind.upper() in ('T','D','S','B'):
+                    found.setdefault(symbol,[]).append(str(archive))
+        return found
+
+    def validate_hardware_ownership(definitions):
+        for symbol in sorted(required):
+            providers=definitions.get(symbol,[])
+            if len(providers)!=1 or providers!=exported[symbol]:
+                raise ValueError(
+                    'duplicate or missing hardware provider: '
+                    +symbol+' '+str(providers)
+                )
+
+    all_definitions=hardware_definitions(candidate_archives)
+    validate_hardware_ownership(all_definitions)
+
+    # Negative regression: the actual validator must reject an extra owner.
+    for symbol in sorted(required):
+        duplicate={k:list(v) for k,v in all_definitions.items()}
+        duplicate[symbol].append('synthetic-duplicate.a')
+        try:
+            validate_hardware_ownership(duplicate)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(
+                'duplicate-provider rejection failed: '+symbol
+            )
+
+    print('PASS global hardware provider uniqueness:',
+          len(candidate_archives),'candidate artifacts')
+    print('PASS global hardware provider uniqueness:',len(candidate_archives),'candidate artifacts')
+    print('PASS duplicate-provider rejection:',len(required),'cases')
     contracts=out/'contracts'
-    generate_contracts([*native_paths,account,crc,mi,std,*additional],archives,contracts,provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'})
+    generate_contracts([*native_paths,account,crc,mi,std,*additional,*hardware],archives,contracts,provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'})
     results={}
     for phase in ('before','providers','admitted','source','global'):
         for ident,archive in zip((0,38),archives):

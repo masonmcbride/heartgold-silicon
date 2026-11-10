@@ -81,7 +81,25 @@ function(dependency name url revision)
         execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${source}" status --porcelain --untracked-files=all
             OUTPUT_VARIABLE dirty COMMAND_ERROR_IS_FATAL ANY)
         if(dirty)
-            message(FATAL_ERROR "${name} must match its pinned commit with a clean working tree.")
+            string(LENGTH "${HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256}" review_hash_length)
+            if(NOT review_hash_length EQUAL 64 OR
+               NOT HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256 MATCHES "^[0-9a-fA-F]+$")
+                message(FATAL_ERROR "${name} must match its pinned commit with a clean working tree.")
+            endif()
+            execute_process(
+                COMMAND "${GIT_EXECUTABLE}" -C "${source}" ls-files --others --exclude-standard
+                OUTPUT_VARIABLE untracked COMMAND_ERROR_IS_FATAL ANY)
+            if(untracked)
+                message(FATAL_ERROR "Reviewed upstream checkout contains untracked files")
+            endif()
+            execute_process(
+                COMMAND "${GIT_EXECUTABLE}" -C "${source}" diff --binary HEAD
+                OUTPUT_VARIABLE reviewed_diff COMMAND_ERROR_IS_FATAL ANY)
+            string(SHA256 actual_review_sha "${reviewed_diff}")
+            if(NOT actual_review_sha STREQUAL HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256)
+                message(FATAL_ERROR "Reviewed upstream source fingerprint changed")
+            endif()
+            message(WARNING "Using fingerprint-locked modified pokeheartgold checkout; not a pristine upstream build")
         endif()
     endif()
 
@@ -268,6 +286,9 @@ if(HEARTGOLD_BUILD_GAME)
     endif()
     if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
+        if(TARGET guest32-lower)
+            include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
+        endif()
     endif()
 endif()
 

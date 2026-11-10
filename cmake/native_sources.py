@@ -23,6 +23,202 @@ def replace(text, old, new, count=1):
     return text.replace(old, new)
 
 
+# Only whole, pointer-bearing runtime objects belong here. In particular the
+# fixed response/field buffers and the HTTP thread's stack are DS byte formats,
+# not candidates for a blanket numeric-constant replacement.
+DWC_NATIVE_EXTENTS = {
+    'lib/NitroDWC/src/auth_client.c': (
+        ('alloc(sStr_ALLOC_DWCauth, 0x13F4)', 'alloc(sStr_ALLOC_DWCauth, sizeof(AuthWork))'),
+        ('MI_CpuFill8(gDwcAuthState.work, 0, 0x13F4)',
+         'MI_CpuFill8(gDwcAuthState.work, 0, sizeof(*gDwcAuthState.work))'),
+    ),
+    'lib/NitroDWC/src/auth_netcheck.c': (
+        ('alloc(sStr_ALLOC_DWCnetcheck, 0x11f4)', 'alloc(sStr_ALLOC_DWCnetcheck, sizeof(NetCheckWork))'),
+        ('MI_CpuFill8(gDwcNetCheckState.work, 0, 0x11f4)',
+         'MI_CpuFill8(gDwcNetCheckState.work, 0, sizeof(*gDwcNetCheckState.work))'),
+        ('alloc(sStr_ALLOC_DWChttp, 0x1c14)', 'alloc(sStr_ALLOC_DWChttp, sizeof(NasHttp))'),
+        ('alloc(sStr_ALLOC_Intwork, 0x1c20)', 'alloc(sStr_ALLOC_Intwork, sizeof(SvcLocWork))'),
+        ('MI_CpuFill8(gDwcSvcLocWork, 0, 0x1c20)',
+         'MI_CpuFill8(gDwcSvcLocWork, 0, sizeof(*gDwcSvcLocWork))'),
+    ),
+    'lib/NitroDWC/src/auth_request.c': (
+        ('MI_CpuFill8(http, 0, 0x1C14)', 'MI_CpuFill8(http, 0, sizeof(*http))'),
+    ),
+    'lib/NitroDWC/src/auth_http.c': (
+        ('MI_CpuFill8(http, 0, 0x1c14)', 'MI_CpuFill8(http, 0, sizeof(*http))'),
+        ('MI_CpuFill8(&http->socket, 0, 100)', 'MI_CpuFill8(&http->socket, 0, sizeof(http->socket))'),
+        ('MI_CpuFill8(ssl, 0, 0x830)', 'MI_CpuFill8(ssl, 0, sizeof(*ssl))'),
+        ('MI_CpuFill8(buf, 0, 16)', 'MI_CpuFill8(buf, 0, sizeof(*buf))'),
+        ('MI_CpuFill8(http->entry, 0, 0x100)', 'MI_CpuFill8(http->entry, 0, sizeof(http->entry))'),
+    ),
+}
+
+# This private native ABI carries either an integer allocation kind or a named
+# NAS identifier. uintptr_t preserves both without changing any DS byte record.
+DWC_ABI_HEADERS = (
+    'lib/include/dwc/auth_internal.h',
+    'lib/include/dwc/net_common_internal.h',
+    'include/wifi_setup/wifi_setup_connection_screens.h',
+)
+DWC_STATUS_STRINGS = (
+    'sStr_HttpsNasTestNintendowifiNetAc_2', 'sStr_HttpsNasDevNintendowifiNetAc',
+    'sStr_HttpsNasNintendowifiNetAc_4', 'sStr_0000', 'sStr_Empty',
+)
+
+
+def dwc_status_string_blocks(root, text):
+    """Only the relocation-free contiguous original status-string range.
+
+    This is deliberately not a conversion/admission of dwc_lib_data.o: its
+    QueryReport/QRRecord storage still has an independent native ABI blocker.
+    """
+    from native_data_ir import parse, raw_layout, native_blocks
+    if hashlib.sha256(text.encode()).hexdigest() != 'e0c88d06b1d65fce3ded518163146af0699bbe74fa6480930ba3a17b7dcec810':
+        raise ValueError('Original DWC data changed')
+    source = root / 'lib/NitroDWC/asm/dwc_lib_data.s'
+    sections, labels, refs = raw_layout(parse(source, text))
+    start = labels[DWC_STATUS_STRINGS[0]]
+    end = labels['sStr_HttpsDownload']
+    if start[0] != '.data' or end[0] != '.data':
+        raise ValueError('DWC strings original data section changed')
+    if any(section == '.data' and start[1] <= offset < end[1] for section, offset in refs):
+        raise ValueError('Unexpected relocation in DWC status strings')
+    result = '.data\n'
+    for index, name in enumerate(DWC_STATUS_STRINGS):
+        section, offset = labels[name]
+        following = labels[DWC_STATUS_STRINGS[index + 1]][1] if index + 1 < len(DWC_STATUS_STRINGS) else end[1]
+        if section != '.data' or offset % 4:
+            raise ValueError('DWC string alignment changed')
+        result += '.public ' + name + '\n' + name + ':\n.byte '
+        result += ','.join(map(str, sections[section][offset:following])) + '\n'
+    return native_blocks(source, text=result)
+DWC_REGISTERED_ALLOCATORS = (
+    'WifiConnection', 'NintendoWfc', 'NintendoWfcUnused', 'GlobalTerminalApp_Dwc',
+    'Gts', 'MysteryGiftWfc', 'WiiMessageSettings',
+)
+DWC_ABI_SOURCES = tuple('lib/NitroDWC/src/' + name + '.c' for name in (
+    'net_common', 'auth_client', 'auth_http', 'auth_request', 'auth_netcheck',
+    'ap_connect_control', 'ap_connect', 'dwc_login', 'match_command',
+    'match_setup', 'match_connect', 'match_browse', 'friend_manager',
+    'query_report_init', 'server_report',
+)) + tuple('src/' + name for name in '''
+global_terminal/global_terminal_socket.c stats_upload.c global_terminal/global_terminal_app.c
+wifi_connection.c game_stats_request.c gts/gts.c
+lobby/lobby_user_id_set.c lobby/ppw_lobby_initialize.cpp lobby/lobby_user_id_set_copy_nodes.cpp
+lobby/lobby_requests.c lobby/lobby_event_vector_reallocate.c lobby/lobby_vector_growth.cpp
+lobby/lobby_u32_vector_buffer.c lobby/lobby_u32_vector_reallocate.cpp lobby/lobby_chat_initialize.cpp
+lobby/ppw_lobby_web_request_delete.c lobby/lobby_chat_on_disconnected.c
+lobby/lobby_event_deque_destroy.cpp lobby/lobby_event_deque_capacity.cpp lobby/lobby_user_map.c
+lobby/lobby_event_deque_map_buffer.c lobby/lobby_channel_map_insert_node.cpp
+lobby/lobby_vip_vector_growth.c lobby/ppw_lobby_player_set_destroy_nodes.c
+lobby/lobby_channel_map.c lobby/lobby_tree_nodes.c lobby/ppw_lobby_player_set.c
+lobby/lobby_event_deque_map_destroy.c lobby/ppw_lobby_process.cpp lobby/ppw_lobby.cpp lobby/lobby_mem.c
+nintendo_wfc_connect_unused.c nintendo_wfc_connect.c application/wii_message/wii_message_settings.c
+application/main_menu/mystery_gift_wfc.c wifi_setup/wifi_setup_connection_menu.c
+'''.split())
+
+
+def dwc_native_qr_constructor_abi(relative, text):
+    if relative != "lib/NitroDWC/src/query_report_init.c": return text
+    source = Path(__file__).resolve().parent.parent / "upstream/pokeheartgold/lib/NitroDWC/src/server_report.c"
+    original = source.read_text()
+    parts = [span(original, a, b) for a,b in (
+        ("typedef struct SockAddr {", "} SockAddr;"),
+        ("typedef struct QRBuffer {", "} QRBuffer;"),
+        ("typedef struct QRKeyList {", "} QRKeyList;"),
+        ("typedef void (*QRServerKeyCallback)", ";"),
+        ("typedef void (*QRIndexedKeyCallback)", ";"),
+        ("typedef void (*QRKeyListCallback)", ";"),
+        ("typedef int (*QRCountCallback)", ";"),
+        ("typedef void (*QRErrorCallback)", ";"),
+        ("typedef void (*QRNatCallback)", ";"),
+        ("typedef void (*QRMessageCallback)", ";"),
+        ("typedef void (*QRAddressCallback)", ";"),
+        ("typedef struct QRRecord {", "} QRRecord;"),
+    )]
+    text = replace(text, span(text, "typedef struct QueryReport {", "} QueryReport;"),
+                   "\n".join(parts) + "\ntypedef QRRecord QueryReport;")
+    before = "u32 cb0, u32 cb1, u32 cb2, u32 cb3, u32 cb4, u32 cb5, u32 userData"
+    after = ("QRServerKeyCallback cb0, QRIndexedKeyCallback cb1, QRIndexedKeyCallback cb2, "
+             "QRKeyListCallback cb3, QRCountCallback cb4, QRErrorCallback cb5, void *userData")
+    text = replace(text, before, after, count=2)
+    text = replace(text, "QueryReport **out", "void **out", count=2)
+    for i,field in enumerate(("serverKeyCallback","playerKeyCallback","teamKeyCallback",
+                              "keyListCallback","countCallback","errorCallback")):
+        text = replace(text, f"qr->callbacks[{i}]", "qr->"+field)
+    for a,b in (("qr->userData","qr->param"),("qr->port = port;","qr->queryPort = port;"),
+                ("0x6cfc, qr->masterAddr, 0","0x6cfc, &qr->masterAddr, 0")):
+        text = replace(text,a,b)
+    return text
+
+
+def dwc_native_qr_caller_abi(relative, text):
+    if relative != "lib/NitroDWC/src/match_setup.c": return text
+    old = 'extern int qr2_init_socketA(void **reporting, int a, int b, const char *gameName, const char *secretKey, int c, int d, void *cb0, void *cb1, void *cb2, void *cb3, void *cb4, void *cb5, int e);'
+    names = 'DWCi_QR2ServerKeyCallback, DWCi_QR2PlayerKeyCallback, DWCi_QR2TeamKeyCallback, DWCi_QR2KeyListCallback, DWCi_QR2CountCallback, DWCi_QR2AddErrorCallback'
+    assert text.count(old) == 1 and text.count(names) == 1, "QR caller source drift"
+    text = text.replace(old, 'typedef struct QRBuffer QRBuffer;\ntypedef struct QRKeyList QRKeyList;\ntypedef void (*HGQRServer)(u8, QRBuffer *, void *);\ntypedef void (*HGQRIndexed)(u8, int, QRBuffer *, void *);\ntypedef void (*HGQRKeyList)(int, QRKeyList *, void *);\ntypedef int (*HGQRCount)(int, void *);\ntypedef void (*HGQRError)(int, char *, void *);\nextern void DWCi_QR2ServerKeyCallback(int, void *);\nextern void DWCi_QR2PlayerKeyCallback(void);\nextern void DWCi_QR2TeamKeyCallback(void);\nextern void DWCi_QR2KeyListCallback(int, void *);\nextern int DWCi_QR2CountCallback(void);\nextern int DWCi_QR2AddErrorCallback(unsigned);\nstatic void HGQR_Server(u8 key, QRBuffer *buffer, void *param) { (void)param; DWCi_QR2ServerKeyCallback(key, buffer); }\nstatic void HGQR_Player(u8 key, int index, QRBuffer *buffer, void *param) { (void)key; (void)index; (void)buffer; (void)param; DWCi_QR2PlayerKeyCallback(); }\nstatic void HGQR_Team(u8 key, int index, QRBuffer *buffer, void *param) { (void)key; (void)index; (void)buffer; (void)param; DWCi_QR2TeamKeyCallback(); }\nstatic void HGQR_Keys(int type, QRKeyList *list, void *param) { (void)param; DWCi_QR2KeyListCallback(type, list); }\nstatic int HGQR_Count(int type, void *param) { (void)type; (void)param; return DWCi_QR2CountCallback(); }\nstatic void HGQR_Error(int error, char *message, void *param) { (void)message; (void)param; (void)DWCi_QR2AddErrorCallback((unsigned)error); }\n\nextern int qr2_init_socketA(void **reporting, int a, int b, const char *gameName, const char *secretKey, int c, int d, HGQRServer cb0, HGQRIndexed cb1, HGQRIndexed cb2, HGQRKeyList cb3, HGQRCount cb4, HGQRError cb5, void *param);', 1)
+    return text.replace(names, 'HGQR_Server, HGQR_Player, HGQR_Team, HGQR_Keys, HGQR_Count, HGQR_Error', 1)
+
+
+def dwc_native_callback_abi(relative, text):
+    # Declaration-only changes: runtime allocation kinds are words, sizes remain
+    # u32. Do not widen sizes, stored DS fields, packet records or heap indices.
+    text = re.sub(r'(\bDWC_(?:Alloc|AllocEx|Free|Realloc|ReallocEx)\()int\b',
+                  r'\1uintptr_t', text)
+    text = re.sub(r'(\bDWC_(?:Alloc|AllocEx|Free|Realloc|ReallocEx)\(uintptr_t(?:\s+\w+)?\s*,\s*)int\b',
+                  r'\1u32', text)
+    text = re.sub(r'(\bDWC_Free\(uintptr_t[^;{}\n]*,\s*)int(\s*\))', r'\1u32\2', text)
+    for prefix in DWC_REGISTERED_ALLOCATORS:
+        for suffix in ('Alloc', 'Free'):
+            name = prefix + ('' if prefix.endswith('_') else '_') + suffix
+            text = re.sub(r'(\b' + name + r'\()int\b', r'\1uintptr_t', text)
+    # Global Terminal's names do not have an underscore after Dwc.
+    text = re.sub(r'(\bGlobalTerminalApp_Dwc(?:Alloc|Free)\()int\b', r'\1uintptr_t', text)
+    text = re.sub(r'(\(\*(?:alloc|free)\)\()int\b', r'\1uintptr_t', text)
+    if relative.endswith(('net_common_internal.h', 'ap_connect_control.c', 'wifi_setup_connection_screens.h')):
+        text = re.sub(r'(\(\*(?:alloc|free)\)\(uintptr_t(?:\s+\w+)?\s*,\s*)int\b', r'\1u32', text)
+        text = re.sub(r'(\(\*free\)\(uintptr_t[^;{}\n]*,\s*)int(\s*\))', r'\1u32\2', text)
+    if relative == 'lib/include/dwc/auth_internal.h':
+        text = replace(text, '(*NasAllocFunc)(char *name, int size)',
+                       '(*NasAllocFunc)(uintptr_t name, u32 size)')
+        text = replace(text, '(*NasFreeFunc)(char *name, void *ptr, int size)',
+                       '(*NasFreeFunc)(uintptr_t name, void *ptr, u32 size)')
+    # The named-to-word adapter is an object-pointer conversion, never a
+    # function-pointer cast. Every label bit survives until the real allocator.
+    if relative in DWC_NATIVE_EXTENTS:
+        text, count = re.subn(r'\b(alloc|free|a|f|cb|allocFunc|freeFunc)\((sStr_\w+|label|value),',
+                              r'\1((uintptr_t)\2,', text)
+        if not count:
+            raise ValueError('DWC named callback calls changed: ' + relative)
+        text = text.replace('->free(sStr_', '->free((uintptr_t)sStr_')
+    if relative in ('lib/NitroDWC/src/net_common.c', 'lib/NitroDWC/src/dwc_login.c'):
+        text = text.replace('(NasAllocFunc)DWC_Alloc', 'DWC_Alloc')
+        text = text.replace('(NasFreeFunc)DWC_Free', 'DWC_Free')
+    if relative == 'lib/NitroDWC/src/ap_connect_control.c':
+        text = '#include <dwc/auth_internal.h>\n' + text
+        for old, new in (
+            ('    u32 *p8;', '    NetCheckCallbacks *p8;'),
+            ('DWCi_AC_Alloc(8, 0xc)', 'DWCi_AC_Alloc(8, sizeof(NetCheckCallbacks))'),
+            ('MIi_CpuClear32(0, (u32 *)DWCi_AC_Globals.p8, 0xc)',
+             'MIi_CpuClear32(0, (u32 *)DWCi_AC_Globals.p8, sizeof(NetCheckCallbacks))'),
+            ('p8[0] = (u32)param->alloc;', 'p8->alloc = param->alloc;'),
+            ('p8[1] = (u32)param->free;', 'p8->free = param->free;'),
+            ('p8[2] = 0;', 'p8->param = 0;'),
+            ('ctx->free(8, p, 0xc)', 'ctx->free(8, p, sizeof(NetCheckCallbacks))'),
+            ('DWCi_AC_Free(8, DWCi_AC_Globals.p8, 0xc)',
+             'DWCi_AC_Free(8, DWCi_AC_Globals.p8, sizeof(NetCheckCallbacks))'),
+        ):
+            text = replace(text, old, new)
+    if relative in ('src/wifi_setup/wifi_setup_connection_menu.c',
+                    'include/wifi_setup/wifi_setup_connection_screens.h'):
+        text = replace(text, 'WifiSetupConnectionTest_Alloc(void *arg, u32 size)',
+                       'WifiSetupConnectionTest_Alloc(uintptr_t arg, u32 size)')
+        text = replace(text, 'WifiSetupConnectionTest_Free(void *arg, void *ptr)',
+                       'WifiSetupConnectionTest_Free(uintptr_t arg, void *ptr, u32 size)')
+    return '#include <stdint.h>\n' + text
+
+
 def drop(text, declaration):
     return replace(text, declaration, "\n" * declaration.count("\n"))
 
@@ -458,7 +654,24 @@ OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + (
 
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("lib/libVCT/src/vct_audio.c", "lib/libVCT/src/vct_fir.c", "lib/libVCT/src/vct_vad.c",)))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(DWC_NATIVE_EXTENTS)))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ('src/application/main_menu/mystery_gift_wfc.c',)))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + DWC_ABI_SOURCES))
 
+
+# BEGIN REVIEWED OVY_0 COMMUNICATIONS SOURCE REGISTRATION
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(
+    OVERLAY_NATIVE_SOURCES + (
+        'lib/NitroDWC/src/available_check_poll.c',
+        'lib/NitroDWC/src/friend_callback.c',
+        'lib/NitroDWC/src/friend_list.c',
+        'lib/NitroDWC/src/gt_buffer.c',
+        'lib/NitroDWC/src/match_sync.c',
+        'lib/NitroDWC/src/sb_query_engine.c',
+        'src/voice_chat_conference.c',
+    )
+))
+# END REVIEWED OVY_0 COMMUNICATIONS SOURCE REGISTRATION
 
 def adapt_vct_fir_hw(text):
     text = replace_regex_native(
@@ -508,6 +721,35 @@ def replace_regex_native(text, pattern, replacement, expected=1):
     return result
 
 def _adapt(relative, text, root):
+    if relative == 'lib/NitroDWC/asm/dwc_lib_data.s':
+        from native_assembly_data import emit_reviewed
+        return emit_reviewed(dwc_status_string_blocks(root, text))
+    if relative == 'src/application/main_menu/mystery_gift_wfc.c':
+        # Both identifier arguments are unused in the original implementation.
+        # Match DWC_SetMemFunc's actual native callback types, including the
+        # ignored alignment/free-size arguments formerly passed in ARM registers.
+        for old, new in (
+            ('void DWC_SetMemFunc(void *(*alloc)(void *, u32), void (*free)(void *, void *));',
+             'void DWC_SetMemFunc(void *(*alloc)(int, u32, int), void (*free)(int, void *, u32));'),
+            ('MysteryGiftWfc_Alloc(void *unused, u32 size)',
+             'MysteryGiftWfc_Alloc(int unused, u32 size, int alignment)'),
+            ('MysteryGiftWfc_Free(void *unused, void *ptr)',
+             'MysteryGiftWfc_Free(int unused, void *ptr, u32 size)'),
+            ('    u32 result;', '    uintptr_t result;'),
+            ('result = ((u32)raw + 32) & ~31u;',
+             'result = ((uintptr_t)raw + 32) & ~(uintptr_t)31;'),
+            ('*(void **)(result - 4) = raw;', '((void **)result)[-1] = raw;'),
+        ):
+            text = replace(text, old, new)
+        return '#include <stdint.h>\n' + text
+    if relative in DWC_NATIVE_EXTENTS:
+        if relative in coordinated.SOURCES:
+            text = coordinated.adapt(relative, text)
+        for old, new in DWC_NATIVE_EXTENTS[relative]:
+            text = replace(text, old, new)
+        if relative in LIBC_DECLARATIONS:
+            text = native_libc(relative, text)
+        return text
     if relative in POKEWALKER_ABI_INPUTS:
         return pokewalker_abi(relative,text,root)
     if relative == "src/application/ball_capsule_editor.c":
@@ -584,6 +826,9 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
         return replace(text, "\nPokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {",
                        "\nstatic int PokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {")
     if relative == "src/field/weather_manager.c":
+        # Current original source already has typed tables and pointer views.
+        if hashlib.sha256(text.encode()).hexdigest() == "28f978cae8177929c55cc91ab0a12b2e964da0ed29dc120da6bcf299fc1fb1b2":
+            return text
         original = span(text, "static const sSnowFallSpeeds[]", "\nstatic void Snow_UpdateFlake(WeatherObject *object) {")
         # The final delimiter belongs to the following function, not the block.
         block = original.removesuffix("\nstatic void Snow_UpdateFlake(WeatherObject *object) {")
@@ -618,6 +863,12 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
 
         return text + '\nu32 hg_vct_audio_flag(void) { return sAudioFlag; }\nu32 hg_vct_audio_sessions(void) { return sAudioSessions; }\nu32 hg_vct_audio_packet_size(void) { return sAudioPacketSize; }\n'
     if relative == "lib/libVCT/src/vct_audio_send.c":
+        # Current original VCT source owns send state in vct_audio.c.
+        # Retain the legacy adapter for its independently guarded form.
+        if hashlib.sha256(text.encode()).hexdigest() == "a4cfa3c93dd3189ccbc75dc9c8fa14ec28849139f999ee7900ab16c91e09ad9d":
+            return ('#include "vct/vct_audio_internal.h"\n' +
+                    replace(text, 'asm { clz x, x }',
+                            'x = x == 0 ? 32u : (u32)__builtin_clz(x);'))
         text = replace(
             text,
             "asm { clz x, x }",
@@ -728,7 +979,10 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
             text = replace(text, "(int (*)(const void *, const void *, void *))PokewalkerEventLog_CompareEntryTimes", "PokewalkerEventLog_CompareEntryTimes")
         return text
     if relative in LIBC_DECLARATIONS:
-        return native_libc(relative, text)
+        text = native_libc(relative, text)
+        if relative == 'lib/NitroDWC/src/match_browse.c':
+            return adapt_original(relative, text, root)
+        return text
     return adapt_original(relative, text, root)
 
 
@@ -748,7 +1002,7 @@ def adapt(relative, text, root):
     try:
         result = _adapt(relative, text, root)
     except ValueError as error:
-        if not (record or operation or arm or bounded) or str(error) != 'No native adaptation is registered for ' + relative:
+        if not (record or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS) or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
     if bounded:
@@ -788,10 +1042,30 @@ _Static_assert(sizeof(PokewalkerIrIdentity) == 104 && sizeof(PokewalkerMon) == 1
 _Static_assert(sizeof(PokewalkerIrRecord) == 136 && sizeof(PokewalkerIrStatus) == 3404, "serialized IR records");
 _Static_assert(sizeof(PokewalkerIrBlocks) == 1736, "serialized IR blocks");
 '''
+    if relative == 'lib/NitroDWC/src/net_common.c':
+        result = adapt_dwc_nas_native_allocation(result)
+        # NetStartParams contains two runtime callbacks. Its DS extent is 12;
+        # the native extent is 24. Preserve initialization of the whole record.
+        result = replace(result, 'MI_CpuFill8(&p, 0, 12);',
+                         'MI_CpuFill8(&p, 0, sizeof(p));')
+    if relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS:
+        result = dwc_native_callback_abi(relative, result)
+    result = dwc_native_qr_constructor_abi(relative, result)
+    result = dwc_native_qr_caller_abi(relative, result)
     return result
 
 
 def adapt_original(relative, text, root):
+    # BEGIN NATIVE MATCH KEY ABI
+    if relative == 'lib/NitroDWC/src/match_browse.c':
+        old_clear = 'MIi_CpuClear32(0, (u32 *)gDwcMatchKeys, 1848);'
+        new_clear = 'MIi_CpuClear32(0, (u32 *)gDwcMatchKeys, sizeof(gDwcMatchKeys[0]) * 154);'
+        old_callback = '    index *= 12;\n    if (!*((u8 *)gDwcMatchKeys + index)) {\n        return;\n    }\n    if (ov00_0221A949[index]) {\n        qr2_buffer_addA(out, *(void **)((u8 *)ov00_0221A950 + index));\n    } else {\n        qr2_buffer_add_int(out, *(int *)*(void **)((u8 *)ov00_0221A950 + index));\n    }'
+        new_callback = '    if (!gDwcMatchKeys[index].id) {\n        return;\n    }\n    if (gDwcMatchKeys[index].isString) {\n        qr2_buffer_addA(out, gDwcMatchKeys[index].value);\n    } else {\n        qr2_buffer_add_int(out, *(int *)gDwcMatchKeys[index].value);\n    }'
+        if text.count(old_clear) != 1 or text.count(old_callback) != 1:
+            raise ValueError('Match-key native ABI fragment drift')
+        return text.replace(old_clear, new_clear).replace(old_callback, new_callback)
+    # END NATIVE MATCH KEY ABI
     if relative == "lib/include/nnsys/g2d/g2d_CellTransferManager.h":
         return replace(text, "\nNNS_G2dInitCellTransferStateManager(", "\nint NNS_G2dInitCellTransferStateManager(")
     if relative == "lib/NitroSystem/src/fnd_expheap.c":
@@ -1132,6 +1406,23 @@ def adapt_original(relative, text, root):
     if relative in ("lib/NitroSystem/src/snd_system.c", "lib/NitroSystem/src/snd_stream.c"):
         text = replace(text, "preSleep.func", "preSleep.callback")
         return replace(text, "postSleep.func", "postSleep.callback")
+    # BEGIN PINNED OVY_0 IDENTITY ADAPTATIONS
+    # Exact original members compiled in the native-805 inventory.
+    # No generic identity fallback: reject source drift.
+    identity_pins = {
+        'lib/NitroDWC/src/available_check_poll.c': '2f7c00b54a64e3c44d0c85a8bf48e44133b78e7cd1ad19a0acb25f803f584046',
+        'lib/NitroDWC/src/friend_callback.c': '44839943777f78cc9054f86ce4a39402060475a060f73fe980d123779e508c09',
+        'lib/NitroDWC/src/friend_list.c': '4a2dec1db1e5af677bc401d596ee769ebf4d09e867d3a25cfd4419001a42adb7',
+        'lib/NitroDWC/src/gt_buffer.c': '6f984f0c14533714824f9301905adb198ece168267233905bb7adf8fe3f159f3',
+        'lib/NitroDWC/src/match_sync.c': 'd099c09d388dc3dda407b58975c646ecdcb09b08859889a45cb0e175efebd06c',
+        'lib/NitroDWC/src/sb_query_engine.c': 'e0d4da44f9d5315b6263920c626627e9fe8d627852e2a3593502660e63538510',
+        'src/voice_chat_conference.c': '745041c680007c40ded838a5bc900076ac2b41b40d425b39302eeb7bf6b97177',
+    }
+    if relative in identity_pins:
+        if hashlib.sha256(text.encode()).hexdigest() != identity_pins[relative]:
+            raise ValueError('Pinned native identity source drift: ' + relative)
+        return text
+    # END PINNED OVY_0 IDENTITY ADAPTATIONS
     raise ValueError("No native adaptation is registered for " + relative)
 
 
@@ -1652,6 +1943,41 @@ def guest32_frontend(relative, text, root):
     Clang VFS keeps the original paths and ownership while these deterministic
     build-directory files repair mismatched declarations and finite ARM forms.
     """
+    if relative in PRIVATE_FUNCTIONS or any(relative==v[0] for v in PRIVATE_FUNCTIONS.values()):
+        return private_declarations(relative,text)
+    if relative in ('lib/NitroSDK/src/os/os_alarm_before_handler.c',
+                    'lib/NitroSDK/src/os/os_alarm_after_handler.c'):
+        # The original build compiles these identical sources, then partitions
+        # the ELF payloads. Reproduce that ownership before Clang emits IR.
+        # Function bodies remain byte-for-byte original in their sole owner.
+        import ast
+        directory = root/'tools/alarm-partition'
+        profile = json.loads((directory/'profile.json').read_text())
+        role = 'prefix' if relative.endswith('before_handler.c') else 'suffix'
+        proof = profile['roles'][role]
+        if proof['source'] != relative or hashlib.sha256(text.encode()).hexdigest() != proof['sha256']:
+            raise ValueError('Original alarm partition source changed')
+        partition = (directory/'partition.py').read_text()
+        if hashlib.sha256(partition.encode()).hexdigest() != profile['modules']['partition.py']:
+            raise ValueError('Original alarm partition implementation changed')
+        tree = ast.parse(partition)
+        names = next(ast.literal_eval(node.value) for node in tree.body
+                     if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id=='EXPECTED' for t in node.targets))
+        if len(names)!=9 or names[-1]!='OSi_ArrangeTimer':
+            raise ValueError('Original alarm partition boundary changed')
+        for name in names:
+            match = re.search(r'(?m)^\w[^\n;{}]*\b'+re.escape(name)+r'\([^\n;{}]*\) \{', text)
+            if not match: raise ValueError('Original alarm function changed: '+name)
+            if (name == names[-1]) == (role == 'suffix'): continue
+            begin = text.index('{', match.start()); end = begin+1; depth = 1
+            while depth:
+                depth += (text[end]=='{')-(text[end]=='}');end += 1
+            body=text[begin:end]
+            text=text[:begin]+';'+('\n'*body.count('\n'))+text[end:]
+        if role=='suffix':
+            text=replace(text,'u16 OSi_UseAlarm = FALSE;', 'extern u16 OSi_UseAlarm;')
+            text=replace(text,'struct OSiAlarmQueue OSi_AlarmQueue;', 'extern struct OSiAlarmQueue OSi_AlarmQueue;')
+        return text
     if relative == 'src/comm_state.c':
         return adapt(relative, text, root)
     if relative == 'src/comm_state_private.h':
@@ -1738,8 +2064,6 @@ def main():
     if args.kind == "native":
         relative = source.relative_to(root).as_posix()
         result = adapt(relative, original, root)
-        if relative == "lib/NitroDWC/src/net_common.c":
-            result = adapt_dwc_nas_native_allocation(result)
     elif args.kind == 'guest32-frontend':
         result = guest32_frontend(source.relative_to(root).as_posix(), original, root)
     elif args.kind == "coordinated-msl":

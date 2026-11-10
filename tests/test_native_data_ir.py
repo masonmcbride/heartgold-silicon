@@ -11,6 +11,18 @@ import subprocess
 
 
 class DataIRTests(unittest.TestCase):
+    def test_original_space_product(self):
+        from native_data_ir import integer
+        self.assertEqual(integer('16 * 11'),176)
+        p=self.source('.rodata\nfirst:\n.space 16 * 11\nlast:\n.byte 7\n')
+        data,labels,refs=raw_layout(parse(p))
+        section,offset=labels['first']
+        self.assertEqual(labels['last'],(section,offset+176))
+        self.assertEqual(data[section],bytes(176)+bytes([7]))
+        self.assertEqual(refs,{})
+        for expr in ('16 / 11','f(16)','x * 11'):
+            with self.assertRaises(ValueError):integer(expr)
+
     def source(self, text):
         directory=tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR',Path(__file__).resolve().parents[1]/'build'))
         self.addCleanup(directory.cleanup)

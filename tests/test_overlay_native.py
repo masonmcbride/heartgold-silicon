@@ -51,3 +51,17 @@ run([a.compiler, '-arch', 'arm64', '-std=c11', '-O1', '-g', '-UNDEBUG',
 print(run([str(work / 'test'), str(work / 'image.dylib'), str(work / 'unsupported.dylib')]), end='')
 if a.fs_test:
     print(run([str(a.fs_test.resolve()), str(work / 'image.dylib')]), end='')
+
+
+guest_test = work / 'guest32-overlay-registration'
+run([a.compiler, '-arch', 'arm64', '-std=c11', '-O1', '-g',
+     '-UNDEBUG', '-fsanitize=address,undefined',
+     '-fno-sanitize-recover=all',
+     '-I' + str(a.sdk.resolve() / 'include'),
+     '-I' + str(root / 'hardware_drivers'),
+     str(root / 'hardware_drivers/guest32.c'),
+     str(root / 'hardware_drivers/guest32_overlay.c'),
+     str(root / 'hardware_drivers/os/overlay_native.c'),
+     str(root / 'tests/test_guest32_overlay_registration.c'),
+     '-o', str(guest_test)])
+print(run([str(guest_test)]), end='')

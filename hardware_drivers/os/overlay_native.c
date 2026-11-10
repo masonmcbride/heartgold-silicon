@@ -19,6 +19,10 @@ typedef struct HG_OverlayRange {
 
 struct HG_OverlayImage {
     uint32_t id;
+    uint64_t generation;
+    size_t active_calls;
+    void (*storage_load)(void *), (*storage_unload)(void *), (*storage_release)(void *);
+    void *storage_context;
     int bound;
     const struct mach_header_64 *header;
     struct HG_OverlayImage *next;
@@ -26,10 +30,21 @@ struct HG_OverlayImage {
     HG_OverlayRange *data;
     void (**initializers)(void);
     size_t initializer_count;
+    const void **entries;
+    size_t entry_count;
+    void *arena;
+    void (*start)(void *);
+    void *context;
     enum { INACTIVE, LOADED, STARTING, STARTED } state;
 };
 
 static HG_OverlayImage *images;
+static uint64_t generation_serial;
+
+static int overlaps(uintptr_t a, size_t n, uintptr_t b, size_t m)
+{
+    return n && m && (a <= b ? b - a < n : a - b < m);
+}
 
 static void free_ranges(HG_OverlayRange *range)
 {
@@ -57,6 +72,65 @@ static int add_range(HG_OverlayRange **head, uintptr_t start, size_t size, int s
     range->next = *head;
     *head = range;
     return 1;
+}
+
+HG_OverlayImage *HG_RegisterResidentOverlay(
+    void *arena, const void *const *entries, size_t entry_count,
+    const HG_OverlayData *data, size_t data_count,
+    void (*start)(void *), void *context)
+{
+    if (!arena || (entry_count && !entries) || (data_count && !data) ||
+        entry_count > SIZE_MAX / sizeof(*entries)) { errno = EINVAL; return NULL; }
+    HG_OverlayImage *image = calloc(1, sizeof(*image));
+    if (!image) return NULL;
+    image->arena = arena;
+    image->start = start;
+    image->context = context;
+    if (entry_count) {
+        image->entries = malloc(entry_count * sizeof(*entries));
+        if (!image->entries) goto fail;
+        memcpy(image->entries, entries, entry_count * sizeof(*entries));
+    }
+    image->entry_count = entry_count;
+    for (size_t i = 0; i < entry_count; ++i) {
+        if (!entries[i]) { errno = EINVAL; goto fail; }
+        for (size_t j = 0; j < i; ++j)
+            if (entries[i] == entries[j]) { errno = EEXIST; goto fail; }
+        for (HG_OverlayImage *peer = images; peer; peer = peer->next)
+            if (HG_OverlayOwnsAddress(peer, entries[i])) { errno = EEXIST; goto fail; }
+    }
+    for (size_t i = 0; i < data_count; ++i) {
+        uintptr_t address = (uintptr_t)data[i].address;
+        if (!data[i].size) continue;
+        if (!address || !data[i].initial || data[i].size > UINTPTR_MAX - address) {
+            errno = EINVAL; goto fail;
+        }
+        for (HG_OverlayRange *r = image->data; r; r = r->next)
+            if (overlaps(address, data[i].size, r->start, r->size)) {
+                errno = EINVAL; goto fail;
+            }
+        if (!add_range(&image->data, address, data[i].size, 0)) goto fail;
+        image->data->initial = malloc(data[i].size);
+        if (!image->data->initial) goto fail;
+        memcpy(image->data->initial, data[i].initial, data[i].size);
+    }
+    image->next = images;
+    images = image;
+    return image;
+fail:
+    {
+        int error = errno;
+        free_ranges(image->data);
+        free(image->entries);
+        free(image);
+        errno = error;
+        return NULL;
+    }
+}
+
+int HG_OverlayAcceptsArena(const HG_OverlayImage *image, const void *arena)
+{
+    return image && (!image->arena || image->arena == arena);
 }
 
 HG_OverlayImage *HG_InspectOverlayImage(const void *anchor)
@@ -150,6 +224,18 @@ fail:
 int HG_LoadOverlayImage(HG_OverlayImage *image)
 {
     if (!image || image->state != INACTIVE) { errno = EINVAL; return 0; }
+    /* Logical overlays may reuse guest RAM, but cannot own it concurrently. */
+    for (HG_OverlayImage *peer = images; peer; peer = peer->next) {
+        if (peer == image || peer->state == INACTIVE) continue;
+        for (HG_OverlayRange *a = image->data; a; a = a->next)
+            for (HG_OverlayRange *b = peer->data; b; b = b->next)
+                if (overlaps(a->start, a->size, b->start, b->size)) {
+                    errno = EBUSY; return 0;
+                }
+    }
+    if(generation_serial==UINT64_MAX){errno=EOVERFLOW;return 0;}
+    image->generation=++generation_serial;
+    if(image->storage_load)image->storage_load(image->storage_context);
     for (HG_OverlayRange *range = image->data; range; range = range->next)
         memcpy((void *)range->start, range->initial, range->size);
     image->state = LOADED;
@@ -176,7 +262,12 @@ int HG_BindOverlayID(uint32_t id, HG_OverlayImage *image)
 
 int HG_OverlayCanUnload(const HG_OverlayImage *image)
 {
-    return image && (image->state == LOADED || image->state == STARTED);
+    return image && !image->active_calls && (image->state == LOADED || image->state == STARTED);
+}
+
+int HG_OverlayIsResident(const HG_OverlayImage *image)
+{
+    return image && image->state != INACTIVE;
 }
 
 int HG_StartOverlayImage(HG_OverlayImage *image)
@@ -185,6 +276,7 @@ int HG_StartOverlayImage(HG_OverlayImage *image)
     image->state = STARTING;
     for (size_t i = 0; i < image->initializer_count; ++i)
         if (image->initializers[i]) image->initializers[i]();
+    if (image->start) image->start(image->context);
     image->state = STARTED;
     return 1;
 }
@@ -195,7 +287,9 @@ int HG_UnloadOverlayImage(HG_OverlayImage *image)
         errno = EINVAL;
         return 0;
     }
+    if(image->active_calls){errno=EBUSY;return 0;}
     image->state = INACTIVE;
+    if(image->storage_unload)image->storage_unload(image->storage_context);
     return 1;
 }
 
@@ -203,6 +297,8 @@ int HG_OverlayOwnsAddress(const HG_OverlayImage *image, const void *address)
 {
     if (!image || !address) return 0;
     uintptr_t value = (uintptr_t)address;
+    for (size_t i = 0; i < image->entry_count; ++i)
+        if (image->entries[i] == address) return 1;
     for (const HG_OverlayRange *range = image->segments; range; range = range->next)
         if (value >= range->start && value - range->start < range->size) return 1;
     return 0;
@@ -217,6 +313,28 @@ int HG_ReleaseOverlayImage(HG_OverlayImage *image)
     *entry = image->next;
     free_ranges(image->data);
     free_ranges(image->segments);
+    free(image->entries);
+    if(image->storage_release)image->storage_release(image->storage_context);
     free(image);
     return 1;
+}
+
+int HG_SetOverlayStorageHooks(HG_OverlayImage *image,void (*load)(void *),
+    void (*unload)(void *),void (*release)(void *),void *context){
+    if(!image || image->state!=INACTIVE || image->storage_context || !context){errno=EINVAL;return 0;}
+    image->storage_load=load;image->storage_unload=unload;image->storage_release=release;
+    image->storage_context=context;return 1;
+}
+uint64_t HG_OverlayGeneration(const HG_OverlayImage *image){return image?image->generation:0;}
+int HG_AcquireOverlayEntry(HG_OverlayImage *image,uint64_t generation,const void *arena,const void *entry){
+    if(!image || !generation || image->generation!=generation ||
+       (image->state!=STARTING && image->state!=STARTED) ||
+       !HG_OverlayAcceptsArena(image,arena) || !HG_OverlayOwnsAddress(image,entry)){
+        errno=ESTALE;return 0;
+    }
+    if(image->active_calls==SIZE_MAX){errno=EOVERFLOW;return 0;}
+    image->active_calls++;return 1;
+}
+void HG_ReleaseOverlayEntry(HG_OverlayImage *image){
+    if(!image || !image->active_calls)abort();image->active_calls--;
 }

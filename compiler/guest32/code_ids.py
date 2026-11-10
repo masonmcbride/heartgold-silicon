@@ -32,7 +32,18 @@ def allocate(functions, previous=()):
             old = prior[k]
             if any(old.get(field) != f.get(field)
                    for field in ('params', 'return', 'local', 'varargs')):
-                raise ValueError('changed guest code ABI for pinned identity: ' + k)
+                # A declaration has no implementation ABI to preserve.
+                # An original definition may refine its provisional signature,
+                # but its existing guest code handle must remain pinned.
+                # Never permit definition drift, declaration-only drift,
+                # or a change in linkage identity.
+                promotion = (
+                    not old.get('definition')
+                    and bool(f.get('definition'))
+                    and old.get('local') == f.get('local')
+                )
+                if not promotion:
+                    raise ValueError('changed guest code ABI for pinned identity: ' + k)
             addr = old['address']
         else:
             addr = candidate(k)

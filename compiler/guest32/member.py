@@ -20,17 +20,20 @@ def main():
     p.add_argument('--catalog',type=Path,help='Shared code and guest storage plan; never creates a second allocation for a planned definition')
     a=p.parse_args();a.game=a.game.resolve();a.build=a.build.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     a.llvm_bin=a.llvm_bin.resolve();a.lowerer=a.lowerer.resolve()
-    image=parse_manifest(a.game/'main.lsf')[a.owner]
+    images=parse_manifest(a.game/'main.lsf')
+    image=images[a.owner]
     if a.member not in image['objects']:p.error('member is not owned by selected original image')
     record=source_record(a.game,a.member)
     if record['kind']!='C':p.error('requires complete original C member')
     source=a.game/record['source'];ir=a.out/'guest.ll';native=a.out/'native.ll';obj=a.out/'provider.o'
-    from frontend import flags as frontend_flags
+    from frontend import flags as frontend_flags, private_overlay
     flags=frontend_flags(a.game,a.build)
+    overlay_flags,overlay_inputs=private_overlay(a.game,a.out,[record])
+    flags.extend(overlay_flags)
     def run(args,outputs,**kw):
         r=cached_run(list(map(str,args)),outputs,**kw)
         if r.returncode:raise RuntimeError(r.stdout+r.stderr)
-    run([a.llvm_bin/'clang',*flags,'-S','-emit-llvm',source,'-o',ir,'-MD','-MF',str(ir)+'.d'],[ir],inputs=[source],depfile=str(ir)+'.d')
+    run([a.llvm_bin/'clang',*flags,'-S','-emit-llvm',source,'-o',ir,'-MD','-MF',str(ir)+'.d'],[ir],inputs=[source,*map(Path,overlay_inputs.values())],depfile=str(ir)+'.d')
     shared=json.loads(a.catalog.read_text()) if a.catalog else None
     abi=a.out/'abi.json'
     interface=a.out/'native-abi.ll';interface.write_text('target datalayout = "e-p:64:64"\n')
@@ -44,13 +47,28 @@ def main():
             canonical=code.get(f['key'])
             if not canonical or not canonical['definition'] or any(canonical[k]!=f[k] for k in ('params','return','body_hash')):
                 raise ValueError('shared catalog lacks matching original definition: '+f['key'])
-        known=dict(shared.get('globals',{}));known.update(shared.get('assembly_globals',{}));known.update(shared.get('c_globals',{}))
+        known=dict(shared.get('globals',{}))
+        for section in ('assembly_globals','c_globals'):
+            for key,value in shared.get(section,{}).items():
+                if key in known and known[key]!=value:
+                    raise ValueError('conflicting shared storage: '+key)
+                known[key]=value
+        image_plan=shared.get('images',{}).get(a.owner)
+        if image_plan is None and a.owner!='main':
+            raise ValueError('shared catalog lacks image owner: '+a.owner)
+        for section in ('assembly_globals','c_globals'):
+            for key,value in (image_plan or {}).get(section,{}).items():
+                if key in known and known[key]!=value:
+                    raise ValueError('conflicting image storage: '+key)
+                known[key]=value
         for g in json.loads(desc.read_text())['globals']:
             placement=known.get(g['key'],known.get(g['name']))
             if placement is not None:placements[g['name']]=placement
             elif g['definition']:
                 raise ValueError('shared catalog lacks defined storage: '+g['key'])
-    abi.write_text(json.dumps(dict(version=1,calls={},exports={},globals=placements)))
+    from original_layout import overlay_id_symbols
+    abi.write_text(json.dumps(dict(version=1,calls={},exports={},globals=placements,
+        absolute_symbols=overlay_id_symbols(a.game,images))))
     # Use the existing compiler's ODR representation for identical original
     # header inlines, just as image.py does across original image members.
     headers=[]

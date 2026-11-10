@@ -156,3 +156,34 @@ occurrences (245 distinct symbols): 206 owned by incomplete OVY_45, 85 by OVY_0,
 nine by OVY_72, six by OVY_70, and missing compiled `WM_GetLinkLevel`. These counts
 are actual failed-image imports, not executable undefined counts. NitroMain has
 not executed. The pinned upstream working tree remains clean.
+
+## Guest callback records and SSA block order
+
+The shared-image regression now runs the original AC three-word store sequence
+with its original `InitParam` and `NetCheckCallbacks` declarations. Both are
+12 bytes under the ARM32 frontend. Integer-kind callback arguments and named
+pointer arguments share their original 32-bit register representation after
+lowering. A test callback receives the complete guest label value through the
+consumer declaration; a copied record remains usable after its source allocation
+is released. O0/O2, ASan/UBSan and two separate Mach-O dylibs cover that path.
+The callback bodies are controlled fixtures: this does not execute the complete
+original AC initializer, its allocator implementation, or wireless operations.
+No LP64 callback cast or native pointer is stored in the guest record.
+
+The compiler validates code-catalog identities before emitting dispatch: duplicate
+keys, duplicate nonzero identities and values outside the 32-bit representation
+are rejected. Zero can remain unassigned for direct-only header definitions, but
+cannot form a callable pointer. Unknown original code coordinates still remain
+unresolved rather than becoming a null or fabricated callback. Existing synthetic
+handles remain synthetic; this change does not prove equivalence to original
+ARM/Thumb PC values embedded as numeric constants.
+
+Reachable LLVM blocks are lowered in reverse postorder, with loop PHIs connected
+in the existing final edge pass and original unreachable blocks retained. LLVM's
+textual block order is not a dominance guarantee. The regression includes a
+non-PHI definition appearing textually after its use, a loop/backedge and an
+unreachable block. It verifies and executes at O0/O2 with and without sanitizers.
+This also enables the complete unmodified original `cps_dhcp.c` member to lower
+and compile; its original `pad_mem` executes 6,741 size/length cases per test
+configuration through the genuine guest MI fill provider. It does not establish
+DHCP packet exchange, socket support or original network startup.

@@ -13,7 +13,41 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_image_graph import parse_manifest,source_record
 from incremental import run as cached_run
-from original_layout import anchored_sections,verified_sections
+from original_layout import anchored_sections,verified_sections,overlay_id_constants,verify_recovery
+
+def private_inline_plan(members):
+    names={f['name'] for r in members for f in r.get('description',{}).get('functions',[])
+           if f.get('private_inline_eligible')}
+    unsafe={f['name'] for r in members for f in r.get('description',{}).get('functions',[])
+            if f['name'] in names and not f.get('private_inline_eligible') and
+               ((not f['definition'] and f.get('referenced',True)) or
+                (f['definition'] and (not f.get('inline_definition') or f['address_taken'])))}
+    # Inline callers from headers must follow their TU-private callees. Select
+    # the complete closed inline region, then propagate rejection backwards to
+    # every callee reachable from a caller that cannot receive a private body.
+    dependencies=[]
+    for r in members:
+        functions={f['name']:f for f in r.get('description',{}).get('functions',[])}
+        for call in r.get('description',{}).get('calls',[]):
+            target=call['target']
+            if target not in names:continue
+            caller=functions.get(call['function'],{})
+            callee=functions.get(target,{})
+            if caller.get('origin')!=callee.get('source'):
+                dependencies.append((call['function'],target))
+                if not caller.get('private_inline_eligible'):unsafe.add(target)
+        for ref in r.get('relocations',[]):
+            symbol=re.match(r'[A-Za-z_.$][\w.$]*',ref['expression'])
+            if symbol and symbol[0] in names:unsafe.add(symbol[0])
+    changed=True
+    while changed:
+        changed=False
+        for caller,callee in dependencies:
+            if caller in unsafe and callee not in unsafe:
+                unsafe.add(callee);changed=True
+    return {r['object']:[x for name in sorted(f['name'] for f in r.get('description',{}).get('functions',[])
+        if f.get('private_inline_eligible') and f['name'] not in unsafe) for x in ('--private-inline',name)]
+        for r in members},unsafe
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -28,16 +62,20 @@ def main():
     p.add_argument('--image',default='OVY_0',help='Original overlay name from main.lsf')
     a=p.parse_args();a.game=a.game.resolve();a.build=a.build.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     a.lowerer=a.lowerer.resolve();a.llvm_bin=a.llvm_bin.resolve()
-    image=parse_manifest(a.game/'main.lsf')[a.image]
+    images=parse_manifest(a.game/'main.lsf')
+    image=images[a.image]
+    constants=overlay_id_constants(a.game,images)
     if image['kind']!='Overlay':p.error('--image must name an original overlay')
     records=[source_record(a.game,m) for m in image['objects']]
+    from frontend import private_overlay,cxx_flags
+    virtual_flags,virtual_files=private_overlay(a.game,a.out,records)
     def member(record):
         r=dict(record);source=a.game/r['source'];r['sha256']=hashlib.sha256(source.read_bytes()).hexdigest()
         work=a.out/r['object'];work.mkdir(parents=True,exist_ok=True)
-        if r['kind']!='C':
+        if r['kind'] not in ('C','C++'):
             from native_data_ir import parse,raw_layout
             try:
-                blocks=parse(source);sections,labels,refs=raw_layout(blocks)
+                blocks=parse(source,constants=constants);sections,labels,refs=raw_layout(blocks)
                 r.update(parsed=True,labels={k:list(v) for k,v in labels.items()},bytes={k:len(v) for k,v in sections.items()},
                          relocations=[dict(section=k[0],offset=k[1],expression=v[0],width=v[1]) for k,v in refs.items()],
                          represented=False,issues=[dict(kind='guest-data',source=str(source),line=0,llvm='',reason='shared guest image bytes, labels and relocation lowering required')])
@@ -45,8 +83,14 @@ def main():
             return r
         ir=work/'guest.ll'
         from frontend import flags as frontend_flags
-        args=[str(a.llvm_bin/'clang'),*frontend_flags(a.game,a.build),'-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
-        run=cached_run(args,[ir],inputs=[source],depfile=str(ir)+'.d')
+        flags=frontend_flags(a.game,a.build)+virtual_flags
+        if r['kind']=='C++':
+            # Compile the original C++ ABI, including its real mangled names,
+            # vtables and exception operations. Unsupported IR remains fatal.
+            flags=[f for f in flags if f not in ('-std=gnu99','-fgnu89-inline')]
+            flags+=cxx_flags(a.game,r['object'])
+        args=[str(a.llvm_bin/('clang++' if r['kind']=='C++' else 'clang')),*flags,'-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
+        run=cached_run(args,[ir],inputs=[source,a.game/'Makefile',a.game/'common.mk'],depfile=str(ir)+'.d',virtual_files=virtual_files)
         (work/'frontend.log').write_text(run.stdout+run.stderr);r.update(frontend=run.returncode==0,command=args)
         if run.returncode:
             r.update(compiled=False,issues=[dict(kind='frontend',source=str(source),line=0,llvm='',reason=run.stderr)]);return r
@@ -57,16 +101,37 @@ def main():
         r['description']=json.loads(diag.read_text());r['compiled']=False
         return r
     with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(member,records))
+    # Closed-image identity proof: source-file inlines with only local direct
+    # uses may keep their own bodies. Any outside declaration use or nonprivate
+    # definition preserves the ownership rejection instead of guessing an ODR.
+    identity_args,unsafe=private_inline_plan(members)
+    for r in members:
+        r['identity_args']=identity_args[r['object']]
+        if not r['identity_args']:continue
+        work=a.out/r['object'];diag=work/'operations.json'
+        run=cached_run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--diagnose',str(diag),*r['identity_args']],
+                       [diag],inputs=[work/'guest.ll',a.game/r['source']])
+        if run.returncode:raise RuntimeError(run.stderr)
+        r['description']=json.loads(diag.read_text());r['issues']=r['description']['issues']
+    (a.out/'inline-identities.json').write_text(json.dumps(dict(unsafe_external_uses=sorted(unsafe),
+        members={r['object']:r['identity_args'] for r in members if r['identity_args']}),indent=2)+'\n')
+    # Retain a complete original-member census even if code ownership or data
+    # placement prevents creating a shared catalog later in this batch.
+    (a.out/'frontend-coverage.json').write_text(json.dumps(dict(image=image,
+        members=[{k:v for k,v in r.items() if k not in ('description','relocations','labels')} for r in members],
+        cpp_total=sum(r['kind']=='C++' for r in members)),indent=2)+'\n')
     from native_data_ir import parse,raw_layout,integer
-    position=4096;placements={};original_placements={};sections=[];functions={};data_names=set()
+    position=4096;placements={};original_placements={};sections=[];section_plans=[];functions={};data_names=set()
     historical_layouts=json.loads(Path(__file__).with_name('original_data_layouts.json').read_text())
     for r in members:
         if r['kind']!='assembly' or not r.get('parsed'):continue
-        raw,labels,refs=raw_layout(parse(a.game/r['source']))
+        raw,labels,refs=raw_layout(parse(a.game/r['source'],constants=constants))
         original_sections=anchored_sections(raw,labels,image['id'])
         if r['source'] in historical_layouts:
             proof=historical_layouts[r['source']]
             assert r['sha256']==proof['source_sha256'],('original data source changed',r['source'])
+            if 'image_id' in proof and proof['image_id']!=image['id']:raise ValueError('historical data image owner mismatch')
+            verify_recovery(a.game,a.game/r['source'],(raw,labels,refs),proof,constants)
             original_sections.update(verified_sections(raw,labels,refs,proof))
         for section,data in raw.items():
             position=(position+15)&~15;base=position;position+=len(data)
@@ -76,10 +141,29 @@ def main():
                     placements[name]=dict(offset=base+off,size=len(data)-off);data_names.add(name)
                     if section in original_sections:
                         original_placements[name]=dict(offset=original_sections[section]['address']+off,size=len(data)-off)
-            sections.append(dict(object=r['object'],section=section,offset=base,data=data,
+            section_labels={name:off for name,(s,off) in labels.items() if s==section}
+            section_refs=[dict(offset=off,expression=expr,width=width)
+                          for (s,off),(expr,width) in refs.items() if s==section]
+            section_plans.append(dict(
+                object=r['object'],
+                source=r['source'],
+                source_sha256=r['sha256'],
+                section=section,
+                offset=base,
+                size=len(data),
+                labels=section_labels,
+                relocation_count=len(section_refs),
+                relocations=section_refs,
+                bytes_sha256=hashlib.sha256(data).hexdigest(),
+                original_placement=original_sections.get(section)))
+            sections.append(dict(
+                object=r['object'],
+                section=section,
+                offset=base,
+                data=data,
                 original_placement=original_sections.get(section),
-                references=[dict(offset=off,expression=expr,width=width) for (s,off),(expr,width) in refs.items() if s==section]))
-        r['public_labels']=[b.symbol for b in parse(a.game/r['source']) if b.public]
+                references=section_refs))
+        r['public_labels']=[b.symbol for b in parse(a.game/r['source'],constants=constants) if b.public]
     definitions={}
     for r in members:
         for f in r.get('description',{}).get('functions',[]):
@@ -88,6 +172,16 @@ def main():
             if not old or f['definition']:
                 functions[f['key']]=dict(f,address_taken=f['address_taken'] or bool(old and old['address_taken']))
             else:old['address_taken'] |= f['address_taken']
+    ownership_conflicts=[]
+    for key,duplicates in sorted(definitions.items()):
+        if len(duplicates)<2:continue
+        origins={(f['origin'],f['origin_line'],f['body_hash'],json.dumps(f['params']),json.dumps(f['return'])) for f in duplicates}
+        if len(origins)>1:
+            ownership_conflicts.append(dict(identity=key,cause='nonidentical-original-definitions',
+                definitions=[{k:f[k] for k in ('source','origin','origin_line','body_hash','params','return')} for f in duplicates]))
+    (a.out/'ownership-conflicts.json').write_text(json.dumps(ownership_conflicts,indent=2)+'\n')
+    if ownership_conflicts:
+        raise ValueError('original code ownership conflicts: '+', '.join(r['identity'] for r in ownership_conflicts))
     used={key:[bool(u['observed']) for u in f['argument_uses']] for key,f in functions.items() if f['definition']}
     changed=True
     while changed:
@@ -110,8 +204,11 @@ def main():
         if len(duplicates)>1:
             origins={(str(Path(x['origin']).resolve()),x['origin_line'],x['body_hash'],json.dumps(x['params']),json.dumps(x['return'])) for x in duplicates}
             assert len(origins)==1,('conflicting original function definitions',key,origins)
-            origin,line,_,_,_=next(iter(origins));text=Path(origin).read_text().splitlines()[line-1]
-            assert Path(origin).suffix=='.h' and re.search(r'\binline\b',text),('unreviewed duplicate definition',key,origin,line)
+            origin,line,_,_,_=next(iter(origins))
+            if not Path(origin).is_file() or not line:raise ValueError('unproved compiler-generated ODR/ABI helper: '+key)
+            text=Path(origin).read_text().splitlines()[line-1]
+            assert Path(origin).suffix in ('.h','.hpp') and (re.search(r'\binline\b',text) or
+                all(x.get('inline_definition') for x in duplicates)),('unreviewed duplicate definition',key,origin,line)
             f['coalesce']=True
         if f['local']:
             identity=str(Path(f['source']).relative_to(a.game))+'|'+f['name']
@@ -126,13 +223,16 @@ def main():
     def compatible(x,y):
         return x==y or (isinstance(x,str) and isinstance(y,str) and x.startswith('i') and y.startswith('i') and int(x[1:])<=32 and int(y[1:])<=32)
     # Original ARM register contracts are data, not function-name rules in the compiler.
-    register_spec=json.loads((Path(__file__).with_name('ovy0_registers.json')).read_text())
-    if image['name']=='OVY_38':
-        register_spec=json.loads((Path(__file__).with_name('ovy38_registers.json')).read_text())
+    register_path=Path(__file__).with_name('ovy'+str(image['id'])+'_registers.json')
+    register_spec=(json.loads(register_path.read_text()) if register_path.is_file() else
+                   dict(source_hashes={},original_functions={},implicit_r0=[],edges=[]))
+    if 'owner' in register_spec and register_spec['owner']!=image['name']:
+        raise ValueError('original register contract owner mismatch')
     for relative,digest in register_spec['source_hashes'].items():
         assert hashlib.sha256((a.game/relative).read_bytes()).hexdigest()==digest,('register contract source changed',relative)
-    from registration_scope import scoped_spec
+    from registration_scope import scoped_spec,validate_machine_edges
     register_spec=scoped_spec(image['name'], register_spec)
+    validate_machine_edges(a.game,register_spec)
     register_edges=[]
     for edge in register_spec['edges']:
         edge=dict(edge)
@@ -155,7 +255,8 @@ def main():
     code_by_key={c['key']:c for c in codes};constraints=[];external_calls=[]
     for r in members:
         r['observed_operations']=r['issues']
-        r['issues']=[i for i in r['issues'] if i['kind']=='frontend']
+        if r['kind'] in ('C','C++'):
+            r['issues']=[i for i in r['issues'] if i['kind']=='frontend']
         for call in r.get('description',{}).get('calls',[]):
             target=code_by_key.get(call['target'])
             if not target or not target['definition']:
@@ -206,7 +307,14 @@ def main():
         # including declarations whose defining member belongs to a peer image.
         code_values={f['name']:f['address'] for f in codes if not f['local']}
         register_edges=shared['register_edges']
-    catalog=a.out/('plan.json' if a.plan_only else 'image.json');catalog.write_text(json.dumps(dict(codes=codes,register_edges=register_edges,static_end=position,assembly_globals=placements,c_globals=own_globals,original_assembly_globals=original_placements),indent=2)+'\n')
+    record=dict(codes=codes,register_edges=register_edges,static_end=position,
+                assembly_globals=placements,c_globals=own_globals,
+                original_assembly_globals=original_placements,
+                assembly_sections=section_plans)
+    if image['name']=='OVY_0':
+        from ac_config import contract as ac_contract
+        record['ac_socket_config']=ac_contract(a.game,placements)
+    catalog=a.out/('plan.json' if a.plan_only else 'image.json');catalog.write_text(json.dumps(record,indent=2)+'\n')
     if a.plan_only:return
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
     def lower(r):
@@ -216,9 +324,10 @@ def main():
         for g in r['description']['globals']:
             if g['key'] in own_globals:globals[g['name']]=own_globals[g['key']]
             elif g['name'] in own_globals:globals[g['name']]=own_globals[g['name']]
-        abi=work/'abi.json';abi.write_text(json.dumps(dict(version=1,globals=globals,calls={},exports={})))
+        from original_layout import overlay_id_symbols
+        abi=work/'abi.json';abi.write_text(json.dumps(dict(version=1,globals=globals,calls={},exports={},absolute_symbols=overlay_id_symbols(a.game,images))))
         run=cached_run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--abi',str(abi),'--native-ir',str(native),
-                            '--image',str(catalog),'--guest-externals','--prefix','guest32_'],[work/'native.ll'],inputs=[work/'guest.ll',abi,native,catalog])
+                            '--image',str(catalog),'--guest-externals','--prefix','guest32_',*r.get('identity_args',[])],[work/'native.ll'],inputs=[work/'guest.ll',abi,native,catalog,a.game/r['source']])
         (work/'lower.log').write_text(run.stdout+run.stderr)
         r['blocking_diagnostic']=run.stderr
         if not run.returncode:
@@ -231,6 +340,73 @@ def main():
     with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(lower,members))
     known={n:v['offset'] for n,v in placements.items()};known.update(code_values);known.update({n:v['offset'] for n,v in own_globals.items() if '|' not in n})
     if a.shared_catalog:known.update({n:v['offset'] for n,v in shared['globals'].items()})
+
+    # Resolve original numeric macros separately from guest address identities.
+    # Only constants required by parsed original assembly are admitted.
+    import_tokens = set()
+    for section in sections:
+        for ref in section['references']:
+            if ref['width']<4:
+                import_tokens.update(
+                    re.findall(r'\b[A-Za-z_]\w*\b',ref['expression'])
+                )
+
+    definitions={}
+    for header in sorted((a.game/'include').rglob('*.h')):
+        for number,line in enumerate(header.read_text(errors='replace').splitlines(),1):
+            match=re.match(r'^\s*#define\s+([A-Za-z_]\w*)\s+(.+)$',line)
+            if not match:
+                continue
+            name,expression=match.groups()
+            expression=expression.split('//',1)[0].strip()
+            if name in definitions:
+                definitions[name].append((expression,str(header),number))
+            else:
+                definitions[name]=[(expression,str(header),number)]
+
+    original_constants={}
+    visiting=set()
+
+    def resolve_original_constant(name):
+        if name in original_constants:
+            return original_constants[name]
+        if name in visiting:
+            raise ValueError('cyclic original constant: '+name)
+        if name not in definitions:
+            raise ValueError('missing original constant: '+name)
+        visiting.add(name)
+        try:
+            candidates=[]
+            for expression,header,number in definitions[name]:
+                dependencies=set(re.findall(r'\\b[A-Za-z_]\\w*\\b',expression))
+                environment=dict(constants)
+                for dependency in sorted(dependencies):
+                    if dependency!=name and dependency in definitions:
+                        environment[dependency]=resolve_original_constant(dependency)
+                try:
+                    value=integer(expression,environment)
+                except ValueError:
+                    continue
+                candidates.append((value,header,number))
+            if not candidates:
+                raise ValueError('no evaluable definition for '+name)
+            values={item[0] for item in candidates}
+            if len(values)!=1:
+                raise ValueError('conflicting original definitions for '+name+
+                                 ': '+repr(candidates[:8]))
+            value=candidates[0][0]
+            original_constants[name]=value
+            return value
+        finally:
+            visiting.remove(name)
+
+    for name in sorted(import_tokens):
+        if name in known:
+            continue
+        value=resolve_original_constant(name)
+        if name in known and known[name]!=value:
+            raise ValueError('constant/address collision: '+name)
+        known[name]=value
     data_sources={r['object']:[] for r in members if r['kind']=='assembly'}
     for r in members:
         for name in r.get('public_labels',[]):
@@ -243,18 +419,55 @@ def main():
         lines.append('static const unsigned char '+name+'[]={'+','.join(map(str,s['data']))+'};')
         base=s['offset']
         if a.shared_catalog:
-            if not s['original_placement']:raise ValueError('shared section lacks verified original placement: '+s['object']+s['section'])
-            base=s['original_placement']['address']
+            identity=s['object']+'|'+s['section']
+            shared_section=plan.get('assembly_sections',{}).get(identity)
+            if shared_section is None:
+                raise ValueError('missing shared assembly section: '+identity)
+            if shared_section['size']!=len(s['data']):
+                raise ValueError('shared assembly section extent mismatch: '+identity)
+            base=shared_section['offset']
+            if s['original_placement'] is not None:
+                if base!=s['original_placement']['address']:
+                    raise ValueError('original assembly section moved: '+identity)
+            else:
+                if not (0x02000000<=base and
+                        base+len(s['data'])<=0x02400000):
+                    raise ValueError('relocatable assembly outside DS RAM: '+identity)
+            labels=shared_section['labels']
+            if not labels:
+                raise ValueError('shared assembly section has no labels: '+identity)
+            for label,off in labels.items():
+                expected=dict(offset=base+off,size=len(s['data'])-off)
+                if placements.get(label)!=expected:
+                    raise ValueError('shared assembly label mismatch: '+label)
             s['offset']=base
         body=['void '+name+'_load(void *ram){unsigned char *p=g32_resolve(ram,'+str(base)+','+str(len(s['data']))+',0);memcpy(p,'+name+','+str(len(s['data']))+');']
         for ref in s['references']:
-            assert ref['width']==4,ref
-            try:value=str(integer(ref['expression'],known)&0xffffffff)
-            except ValueError:
-                # External coordinates remain genuine undefined metadata imports.
-                expr=ref['expression'];assert expr.isidentifier(),expr
-                symbol='guest32_address_'+expr;unresolved.add(expr);lines.append('extern const uint32_t '+symbol+';');value=symbol
-            body.append('{uint32_t v='+value+';memcpy(p+'+str(ref['offset'])+',&v,4);}')
+            width=ref['width']
+            if width not in (1,2,4):
+                raise ValueError('unsupported assembly relocation width: '+repr(ref))
+            expr=ref['expression']
+            try:
+                resolved=integer(expr,known)
+            except ValueError as error:
+                if not expr.isidentifier():
+                    raise ValueError('unresolved assembly expression: '+expr) from error
+                if width!=4:
+                    raise ValueError('unresolved narrow assembly relocation: '+expr) from error
+                symbol='guest32_address_'+expr
+                unresolved.add(expr)
+                lines.append('extern const uint32_t '+symbol+';')
+                value=symbol
+            else:
+                minimum=-(1<<(8*width-1))
+                maximum=(1<<(8*width))-1
+                if not minimum<=resolved<=maximum:
+                    raise ValueError('assembly relocation overflows '+str(width)+
+                                     ' bytes: '+expr+' = '+str(resolved))
+                value=str(resolved&maximum)
+            ctype={1:'uint8_t',2:'uint16_t',4:'uint32_t'}[width]
+            body.append('{'+ctype+' v='+value+';memcpy(p+'+
+                        str(ref['offset'])+',&v,'+str(width)+');}')
         lines.append(''.join(body)+'}')
     for r in members:
         if r['kind']!='assembly' or not r.get('parsed'):continue
@@ -264,7 +477,7 @@ def main():
         (work/'object.log').write_text(run.stdout+run.stderr);r['represented']=run.returncode==0
         r['issues']=[] if r['represented'] else r['issues']
     (a.out/'data-relocations.json').write_text(json.dumps(dict(external_guest_coordinates=sorted(unresolved),sections=[{k:v for k,v in s.items() if k!='data'} for s in sections]),indent=2)+'\n')
-    summary=dict(c_total=sum(r['kind']=='C' for r in members),frontend=sum(r.get('frontend',False) for r in members),
+    summary=dict(c_total=sum(r['kind'] in ('C','C++') for r in members),cpp_total=sum(r['kind']=='C++' for r in members),frontend=sum(r.get('frontend',False) for r in members),
                  compiled=sum(r.get('compiled',False) for r in members),data_total=sum(r['kind']=='assembly' for r in members),
                  data_represented=sum(r.get('represented',False) for r in members),
                  issues=dict(Counter(i['kind'] for r in members for i in r['issues'])))
@@ -274,10 +487,17 @@ def main():
     # help once this driver has actually been scheduled.
     dependencies = {Path(__file__).resolve(), Path(__file__).with_name('incremental.py').resolve()}
     dependencies.add(Path(__file__).with_name('original_layout.py').resolve())
+    if image['name']=='OVY_0':
+        from ac_config import INPUTS as ac_inputs
+        dependencies.add(Path(__file__).with_name('ac_config.py').resolve())
+        dependencies.update(a.game/source for source in ac_inputs)
+    dependencies.add(a.game/'lib/include/nitro/fs/overlay.h')
     dependencies.add(Path(__file__).with_name('registration_scope.py').resolve())
+    dependencies.update((a.game/'Makefile',a.game/'common.mk',ROOT/'cmake/native_sources.py'))
+    dependencies.update(Path(s) for s in virtual_files)
     dependencies.add(Path(__file__).with_name('frontend.py').resolve())
     dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
-    dependencies.add(Path(__file__).with_name('ovy38_registers.json' if image['name']=='OVY_38' else 'ovy0_registers.json').resolve())
+    if register_path.is_file():dependencies.add(register_path.resolve())
     if a.shared_catalog:dependencies.add(a.shared_catalog.resolve())
     for receipt in a.out.rglob('*.receipt.json'):
         dependencies.update(Path(p) for p in json.loads(receipt.read_text())['inputs']

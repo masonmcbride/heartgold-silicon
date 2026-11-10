@@ -1,6 +1,9 @@
 """Pinned-source compatibility records. No upstream writes or permissive regex patches."""
 import hashlib
 
+# Resident main.lsf:677. Preserve the complete original request implementation.
+WM_REQUESTS_SHA256 = '224be3a3adef3221a15676f8f54325fbc3b5c0b737155f7221b7b97ef3495c94'
+
 SOURCES = {'src/application/main_menu/main_menu_util.c': {'sha256': '29f269b406bb52ed5c3952d8c17c07e73dc57e431fbb1fc5c529365ee918fc83',
                                                 'edits': [('void CTRDG_Read32(const void *src, void *dest);',
                                                            '')]},
@@ -1854,7 +1857,7 @@ def runtime_source(relative, original):
     prefix = '#include "ntr_native_internal.h"\n#include <errno.h>\n'
     if relative.endswith("MSL_Common_ctype.s"):
         arrays = ""
-        for name, directive, ctype in (("__msl_digit", ".short", "u16"), ("__upper_mapC", ".byte", "u8")):
+        for name, directive, ctype in (("__msl_digit", ".short", "u16"), ("__upper_mapC", ".byte", "u8"), ("__lower_mapC", ".byte", "u8")):
             block = original.split(name + ":", 1)[1].split(".size " + name, 1)[0]
             values = []
             for line in block.splitlines():
@@ -1880,6 +1883,11 @@ def runtime_source(relative, original):
     for old, new in (("__strtoul", "NTR_ParseCore"), ("__StringRead", "NTR_StringRead"),
                      ("__msl_digit", "NTR_Digit"), ("__upper_mapC", "NTR_Upper")):
         code = code.replace(old, new)
+    if relative.endswith("MSL_Common_ctype.s"):
+        # One source-derived table, two ABI names at the same address.
+        # The resident native runtime uses NTR_Digit, while original
+        # HTTP overlay members still import __msl_digit.
+        code += '\n__asm__(".globl ___msl_digit\\n.set ___msl_digit, _NTR_Digit");\n'
     return code
 
 # Native PPW interfaces and fixed-layout multiboot reference ownership.
@@ -7289,7 +7297,7 @@ HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#i
                               'sha256': '44b9532c3fef62ff6dfa7d7de6c1d2d4a631ca5b9f3a75f9cc3083617ba599fd'},
  'include/field_very_tall_grass.h': {'edits': [('#include "field/field_effect_manager.h"',
                                                 '#include <field/field_effect_manager.h>')],
-                                     'sha256': '3ab195a2071e7fcdf0a1f947ba41395eafb6498b4f704fe65b4a566350ef90dd'},
+                                     'sha256': 'c3eeca5a37f4d680af6bed5602af5bab5ed8d04548f4411597bbfcb91c935f57'},
  'include/field_warp_arrow.h': {'edits': [('#include "field/field_effect_manager.h"',
                                            '#include <field/field_effect_manager.h>'),
                                           ('#include "player_avatar.h"', '#include <player_avatar.h>')],
@@ -8014,7 +8022,7 @@ HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#i
                                ('#include "map_object_movement_commands.h"',
                                 '#include <map_object_movement_commands.h>'),
                                ('#include "union_room_internal.h"', '#include <union_room_internal.h>')],
-                     'sha256': '3de264112bb486042224ef6922865234ef43cae4bdb676f2f9fe67e983c5f4ec'},
+                     'sha256': 'd1c5af6bf9144a095a1aea90a97364c0bd4d3c04e0e18ba49e39d30f8e5b02ec'},
  'src/comm_player_manager.c': {'edits': [('#include "comm_player_manager_internal.h"',
                                           '#include <comm_player_manager_internal.h>')],
                                'sha256': '38441d333bb2138576e7d4cf00d75990b287bb7873bf41cce7019bc17cabd92c'},
@@ -8036,7 +8044,7 @@ HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#i
                                               '#include <communication_club_link_internal.h>'),
                                              ('#include "script_manager.h"', '#include <script_manager.h>'),
                                              ('#include "trainer_card_data.h"', '#include <trainer_card_data.h>')],
-                                   'sha256': 'e05af5abfd12b0d7d458f8631c406b571e2619ee9d01f09247e129e7ed18ee64'},
+                                   'sha256': '7930089ef467b7b9e456b60ab27abaea637f3ba625c408fef79e32eb2c7ef8f6'},
  'src/data/fieldmap/script_cmd_table.h': {'edits': [('#include "script.h"', '#include <script.h>')],
                                           'sha256': '843e0f472070906bd758d4d89aa8d2e9f6e09c8c7acc8c03c75341e20c9cbce6'},
  'src/drawing_session_link.c': {'edits': [('#include "drawing_session.h"', '#include <drawing_session.h>')],
@@ -9090,7 +9098,7 @@ HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#i
                                            ('#include "field_system.h"', '#include <field_system.h>'),
                                            ('#include "field/weather_manager.h"',
                                             '#include <field/weather_manager.h>')],
-                                 'sha256': 'dd47b7de24a58e6a98f1b850d2b6266b26aa3bb928790afd22c54f54ebf6bd74'},
+                                 'sha256': '28f978cae8177929c55cc91ab0a12b2e964da0ed29dc120da6bcf299fc1fb1b2'},
  'src/field_bgm.c': {'edits': [('#include "field_bgm.h"', '#include <field_bgm.h>'),
                                ('#include "field/field_control.h"', '#include <field/field_control.h>'),
                                ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>')],
@@ -10260,7 +10268,7 @@ HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#i
                           'sha256': '54bb44b78a2e8c640c580f6f890992a53db0fb1be818b3456db26f83ff7c60db'},
  'src/union_room.c': {'edits': [('#include "union_room_internal.h"', '#include <union_room_internal.h>'),
                                 ('#include "union_room_talk.h"', '#include <union_room_talk.h>')],
-                      'sha256': 'd33cd0bb283c8ebc366caf9ac896d75fa37bf5401dd0f8411c5ae95b4ba38329'},
+                      'sha256': '3c7621f2cc215fc0feb59f616a2695396ab48ecad80ab642a2c9ce2e4bab39f1'},
  'src/union_room_objects.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
                                         ('#include "map_object.h"', '#include <map_object.h>'),
                                         ('#include "player_avatar.h"', '#include <player_avatar.h>'),
@@ -10490,3 +10498,16 @@ SOURCES.update({'src/application/palpad/palpad.c': {'edits': [('((SpriteTemplate
                                                 '+ 0x4C))->heapID',
                                                 'gPalPadCursorSpriteTemplate.heapID')],
                                      'sha256': 'fa9e673038a8a2364e082e3fc27e5fdb701f4dc325adfa9e741609af88f1c866'}})
+
+SOURCES['lib/NitroSDK/src/wm_requests.c'] = {
+    'sha256': WM_REQUESTS_SHA256, 'edits': []}
+
+# Original cross-label stores address fields of the same RST socket.
+SOURCES['lib/libCPS/src/cps_tcp.c'] = {'sha256': '173fb300940e2fa14edad921fb942421c4507ab11913fcc55b7c996166a30f10', 'edits': [('_021D4720[0x27]', 'gCpsRstSocket.localPort'), ('_021D4720[0x2E]', 'gCpsRstSocket.remotePort'), ('((u32 *)&gCpsState)[0x58]', 'gCpsRstSocket.remoteIp')]}
+
+# Native certificate table uses the original CPS type, not an untyped byte array.
+SOURCES['lib/NitroDWC/src/auth_http.c'] = {'sha256': '3538ce8a29467af7c13ddea6542805b2396bc2907173244e0f84e07e38a3100a', 'edits': [('extern const u8 gDwcRootCaList[];', 'typedef struct CpsRootCa CpsRootCa;\nextern CpsRootCa *gDwcRootCaList[12];'), ('void CPS_SetRootCa(const void *, int);', 'void CPS_SetRootCa(CpsRootCa **, int);')]}
+
+# The marker is exactly one original u32. Keep the genuine allocator and free;
+# only its guest address identity follows the existing native allocation.
+SOURCES['src/system.c'] = {'sha256': '55dda8ee474dc20d89cc92335915d0619f0cca0d94d0c2d8ac2c25a941a988b4', 'prefix': '#include "guest32.h"\n', 'edits': [('    *gSystem.asyncSaveMarker = 0x2F93A1BC;', '    g32_bind_async_save_marker(gSystem.asyncSaveMarker);\n    *gSystem.asyncSaveMarker = 0x2F93A1BC;'), ('    Heap_Free(gSystem.asyncSaveMarker);', '    g32_unbind_async_save_marker(gSystem.asyncSaveMarker);\n    Heap_Free(gSystem.asyncSaveMarker);')]}

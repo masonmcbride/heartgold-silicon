@@ -91,7 +91,47 @@ u32 CallbackIdentity(void){return (u32)cb;}
 void StoreCallbacks(u32 cb0,u32 cb1,u32 cb2,u32 cb3,u32 cb4,u32 cb5,u32 userData){QueryReport *qr=&static_qr2_rec;
 '''+stores+'''
 }
+'''
+    # Exact original AC declaration and stores. Integer-kind producers and
+    # named-pointer consumers must share guest register values, not LP64 types.
+    ac=(game/'lib/NitroDWC/src/ap_connect_control.c').read_text()
+    auth=(game/'lib/include/dwc/auth_internal.h').read_text()
+    ac_types='\n'.join(line for line in auth.splitlines() if line.startswith(
+        ('typedef void *(*NasAllocFunc)', 'typedef void (*NasFreeFunc)')))+'\n'
+    for text,name in ((ac,'InitParam'),(auth,'NetCheckCallbacks')):
+        ac_types+=block(text,'typedef struct '+name+' {').rstrip()+' '+name+';\n'
+    ac_stores='\n'.join(line for line in ac.splitlines() if line.strip().startswith(
+        ('p8[0] =','p8[1] =','p8[2] =')))
+    assert len(ac_stores.splitlines())==3
+    fixture+=ac_types+'''
+typedef char AcRecordExtent[sizeof(NetCheckCallbacks)==12?1:-1];
+typedef char AcRecordParamOffset[__builtin_offsetof(NetCheckCallbacks,param)==8?1:-1];
+typedef char AcProducerExtent[sizeof(InitParam)==12?1:-1];
+typedef char AcProducerFlagOffset[__builtin_offsetof(InitParam,dmaNo)==8?1:-1];
+static void *ac_alloc(int label,int size){*(u32*)label=size;return (void*)(label+16);}
+static void ac_free(int label,void *p,int size){((u32*)label)[1]=(u32)p;((u32*)label)[2]=size;}
+u32 AcAllocIdentity(void){return (u32)ac_alloc;}
+u32 AcFreeIdentity(void){return (u32)ac_free;}
+u32 EchoGlobal(u32 value){return value;}
+void StoreAcCallbacks(u32 *p8){
+ InitParam init;InitParam *param=&init;param->alloc=ac_alloc;param->free=ac_free;
+'''+ac_stores+'''
+}
+'''
+    fixture+='''
 void CallStored(void){QRRecord *qr=(QRRecord *)&static_qr2_rec;qr->serverKeyCallback(7,0,qr->param);}
+u32 EchoGlobal();
+u32 GatePointer(void){if(gDwcControl)return EchoGlobal();return 0;}
+u32 GateGlobal(int count){
+ if(((u32*)&gDwcControl)[1]){
+  if(!--count)return EchoGlobal();
+ }
+ return 0;
+}
+void CopyAcCallbacks(NetCheckCallbacks *dest,NetCheckCallbacks *callbacks){*dest=*callbacks;}
+void InvokeAcCallbacks(NetCheckCallbacks *callbacks,char *label,int size){
+ NasAllocFunc alloc=callbacks->alloc;void *p=alloc(label,size);callbacks->free(label,p,size);
+}
 u32 Coordinates(void){return sizeof(QueryReport)==sizeof(QRRecord) && offsetof(QueryReport,userData)==offsetof(QRRecord,param) && sizeof(MatchKeyEntry)==12 && sizeof(PersistSocket)==12 && offsetof(PersistWork,values)==0x30 && sizeof(NatGlobals)==20 && sizeof(CpsRootCa)==20 && offsetof(CpsRootCa,exponent)==16;}
 void StorePointer(void *p){gDwcControl=p;}
 void *ReadPointer(void){return gDwcControl;}
@@ -107,7 +147,7 @@ u32 ReadNullAlias(int ret){ov00_0221B1AC.lastError=ret;return (u32)ov00_0221B1AC
     # Separate translation units exercise the same storage and callback catalog.
     left=out/'writer.c';right=out/'reader.c'
     split=fixture.index('void CallStored(')
-    prefix=fixture[:fixture.index('static void cb(')]
+    prefix=fixture[:fixture.index('static void cb(')]+ac_types
     left.write_text(fixture[:split]);right.write_text(prefix+fixture[split:])
     descriptions=[];inputs=[]
     for source in (left,right):
@@ -128,15 +168,43 @@ u32 ReadNullAlias(int ret){ov00_0221B1AC.lastError=ret;return (u32)ov00_0221B1AC
                 continue
             f.update(address=0x18000000+len(keys)*4,native='fixture_'+f['name'],coalesce=False,used_flat=[True]*len(f['params']))
             regression['codes'].append(f);keys.add(f['key'])
+    regression['register_edges'].append(dict(source=str(right),function='GatePointer',target='EchoGlobal',
+        mode='dominating-global',**{'global':'gDwcControl'},offset=0,
+        line=next(i for i,line in enumerate(right.read_text().splitlines(),1) if 'u32 GatePointer' in line)))
+    regression['register_edges'].append(dict(source=str(right),function='GateGlobal',target='EchoGlobal',
+        mode='dominating-global',global_='gDwcControl',offset=4,
+        line=next(i for i,line in enumerate(right.read_text().splitlines(),1) if 'if(!--count)return EchoGlobal();' in line)))
+    regression['register_edges'][-1]['global']=regression['register_edges'][-1].pop('global_')
     reg=out/'catalog.json';reg.write_text(json.dumps(regression))
     abi=out/'abi.json';abi.write_text(json.dumps(dict(version=1,calls={},exports={},globals=catalog['globals'])))
     native=out/'native.ll';native.write_text('target datalayout = "e-p:64:64"\n')
+    # Catalog identity validation is shared compiler behavior. Reject malformed
+    # domains before dispatch construction rather than truncating handles or
+    # silently keeping the first conflicting entry.
+    for tag,message,edit in [
+        ('overflow','not a 32-bit',lambda c:c['codes'][0].update(address=0x100000001)),
+        ('null','must be nonzero',lambda c:c['codes'][0].update(address=0,address_taken=True)),
+        ('missing-coordinate','must be nonzero',lambda c:next(
+            f for f in c['codes'] if f['name']=='ac_alloc').update(address=0,address_taken=False)),
+        ('duplicate-key','duplicate guest code key',lambda c:c['codes'].append(dict(c['codes'][0]))),
+        ('duplicate-address','duplicate guest code identity',lambda c:c['codes'][1].update(address=c['codes'][0]['address'])),
+        ('global-source','global-value producer mismatch',lambda c:c['register_edges'][-1].update(offset=0)),
+    ]:
+        invalid=copy.deepcopy(regression);edit(invalid)
+        path=out/('invalid-'+tag+'.json');path.write_text(json.dumps(invalid))
+        diagnostic=run([a.lowerer,inputs[1 if tag=='global-source' else 0],out/'invalid.ll','--abi',abi,'--native-ir',native,
+                        '--image',path,'--guest-externals'],ok=False)
+        assert message in diagnostic,diagnostic
     declarations+='''extern unsigned fixture_CallbackIdentity(void*),fixture_Coordinates(void*),fixture_TypedKey(void*,unsigned);
 extern void fixture_StoreCallbacks(void*,unsigned,unsigned,unsigned,unsigned,unsigned,unsigned,unsigned),fixture_CallStored(void*);
 extern void fixture_StorePointer(void*,unsigned),fixture_StoreError(void*,int);
 extern unsigned fixture_ReadPointer(void*);
 extern void fixture_SetSharedPointers(void*,unsigned),fixture_SetupSocketAliases(void*);
 extern unsigned fixture_CheckSharedPointers(void*,unsigned),fixture_ReadNullAlias(void*,int);
+extern unsigned fixture_AcAllocIdentity(void*),fixture_AcFreeIdentity(void*);
+extern void fixture_StoreAcCallbacks(void*,unsigned),fixture_CopyAcCallbacks(void*,unsigned,unsigned);
+extern void fixture_InvokeAcCallbacks(void*,unsigned,unsigned,int);
+extern unsigned fixture_GateGlobal(void*,int),fixture_GatePointer(void*);
 '''.splitlines()
     control=known['gDwcControl'];keys_address=known['gDwcMatchKeys']
     host=out/'host.c';host.write_text('#include "guest32.h"\n#include <assert.h>\n#include <stdint.h>\n#include <string.h>\n'+'\n'.join(declarations)+'''
@@ -147,10 +215,25 @@ uint32_t *p=g32_allocate(ram,16,16);assert(p && (uintptr_t)p>UINT32_MAX);*p=19;
 uint32_t address=g32_encode(ram,p,16,0);assert(g32_resolve(ram,address,16,0)==p);
 fixture_StorePointer(ram,address);fixture_StoreError(ram,7);assert(fixture_ReadPointer(ram)==address);
 uint32_t error;memcpy(&error,g32_resolve(ram,'''+str(control+4)+''',4,0),4);assert(error==7);
+assert(fixture_GatePointer(ram)==address);
+assert(fixture_GateGlobal(ram,1)==7 && fixture_GateGlobal(ram,2)==0);
+fixture_StoreError(ram,-1234567);assert(fixture_GateGlobal(ram,1)==(uint32_t)-1234567);
+fixture_StoreError(ram,0);assert(fixture_GateGlobal(ram,1)==0);
 fixture_StoreCallbacks(ram,fixture_CallbackIdentity(ram),0,0,0,0,0,address);fixture_CallStored(ram);assert(*p==26);
 fixture_SetSharedPointers(ram,address);assert(fixture_CheckSharedPointers(ram,address));
 fixture_SetupSocketAliases(ram);assert(fixture_ReadNullAlias(ram,7)==0);
 for(unsigned i=0;i<154;i++){uint32_t v=1000+i;memcpy(g32_resolve(ram,'''+str(keys_address)+'''+i*12+8,4,0),&v,4);assert(fixture_TypedKey(ram,i)==v);}
+void *source=g32_allocate(ram,12,4),*copy=g32_allocate(ram,12,4),*label=g32_allocate(ram,64,4);
+assert(source && copy && label);
+uint32_t src=g32_encode(ram,source,12,0),dst=g32_encode(ram,copy,12,0),tag=g32_encode(ram,label,64,0);
+assert((uintptr_t)source>UINT32_MAX && (uintptr_t)copy>UINT32_MAX && (uintptr_t)label>UINT32_MAX);
+fixture_StoreAcCallbacks(ram,src);
+uint32_t words[3];memcpy(words,source,12);
+assert(words[0]==fixture_AcAllocIdentity(ram) && words[1]==fixture_AcFreeIdentity(ram) && words[2]==0);
+fixture_CopyAcCallbacks(ram,dst,src);g32_release(ram,source,12);
+fixture_InvokeAcCallbacks(ram,dst,tag,29);
+memcpy(words,label,12);assert(words[0]==29 && words[1]==tag+16 && words[2]==29);
+g32_release(ram,copy,12);g32_release(ram,label,64);
 g32_destroy(ram);return 0;}
 ''')
     results=[]
@@ -180,7 +263,7 @@ g32_destroy(ram);return 0;}
     assert '_static_qr2_rec' in diagnostic
     # Planner rejection checks use real catalogs, changing one invariant each.
     originals={f'OVY_{i}':json.loads((images/f'OVY_{i}'/'plan.json').read_text()) for i in (0,38)}
-    replanned=plan(originals)
+    replanned=plan(originals,catalog)
     assert replanned['globals']==catalog['globals'] and replanned['codes']==catalog['codes']
     broken=copy.deepcopy(originals)
     victim=next(iter(broken['OVY_38']['original_assembly_globals']))
@@ -199,7 +282,8 @@ g32_destroy(ram);return 0;}
     except ValueError as error:assert 'inconsistent C address anchors' in str(error),str(error)
     else:raise AssertionError('inconsistent interior alias accepted')
     (out/'results.json').write_text(json.dumps(dict(executions=results,cross_dylib_callback=True,fixture_preflight=2,blocks=blocks,relocations=relocations,sections=sections,
-        scope='all original data loaders; original QR assignments/layouts and login store; controlled cross-unit callback; no SDK/lifecycle admission'),indent=2)+'\n')
+        ac_record_bytes=12,ac_callback_copy_lifetime=True,invalid_code_catalogs_rejected=5,global_register_contract=True,
+        scope='all original data loaders; original QR/AC stores and login store; controlled cross-unit callbacks and AC record copy lifetime; no SDK/AC startup/lifecycle admission'),indent=2)+'\n')
     print('PASS',blocks,'original blocks,',relocations,'relocations; QR views/callbacks, control overlap, all 154 strides;',','.join(results))
 
 

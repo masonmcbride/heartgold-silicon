@@ -24,6 +24,16 @@ def semantic_adapt(relative, original):
     return result
 
 
+def expected_common_storage(relative, text):
+    if relative == 'lib/NitroDWC/src/net_common.c':
+        text = text.replace('MI_CpuFill8(&p, 0, 12);', 'MI_CpuFill8(&p, 0, sizeof(p));')
+        text = text.replace('DWC_Alloc(4, 7712)', 'DWC_Alloc(4, sizeof(NetAuthWork))')
+        text = text.replace('MI_CpuFill8(allocated, 0, 7712)', 'MI_CpuFill8(allocated, 0, sizeof(NetAuthWork))')
+        text = text.replace('DWC_Free(4, gDwcNasLoginWork, 7712)',
+                            'DWC_Free(4, gDwcNasLoginWork, sizeof(NetAuthWork))')
+    return text
+
+
 class NativeSourceAdaptations(unittest.TestCase):
     def test_explicit_compiler_arithmetic_operations(self):
         for relative, (_, declaration, old, new) in native.COMPILER_OPERATIONS.items():
@@ -196,7 +206,7 @@ class NativeSourceAdaptations(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     native.adapt(relative, original.replace(declaration, '/* declaration changed */'), GAME)
             self.assertEqual(native.adapt(relative, original, GAME),
-                             '#include <nitro/os/common/printf.h>\n' + expected)
+                             '#include <nitro/os/common/printf.h>\n' + expected_common_storage(relative, expected))
         for relative in ('lib/include/vct/vct_audio_internal.h', 'lib/include/nitro/wm/wm_internal.h'):
             original = (GAME / relative).read_text()
             declaration = 'int MATH_CountPopulation(u32 value);'
@@ -236,7 +246,7 @@ class NativeSourceAdaptations(unittest.TestCase):
                 for declaration in native.PRINTF_DECLARATIONS[relative]:
                     expected = native.drop(expected, declaration)
                 expected = '#include <nitro/os/common/printf.h>\n' + expected
-            self.assertEqual(result, expected)
+            self.assertEqual(result, expected_common_storage(relative, expected))
             with self.assertRaises(ValueError):
                 native.adapt(relative, original.replace(declarations[0], "/* changed declaration */", 1), GAME)
         # Compile and run genuine native libc calls with fortification still on.

@@ -73,6 +73,29 @@ reproduce those exact SDK changes; configuration does not fabricate them.
 
 ## Link diagnostics and remaining work
 
+To reattempt historical resident-provider failures rather than retain their old
+diagnostics, enable the recovery retry explicitly:
+
+```sh
+cmake -S . -B build -DHEARTGOLD_GUEST32_RETRY_BLOCKERS=ON
+cmake --build build --target heartgold_guest32_provider_closure -j8
+```
+
+This retries failed frontend discovery as well as lowering. The original owner
+selection floor, pinned identities and publication checks still apply. A failed
+retry preserves the published generation and retains the pending directory;
+`compilation-attempt.json` there records actual selected-member results before
+the publication guard rejects failures. It does not establish game execution.
+
+Guest32 ABI manifests distinguish `absolute_symbols` from `globals` storage.
+The original `FS_OVERLAY_ID` C macro takes the address of an absolute Nintendo
+linker symbol; that value is the overlay ID from `main.lsf`, not a RAM address.
+Original header checks and the owner manifest supply these constants to member,
+resident and overlay compilation. Lowering permits only 32-bit address-value
+uses, rejects storage access and overlapping storage declarations, and emits no
+runtime provider or overlay-load operation for them. The focused regression
+executes the original macros and compiles the complete original script member.
+
 Capture a normal build log and derive the inventory from the actual linker report:
 
 ```sh

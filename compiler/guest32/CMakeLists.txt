@@ -5,7 +5,11 @@ if(NOT LLVM_VERSION_MAJOR EQUAL 23)
     message(FATAL_ERROR "guest32-lower requires LLVM 23")
 endif()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
-add_executable(guest32-lower lower.cpp)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rules.json")
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/rules.json" GUEST32_RULE_CATALOG)
+configure_file(rules_catalog.h.in rules_catalog.h @ONLY)
+add_executable(guest32-lower lower.cpp semantic_slots.cpp)
+target_include_directories(guest32-lower PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 set_property(TARGET guest32-lower PROPERTY HG_LLVM_TOOLS_DIR "${LLVM_TOOLS_BINARY_DIR}")
 target_compile_features(guest32-lower PRIVATE cxx_std_17)
 target_include_directories(guest32-lower SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})
@@ -14,6 +18,9 @@ target_compile_options(guest32-lower PRIVATE ${guest32_definitions})
 llvm_map_components_to_libnames(guest32_libraries Core IRReader TransformUtils Analysis)
 target_link_libraries(guest32-lower PRIVATE ${guest32_libraries})
 enable_testing()
+add_test(NAME guest32_rule_model COMMAND "${Python3_EXECUTABLE}" -B
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/test_guest32_rule_model.py"
+    --build "${CMAKE_CURRENT_BINARY_DIR}" --lowerer "$<TARGET_FILE:guest32-lower>")
 add_test(NAME guest32_regression COMMAND "${Python3_EXECUTABLE}" -B
     "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/test_guest32_compiler.py"
     --build "${CMAKE_CURRENT_BINARY_DIR}"

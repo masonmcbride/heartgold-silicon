@@ -22,8 +22,8 @@
     },
     {
       "source": "upstream/pokeheartgold/lib/libVCT/src/vct_audio_send.c",
-      "sha256": "925b1058ca37e30a683064296d33b7b6c8e78c565e3bd6e163a39c0631806122",
-      "adapted_sha256": "03497be39f5e9e6720739ccb93d3a5dc76221e58b80e80593f3a770f4b9c26bd",
+      "sha256": "a4cfa3c93dd3189ccbc75dc9c8fa14ec28849139f999ee7900ab16c91e09ad9d",
+      "adapted_sha256": "33dccb9e6633c030c24bf4ff830acec3dcd9e01c1c45f1b5f6ecd52914f8ace0",
       "replacements": [
         {
           "original": "asm { clz x, x }",

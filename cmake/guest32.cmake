@@ -4,6 +4,7 @@ set(LLVM_DIR "${HEARTGOLD_GUEST32_LLVM_DIR}")
 set(GUEST32_GAME_BINARY_DIR "${PROJECT_BINARY_DIR}")
 add_subdirectory("${PROJECT_SOURCE_DIR}/compiler/guest32" "${PROJECT_BINARY_DIR}/guest32-compiler")
 get_target_property(guest32_tools guest32-lower HG_LLVM_TOOLS_DIR)
+include("${CMAKE_CURRENT_LIST_DIR}/wm_guest32.cmake")
 set(guest32_dir "${PROJECT_BINARY_DIR}/guest32-ovy0")
 set(guest32_original "${game_source}/lib/NitroDWC/src/match_browse.c")
 set(guest32_ir "${guest32_dir}/match_browse.ll")
@@ -53,6 +54,7 @@ file(GLOB_RECURSE guest32_headers CONFIGURE_DEPENDS
 set(guest32_image_dir "${PROJECT_BINARY_DIR}/guest32-ovy0-image")
 set(guest32_driver "${PROJECT_SOURCE_DIR}/compiler/guest32/image.py")
 add_custom_command(OUTPUT "${guest32_image_dir}/complete.stamp"
+    BYPRODUCTS "${guest32_image_dir}/frontend-coverage.json" "${guest32_image_dir}/inline-identities.json" "${guest32_image_dir}/ownership-conflicts.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${guest32_driver}" --game "${game_source}"
         --build "${PROJECT_BINARY_DIR}" --out "${guest32_image_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
@@ -107,7 +109,8 @@ add_test(NAME guest32_ovy0_pipeline COMMAND "${Python3_EXECUTABLE}" -B
 # Host-side support for guest-addressed native ARM64 execution.
 # Separate from original-image membership.
 add_library(heartgold_guest32_runtime STATIC
-    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32.c")
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32.c"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_overlay.c")
 enable_language(ASM)
 add_library(heartgold_guest32_context STATIC
     "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_context.c"
@@ -118,6 +121,27 @@ target_link_libraries(heartgold_guest32_cache PUBLIC ntr_os)
 set_target_properties(heartgold_guest32_runtime PROPERTIES
     C_STANDARD 11
     C_STANDARD_REQUIRED YES)
+
+add_test(NAME guest32_callback_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
+    --target guest32-lower test_overlay_fs heartgold_guest32_runtime -j8)
+set_tests_properties(guest32_callback_build PROPERTIES FIXTURES_SETUP guest32_callbacks)
+add_test(NAME guest32_original_callbacks COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_callbacks.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+set_tests_properties(guest32_original_callbacks PROPERTIES FIXTURES_REQUIRED guest32_callbacks)
+add_test(NAME guest32_whole_program_projection COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_whole_program.py")
+add_test(NAME guest32_call_results COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_call_results.py" --build "${PROJECT_BINARY_DIR}"
+    --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
+add_custom_target(heartgold_whole_program_plan
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/whole_program.py"
+        --game "${game_source}" --build "${PROJECT_BINARY_DIR}"
+        --out "${PROJECT_BINARY_DIR}/whole-program/plan.json"
+    BYPRODUCTS "${PROJECT_BINARY_DIR}/whole-program/plan.json"
+    DEPENDS heartgold_guest32_provider_closure
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/whole_program.py"
+    VERBATIM)
 
 # Rebuild original CPS/VCT providers with validated ARM assembly lowering.
 # These archives are not automatically admitted across the guest32 ABI.
@@ -161,6 +185,7 @@ function(heartgold_guest_provider name member)
             --owner main --member "${member}"
         DEPENDS guest32-lower fx_constants "${game_source}/${source}" "${game_source}/main.lsf"
             "${PROJECT_SOURCE_DIR}/compiler/guest32/member.py"
+            "${PROJECT_SOURCE_DIR}/compiler/guest32/original_layout.py"
             "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
         DEPFILE "${dir}/provider.d" VERBATIM)
     add_custom_target(heartgold_guest32_${name}_build DEPENDS "${dir}/provider.a" "${dir}/providers.json")
@@ -184,6 +209,7 @@ foreach(i RANGE 0 ${guest38_last})
     list(APPEND guest38_inputs "${game_source}/${relative}")
 endforeach()
 add_custom_command(OUTPUT "${guest38_dir}/complete.stamp"
+    BYPRODUCTS "${guest38_dir}/frontend-coverage.json" "${guest38_dir}/inline-identities.json" "${guest38_dir}/ownership-conflicts.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${guest32_driver}" --image OVY_38 --game "${game_source}"
         --build "${PROJECT_BINARY_DIR}" --out "${guest38_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
@@ -253,7 +279,7 @@ set(guest32_shared_outputs "${guest32_shared_dir}/shared.json" "${guest32_shared
 foreach(id IN ITEMS 0 38)
     set(dir "${guest32_shared_dir}/OVY_${id}")
     list(APPEND guest32_shared_outputs "${dir}/libheartgold_overlay_${id}.a"
-        "${dir}/plan.json" "${dir}/image.json" "${dir}/coverage.json" "${dir}/data-relocations.json"
+        "${dir}/plan.json" "${dir}/image.json" "${dir}/coverage.json" "${dir}/frontend-coverage.json" "${dir}/inline-identities.json" "${dir}/ownership-conflicts.json" "${dir}/data-relocations.json"
         "${dir}/cross-unit-abi.json" "${dir}/complete.stamp" "${dir}/image.d" "${dir}/native-abi.ll")
     string(JSON count LENGTH "${guest32_model}" images OVY_${id} objects)
     math(EXPR last "${count}-1")
@@ -343,24 +369,47 @@ foreach(file IN LISTS guest32_shared_outputs)
     string(REPLACE "${guest32_shared_dir}" "${guest32_provider_dir}" file "${file}")
     list(APPEND guest32_provider_outputs "${file}")
 endforeach()
+# A recovery floor is optional for clean builds, authoritative when supplied.
+set(guest32_recovery_floor "${PROJECT_BINARY_DIR}/execution-boundary/main-provider-recovery.json")
+set(guest32_recovery_arguments)
+option(HEARTGOLD_GUEST32_RETRY_BLOCKERS
+    "Reattempt historical resident failures without publishing incomplete generations" OFF)
+if(HEARTGOLD_GUEST32_RETRY_BLOCKERS)
+    list(APPEND guest32_recovery_arguments --retry-blockers)
+endif()
+if(EXISTS "${guest32_recovery_floor}")
+    list(APPEND guest32_recovery_arguments --selection-floor "${guest32_recovery_floor}")
+endif()
 add_custom_target(heartgold_guest32_provider_closure
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/finish.py"
         --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_provider_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
         --image-root "${guest32_shared_dir}" --compiler "${CMAKE_C_COMPILER}"
+        --root-symbol NitroMain --root-symbol CodeEntryArgs_New --root-symbol ListMenuInit
+        ${guest32_recovery_arguments}
     BYPRODUCTS ${guest32_provider_outputs} "${guest32_provider_dir}/complete.stamp"
         "${guest32_provider_dir}/discovery.json" "${guest32_provider_dir}/closure.json"
         "${guest32_provider_dir}/thread-entry.json" "${guest32_provider_dir}/bindings.json"
         "${guest32_provider_dir}/providers.json" "${guest32_provider_dir}/runtime-providers.json"
         "${guest32_provider_dir}/catalog.json" "${guest32_provider_dir}/thread-entry.c"
         "${guest32_provider_dir}/thread-entry.o" "${guest32_provider_dir}/thread-entry.a"
+        "${guest32_provider_dir}/frontend/lib/NitroSDK/src/os/os_alarm_before_handler.c"
+        "${guest32_provider_dir}/frontend/lib/NitroSDK/src/os/os_alarm_after_handler.c"
         "${guest32_provider_dir}/links/OVY_0-global.dylib"
         "${guest32_provider_dir}/links/OVY_38-global.dylib"
     DEPENDS guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
         heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_std_build
         heartgold_guest32_runtime heartgold_guest32_mi_manifest heartgold_guest32_scalar_bridges
         heartgold_guest32_libc_memory heartgold_overlay_link_contract
+        "${game_source}/tools/alarm-partition/profile.json"
+        "${game_source}/tools/alarm-partition/partition.py"
     VERBATIM)
+add_test(NAME guest32_recovery_publication COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_recovery.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME guest32_absolute_overlay_ids COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_absolute_symbols.py"
+    --build "${PROJECT_BINARY_DIR}" --llvm-bin "${guest32_tools}"
+    --lowerer $<TARGET_FILE:guest32-lower>)
 add_test(NAME guest32_effective_inputs COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_effective_inputs.py" --build "${PROJECT_BINARY_DIR}"
     --llvm-bin "${guest32_tools}")
@@ -396,3 +445,42 @@ add_test(NAME guest32_execution_data_build COMMAND "${CMAKE_COMMAND}" --build "$
     --target heartgold_guest32_execution_data -j8)
 set_tests_properties(guest32_execution_data_build PROPERTIES FIXTURES_SETUP guest32_execution_data)
 set_tests_properties(guest32_original_execution PROPERTIES FIXTURES_REQUIRED guest32_execution_data)
+
+# Bind proven byte-compatible resident storage; never allocate a guest copy.
+# This does not authorize image admission or entry wrappers for the blocked state.
+set(hg_execution_dir "${PROJECT_BINARY_DIR}/execution-boundary")
+add_custom_target(heartgold_guest32_state_proof
+    COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/guest32_state.py"
+        --build "${PROJECT_BINARY_DIR}" --closure "${guest32_provider_dir}"
+        --game "${game_source}" --lowerer $<TARGET_FILE:guest32-lower>
+        --out "${hg_execution_dir}/state"
+    BYPRODUCTS "${hg_execution_dir}/state/state.json"
+        "${hg_execution_dir}/state/bindings.c"
+        "${hg_execution_dir}/state/typed-bindings.c"
+        "${hg_execution_dir}/state/typed-plans.json"
+    DEPENDS heartgold_main heartgold_guest32_provider_closure
+        "${PROJECT_SOURCE_DIR}/cmake/guest32_state.py"
+    VERBATIM)
+set_source_files_properties(
+    "${hg_execution_dir}/state/bindings.c"
+    "${hg_execution_dir}/state/typed-bindings.c"
+    PROPERTIES GENERATED TRUE)
+add_library(heartgold_guest32_main_state STATIC
+    "${hg_execution_dir}/state/bindings.c"
+    "${hg_execution_dir}/state/typed-bindings.c"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32_main_state.c")
+target_include_directories(heartgold_guest32_main_state PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers")
+add_dependencies(heartgold_guest32_main_state heartgold_guest32_state_proof)
+target_link_libraries(heartgold PRIVATE heartgold_guest32_main_state heartgold_guest32_runtime)
+add_test(NAME guest32_execution_boundary_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
+    --target heartgold_guest32_main_state -j8)
+set_tests_properties(guest32_execution_boundary_build PROPERTIES RUN_SERIAL TRUE FIXTURES_SETUP execution_boundary)
+add_test(NAME guest32_execution_boundary COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_execution_boundary.py"
+    --build "${PROJECT_BINARY_DIR}" --game "${game_source}"
+    --lowerer $<TARGET_FILE:guest32-lower> --llvm-bin "${guest32_tools}")
+set_tests_properties(guest32_execution_boundary PROPERTIES RUN_SERIAL TRUE FIXTURES_REQUIRED execution_boundary)
+
+# Private address-identity hooks on the source-faithful u32 save marker.
+set_property(SOURCE "${native_root}/src/system.c" APPEND PROPERTY
+    INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/hardware_drivers")

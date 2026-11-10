@@ -31,7 +31,22 @@ static int check_binding(int importer, uintptr_t offset, const char *name, int p
     uintptr_t slot;
     memcpy(&slot, (const char *)source.dli_fbase + offset, sizeof(slot));
     if (slot != (uintptr_t)resolved + addend) goto fail;
-    if (provider != -2) {
+    if (provider == -3 || provider == -4 || provider == -5 || provider == -6) {
+        const char *expected_name =
+            provider == -3 ? "libheartgold_dwc_status.dylib" :
+            provider == -4 ? "libheartgold_wm_arm9.dylib" :
+            provider == -5 ? "libheartgold_ovy0_wifi_subset.dylib" :
+                             "libc++.1.dylib";
+
+        if (!dladdr(resolved, &actual) || !actual.dli_fname)
+            goto fail;
+
+        const char *base = strrchr(actual.dli_fname, '/');
+        base = base ? base + 1 : actual.dli_fname;
+
+        if (strcmp(base, expected_name) != 0)
+            goto fail;
+    } else if (provider != -2) {
         const void *anchor = provider == -1 ? (const void *)&HG_PrepareGameOverlays : image_anchor(provider);
         if (!anchor || !dladdr(anchor, &expected) || !dladdr(resolved, &actual) ||
             expected.dli_fbase != actual.dli_fbase) goto fail;

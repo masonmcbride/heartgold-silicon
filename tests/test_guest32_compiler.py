@@ -207,6 +207,59 @@ int main(int argc,char **argv){
         results.append(run([exe]).strip())
         overflow = run([exe, 'overflow'], expected=None)
         assert 'AddressSanitizer: heap-buffer-overflow' in overflow, overflow
+    # Valid LLVM SSA does not require textual block order to follow dominance.
+    # Exercise a forward textual reference, a loop PHI/backedge and retained
+    # unreachable code without changing the input CFG or guest pointer widths.
+    reordered = out/'reordered.ll'
+    reordered.write_text('''target datalayout = "e-p:32:32-i64:64-n32"
+define i32 @reordered(ptr %p, i32 %index) {
+entry:
+  br label %produce
+consume:
+  %q = getelementptr i32, ptr %base, i32 %index
+  %value = load i32, ptr %q, align 4
+  br label %loop
+loop:
+  %n = phi i32 [ 0, %consume ], [ %next, %step ]
+  %done = icmp eq i32 %n, 3
+  br i1 %done, label %exit, label %step
+exit:
+  ret i32 %value
+step:
+  %next = add i32 %n, 1
+  br label %loop
+produce:
+  %base = getelementptr i32, ptr %p, i32 1
+  br label %consume
+unreachable_block:
+  ret i32 99
+}
+''')
+    run([bindir/'opt', '-passes=verify', '-disable-output', reordered])
+    reordered_host = out/'reordered-host.c'
+    reordered_host.write_text('''#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+extern uint32_t reordered(void *,uint32_t,int);
+int main(void){
+ uint32_t *ram=calloc(256,4);assert(ram && (uintptr_t)ram>UINT32_MAX);
+ for(unsigned i=0;i<256;i++)ram[i]=i*1234567u;
+ for(int i=-32;i<32;i++)assert(reordered(ram,512,i)==ram[129+i]);
+ free(ram);return 0;
+}
+''')
+    reordered_runs=[]
+    for opt in ('0','2'):
+        for san in (False,True):
+            dest=out/'reordered-native.ll'
+            run([tool,reordered,dest,*(['--asan'] if san else [])])
+            run([bindir/'opt','-passes=verify','-disable-output',dest])
+            # The unreachable block remains in the emitted module.
+            assert 'unreachable_block:' in dest.read_text()
+            exe=out/('reordered.O'+opt+('.asan' if san else ''))
+            run([clang,'-O'+opt,*(['-fsanitize=address,undefined','-fno-sanitize-recover=all'] if san else []),
+                 reordered_host,dest,'-o',exe])
+            run([exe]);reordered_runs.append(exe.name)
     negatives = {
         'escaped_stack': 'void sink(int*);void f(void){int x=1;sink(&x);}',
         'indirect_call': 'int f(int(*p)(int)){return p(1);}',
@@ -233,7 +286,7 @@ int main(int argc,char **argv){
     blocker = run([tool, clear_ir, out/'original-clear.rejected.ll'], expected=1)
     assert 'external/indirect call boundary: DWCi_ClearMatchKeys' in blocker
     (out/'original-clear.blocker.txt').write_text(blocker)
-    evidence = dict(results=results, negative_cases=list(negatives),
+    evidence = dict(results=results, reordered_block_executions=reordered_runs, negative_cases=list(negatives),
                     native_negative_control=control_result,
                     benchmarks=benchmarks,
                     original_function='DWCi_GetNewMatchKeyID',

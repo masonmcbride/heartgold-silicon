@@ -11,6 +11,7 @@ struct BoundaryType {
 };
 struct Boundary {
   std::string native;
+  int64_t entryOwner = -1;
   std::vector<BoundaryType> args;
   BoundaryType result;
 };
@@ -60,8 +61,9 @@ class ABI {
     if (!O) return;
     for (const auto &Entry : *O) {
       auto *S = Entry.second.getAsObject(); if (!S) reject("ABI function must be object");
-      keys(*S, {"native", "args", "result"});
+      keys(*S, {"native", "args", "result", "entry_owner"});
       Boundary B; B.native = str(*S, "native");
+      if(S->get("entry_owner"))B.entryOwner=number(*S,"entry_owner");
       if (B.native.empty()) reject("empty native symbol");
       auto *Args = S->getArray("args"); auto *Ret = S->get("result");
       if (!Args || !Ret) reject("missing ABI arguments/result");
@@ -80,6 +82,7 @@ class ABI {
 public:
   std::map<std::string, Boundary> calls, exports;
   std::map<std::string, Placement> globals;
+  std::map<std::string, uint32_t> absoluteSymbols;
   static Type *nativeType(LLVMContext &C, const BoundaryType &T) {
     if (T.type == "ptr") return PointerType::getUnqual(C);
     if (T.type == "void") return Type::getVoidTy(C);
@@ -108,11 +111,13 @@ public:
     auto Parsed = json::parse((*Buffer)->getBuffer());
     if (!Parsed) { consumeError(Parsed.takeError()); reject("invalid ABI JSON"); }
     auto *Root = Parsed->getAsObject(); if (!Root) reject("ABI root must be object");
-    keys(*Root, {"version", "calls", "exports", "globals"});
+    keys(*Root, {"version", "calls", "exports", "globals", "absolute_symbols"});
     if (Root->getInteger("version") != 1) reject("ABI version");
-    for (StringRef K : {"calls","exports","globals"})
+    for (StringRef K : {"calls","exports","globals","absolute_symbols"})
       if (Root->get(K) && !Root->getObject(K)) reject("ABI section must be object: " + K);
     signatures(Root->getObject("calls"), calls); signatures(Root->getObject("exports"), exports);
+    if (auto *A = Root->getObject("absolute_symbols")) for (const auto &Entry : *A)
+      absoluteSymbols.emplace(Entry.first.str(), number(*A, Entry.first));
     if (auto *G = Root->getObject("globals")) for (const auto &Entry : *G) {
       auto *O = Entry.second.getAsObject(); if (!O) reject("global placement must be object");
       keys(*O, {"offset", "size"});
@@ -120,7 +125,10 @@ public:
       if (P.offset < 4096 || !P.size || (uint64_t)P.offset+P.size > UINT32_MAX) reject("invalid global placement");
       globals.emplace(Entry.first.str(), P);
     }
+    for (const auto &A : absoluteSymbols)
+      if (globals.count(A.first)) reject("absolute symbol also has storage: " + A.first);
     for (const auto &E : calls) {
+      if(E.second.entryOwner>=0)reject("entry_owner is only valid on native exports");
       Function *F = Native.getFunction(E.second.native);
       if (!F || F->getFunctionType() != nativeSignature(Native.getContext(), E.second) ||
           F->getCallingConv() != CallingConv::C) reject("native ABI signature: " + E.second.native);

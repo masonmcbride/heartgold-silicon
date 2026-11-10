@@ -25,6 +25,8 @@ def plan(catalogs, previous=None):
     previous = previous or {}
     occupied = []
     pending = []
+    pending_aliases = []
+    pending_sections = []
     functions = {}
     seen_register_edges = set()
     for owner, original in sorted(catalogs.items()):
@@ -73,16 +75,89 @@ def plan(catalogs, previous=None):
                     projected[key]=dict(offset=base+view['offset']-group['start'],size=view['size'])
                 occupied.append((base,base+group['end']-group['start'],owner))
             else:pending.append((owner,group))
-        # Recover C-owned assembly aliases using their already validated view.
-        for name, view in c['assembly_globals'].items():
-            if name in assembly:continue
-            matches=[(key,v) for key,v in c['c_globals'].items()
-                     if v['offset']<=view['offset'] and view['offset']+view['size']<=v['offset']+v['size']]
-            matches=[(k,v) for k,v in matches if k in projected]
-            if not matches:raise ValueError('unplaced original alias: '+name)
-            values={projected[k]['offset']+view['offset']-v['offset'] for k,v in matches}
-            if len(values)!=1:raise ValueError('inconsistent alias coordinates: '+name)
-            assembly[name]=dict(offset=values.pop(),size=view['size'])
+        # An original section is one allocation, not one allocation per label.
+        # Missing historical coordinates do not imply permission to relocate.
+        section_plans = {}
+        for section in c.get('assembly_sections', []):
+            identity = (section['object'], section['section'])
+            if identity in section_plans:
+                raise ValueError('duplicate assembly section: '+repr(identity))
+            section_plans[identity] = section
+
+        section_coordinates = {}
+        for identity, section in sorted(section_plans.items()):
+            labels = section['labels']
+            size = section['size']
+            provisional = section['offset']
+            if size < 0:
+                raise ValueError('negative assembly section extent: '+repr(identity))
+            for name, off in labels.items():
+                view = c['assembly_globals'].get(name)
+                if view != dict(offset=provisional+off, size=size-off):
+                    raise ValueError('inconsistent assembly section view: '+name)
+            historical = section['original_placement']
+            if historical is not None:
+                base = historical['address']
+                if historical['size'] != size:
+                    raise ValueError('historical section extent mismatch: '+repr(identity))
+                for name, off in labels.items():
+                    if assembly.get(name) != dict(offset=base+off,size=size-off):
+                        raise ValueError('historical section coordinate mismatch: '+name)
+                section_coordinates[identity] = base
+                continue
+
+            # A section already represented by C storage is not allocated twice.
+            # Such aliases are resolved after all C groups have been assigned.
+            if labels and all(any(
+                    v['offset'] <= provisional+off and
+                    provisional+size <= v['offset']+v['size']
+                    for v in c['c_globals'].values())
+                    for off in labels.values()):
+                continue
+
+            # Admit sections described by the original assembly parser.
+            # Historical address verification remains mandatory above.
+            # New sections receive relocatable Guest32 coordinates below.
+            if not re.fullmatch(r"[0-9a-f]{64}", section.get("source_sha256", "")):
+                raise ValueError("invalid original assembly source hash: "+repr(identity))
+            if not re.fullmatch(r"[0-9a-f]{64}", section.get("bytes_sha256", "")):
+                raise ValueError("missing original assembly bytes certificate: "+repr(identity))
+            if section["size"] <= 0 or not labels:
+                raise ValueError("invalid original assembly section extent or labels: "+repr(identity))
+            if any(not isinstance(off,int) or not 0 <= off < size for off in labels.values()):
+                raise ValueError("assembly label outside section: "+repr(identity))
+            relocations = section.get("relocations")
+            if not isinstance(relocations,list) or len(relocations) != section["relocation_count"]:
+                raise ValueError("missing original assembly relocation records: "+repr(identity))
+            spans = []
+            for ref in relocations:
+                off, width = ref["offset"], ref["width"]
+                if not isinstance(off,int) or width not in (1,2,4) or not 0 <= off <= size-width:
+                    raise ValueError("invalid assembly relocation span: "+repr(identity))
+                if not isinstance(ref.get("expression"),str) or not ref["expression"]:
+                    raise ValueError("invalid assembly relocation expression: "+repr(identity))
+                spans.append((off,off+width))
+            spans.sort()
+            if any(a[1] > b[0] for a,b in zip(spans,spans[1:])):
+                raise ValueError("overlapping assembly relocations: "+repr(identity))
+            prior_sections = previous.get('images',{}).get(owner,{}).get('assembly_sections',{})
+            stable_key = identity[0]+'|'+identity[1]
+            prior = prior_sections.get(stable_key)
+            if prior is not None:
+                if (prior['size'] != size or
+                        prior['source_sha256'] != section['source_sha256'] or
+                        prior['labels'] != labels):
+                    raise ValueError('changed pinned assembly section: '+stable_key)
+                base = prior['offset']
+                occupied.append((base,base+size,owner))
+                section_coordinates[identity] = base
+                for name,off in labels.items():
+                    assembly[name] = dict(offset=base+off,size=size-off)
+            else:
+                pending_sections.append((owner,identity,section))
+        # Legacy C-owned aliases are resolved after pending C allocations.
+        pending_aliases.append((owner,c['assembly_globals'],c['c_globals'],
+                                assembly,projected))
         # Assembly view sizes extend to section end; collapse overlapping views
         # within one owner before checking peer ownership.
         spans=[]
@@ -91,14 +166,33 @@ def plan(catalogs, previous=None):
             if spans and start<spans[-1][1]:spans[-1]=(spans[-1][0],max(spans[-1][1],end))
             else:spans.append((start,end))
         occupied.extend((start,end,owner) for start,end in spans if end>start)
-        result['images'][owner]=dict(assembly_globals=assembly,c_globals=projected)
+        result['images'][owner]=dict(assembly_globals=assembly,c_globals=projected,
+                                     assembly_sections={
+                                         obj+'|'+sec:dict(offset=base,
+                                             size=section_plans[(obj,sec)]['size'],
+                                             source_sha256=section_plans[(obj,sec)]['source_sha256'],
+                                             labels=section_plans[(obj,sec)]['labels'])
+                                         for (obj,sec),base in section_coordinates.items()})
         for f in c['codes']:
             old=functions.get(f['key'])
             if old and old['definition'] and f['definition']:
-                if not (old.get('coalesce') and f.get('coalesce') and
-                        all(old[k]==f[k] for k in ('origin','origin_line','body_hash','params','return'))):
+                signature=('origin','origin_line','body_hash','params',
+                           'return','local','native','varargs')
+                identical=all(old.get(k)==f.get(k) for k in signature)
+                shared_header=(
+                    old.get('origin') and
+                    Path(old['origin']).suffix=='.h' and
+                    not old.get('local') and not f.get('local')
+                )
+                explicit=bool(old.get('coalesce') and f.get('coalesce'))
+                if not (identical and (explicit or shared_header)):
                     raise ValueError('multiple guest code owners: '+f['key'])
-            chosen=f if not old or f['definition'] else old
+                # Preserve canonical provenance; subsequent identical header
+                # definitions reuse the same synthetic guest code identity.
+                chosen=dict(old)
+                chosen['coalesce']=True
+            else:
+                chosen=dict(f if not old or f['definition'] else old)
             chosen['address_taken']=f['address_taken'] or bool(old and old['address_taken'])
             functions[f['key']]=chosen
     for start,end,owner in occupied:
@@ -110,8 +204,60 @@ def plan(catalogs, previous=None):
                  previous.get('static_end', MAIN_BASE)])+15)&~15
     for owner,group in pending:
         for key,view in group['views'].items():
-            result['images'][owner]['c_globals'][key]=dict(offset=cursor+view['offset']-group['start'],size=view['size'])
+            result['images'][owner]['c_globals'][key]=dict(
+                offset=cursor+view['offset']-group['start'],size=view['size'])
         cursor=(cursor+group['end']-group['start']+15)&~15
+
+    # Allocate complete admitted assembly sections after existing C allocations.
+    for owner,identity,section in pending_sections:
+        cursor=(cursor+15)&~15
+        base=cursor
+        cursor+=section['size']
+        key=identity[0]+'|'+identity[1]
+        result['images'][owner]['assembly_sections'][key]=dict(
+            offset=base,size=section['size'],
+            source_sha256=section['source_sha256'],
+            labels=section['labels'])
+        for name,off in section['labels'].items():
+            result['images'][owner]['assembly_globals'][name]=dict(
+                offset=base+off,size=section['size']-off)
+
+    # Resolve original C aliases only after every C group is placed.
+    for owner,original_assembly,original_c,assembly,projected in pending_aliases:
+        final_c=result['images'][owner]['c_globals']
+        for name,view in original_assembly.items():
+            if name in assembly:
+                continue
+            matches=[(key,v) for key,v in original_c.items()
+                     if v['offset']<=view['offset'] and
+                     view['offset']+view['size']<=v['offset']+v['size']
+                     and key in final_c]
+            if not matches:
+                raise ValueError('unplaced original alias: '+name)
+            values={final_c[key]['offset']+view['offset']-v['offset']
+                    for key,v in matches}
+            if len(values)!=1:
+                raise ValueError('inconsistent alias coordinates: '+name)
+            assembly[name]=dict(offset=values.pop(),size=view['size'])
+
+    # Check final relocatable allocations against all pinned/original intervals.
+    allocated=[]
+    for owner,group in pending:
+        views=result['images'][owner]['c_globals']
+        first=next(iter(group['views']))
+        base=views[first]['offset']-(group['views'][first]['offset']-group['start'])
+        allocated.append((base,base+group['end']-group['start'],owner))
+    for owner,identity,section in pending_sections:
+        base=result['images'][owner]['assembly_sections'][identity[0]+'|'+identity[1]]['offset']
+        allocated.append((base,base+section['size'],owner))
+    for start,end,owner in allocated:
+        if start<MAIN_BASE or end>MAIN_BASE+MAIN_SIZE:
+            raise ValueError('relocatable storage outside DS RAM: '+owner)
+        for other_start,other_end,peer in occupied+allocated:
+            if (start,end,owner)==(other_start,other_end,peer):
+                continue
+            if start<other_end and other_start<end:
+                raise ValueError('overlapping allocated storage: '+owner+' / '+peer)
     if cursor>=MAIN_BASE+MAIN_SIZE:raise ValueError('guest static storage exhausted')
     for owner,c in result['images'].items():
         for name,view in [*c['assembly_globals'].items(),*c['c_globals'].items()]:

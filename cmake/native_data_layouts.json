@@ -10734,5 +10734,317 @@
     "expected_blocks": 17,
     "expected_relocations": 0,
     "layouts": {}
+  },
+  "asm/nintendo_wfc_connect_data.o": {
+    "inputs": {
+      "asm/nintendo_wfc_connect_data.s": "dd5381b3b3d7ca2b2df4f0aa444148eb92a57b6d3eed60d3260bb0234f9cd313"
+    },
+    "layouts": {
+      "gNintendoWfcScreens": {
+        "source_size": 12,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "alignment": 8
+      },
+      "gNintendoWfcStates": {
+        "source_size": 228,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156,
+          160,
+          164,
+          168,
+          172,
+          176,
+          180,
+          184,
+          188,
+          192,
+          196,
+          200,
+          204,
+          208,
+          212,
+          216,
+          220,
+          224
+        ],
+        "alignment": 8
+      },
+      "gNintendoWfcNumberInputStates": {
+        "source_size": 48,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44
+        ],
+        "alignment": 8
+      },
+      "gNintendoWfcYesNoStates": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "alignment": 8
+      }
+    },
+    "expected_blocks": 40,
+    "expected_relocations": 76
+  },
+  "lib/NitroDWC/asm/http_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/http_data.s": "c3421ba8e29dbc6e6b5a0c8cf1dfe1319b812be0933b0a45f571c90c0a918e5b"
+    },
+    "layouts": {
+      "gNdCaNintendo": {
+        "source_size": 20,
+        "pointers": [
+          0,
+          8,
+          16
+        ],
+        "alignment": 8,
+        "padding": {
+          "8": 4,
+          "16": 4
+        }
+      },
+      "gNdCaList": {
+        "source_size": 4,
+        "pointers": [
+          0
+        ],
+        "alignment": 8
+      }
+    },
+    "expected_blocks": 222,
+    "expected_relocations": 4
+  },
+  "lib/NitroDWC/asm/http_socket_bss.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/http_socket_bss.s": "b67af902342f7a1e7f208edc85cd3463ac28154d156d2bedb2e07f3f5723d02d"
+    },
+    "layouts": {},
+    "expected_blocks": 26,
+    "expected_relocations": 0
+  },
+  "asm/gts_data.o": {
+    "inputs": {
+      "asm/gts_data.s": "07891de95081199694d3247da50e5f42530a59992174d00b15e91fed36da43e5",
+      "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
+      "lib/include/nitro/fs/overlay.h": "cb1a7d308c512050c77f6628eda9869422d633633b49cb5b737e84bef0d5d305"
+    },
+    "constants": {
+      "FS_OVERLAY_ID(OVY_71)": 71
+    },
+    "layouts": {
+      "gGtsTradeSequenceTemplate": {
+        "source_size": 16,
+        "pointers": [
+          0,
+          4,
+          8
+        ],
+        "alignment": 8,
+        "padding": {
+          "16": 4
+        }
+      },
+      "gGtsWantedStates": {
+        "source_size": 68,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64
+        ],
+        "alignment": 8
+      },
+      "gGtsTransactionStates": {
+        "source_size": 160,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132,
+          136,
+          140,
+          144,
+          148,
+          152,
+          156
+        ],
+        "alignment": 8
+      },
+      "gGtsSelectorStates": {
+        "source_size": 136,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96,
+          100,
+          104,
+          108,
+          112,
+          116,
+          120,
+          124,
+          128,
+          132
+        ],
+        "alignment": 8
+      },
+      "gGtsConnectionStates": {
+        "source_size": 100,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          48,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          80,
+          84,
+          88,
+          92,
+          96
+        ],
+        "alignment": 8
+      }
+    },
+    "expected_blocks": 64,
+    "expected_relocations": 119
   }
 }

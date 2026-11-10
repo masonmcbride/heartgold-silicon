@@ -47,7 +47,10 @@ def archive_id(path):
 
 def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name='heartgold',
                        imports_path=None, exports_path=None, contracts_path=None, identities=None, image_names=None,
-                       provider_manifests=()):
+                       provider_manifests=(), resident_owners=None, resident_roots=(), resident_consumers=()):
+    resident_owners = {Path(p).resolve(): owner for p, owner in (resident_owners or {}).items()}
+    if set(resident_owners) - {p.resolve() for p in main_paths}:
+        raise ValueError("Resident owner must name a linked main archive")
     metadata={};inline_definitions={}
     for manifest in provider_manifests:
         for family in json.loads(Path(manifest).read_text())['families'].values():
@@ -62,11 +65,25 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
             metadata[path]=family
     def row(path,symbol,owner):
         info=metadata.get(path.resolve(),{})
-        return provider(info.get('original_identities',{}).get(symbol,symbol[1:]),symbol,owner,path,
+        return provider(info.get('original_identities',{}).get(symbol,symbol[1:]),symbol,
+                        resident_owners.get(path.resolve(), owner),path,
                         info.get('abi_representation','native-arm64'),
                         **({'original_member':info['symbols'][symbol]} if symbol in info.get('symbols',{}) else {}))
     main_definitions = {p: symbols(p, nm=nm) for p in main_paths}
     main = set().union(*main_definitions.values())
+    resident_available = set().union(*(main_definitions[p] for p in main_paths
+                                    if p.resolve() in resident_owners))
+    resident_exports = set(resident_roots)
+    for consumer in resident_consumers:
+        resident_exports.update(symbols(consumer, True, nm=nm) & resident_available)
+    if resident_exports - resident_available:
+        raise ValueError('Resident root has no emitted definition: ' +
+                         str(sorted(resident_exports - resident_available)))
+    for p in main_paths:
+        if p.resolve() in resident_owners:
+            competing = set().union(*(v for q, v in main_definitions.items() if q != p)) & main_definitions[p]
+            if competing:
+                raise ValueError('Competing resident providers: ' + str(sorted(competing)))
     identity = lambda path: identities[str(path)] if identities is not None else archive_id(path)
     definitions = {identity(p): symbols(p, nm=nm) for p in overlay_paths}
     if len(definitions) != len(overlay_paths): raise ValueError('Duplicate original image ID')
@@ -108,10 +125,10 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
         write_if_changed(out/f'image_{ident}.rsp',
                          ''.join(json.dumps(str(interfaces[d])) + '\n' for d in dependencies))
     if imports_path: write_if_changed(imports_path, '# Explicit interfaces are in image_<id>.rsp\n')
-    if exports_path: write_if_changed(exports_path, '\n'.join(sorted((imports & main) | {'_main'}))+'\n')
+    if exports_path: write_if_changed(exports_path, '\n'.join(sorted((imports & main) | resident_exports | {'_main'}))+'\n')
     if contracts_path: write_if_changed(contracts_path, json.dumps(providers,sort_keys=True,indent=2)+'\n')
     write_if_changed(out/'provider-registry.json', json.dumps(
-        registry(['main', *map(owner, sorted(definitions))], records, requests),
+        registry(list(dict.fromkeys(['main', *resident_owners.values(), *map(owner, sorted(definitions))])), records, requests),
         sort_keys=True, indent=2)+'\n')
     return providers
 
@@ -121,6 +138,9 @@ def main():
     p.add_argument('--nm', required=True)
     p.add_argument('--image-graph', type=Path)
     p.add_argument('--provider-manifest', type=Path, action='append', default=[])
+    p.add_argument('--resident-consumer', type=Path, action='append', default=[], help='Native consumer object whose resident imports must be exported')
+    p.add_argument('--resident-root', action='append', default=[], help='Required resident export from a partial native consumer')
+    p.add_argument('--resident-owner', action='append', default=[], help='Linked main archive=original logical image owner')
     p.add_argument('--main', action='append', default=[], type=Path)
     p.add_argument('--overlay', action='append', default=[], help='Original numeric ID=archive path')
     p.add_argument('--imports', required=True, type=Path)
@@ -140,7 +160,8 @@ def main():
     image_names = ({i['id']: n for n, i in json.loads(a.image_graph.read_text())['images'].items()
                     if i['kind'] == 'Overlay'} if a.image_graph else None)
     generate_contracts(a.main, archives, a.imports.parent, a.nm,
-                       a.executable_name, a.imports, a.exports, a.contracts, identities, image_names,a.provider_manifest)
+                       a.executable_name, a.imports, a.exports, a.contracts, identities, image_names,a.provider_manifest,
+                       dict(value.rsplit('=', 1) for value in a.resident_owner), a.resident_root, a.resident_consumer)
 
 
 
