@@ -1,0 +1,2646 @@
+{
+  "change_reviews": [
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-MUTEX"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-048cae23abd87cb5733f7c1b",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-DMA"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-05c4cce421733671ca299033",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-TIMERS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-06581c6109a9063be549511f",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-0f0936f37fd35c334e402c48",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-QUEUE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-1ee0049e4813e6b23d9c119b",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-220313e0cafaaab166294f23",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Adds vendor-specific 4-Mbit flash enum constant."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-QUEUE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-36050e3235c167700f821206",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-TIMERS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-36898d8315a5d1a92553df5c",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-CARD-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-407319e5f3bd7c1a7dbbb46b",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-ASSERT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4203460134335a106f2453c8",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-ARENA-ADDRESS",
+        "COR-EARLY-ARENA-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4d75332d4f40058cbe21fc78",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-DMA",
+        "COR-EARLY-MEMORY-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-57f3e8773330833b4cac71d7",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-THREAD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-59585dafa8490190a50c7bd2",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-MUTEX"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-5b01e901fd7937f8e39c866c",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-THREAD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-5debc87d2cffcef636c2f697",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-5e57c7bd103c1ecbd697e211",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Include guard renamed to avoid collision with the umbrella header."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-CLOCK"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-7d3684e54113e6b8facc46b0",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-RESOURCE-UI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-810543af559930eeeba379ef",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-IRQ-TABLE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-8258f7018a6bfa8f4fd45146",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-PXI-WAIT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-9994049dc4d2ae8fde2f8a19",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-EARLY-SCALARS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c44dc21a667da6ef717982c4",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-cc82179f277c935f66c738dc",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Data-only branch and original WM/MB header ownership guards; variant macro is SDK_FROM_TOOL (superseded)."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-dd5cf3821acd0f6938a052db",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-e2abaaf07693c319002c2a8a",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-CLOCK"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-07ef90268a82ab38f5c008a6",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-THREAD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0cf58070624cc9c2c7ae58b8",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-11d5e1c23573ae86771e881a",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-DMA",
+        "COR-PORT-MEMORY-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-1c81eed4e14dbf2ed81d6d54",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-ASSERT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-200e080aa327f28ea7a49dd4",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-20ec023a3cbfda4a4468b0d0",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Data-only branch and original WM/MB header ownership guards; variant macro is SDK_DATA_ONLY."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-QUEUE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2a59c7a9d413f73b5ce80b65",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-DMA"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2bbafe068859ecae8e0e446a",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-41713ba3e8b074ceef8c6f5a",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-QUEUE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4dd1060ced1f5aa81fa8d05b",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-PXI-WAIT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-53ebd4f39536942381ca492e",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-MUTEX"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-57c1c10312de5dc7878ecf8c",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-TIMERS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-58947c42b39aac1821e3020f",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-RESOURCE-UI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-7bac2a1750b033493dcd52da",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-CARD-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-80fc7bae495dca2e79a528cf",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-IRQ-TABLE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-84fbd346b08782fa6ea6d138",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-980cd60ed083ce1a21bae1fe",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Include guard renamed to avoid collision with the umbrella header."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-a14def55b5c85422a34bf3cb",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Adds vendor-specific 4-Mbit flash enum constant."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-ARENA-ADDRESS",
+        "COR-PORT-ARENA-ALIGN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c94bfdd6535a5503492764f6",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-SCALARS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-dffc07b40ee5321deefdcdac",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-e123395d60d9e670ae514eef",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. Opaque host service/window/audio declarations replace SDL types; does not establish implemented audio/rendering."
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-TIMERS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-ea27f839a48a5d04f6a6ad76",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-THREAD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-f2c822579098468871a70997",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "runtime_semantic_adaptation",
+      "correction_ids": [
+        "COR-PORT-MUTEX"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-faf364eb4807842ee2a9f49d",
+      "reason": "All file diff hunks inspected; host service/type changes linked individually. "
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-QSORT-ALGORITHM",
+        "COR-QSORT-SCRATCH",
+        "COR-QSORT-COMPARE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-f5a2092e8430dcc51bf60101",
+      "reason": "Complete patch read: real quicksort, original byte/four-byte swap order, private bounded scratch, comparator signature."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-QSORT-ALGORITHM",
+        "COR-QSORT-SCRATCH",
+        "COR-QSORT-COMPARE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-16ae09def0dcdfa0aab9f698",
+      "reason": "Complete patch read: real quicksort, original byte/four-byte swap order, private bounded scratch, comparator signature."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-BALL-DATA-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d4fdfc34b05916617d2f8a1d",
+      "reason": "Complete 38-line entry inspected: modes five pointer words; menu five mixed callback records, eight-byte alignment and padding."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-BALL-MENU",
+        "COR-MI-TRANSLATOR-ROUTE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2e6e78888585aa4ad362ecd2",
+      "reason": "All three hunks inspected: original source membership, bounded menu callback index transport, MI generator dispatch."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-053cad4435aeb87f86082280",
+      "reason": "Complete file diff reviewed. Repin fork from 51c8685 to f4f9905 to include original FS lifecycle/resource changes."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-d1992069fd6466e9132653a4",
+      "reason": "Complete file diff reviewed. Declare the native lifecycle/ownership inspection API with C linkage; no new algorithm."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-d5ed5f9bbaf90cfb810ae510",
+      "reason": "Complete file diff reviewed. Include actual native header and opaque typedef."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-08cbd30577bd105f36b2ab32",
+      "reason": "Complete file diff reviewed. Include actual native declarations."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-a70991955d3b5d5274c9f215",
+      "reason": "Complete file diff reviewed. Add stdio declarations for FILE operations."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-c8bf1f318016638eef662047",
+      "reason": "Complete file diff reviewed. Use native overlay header/include directory in both fixture compilation steps."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-548ce5cbf9856b0ccc80fc1f",
+      "reason": "Complete file diff reviewed. Use native API header; remove assertion on nonexistent nativeOverlayResult while retaining pcFilePtr and failure-path checks. This is an interface expectation correction, not extra lifecycle proof."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-06952004e17db929b7efca29",
+      "reason": "Complete file diff reviewed. Include actual native API header."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "u32 and s32 typedef selection",
+          "path": "include/nitro/types.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-SCALARS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select unsigned/signed int in the macOS branch.",
+      "incorrect_host_behavior": "Mac LP64 unsigned/signed long would make u32/s32 64 bits.",
+      "invariant": "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Mac LP64 unsigned/signed long would make u32/s32 64 bits.",
+      "postconditions": [
+        "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "u32 and s32 typedef selection",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Mac SDK scalar words retain 32-bit widths"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MI_StopDma and MIi_DmaSet register block",
+          "path": "include/nitro/hw/X86/ioreg_MI.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "MI_StopDma and MIi_DmaSet register block",
+          "path": "libraries/sim/src/sim_vars.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-DMA",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Place channel and clear-data registers in a 16-word array and alias names to indices.",
+      "incorrect_host_behavior": "Separate register globals do not establish byte-offset DMA register addressing.",
+      "invariant": "Adjacent hardware register views alias the same contiguous correctly aligned bytes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-REGISTER-CONTIGUITY"
+      ],
+      "original_failure": "Separate register globals do not establish byte-offset DMA register addressing.",
+      "postconditions": [
+        "Adjacent hardware register views alias the same contiguous correctly aligned bytes."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "MI_StopDma and MIi_DmaSet register block",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "DMA registers share contiguous backing"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OSi_TRUNC and OSi_ROUND",
+          "path": "libraries/os/src/os_arena.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-ARENA-ADDRESS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Cast alignment and address operands to uPtr before complement and rounding.",
+      "incorrect_host_behavior": "Masks formed in narrower integer types can lose high native address bits.",
+      "invariant": "Address predicates and alignment preserve full native address identity within the supplied allocation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "Masks formed in narrower integer types can lose high native address bits.",
+      "postconditions": [
+        "Address predicates and alignment preserve full native address identity within the supplied allocation."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OSi_TRUNC and OSi_ROUND",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Arena rounding retains the high address bits"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_AllocFromArenaLo requested alignment",
+          "path": "libraries/os/src/os_arena.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-ARENA-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use the existing original rounded low-arena path on macOS.",
+      "incorrect_host_behavior": "SDK_PORT low-arena path simply advanced size without aligning pointer or new boundary.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "SDK_PORT low-arena path simply advanced size without aligning pointer or new boundary.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_AllocFromArenaLo requested alignment",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Low arena allocations honor requested alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Shared-memory host backing arrays",
+          "path": "libraries/sim/src/sim_vars.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-MEMORY-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Align main, sub, system, extended, arena and private-WRAM host backing arrays to 32 bytes.",
+      "incorrect_host_behavior": "Unaligned byte-array storage may not satisfy metadata/cache/DMA alignment.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "Unaligned byte-array storage may not satisfy metadata/cache/DMA alignment.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Shared-memory host backing arrays",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Mapped SDK storage satisfies shared-memory alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "CARDRomStat cache buffer",
+          "path": "libraries/card/include/card_rom.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-CARD-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Apply 32-byte alignment to the host struct; retain the size multiple assertion.",
+      "incorrect_host_behavior": "Native pointer-bearing CARDRomStat no longer automatically meets the 32-byte size/alignment requirement.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "Native pointer-bearing CARDRomStat no longer automatically meets the 32-byte size/alignment requirement.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "CARDRomStat cache buffer",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Card ROM state honors cache-block alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "include/nitro/os/common/alarm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "libraries/os/src/os_alarm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-TIMERS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_TimerID and use HG_AddTimer/HG_RemoveTimer with the existing alarm callback and interval conversion.",
+      "incorrect_host_behavior": "SDK alarms depended on SDL timer identities and callbacks.",
+      "invariant": "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-TIMER"
+      ],
+      "original_failure": "SDK alarms depended on SDL timer identities and callbacks.",
+      "postconditions": [
+        "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS alarm host-service boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Host alarms preserve callback and cancellation contracts"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "include/nitro/os/common/mutex.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "libraries/os/src/os_mutex.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-MUTEX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_Mutex and route lock/unlock/try-lock with the existing zero-success convention.",
+      "incorrect_host_behavior": "SDK mutex representation/calls directly depended on SDL.",
+      "invariant": "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MUTEX"
+      ],
+      "original_failure": "SDK mutex representation/calls directly depended on SDL.",
+      "postconditions": [
+        "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS mutex host-service boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK mutex operations retain host mutex semantics"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "include/nitro/os/common/message.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "libraries/os/src/os_message.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-QUEUE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_Semaphore; create/post/wait through HG services without replacing original message-buffer logic.",
+      "incorrect_host_behavior": "SDL semaphore representation was not the native host service interface.",
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-SEMAPHORE"
+      ],
+      "original_failure": "SDL semaphore representation was not the native host service interface.",
+      "postconditions": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK message queue semaphore boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Message queues retain blocking notification behavior"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "include/nitro/os/common/thread.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "libraries/os/src/os_thread.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-THREAD",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use opaque HG threads, HG_ThreadID, create/get-id/join and delay services while keeping the SDK thread lookup logic.",
+      "incorrect_host_behavior": "Thread objects and ID comparisons depended on SDL types and calls.",
+      "invariant": "The host thread boundary preserves entry arguments, current-thread identity and join completion.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-THREAD"
+      ],
+      "original_failure": "Thread objects and ID comparisons depended on SDL types and calls.",
+      "postconditions": [
+        "The host thread boundary preserves entry arguments, current-thread identity and join completion."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK_PORT thread service calls",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK host threads preserve entry identity and join behavior"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_GetTick millisecond conversion",
+          "path": "libraries/os/src/os_tick.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-CLOCK",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use HG_GetTicks64 while retaining the original SDK tick scaling expression.",
+      "incorrect_host_behavior": "SDK tick calculation called SDL_GetTicks64 directly.",
+      "invariant": "Time observations use a consistent monotonic origin and original SDK units.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-CLOCK"
+      ],
+      "original_failure": "SDK tick calculation called SDL_GetTicks64 directly.",
+      "postconditions": [
+        "Time observations use a consistent monotonic origin and original SDK units."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_GetTick millisecond conversion",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK tick conversion uses the selected monotonic host clock"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ARM7/ARM9 simulator notification boundary",
+          "path": "libraries/sim7/src/pxi.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-PXI-WAIT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use HG semaphore wait/post and HG_Delay while retaining queue processing and sound alarm callback identities.",
+      "incorrect_host_behavior": "PXI simulator notification queues were tied to SDL semaphore/thread services.",
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-SEMAPHORE"
+      ],
+      "original_failure": "PXI simulator notification queues were tied to SDL semaphore/thread services.",
+      "postconditions": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "ARM7/ARM9 simulator notification boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "ARM7 simulator notifications preserve semaphore transport"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_IRQTable source ownership",
+          "path": "libraries/os/src/os_irqTable.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-IRQ-TABLE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select original table definition and initial dummy entry for macOS.",
+      "incorrect_host_behavior": "Generic SDK_PORT selected a declaration instead of the original IRQ table definition.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "Generic SDK_PORT selected a declaration instead of the original IRQ table definition.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_IRQTable source ownership",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native IRQ registration has a real table owner"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SIM_debugBreak",
+          "path": "libraries/sim/src/sim_assert.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-ASSERT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Enable signal header and raise(SIGTRAP) for macOS.",
+      "incorrect_host_behavior": "Mac builds did not select the SIGTRAP debug-break path.",
+      "invariant": "Explicit debug-break requests produce an observable trap on the selected host.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FAILURE-VISIBILITY"
+      ],
+      "original_failure": "Mac builds did not select the SIGTRAP debug-break path.",
+      "postconditions": [
+        "Explicit debug-break requests produce an observable trap on the selected host."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SIM_debugBreak",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native debug breaks remain observable"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "FS_OpenFile missing-resource diagnostics",
+          "path": "libraries/fs/src/fs_file.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-EARLY-RESOURCE-UI",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Call HG_ShowMessage with the same title/message; preserve extraction retry in this historical revision.",
+      "incorrect_host_behavior": "Missing-file diagnostics depended on SDL message-box ABI.",
+      "invariant": "Host diagnostic services preserve the SDK caller message and failure observability.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MESSAGE"
+      ],
+      "original_failure": "Missing-file diagnostics depended on SDL message-box ABI.",
+      "postconditions": [
+        "Host diagnostic services preserve the SDK caller message and failure observability."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "FS_OpenFile missing-resource diagnostics",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Filesystem diagnostics cross the host message boundary"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "u32 and s32 typedef selection",
+          "path": "include/nitro/types.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-SCALARS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select unsigned/signed int in the macOS branch.",
+      "incorrect_host_behavior": "Mac LP64 unsigned/signed long would make u32/s32 64 bits.",
+      "invariant": "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Mac LP64 unsigned/signed long would make u32/s32 64 bits.",
+      "postconditions": [
+        "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "u32 and s32 typedef selection",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Mac SDK scalar words retain 32-bit widths"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MI_StopDma and MIi_DmaSet register block",
+          "path": "include/nitro/hw/X86/ioreg_MI.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        },
+        {
+          "locator": "MI_StopDma and MIi_DmaSet register block",
+          "path": "libraries/sim/src/sim_vars.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-DMA",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Place channel and clear-data registers in a 16-word array and alias names to indices.",
+      "incorrect_host_behavior": "Separate register globals do not establish byte-offset DMA register addressing.",
+      "invariant": "Adjacent hardware register views alias the same contiguous correctly aligned bytes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-REGISTER-CONTIGUITY"
+      ],
+      "original_failure": "Separate register globals do not establish byte-offset DMA register addressing.",
+      "postconditions": [
+        "Adjacent hardware register views alias the same contiguous correctly aligned bytes."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "MI_StopDma and MIi_DmaSet register block",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "DMA registers share contiguous backing"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OSi_TRUNC and OSi_ROUND",
+          "path": "libraries/os/src/os_arena.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-ARENA-ADDRESS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Cast alignment and address operands to uPtr before complement and rounding.",
+      "incorrect_host_behavior": "Masks formed in narrower integer types can lose high native address bits.",
+      "invariant": "Address predicates and alignment preserve full native address identity within the supplied allocation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "Masks formed in narrower integer types can lose high native address bits.",
+      "postconditions": [
+        "Address predicates and alignment preserve full native address identity within the supplied allocation."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OSi_TRUNC and OSi_ROUND",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Arena rounding retains the high address bits"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_AllocFromArenaLo requested alignment",
+          "path": "libraries/os/src/os_arena.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-ARENA-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use the existing original rounded low-arena path on macOS.",
+      "incorrect_host_behavior": "SDK_PORT low-arena path simply advanced size without aligning pointer or new boundary.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "SDK_PORT low-arena path simply advanced size without aligning pointer or new boundary.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_AllocFromArenaLo requested alignment",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Low arena allocations honor requested alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Shared-memory host backing arrays",
+          "path": "libraries/sim/src/sim_vars.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-MEMORY-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Align main, sub, system, extended, arena and private-WRAM host backing arrays to 32 bytes.",
+      "incorrect_host_behavior": "Unaligned byte-array storage may not satisfy metadata/cache/DMA alignment.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "Unaligned byte-array storage may not satisfy metadata/cache/DMA alignment.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Shared-memory host backing arrays",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Mapped SDK storage satisfies shared-memory alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "CARDRomStat cache buffer",
+          "path": "libraries/card/include/card_rom.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-CARD-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Apply 32-byte alignment to the host struct; retain the size multiple assertion.",
+      "incorrect_host_behavior": "Native pointer-bearing CARDRomStat no longer automatically meets the 32-byte size/alignment requirement.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "Native pointer-bearing CARDRomStat no longer automatically meets the 32-byte size/alignment requirement.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "CARDRomStat cache buffer",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Card ROM state honors cache-block alignment"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "include/nitro/os/common/alarm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        },
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "libraries/os/src/os_alarm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-TIMERS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_TimerID and use HG_AddTimer/HG_RemoveTimer with the existing alarm callback and interval conversion.",
+      "incorrect_host_behavior": "SDK alarms depended on SDL timer identities and callbacks.",
+      "invariant": "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-TIMER"
+      ],
+      "original_failure": "SDK alarms depended on SDL timer identities and callbacks.",
+      "postconditions": [
+        "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS alarm host-service boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Host alarms preserve callback and cancellation contracts"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "include/nitro/os/common/mutex.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        },
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "libraries/os/src/os_mutex.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-MUTEX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_Mutex and route lock/unlock/try-lock with the existing zero-success convention.",
+      "incorrect_host_behavior": "SDK mutex representation/calls directly depended on SDL.",
+      "invariant": "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MUTEX"
+      ],
+      "original_failure": "SDK mutex representation/calls directly depended on SDL.",
+      "postconditions": [
+        "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS mutex host-service boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK mutex operations retain host mutex semantics"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "include/nitro/os/common/message.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        },
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "libraries/os/src/os_message.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-QUEUE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Carry HG_Semaphore; create/post/wait through HG services without replacing original message-buffer logic.",
+      "incorrect_host_behavior": "SDL semaphore representation was not the native host service interface.",
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-SEMAPHORE"
+      ],
+      "original_failure": "SDL semaphore representation was not the native host service interface.",
+      "postconditions": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK message queue semaphore boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Message queues retain blocking notification behavior"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "include/nitro/os/common/thread.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        },
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "libraries/os/src/os_thread.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-THREAD",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use opaque HG threads, HG_ThreadID, create/get-id/join and delay services while keeping the SDK thread lookup logic.",
+      "incorrect_host_behavior": "Thread objects and ID comparisons depended on SDL types and calls.",
+      "invariant": "The host thread boundary preserves entry arguments, current-thread identity and join completion.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-THREAD"
+      ],
+      "original_failure": "Thread objects and ID comparisons depended on SDL types and calls.",
+      "postconditions": [
+        "The host thread boundary preserves entry arguments, current-thread identity and join completion."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK_PORT thread service calls",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK host threads preserve entry identity and join behavior"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_GetTick millisecond conversion",
+          "path": "libraries/os/src/os_tick.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-CLOCK",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use HG_GetTicks64 while retaining the original SDK tick scaling expression.",
+      "incorrect_host_behavior": "SDK tick calculation called SDL_GetTicks64 directly.",
+      "invariant": "Time observations use a consistent monotonic origin and original SDK units.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-CLOCK"
+      ],
+      "original_failure": "SDK tick calculation called SDL_GetTicks64 directly.",
+      "postconditions": [
+        "Time observations use a consistent monotonic origin and original SDK units."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_GetTick millisecond conversion",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "SDK tick conversion uses the selected monotonic host clock"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ARM7/ARM9 simulator notification boundary",
+          "path": "libraries/sim7/src/pxi.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-PXI-WAIT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use HG semaphore wait/post and HG_Delay while retaining queue processing and sound alarm callback identities.",
+      "incorrect_host_behavior": "PXI simulator notification queues were tied to SDL semaphore/thread services.",
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-SEMAPHORE"
+      ],
+      "original_failure": "PXI simulator notification queues were tied to SDL semaphore/thread services.",
+      "postconditions": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "ARM7/ARM9 simulator notification boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "ARM7 simulator notifications preserve semaphore transport"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_IRQTable source ownership",
+          "path": "libraries/os/src/os_irqTable.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-IRQ-TABLE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select original table definition and initial dummy entry for macOS.",
+      "incorrect_host_behavior": "Generic SDK_PORT selected a declaration instead of the original IRQ table definition.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "Generic SDK_PORT selected a declaration instead of the original IRQ table definition.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "OS_IRQTable source ownership",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native IRQ registration has a real table owner"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SIM_debugBreak",
+          "path": "libraries/sim/src/sim_assert.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-ASSERT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Enable signal header and raise(SIGTRAP) for macOS.",
+      "incorrect_host_behavior": "Mac builds did not select the SIGTRAP debug-break path.",
+      "invariant": "Explicit debug-break requests produce an observable trap on the selected host.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FAILURE-VISIBILITY"
+      ],
+      "original_failure": "Mac builds did not select the SIGTRAP debug-break path.",
+      "postconditions": [
+        "Explicit debug-break requests produce an observable trap on the selected host."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SIM_debugBreak",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native debug breaks remain observable"
+    },
+    {
+      "architectural_assumption": "SDK_BUILD_MACOS with native LP64 host services",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "FS_OpenFile missing-resource diagnostics",
+          "path": "libraries/fs/src/fs_file.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "4780187a1eb6bdb4ca60b703b89f9fd071a3c519"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-PORT-RESOURCE-UI",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Call HG_ShowMessage with the same title/message; preserve extraction retry in this historical revision.",
+      "incorrect_host_behavior": "Missing-file diagnostics depended on SDL message-box ABI.",
+      "invariant": "Host diagnostic services preserve the SDK caller message and failure observability.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MESSAGE"
+      ],
+      "original_failure": "Missing-file diagnostics depended on SDL message-box ABI.",
+      "postconditions": [
+        "Host diagnostic services preserve the SDK caller message and failure observability."
+      ],
+      "preconditions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "FS_OpenFile missing-resource diagnostics",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Filesystem diagnostics cross the host message boundary"
+    },
+    {
+      "architectural_assumption": "num <= 1 or valid array, nonzero width, valid comparator; u32 count",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MATH_QSort and swap",
+          "path": "libraries/math/src/qsort.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        },
+        {
+          "locator": "MATHCompareFunc",
+          "path": "include/nitro/math/qsort.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-QSORT-ALGORITHM",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Translate original quicksort pivot selection, partition comparisons, swap order and equal-size range ordering to native byte offsets.",
+      "incorrect_host_behavior": "SDK_PORT MATH_QSort returned without sorting.",
+      "invariant": "Translated algorithm preserves original observable ordering, comparisons and memory writes for valid inputs.",
+      "known_counterexamples": [
+        "Original assembly equivalence beyond existing regressions remains unproved."
+      ],
+      "law_ids": [
+        "LAW-ALGORITHM-TRANSLATION"
+      ],
+      "original_failure": "SDK_PORT MATH_QSort returned without sorting.",
+      "postconditions": [
+        "Translated algorithm preserves original observable ordering, comparisons and memory writes for valid inputs."
+      ],
+      "preconditions": [
+        "num <= 1 or valid array, nonzero width, valid comparator; u32 count"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original SDK quicksort",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_qsort.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7e0bfbc6aa19b21fdf1c19efe811bf97655bc978f9f5ed13839f6bfceab67c2b"
+        },
+        {
+          "path": "tests/test_qsort.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "badd8ffac5ce936734569c1232d517d9a9fe77609a3e71ded376f2d14bb8742a"
+        }
+      ],
+      "title": "Native quicksort implements the original unstable partition algorithm"
+    },
+    {
+      "architectural_assumption": "num <= 1 or valid array, nonzero width, valid comparator; u32 count",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MATH_QSort and swap",
+          "path": "libraries/math/src/qsort.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        },
+        {
+          "locator": "MATHCompareFunc",
+          "path": "include/nitro/math/qsort.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-QSORT-SCRATCH",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use a private bounded 32-range offset stack; process smaller partitions first and check width-product bounds.",
+      "incorrect_host_behavior": "Original caller scratch can be only 40 bytes and cannot accommodate native pointer records.",
+      "invariant": "Every accessed field lies within a live allocation and initialization covers required observable bytes.",
+      "known_counterexamples": [
+        "Original assembly equivalence beyond existing regressions remains unproved."
+      ],
+      "law_ids": [
+        "LAW-ALLOCATION-COHERENCE"
+      ],
+      "original_failure": "Original caller scratch can be only 40 bytes and cannot accommodate native pointer records.",
+      "postconditions": [
+        "Every accessed field lies within a live allocation and initialization covers required observable bytes."
+      ],
+      "preconditions": [
+        "num <= 1 or valid array, nonzero width, valid comparator; u32 count"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original SDK quicksort",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_qsort.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7e0bfbc6aa19b21fdf1c19efe811bf97655bc978f9f5ed13839f6bfceab67c2b"
+        },
+        {
+          "path": "tests/test_qsort.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "badd8ffac5ce936734569c1232d517d9a9fe77609a3e71ded376f2d14bb8742a"
+        }
+      ],
+      "title": "Quicksort scratch cannot hold widened pointer ranges"
+    },
+    {
+      "architectural_assumption": "num <= 1 or valid array, nonzero width, valid comparator; u32 count",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MATH_QSort and swap",
+          "path": "libraries/math/src/qsort.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        },
+        {
+          "locator": "MATHCompareFunc",
+          "path": "include/nitro/math/qsort.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-QSORT-COMPARE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use const void* comparator arguments in SDK_PORT only.",
+      "incorrect_host_behavior": "Mutable void* comparator typedef did not match const-qualified native callback declarations.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [
+        "Original assembly equivalence beyond existing regressions remains unproved."
+      ],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Mutable void* comparator typedef did not match const-qualified native callback declarations.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "num <= 1 or valid array, nonzero width, valid comparator; u32 count"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original SDK quicksort",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_qsort.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7e0bfbc6aa19b21fdf1c19efe811bf97655bc978f9f5ed13839f6bfceab67c2b"
+        },
+        {
+          "path": "tests/test_qsort.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "badd8ffac5ce936734569c1232d517d9a9fe77609a3e71ded376f2d14bb8742a"
+        }
+      ],
+      "title": "Quicksort comparator type agrees with native callers"
+    },
+    {
+      "architectural_assumption": "Source and consumer hashes match the recorded original inputs",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "8f31e966310ca78b109faf4a25b708353a9f95fc",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/ball_capsule_editor_data.o",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "8f31e966310ca78b109faf4a25b708353a9f95fc"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-BALL-DATA-ABI",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Declare pointer slots and padding for both original tables with source hashes.",
+      "incorrect_host_behavior": "Original .word callback arrays and mixed menu records cannot be emitted unchanged as LP64 data.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Original .word callback arrays and mixed menu records cannot be emitted unchanged as LP64 data.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Source and consumer hashes match the recorded original inputs"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Ball capsule mode/menu initialized tables",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Ball capsule callback arrays use native pointer/padding maps"
+    },
+    {
+      "architectural_assumption": "The source-validated native_mi translator is the selected provider",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "8f31e966310ca78b109faf4a25b708353a9f95fc",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asset_types guest-mi-memory branch",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "8f31e966310ca78b109faf4a25b708353a9f95fc"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-MI-TRANSLATOR-ROUTE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Route the kind through native_mi.translate rather than omitting it.",
+      "incorrect_host_behavior": "Approved guest-mi-memory generation kind lacked dispatch through this source adaptation entry.",
+      "invariant": "A symbol provider must implement its required behavior; resolution alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-SEMANTICS"
+      ],
+      "original_failure": "Approved guest-mi-memory generation kind lacked dispatch through this source adaptation entry.",
+      "postconditions": [
+        "A symbol provider must implement its required behavior; resolution alone is insufficient."
+      ],
+      "preconditions": [
+        "The source-validated native_mi translator is the selected provider"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host source-generator dispatch",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Asset-kind dispatch selects the existing memory translator"
+    }
+  ],
+  "id": "review-batch-002",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "OS alarm host-service boundary",
+      "E": [
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "include/nitro/os/common/alarm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "OS alarm host-service boundary",
+          "path": "libraries/os/src/os_alarm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms."
+      ],
+      "T": "Carry HG_TimerID and use HG_AddTimer/HG_RemoveTimer with the existing alarm callback and interval conversion.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "OS alarm host-service boundary",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-TIMER",
+      "implementation_locations": [],
+      "invariant": "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Host alarms preserve callback and cancellation contracts",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "OS mutex host-service boundary",
+      "E": [
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "include/nitro/os/common/mutex.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "OS mutex host-service boundary",
+          "path": "libraries/os/src/os_mutex.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract."
+      ],
+      "T": "Carry HG_Mutex and route lock/unlock/try-lock with the existing zero-success convention.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "OS mutex host-service boundary",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-MUTEX",
+      "implementation_locations": [],
+      "invariant": "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "SDK mutex operations retain host mutex semantics",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "SDK message queue semaphore boundary",
+      "E": [
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "include/nitro/os/common/message.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "SDK message queue semaphore boundary",
+          "path": "libraries/os/src/os_message.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "T": "Carry HG_Semaphore; create/post/wait through HG services without replacing original message-buffer logic.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "SDK message queue semaphore boundary",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-SEMAPHORE",
+      "implementation_locations": [],
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Message queues retain blocking notification behavior",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "SDK_PORT thread service calls",
+      "E": [
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "include/nitro/os/common/thread.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        },
+        {
+          "locator": "SDK_PORT thread service calls",
+          "path": "libraries/os/src/os_thread.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "The host thread boundary preserves entry arguments, current-thread identity and join completion."
+      ],
+      "T": "Use opaque HG threads, HG_ThreadID, create/get-id/join and delay services while keeping the SDK thread lookup logic.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "SDK_PORT thread service calls",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-THREAD",
+      "implementation_locations": [],
+      "invariant": "The host thread boundary preserves entry arguments, current-thread identity and join completion.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "SDK host threads preserve entry identity and join behavior",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "OS_GetTick millisecond conversion",
+      "E": [
+        {
+          "locator": "OS_GetTick millisecond conversion",
+          "path": "libraries/os/src/os_tick.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "Time observations use a consistent monotonic origin and original SDK units."
+      ],
+      "T": "Use HG_GetTicks64 while retaining the original SDK tick scaling expression.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "OS_GetTick millisecond conversion",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-CLOCK",
+      "implementation_locations": [],
+      "invariant": "Time observations use a consistent monotonic origin and original SDK units.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "SDK tick conversion uses the selected monotonic host clock",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "SIM_debugBreak",
+      "E": [
+        {
+          "locator": "SIM_debugBreak",
+          "path": "libraries/sim/src/sim_assert.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "Explicit debug-break requests produce an observable trap on the selected host."
+      ],
+      "T": "Enable signal header and raise(SIGTRAP) for macOS.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "SIM_debugBreak",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-FAILURE-VISIBILITY",
+      "implementation_locations": [],
+      "invariant": "Explicit debug-break requests produce an observable trap on the selected host.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Native debug breaks remain observable",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "FS_OpenFile missing-resource diagnostics",
+      "E": [
+        {
+          "locator": "FS_OpenFile missing-resource diagnostics",
+          "path": "libraries/fs/src/fs_file.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "34c593f6cf73a8b1b1e6a6b307a4102025b1c29a"
+        }
+      ],
+      "P": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "Q": [
+        "Host diagnostic services preserve the SDK caller message and failure observability."
+      ],
+      "T": "Call HG_ShowMessage with the same title/message; preserve extraction retry in this historical revision.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "FS_OpenFile missing-resource diagnostics",
+      "architectural_assumptions": [
+        "SDK_BUILD_MACOS with native LP64 host services"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-HOST-MESSAGE",
+      "implementation_locations": [],
+      "invariant": "Host diagnostic services preserve the SDK caller message and failure observability.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Filesystem diagnostics cross the host message boundary",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original SDK quicksort",
+      "E": [
+        {
+          "locator": "MATH_QSort and swap",
+          "path": "libraries/math/src/qsort.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        },
+        {
+          "locator": "MATHCompareFunc",
+          "path": "include/nitro/math/qsort.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "64f6206d06d7e767d7d4aac34bc6fc6ac4369c88"
+        }
+      ],
+      "P": [
+        "num <= 1 or valid array, nonzero width, valid comparator; u32 count"
+      ],
+      "Q": [
+        "Translated algorithm preserves original observable ordering, comparisons and memory writes for valid inputs."
+      ],
+      "T": "Translate original quicksort pivot selection, partition comparisons, swap order and equal-size range ordering to native byte offsets.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_native_qsort.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7e0bfbc6aa19b21fdf1c19efe811bf97655bc978f9f5ed13839f6bfceab67c2b"
+          },
+          {
+            "path": "tests/test_qsort.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "badd8ffac5ce936734569c1232d517d9a9fe77609a3e71ded376f2d14bb8742a"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original SDK quicksort",
+      "architectural_assumptions": [
+        "num <= 1 or valid array, nonzero width, valid comparator; u32 count"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ALGORITHM-TRANSLATION",
+      "implementation_locations": [],
+      "invariant": "Translated algorithm preserves original observable ordering, comparisons and memory writes for valid inputs.",
+      "limitations": [
+        "Original assembly equivalence beyond existing regressions remains unproved."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Native quicksort implements the original unstable partition algorithm",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": []
+}

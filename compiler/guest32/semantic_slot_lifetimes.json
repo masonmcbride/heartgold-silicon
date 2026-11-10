@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "boundaries": [
+    {
+      "function": "Heap_Free",
+      "argument": 0,
+      "owner": "src/heap.c",
+      "source_sha256": "9657a0f8402d578286b681bb19cb7617f0ee13ac922c36177f7dbd4b32aadc28",
+      "effect": "release",
+      "proof": "The original function subtracts sizeof(MemoryBlock), reads only that prefix's heapID, updates heap bookkeeping, and hands the prefix to NNS_FndFreeToExpHeap. It neither reads nor serializes payload fields. Native payload extents and all offsets are unchanged by admitted promotions. Post-release payload contents are outside object lifetime."
+    }
+  ]
+}

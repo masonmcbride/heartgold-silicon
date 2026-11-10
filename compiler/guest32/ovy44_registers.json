@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "machine_rule": "adjacent-call-result-v1",
+  "provenance": {
+    "commit": "47e0855242035f82d3002d962fdc8d018bf2be4f",
+    "path": "asm/overlay_44.s",
+    "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
+  },
+  "source_hashes": {
+    "src/wifi_club/wifi_club_app.c": "7c5d8fcb6e8a728ea2828a0637237d690943c64ca38cfbd47adc956da763c45f",
+    "src/wifi_club/wifi_club_game_entry.c": "ff0e33d2386286466ddbd1635f8230e869a425d1f4faab6d9488c89e3d40212e",
+    "src/sound_system.c": "ee92341d2579aa467c216c5d4dda0b6af0810cedaf4341553cea02744a699a00",
+    "src/friend_roster.c": "6ff7f4386a5e80c6412f38ce659c225c481650b063136e218511a8365a0140c7",
+    "lib/NitroDWC/src/dwc_account.c": "28f0b35ba8b0dce4f95f3cb2d1da10bd0d34298cd44879ffddf73b2ab39e1ff1"
+  },
+  "original_functions": {
+    "WifiClub_PlayRoomBgm": "\tthumb_func_start ov44_0222E030\nov44_0222E030: ; 0x0222E030\n\tpush {r4, lr}\n\tmov r0, #0\n\tbl ov00_021E70B8\n\tbl ov44_0222E074\n\tcmp r0, #0\n\tbne _0222E056\n\tbl IsNighttime\n\tmov r0, #0\n\tbl sub_02004AD8\n\tldr r1, _0222E070 ; =0x00000427\n\tmov r0, #0xb\n\tmov r2, #1\n\tbl Sound_SetSceneAndPlayBGM\n\tpop {r4, pc}\n_0222E056:\n\tbl GF_GetCurrentPlayingBGM\n\tadd r4, r0, #0\n\tbl GF_GetCurrentPlayingBGM\n\tbl GF_GetVolumeBySeqNo\n\tadd r1, r0, #0\n\tadd r0, r4, #0\n\tbl GF_SetVolumeBySeqNo\n\tpop {r4, pc}\n\tnop\n_0222E070: .word 0x00000427\n\tthumb_func_end ov44_0222E030",
+    "WifiClubGameEntry_EnableVoiceChat": "\tthumb_func_start ov44_02233F3C\nov44_02233F3C: ; 0x02233F3C\n\tpush {r3, lr}\n\tbl ov44_02233EF8\n\tcmp r0, #0\n\tbeq _02233F4E\n\tbl GF_GetCurrentPlayingBGM\n\tbl sub_02005448\n_02233F4E:\n\tpop {r3, pc}\n\tthumb_func_end ov44_02233F3C",
+    "WifiClub_State_Start": "\tthumb_func_start ov44_0222B228\nov44_0222B228: ; 0x0222B228\n\tpush {r3, r4, r5, lr}\n\tadd r5, r0, #0\n\tadd r4, r1, #0\n\tbl sub_02039998\n\tcmp r0, #0\n\tbeq _0222B2CA\n\tbl ov00_021E6EBC\n\tadd r1, r0, #0\n\tadd r0, r5, #0\n\tbl ov44_0222F780\n\tbl sub_020398C8\n\tstr r0, [r5, #4]\n\tldr r1, [r5, #4]\n\tadd r0, r5, #0\n\tbl ov44_02229F00\n\tcmp r0, #8\n\tbeq _0222B278\n\tcmp r0, #0x12\n\tbeq _0222B278\n\tcmp r0, #0x14\n\tbeq _0222B278\n\tcmp r0, #0x16\n\tbeq _0222B278\n\tcmp r0, #0x17\n\tbeq _0222B278\n\tcmp r0, #0x18\n\tbeq _0222B278\n\tcmp r0, #0x19\n\tbeq _0222B278\n\tcmp r0, #0x1a\n\tbeq _0222B278\n\tcmp r0, #0x1b\n\tbeq _0222B278\n\tcmp r0, #0x13\n\tbne _0222B2A8\n_0222B278:\n\tadd r0, r5, #0\n\tmov r1, #0x10\n\tbl ov44_0222F818\n\tbl sub_020343E4\n\tbl sub_02039378\n\tbl sub_020398C8\n\tadd r1, r0, #0\n\tstr r0, [r5, #4]\n\tadd r1, #0x22\n\tldrb r1, [r1]\n\tadd r0, #0x21\n\tstrb r1, [r0]\n\tmov r0, #0xd7\n\tmov r1, #0x14\n\tlsl r0, r0, #2\n\tstr r1, [r5, r0]\n\tmov r1, #0x41\n\tsub r0, #0x14\n\tstr r1, [r5, r0]\n\tb _0222B360\n_0222B2A8:\n\tadd r0, r5, #0\n\tmov r1, #0x4d\n\tmov r2, #0\n\tbl ov44_0222F510\n\tmov r0, #1\n\tadd r1, r0, #0\n\tbl sub_020398D4\n\tmov r0, #0x10\n\tbl sub_02037AC0\n\tmov r0, #0xd2\n\tmov r1, #0x3d\n\tlsl r0, r0, #2\n\tstr r1, [r5, r0]\n\tb _0222B360\n_0222B2CA:\n\tldr r1, _0222B364 ; =0x0000047D\n\tmov r0, #0xb\n\tmov r2, #1\n\tbl Sound_SetSceneAndPlayBGM\n\tadd r0, r5, #0\n\tbl ov44_0222B0B0\n\tldr r0, [r5]\n\tbl sub_0202C08C\n\tbl DWC_CheckHasProfile\n\tcmp r0, #0\n\tbne _0222B32E\n\tmov r0, #0\n\tmov r1, #3\n\tbl SetBgPriority\n\tmov r0, #1\n\tmov r1, #0\n\tbl SetBgPriority\n\tmov r0, #3\n\tmov r1, #0\n\tbl SetBgPriority\n\tmov r0, #2\n\tmov r1, #1\n\tbl SetBgPriority\n\tadd r0, r5, #0\n\tmov r1, #0x12\n\tbl ov44_0222F66C\n\tmov r0, #0x57\n\tlsl r0, r0, #2\n\tldr r0, [r5, r0]\n\tldr r1, _0222B368 ; =ov44_02235384\n\tmov r2, #0\n\tbl ov44_02231A28\n\tmov r1, #0x62\n\tlsl r1, r1, #2\n\tstr r0, [r5, r1]\n\tmov r0, #0xd2\n\tmov r1, #6\n\tlsl r0, r0, #2\n\tstr r1, [r5, r0]\n\tb _0222B360\n_0222B32E:\n\tldr r0, [r5]\n\tbl sub_0202C08C\n\tbl DWC_CheckValidConsole\n\tcmp r0, #0\n\tbne _0222B34E\n\tadd r0, r5, #0\n\tmov r1, #0x14\n\tbl ov44_0222F66C\n\tmov r0, #0xd2\n\tmov r1, #3\n\tlsl r0, r0, #2\n\tstr r1, [r5, r0]\n\tb _0222B360\n_0222B34E:\n\tadd r0, r5, #0\n\tmov r1, #0x11\n\tmov r2, #1\n\tbl ov44_0222F510\n\tmov r0, #0xd2\n\tmov r1, #1\n\tlsl r0, r0, #2\n\tstr r1, [r5, r0]\n_0222B360:\n\tadd r0, r4, #0\n\tpop {r3, r4, r5, pc}\n\t.balign 4, 0\n_0222B364: .word 0x0000047D\n_0222B368: .word ov44_02235384\n\tthumb_func_end ov44_0222B228"
+  },
+  "implicit_r0": [],
+  "edges": [
+    {
+      "source": "src/wifi_club/wifi_club_app.c",
+      "function": "WifiClub_PlayRoomBgm",
+      "target": "GF_GetVolumeBySeqNo",
+      "line": 3177,
+      "mode": "previous-result",
+      "previous": "GF_GetCurrentPlayingBGM",
+      "argument": 0,
+      "arm_target": "GF_GetVolumeBySeqNo",
+      "evidence": "\tbl GF_GetCurrentPlayingBGM\n\tbl GF_GetVolumeBySeqNo"
+    },
+    {
+      "source": "src/wifi_club/wifi_club_game_entry.c",
+      "function": "WifiClubGameEntry_EnableVoiceChat",
+      "target": "Sound_ApplyVoiceChatVolumeForSeq",
+      "line": 828,
+      "mode": "previous-result",
+      "previous": "GF_GetCurrentPlayingBGM",
+      "argument": 0,
+      "arm_target": "sub_02005448",
+      "evidence": "\tbl GF_GetCurrentPlayingBGM\n\tbl sub_02005448"
+    },
+    {
+      "source": "src/wifi_club/wifi_club_app.c",
+      "function": "WifiClub_State_Start",
+      "target": "DWC_CheckHasProfile",
+      "line": 1512,
+      "mode": "previous-result",
+      "previous": "FriendRoster_GetUserData",
+      "arm_previous": "sub_0202C08C",
+      "argument": 0,
+      "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckHasProfile"
+    },
+    {
+      "source": "src/wifi_club/wifi_club_app.c",
+      "function": "WifiClub_State_Start",
+      "target": "DWC_CheckValidConsole",
+      "line": 1522,
+      "mode": "previous-result",
+      "previous": "FriendRoster_GetUserData",
+      "arm_previous": "sub_0202C08C",
+      "argument": 0,
+      "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckValidConsole"
+    }
+  ],
+  "renames": [
+    {
+      "commit": "c40b43d5dc2e1cc2e1d16450a594acb41069c710",
+      "path": "src/sound_system.c",
+      "old": "sub_02005448",
+      "new": "Sound_ApplyVoiceChatVolumeForSeq",
+      "evidence": [
+        "-void sub_02005448(int seqNo) {",
+        "+void Sound_ApplyVoiceChatVolumeForSeq(int seqNo) {"
+      ]
+    },
+    {
+      "commit": "e2fb5f3d4d239fe40307665d692cda277a97404c",
+      "path": "src/friend_roster.c",
+      "old": "sub_0202C08C",
+      "new": "FriendRoster_GetUserData",
+      "evidence": [
+        "-void *sub_0202C08C(UnkStruct_021D2230 *data) {",
+        "+void *FriendRoster_GetUserData(FriendRoster *data) {"
+      ]
+    }
+  ],
+  "owner": "OVY_44"
+}

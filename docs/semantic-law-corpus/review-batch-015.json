@@ -1,0 +1,62 @@
+{
+  "change_reviews": [
+    {
+      "classification": "regression_infrastructure",
+      "correction_ids": [
+        "COR-REPRO-G3-TABLES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d97e5ae8f962aa95e680bafb",
+      "reason": "Complete41-line file: standalone original producer/texture-matrix sources, typed table generation and existing canonical header reuse, sanitizer flags and actual dependencies. Opt-in probe does not link into game. No execution performed during reconstruction."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-REPRO-G3-TABLES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-7176d584fad0c3667156acef",
+      "reason": "Complete122-line C source: fixed layout assertions, bounded resource/dictionary/model/material/display-list validation before original unchecked accessors; actual producer callbacks capture bytes, repeats prove emission identity/resource immutability. Capture endpoints intentionally replace device execution only in isolated probe. No execution performed during reconstruction."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-REPRO-G3-TABLES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-a81240150e3ab259da12c04c",
+      "reason": "Complete159-line source: pinned3332-byte original crystal input; independent original offsets/1784emission bytes/events and1724display-list bytes, process-repeat hashes, malformed-resource rejection, original table drift and source-owned operand counts. Packet syntax/emission only, no processor/GPU/frame semantic validation. No execution performed during reconstruction."
+    },
+    {
+      "classification": "diagnostic_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-5e19735e8432021ddf30c1d6",
+      "reason": "Complete131-line source: main.lsf129overlay/805unique original C/C++ inventory, fallback flags distinguished from original source/language/library/exception flags, exact adaptation freshness check, full commands/logs and syntax-only counts. It does not verify per-image native linking or runtime. No execution performed during reconstruction."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-CHANNEL-LIFETIME"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-ba1d2abae9e7d34c095720d5",
+      "reason": "Complete100-line source: eight runtime node prefixes/tag widths, canonical channel size/offset/canaries, high-address128node inserts/removals across eight permutations, ordering/parent/color/blackheight and sentinel iteration. Channel canaries are not actual string lifetime proof. No execution performed during reconstruction."
+    },
+    {
+      "classification": "regression_infrastructure",
+      "correction_ids": [
+        "COR-LOBBY-TAGGED-PARENTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-b4daf3998d2ccc96dbabcc8d",
+      "reason": "Complete69-line source: extracts actual adapted original iterator/rebalance/rotation/PPWString/channel bodies, canonical headers and ASan/UBSan harness under actual native compiler. Extractor assumes source brace syntax; not a whole-lobby execution. No execution performed during reconstruction."
+    }
+  ],
+  "corrections": [],
+  "id": "review-batch-015",
+  "laws": [],
+  "unresolved": [],
+  "worktree_reviews": []
+}

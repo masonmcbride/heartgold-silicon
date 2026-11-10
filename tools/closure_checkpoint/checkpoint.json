@@ -1,0 +1,49 @@
+{
+  "unresolved": 167,
+  "baseline_manifest": "build/final-closure/wifi-three-owner-batch/link-manifest.json",
+  "baseline_log": "build/final-closure/wifi-three-owner-batch/production-link.log",
+  "staged_sources": [
+    {
+      "path": "tools/closure_checkpoint/staged_sources/abi/main_menu_shared_native.c",
+      "sha256": "e240528c771ca8d6ea7bef6ac103cdec056ad53b61791b9026ebddbc6cbce014"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/abi/main_menu_native.c",
+      "sha256": "88327c3915fde001995f66633bf206684705f04ad3d16a19b80fa2aabf552578"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/abi/ranger_native.c",
+      "sha256": "bfd52eb99430ee16567ac825a2d73691576600b7dbd61b71ba43141879d446d2"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/abi/vs_recorder_native.c",
+      "sha256": "a3d47e420eba8978e2bd6e04c237c52427bc356f95ecedf30b1e40065dccd2bb"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/msl_float_exact.s",
+      "sha256": "091de3a2a27030b99adfcb06e58777abd842ab1413101d6aefcac81c0ee0b624"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/msl_decimal_exact.s",
+      "sha256": "c6ae04d02d020e9f9ae352c7bfca17172a2dbc481b94ef18b2e517f38d6a3cba"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/wifi_rodata_exact.s",
+      "sha256": "988c851c6d8ef8002085d9659be070e197cf5c618952bffcbfa92994274f9093"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/wifi_setup_screens_rodata_native.s",
+      "sha256": "331d21f5d226477040d367cc4810b223764aae790895b54f0a80675e4d365ba6"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/wifi_setup_keypad_rodata_native.s",
+      "sha256": "22c9a8230a6ace2c714624928af9ea511bdcd3015d3c4a175f2c4e1683318c4a"
+    },
+    {
+      "path": "tools/closure_checkpoint/staged_sources/data/wifi_setup_share_data_native.s",
+      "sha256": "215bb7e570c4167465679cbd3be8b70f4acf6b720a0381a3b64c49c2bfbd02c6"
+    }
+  ],
+  "bss_ledger": "tools/closure_checkpoint/bss-allocation-ledger.json",
+  "status": "Staged link verified; executable not yet linked"
+}

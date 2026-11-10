@@ -1,0 +1,215 @@
+{
+  "artifacts": "build/semantic-law-corpus/{dwc-layout-probe.c,arm32.ll,arm64.ll,arm32.stdout,arm64.stdout,arm32.stderr,arm64.stderr,commands.json}",
+  "claim_provenance": [
+    {
+      "commit_provenance": "No introducing commit established; files are currently untracked. Named tree snapshots preserve the claims but are not commits.",
+      "path": "docs/NATIVE_LINK_CLOSURE.md",
+      "provenance_category": "diagnostic-evidence",
+      "tree_snapshots": [
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/captures/1794029917560/b7181fc7-8184-4eca-b445-4ec0e521d3e9/base",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        },
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/checkpoints/220b6979f3a4fa2aab6d949bb6bcb159/5d45acd27009673017e9efa5e9b3b067/1794029178884/dac76233-1724-4b65-bdbc-2dc3045b712c",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        },
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/checkpoints/3590303858e5e0af71b13dd0d6824830/6ea53c6f19eaf1b7f125be7b630352f8/1794007857063/d2e71f53-af3a-4d96-8dba-fe6ea7f9fb59",
+          "tree": "c56f9707fb803b944ae9d5f64076d45477a29cd3"
+        },
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/checkpoints/8a4499f83092235f6c6d11611fdea357/6e2013a156e9a072a2861dc0f193311e/1794026016909/7c4edfa6-24b8-4a49-8bcc-560edf70a8a6",
+          "tree": "2b22a3c42b53316d86974fc50abcd8b72ab488be"
+        },
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/checkpoints/b08fa3d9ffb50b5348a630fbaacf1b36/9268c1fae68249280bd7e9340715bc92/1794012980162/dbe4be9d-cd10-421f-9563-8cb3b7b7c6fa",
+          "tree": "a5e74f120cb47a12c66ce5eb492ec6898ecccd27"
+        },
+        {
+          "blob": "1e39b6b31f7280d9f682e10121bbba8599f115a1",
+          "ref": "refs/codex/turn-diffs/checkpoints/ebc21b9045e9505ae1a6dcb8a7bc473c/2ea7c2ab9f31bbe4519dc98d3f41a403/1793941254689/66c77d52-cb8f-4e31-87e8-31efd73c60c0",
+          "tree": "48044d6d5d3b4cc3a39e1f676db20d90821b9766"
+        }
+      ],
+      "worktree_sha256": "c8fe2e2f7a157769ef172d00d7d4e97a53e95dcae79f956c93b6804c0a27a837"
+    },
+    {
+      "commit_provenance": "No introducing commit established; files are currently untracked. Named tree snapshots preserve the claims but are not commits.",
+      "path": "tests/test_dwc_ac_contract.py",
+      "provenance_category": "regression-evidence",
+      "tree_snapshots": [
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/captures/1794029917560/b7181fc7-8184-4eca-b445-4ec0e521d3e9/base",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        },
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/checkpoints/220b6979f3a4fa2aab6d949bb6bcb159/5d45acd27009673017e9efa5e9b3b067/1794029178884/dac76233-1724-4b65-bdbc-2dc3045b712c",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        },
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/checkpoints/3590303858e5e0af71b13dd0d6824830/6ea53c6f19eaf1b7f125be7b630352f8/1794007857063/d2e71f53-af3a-4d96-8dba-fe6ea7f9fb59",
+          "tree": "c56f9707fb803b944ae9d5f64076d45477a29cd3"
+        },
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/checkpoints/8a4499f83092235f6c6d11611fdea357/6e2013a156e9a072a2861dc0f193311e/1794026016909/7c4edfa6-24b8-4a49-8bcc-560edf70a8a6",
+          "tree": "2b22a3c42b53316d86974fc50abcd8b72ab488be"
+        },
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/checkpoints/b08fa3d9ffb50b5348a630fbaacf1b36/9268c1fae68249280bd7e9340715bc92/1794012980162/dbe4be9d-cd10-421f-9563-8cb3b7b7c6fa",
+          "tree": "a5e74f120cb47a12c66ce5eb492ec6898ecccd27"
+        },
+        {
+          "blob": "a9e3c8b66cb8c1b3818a687c13f89f52f94bac62",
+          "ref": "refs/codex/turn-diffs/checkpoints/ebc21b9045e9505ae1a6dcb8a7bc473c/2ea7c2ab9f31bbe4519dc98d3f41a403/1793941254689/66c77d52-cb8f-4e31-87e8-31efd73c60c0",
+          "tree": "48044d6d5d3b4cc3a39e1f676db20d90821b9766"
+        }
+      ],
+      "worktree_sha256": "c8fdcb66ccba295d75fad730769a96a1c91a00efb964fbb729b905a422e26a4e"
+    },
+    {
+      "commit_provenance": "No introducing commit established; files are currently untracked. Named tree snapshots preserve the claims but are not commits.",
+      "path": "tests/test_guest32_dwc_rules.py",
+      "provenance_category": "regression-evidence",
+      "tree_snapshots": [
+        {
+          "blob": "c87b4b13660b307f354be9643d55b5d995018f85",
+          "ref": "refs/codex/turn-diffs/captures/1794029917560/b7181fc7-8184-4eca-b445-4ec0e521d3e9/base",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        },
+        {
+          "blob": "c87b4b13660b307f354be9643d55b5d995018f85",
+          "ref": "refs/codex/turn-diffs/checkpoints/220b6979f3a4fa2aab6d949bb6bcb159/5d45acd27009673017e9efa5e9b3b067/1794029178884/dac76233-1724-4b65-bdbc-2dc3045b712c",
+          "tree": "4b1c49280a403261c0cc9b21c466c5b72716bfeb"
+        }
+      ],
+      "worktree_sha256": "3243395c3cb23463bdaf2d42cb4be8493f330ffb52cd92ea0099fdf99d457236"
+    }
+  ],
+  "conclusion": "ARM64 offsets are 32/72, not 28/56. ARM32 offsets are 24/52. Native expansion does not explain the older pair for these exact declarations. Origin of that pair remains unresolved.",
+  "header": {
+    "path": "lib/include/dwc/auth_internal.h",
+    "repository": "upstream/pokeheartgold",
+    "revision": "6d94f9137ced9db12d9ce827a8127c97b779bbeb",
+    "sha256": "0d632f161059b2558b9902a59e60b06daf0bc8164d9acdde94fe3be88f09e1f1"
+  },
+  "id": "DWC-LAYOUT-CHECK-001",
+  "layouts": {
+    "arm32": {
+      "compiler_version": "Homebrew clang version 23.1.4",
+      "complete_record_layouts": [
+        "0 | struct NasHttpParams\n         0 |   const char * url\n         4 |   int method\n         8 |   int bufferSize\n        12 |   NasAllocFunc alloc\n        16 |   NasFreeFunc free\n        20 |   int testServer\n        24 |   int timeout\n           | [sizeof=28, align=4]",
+        "0 | struct AuthParams\n         0 |   u16[26] ingamesn\n        52 |   char[12] gsbrcd\n        64 |   NasAllocFunc alloc\n        68 |   NasFreeFunc free\n           | [sizeof=72, align=4]",
+        "0 | struct NetCheckState\n         0 |   NetCheckWork * work\n         4 |   int redirected\n         8 |   u32 ip\n        12 |   int mode\n        16 |   int unk_10\n        20 |   NasHttp * http\n        24 |   struct NasHttpParams httpParams\n        24 |     const char * url\n        28 |     int method\n        32 |     int bufferSize\n        36 |     NasAllocFunc alloc\n        40 |     NasFreeFunc free\n        44 |     int testServer\n        48 |     int timeout\n        52 |   struct AuthParams authParams\n        52 |     u16[26] ingamesn\n       104 |     char[12] gsbrcd\n       116 |     NasAllocFunc alloc\n       120 |     NasFreeFunc free\n           | [sizeof=124, align=4]"
+      ],
+      "llvm_datalayout": "target datalayout = \"e-m:o-p:32:32-Fi8-f64:32:64-v64:32:64-v128:32:128-a:0:32-n32-S32\"",
+      "original_definitions_preprocessor_verified": true,
+      "values": {
+        "AuthParams.align": 4,
+        "AuthParams.alloc": 64,
+        "AuthParams.free": 68,
+        "AuthParams.gsbrcd": 52,
+        "AuthParams.ingamesn": 0,
+        "AuthParams.size": 72,
+        "NasHttpParams.align": 4,
+        "NasHttpParams.alloc": 12,
+        "NasHttpParams.bufferSize": 8,
+        "NasHttpParams.free": 16,
+        "NasHttpParams.method": 4,
+        "NasHttpParams.size": 28,
+        "NasHttpParams.testServer": 20,
+        "NasHttpParams.timeout": 24,
+        "NasHttpParams.url": 0,
+        "NetCheckState.align": 4,
+        "NetCheckState.authParams": 52,
+        "NetCheckState.http": 20,
+        "NetCheckState.httpParams": 24,
+        "NetCheckState.ip": 8,
+        "NetCheckState.mode": 12,
+        "NetCheckState.redirected": 4,
+        "NetCheckState.size": 124,
+        "NetCheckState.unk_10": 16,
+        "NetCheckState.work": 0,
+        "pointer.align": 4,
+        "pointer.size": 4
+      }
+    },
+    "arm64": {
+      "compiler_version": "Apple clang version 17.0.0 (clang-1700.0.13.5)",
+      "complete_record_layouts": [
+        "0 | struct NasHttpParams\n         0 |   const char * url\n         8 |   int method\n        12 |   int bufferSize\n        16 |   NasAllocFunc alloc\n        24 |   NasFreeFunc free\n        32 |   int testServer\n        36 |   int timeout\n           | [sizeof=40, align=8]",
+        "0 | struct AuthParams\n         0 |   u16[26] ingamesn\n        52 |   char[12] gsbrcd\n        64 |   NasAllocFunc alloc\n        72 |   NasFreeFunc free\n           | [sizeof=80, align=8]",
+        "0 | struct NetCheckState\n         0 |   NetCheckWork * work\n         8 |   int redirected\n        12 |   u32 ip\n        16 |   int mode\n        20 |   int unk_10\n        24 |   NasHttp * http\n        32 |   struct NasHttpParams httpParams\n        32 |     const char * url\n        40 |     int method\n        44 |     int bufferSize\n        48 |     NasAllocFunc alloc\n        56 |     NasFreeFunc free\n        64 |     int testServer\n        68 |     int timeout\n        72 |   struct AuthParams authParams\n        72 |     u16[26] ingamesn\n       124 |     char[12] gsbrcd\n       136 |     NasAllocFunc alloc\n       144 |     NasFreeFunc free\n           | [sizeof=152, align=8]"
+      ],
+      "llvm_datalayout": "target datalayout = \"e-m:o-i64:64-i128:128-n32:64-S128-Fn32\"",
+      "original_definitions_preprocessor_verified": true,
+      "values": {
+        "AuthParams.align": 8,
+        "AuthParams.alloc": 64,
+        "AuthParams.free": 72,
+        "AuthParams.gsbrcd": 52,
+        "AuthParams.ingamesn": 0,
+        "AuthParams.size": 80,
+        "NasHttpParams.align": 8,
+        "NasHttpParams.alloc": 16,
+        "NasHttpParams.bufferSize": 12,
+        "NasHttpParams.free": 24,
+        "NasHttpParams.method": 8,
+        "NasHttpParams.size": 40,
+        "NasHttpParams.testServer": 32,
+        "NasHttpParams.timeout": 36,
+        "NasHttpParams.url": 0,
+        "NetCheckState.align": 8,
+        "NetCheckState.authParams": 72,
+        "NetCheckState.http": 24,
+        "NetCheckState.httpParams": 32,
+        "NetCheckState.ip": 12,
+        "NetCheckState.mode": 16,
+        "NetCheckState.redirected": 8,
+        "NetCheckState.size": 152,
+        "NetCheckState.unk_10": 20,
+        "NetCheckState.work": 0,
+        "pointer.align": 8,
+        "pointer.size": 8
+      }
+    }
+  },
+  "old_claim_offsets": [
+    28,
+    56
+  ],
+  "older_diagnostic_analysis": "The older test measures native offsets with offsetof and compares them against hard-coded 28/56. It does not compute those constants from assembly or an ARM32 record layout. Its emitted native JSON reports 32/72. The older narrative calls 28/56 original aliases of NetCheckState; no derivation or alternate base is identified. Named snapshots retain the same claims. 28/56 numerically match the preceding gDwcHttpTestServer base, but no inspected diagnostic establishes that as their derivation; cause remains unresolved.",
+  "original_placement_evidence": {
+    "coordinates": {
+      "gDwcHttpTestServer": 35759796,
+      "gDwcNetCheckState": 35759800,
+      "ov00_0221A6BC": 35759804,
+      "ov00_0221A6D0": 35759824,
+      "ov00_0221A6EC": 35759852
+    },
+    "offsets_relative_to_each_base": {
+      "gDwcHttpTestServer": [
+        28,
+        56
+      ],
+      "gDwcNetCheckState": [
+        24,
+        52
+      ]
+    },
+    "path": "build/provider-closure170/OVY_0/lib/NitroDWC/src/auth_netcheck.o/abi.json",
+    "sha256": "b3ffdadddcfd1ba5e096b20bf9a5a0e22d454b88c0fd8f4c3e67d38081aebfc4"
+  },
+  "schema": 1,
+  "status": "measured"
+}

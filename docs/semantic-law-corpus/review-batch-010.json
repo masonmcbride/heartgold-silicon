@@ -1,0 +1,759 @@
+{
+  "change_reviews": [
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-LOBBY-PTR-DIFFERENCE",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-SPLIT-ALGORITHMS",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-VECTOR-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-6f7740335182e0eac160ac38",
+      "reason": "All registered source edits and adaptation guards examined individually; preserve original algorithms and distinguish native runtime objects from fixed DS data."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-LOBBY-LIBC"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-cf96c65a9ccfa44930d9b4a7",
+      "reason": "Entire diff examined; dynamic coordinated dispatch and canonical libc declarations."
+    },
+    {
+      "classification": "build_dependency_correction",
+      "correction_ids": [
+        "COR-LOBBY-PTR-DIFFERENCE",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-SPLIT-ALGORITHMS",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-VECTOR-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-9775b1b9a9eb92eb86e314a4",
+      "reason": "Entire diff examined: coordinated adapter is an explicit generation dependency, six adapted headers declared, string sanitizer test registered."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-LOBBY-PTR-DIFFERENCE",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-SPLIT-ALGORITHMS",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-VECTOR-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-3fba7b8684604bca805840c4",
+      "reason": "Complete source read: extracted adapted original functions under ASan/UBSan; canaries, high pointers, independent ownership after input destruction, growth, limits and distinct delimiter semantics. Empty full delimiter excluded. Source evidence only; no new execution."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-LOBBY-PTR-DIFFERENCE",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-SPLIT-ALGORITHMS",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-VECTOR-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0f42ba6076bae4c33795b449",
+      "reason": "Complete source read: extracted adapted original functions under ASan/UBSan; canaries, high pointers, independent ownership after input destruction, growth, limits and distinct delimiter semantics. Empty full delimiter excluded. Source evidence only; no new execution."
+    },
+    {
+      "classification": "diagnostic_evidence",
+      "correction_ids": [
+        "COR-LOBBY-PTR-DIFFERENCE",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-SPLIT-ALGORITHMS",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-VECTOR-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c8c2e2e8aded282aefca9d9f",
+      "reason": "Complete ledger read. Reported compiler/test results are historical reports, not new executions. Broader dirty-work fixes are not attributed to this six-file commit. Explicit unresolved callback words, multiboot fixed strides/cache extents/lifecycle and native-self-image address arithmetic retained as obligations."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Pointers belong to the same live allocation and count fits original result",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native vector element counts use pointer differences",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-PTR-DIFFERENCE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Subtract compatible native element pointers; check signed32 count where original interface requires it.",
+      "incorrect_host_behavior": "u32 address subtraction truncates native iterator addresses.",
+      "invariant": "Element distance preserves original element units without truncating addresses.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "u32 address subtraction truncates native iterator addresses.",
+      "postconditions": [
+        "Element distance preserves original element units without truncating addresses."
+      ],
+      "preconditions": [
+        "Pointers belong to the same live allocation and count fits original result"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Native vector element counts use pointer differences"
+    },
+    {
+      "architectural_assumption": "Runtime-only tree storage; original low-bit alignment and ownership remain valid",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Tagged tree parent words preserve native pointers",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-TAGGED-PARENTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use uintptr_t consistently across tree definitions, root/sentinel initialization, maps, player sets and volatile access.",
+      "incorrect_host_behavior": "u32 tree parent words and producer/consumer temporaries discard native address bits.",
+      "invariant": "Native tagged addresses preserve pointer identity and original low-bit color tag through all consumers.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-PAYLOAD"
+      ],
+      "original_failure": "u32 tree parent words and producer/consumer temporaries discard native address bits.",
+      "postconditions": [
+        "Native tagged addresses preserve pointer identity and original low-bit color tag through all consumers."
+      ],
+      "preconditions": [
+        "Runtime-only tree storage; original low-bit alignment and ownership remain valid"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Tagged tree parent words preserve native pointers"
+    },
+    {
+      "architectural_assumption": "Canonical runtime types are not fixed serialized DS records",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "String and search views share native layout",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-STRING-LAYOUT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use canonical Str, pointer-aligned sixteen-byte native storage and matching long/short field offsets; retain original DS checks separately.",
+      "incorrect_host_behavior": "Private twelve-byte string/search copies disagree with native pointer-bearing canonical strings.",
+      "invariant": "All views and allocations of one native object agree on field layout and extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "original_failure": "Private twelve-byte string/search copies disagree with native pointer-bearing canonical strings.",
+      "postconditions": [
+        "All views and allocations of one native object agree on field layout and extent."
+      ],
+      "preconditions": [
+        "Canonical runtime types are not fixed serialized DS records"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "String and search views share native layout"
+    },
+    {
+      "architectural_assumption": "Construction, copy and destruction retain original ownership semantics",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Channel storage contains a real string object",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-CHANNEL-LIFETIME",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Replace word storage with actual PPWString and return its storage; initialize the original main-channel local Str before assignment.",
+      "incorrect_host_behavior": "Three u32 words lack extent, alignment and object lifetime for native PPWString.",
+      "invariant": "String methods operate on live correctly aligned canonical objects.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "original_failure": "Three u32 words lack extent, alignment and object lifetime for native PPWString.",
+      "postconditions": [
+        "String methods operate on live correctly aligned canonical objects."
+      ],
+      "preconditions": [
+        "Construction, copy and destruction retain original ownership semantics"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Channel storage contains a real string object"
+    },
+    {
+      "architectural_assumption": "All callers share the corrected explicit output signature",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Split result uses canonical explicit output ABI",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-SPLIT-RESULT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use explicit LobbyStringVector output pointer and canonical string/vector APIs at both split implementations.",
+      "incorrect_host_behavior": "Private by-value vector/string declarations disagree with actual callers and canonical native objects.",
+      "invariant": "Every call agrees on result storage, arguments, object representation and ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private by-value vector/string declarations disagree with actual callers and canonical native objects.",
+      "postconditions": [
+        "Every call agrees on result storage, arguments, object representation and ownership."
+      ],
+      "preconditions": [
+        "All callers share the corrected explicit output signature"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Split result uses canonical explicit output ABI"
+    },
+    {
+      "architectural_assumption": "Full delimiter is nonempty; original empty-full-delimiter loop does not progress",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Two split algorithms preserve distinct original search rules",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-SPLIT-ALGORITHMS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Retain delimiter-length advancement for complete matches and single-character advancement for charset matches; preserve empty filtering and maximum count.",
+      "incorrect_host_behavior": "Conflating full-delimiter and character-set splitting changes token boundaries and progress.",
+      "invariant": "Translation preserves each original algorithm and its observable boundary cases.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-ALGORITHM"
+      ],
+      "original_failure": "Conflating full-delimiter and character-set splitting changes token boundaries and progress.",
+      "postconditions": [
+        "Translation preserves each original algorithm and its observable boundary cases."
+      ],
+      "preconditions": [
+        "Full delimiter is nonempty; original empty-full-delimiter loop does not progress"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Two split algorithms preserve distinct original search rules"
+    },
+    {
+      "architectural_assumption": "Canonical copy/destructor semantics; no allocation-failure equivalence established",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Split output owns independent string copies",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-SPLIT-OWNERSHIP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Initialize canonical vector, copy substring objects through original APIs and destroy all temporaries while output retains independent copies.",
+      "incorrect_host_behavior": "Private vector/string handling can alias inputs, leak temporaries or use undersized result storage.",
+      "invariant": "Owned output remains valid after input destruction and releases each allocation exactly once.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALLBACK-LIFETIME"
+      ],
+      "original_failure": "Private vector/string handling can alias inputs, leak temporaries or use undersized result storage.",
+      "postconditions": [
+        "Owned output remains valid after input destruction and releases each allocation exactly once."
+      ],
+      "preconditions": [
+        "Canonical copy/destructor semantics; no allocation-failure equivalence established"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Split output owns independent string copies"
+    },
+    {
+      "architectural_assumption": "Linked caller/provider signatures agree",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "FindFirstOf returns the original search result",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-SEARCH-RESULT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Declare int and return original character-search result.",
+      "incorrect_host_behavior": "Void declaration/body discards the actual search index.",
+      "invariant": "Caller observes the original search result and sentinel convention.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Void declaration/body discards the actual search index.",
+      "postconditions": [
+        "Caller observes the original search result and sentinel convention."
+      ],
+      "preconditions": [
+        "Linked caller/provider signatures agree"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "FindFirstOf returns the original search result"
+    },
+    {
+      "architectural_assumption": "Canonical provider definitions and original ownership operations are authoritative",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Vector and range helpers use canonical declarations",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-VECTOR-ABI",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use canonical vector and range dispatch types, two-argument u32 RecommendSize, reference AppendCopies, three-argument EraseAtEnd and const source ranges.",
+      "incorrect_host_behavior": "Private five-word Vec, fake varargs, wrong argument count/reference/tag declarations disagree with original providers.",
+      "invariant": "Caller and provider agree on argument count, type, reference and result ABI.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private five-word Vec, fake varargs, wrong argument count/reference/tag declarations disagree with original providers.",
+      "postconditions": [
+        "Caller and provider agree on argument count, type, reference and result ABI."
+      ],
+      "preconditions": [
+        "Canonical provider definitions and original ownership operations are authoritative"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby C++ runtime objects",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_lobby_strings_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+        },
+        {
+          "path": "tests/test_lobby_strings_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+        }
+      ],
+      "title": "Vector and range helpers use canonical declarations"
+    },
+    {
+      "architectural_assumption": "Only declaration ownership changes; original algorithms retained",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "native_libc",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-LOBBY-LIBC",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Drop enumerated declarations; include stdio/string/cstring and use global canonical va_list.",
+      "incorrect_host_behavior": "Private u32/unsigned length and va_list declarations disagree with native libc.",
+      "invariant": "Calls agree with actual native libc argument widths and linkage.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private u32/unsigned length and va_list declarations disagree with native libc.",
+      "postconditions": [
+        "Calls agree with actual native libc argument widths and linkage."
+      ],
+      "preconditions": [
+        "Only declaration ownership changes; original algorithms retained"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby libc calls",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Lobby libc uses native canonical prototypes"
+    }
+  ],
+  "id": "review-batch-010",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original lobby C++ runtime objects",
+      "E": [
+        {
+          "locator": "Two split algorithms preserve distinct original search rules",
+          "path": "cmake/native_coordinated.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "dbb7c478e3eaaa7d5014a07f5018a0d311af363a"
+        }
+      ],
+      "P": [
+        "Full delimiter is nonempty; original empty-full-delimiter loop does not progress"
+      ],
+      "Q": [
+        "Translation preserves each original algorithm and its observable boundary cases."
+      ],
+      "T": "Retain delimiter-length advancement for complete matches and single-character advancement for charset matches; preserve empty filtering and maximum count.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_lobby_strings_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "d4fb669c8e2bdbb941e4676b4621c0ac943d951f5575b5c7c8af4ba70d4a042f"
+          },
+          {
+            "path": "tests/test_lobby_strings_native.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "088bdc36b9677b21a03369f03e60ac7fdee46a61778ca7d3540e17f2caeba95d"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original lobby C++ runtime objects",
+      "architectural_assumptions": [
+        "Full delimiter is nonempty; original empty-full-delimiter loop does not progress"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ORIGINAL-ALGORITHM",
+      "implementation_locations": [],
+      "invariant": "Translation preserves each original algorithm and its observable boundary cases.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Two split algorithms preserve distinct original search rules",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [
+    {
+      "description": "Historical ledger reports callback u32/native pointer mismatches; channel-prefix pointer vector; enum-channel array types; mode word/pointer mismatch; multiboot ReceiverSlot fixed 0x5d4 stride/0x1d40 files, four 0x10 cache entries in 0x70 buffer, callback offsets/lifetime, and self-image arithmetic mixing native symbols with original ARM9 addresses. Fix provenance of broader dirty-work reports is not established by this six-file checkpoint. Empty complete delimiter remains nonprogressing in original split algorithm.",
+      "evidence": [
+        {
+          "path": "docs/NATIVE_805_LEDGER.md",
+          "provenance_category": "diagnostic-evidence",
+          "repository": ".",
+          "revision": "dbb7c478"
+        }
+      ],
+      "id": "UNRESOLVED-LOBBY-LEDGER-BOUNDARIES",
+      "required_action": "Trace corresponding in-scope changes and original contracts; do not widen fixed records, invent fixes, or claim these paths pass.",
+      "status": "unresolved"
+    }
+  ],
+  "worktree_reviews": []
+}

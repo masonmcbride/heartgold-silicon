@@ -1,0 +1,193 @@
+#line 1 "/Users/mason/w/cs/fun/heartgold-silicon/upstream/pokeheartgold/src/vs_recorder_menu_app.c"
+#include "constants/flypoints.h"
+#include "constants/trainer_class.h"
+
+#include <global_terminal/global_terminal_app_internal.h>
+
+#include "assert.h"
+#include <field_bgm.h>
+#include "heap.h"
+#include "orbit_cursor.h"
+#include "poke_overlay.h"
+#include "save_misc_data.h"
+#include "sound_playback.h"
+#include "sound_system.h"
+#include "sys_flags.h"
+#include "system.h"
+#include "vs_recorder_app.h"
+#include <vs_recorder_app_internal.h>
+
+enum VsRecorderMenuExitState {
+    VS_RECORDER_MENU_EXIT_DESTROY_TASKS,
+    VS_RECORDER_MENU_EXIT_DELETE_SPRITES,
+    VS_RECORDER_MENU_EXIT_DELETE_CURSOR_1,
+    VS_RECORDER_MENU_EXIT_DELETE_CURSOR_2,
+};
+
+static BOOL VsRecorderMenu_InitCommon(OverlayManager *manager, int *state, BOOL fromTerminal);
+static int VsRecorderMenu_Init(OverlayManager *manager, int *state);
+static int VsRecorderMenu_InitFromTerminal(OverlayManager *manager, int *state);
+static BOOL VsRecorderMenu_Main(OverlayManager *manager, int *state);
+static BOOL VsRecorderMenu_Exit(OverlayManager *manager, int *state);
+static const VsRecorderMenuEntry *VsRecorderApp_GetRootMenu(int mode);
+
+FS_EXTERN_OVERLAY(OVY_40);
+
+const OverlayManagerTemplate gOverlayTemplate_VsRecorderApp = { VsRecorderApp_InitMode0, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode1 = { VsRecorderApp_InitMode1, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode2 = { VsRecorderApp_InitMode2, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode3 = { VsRecorderApp_InitMode3, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode4 = { VsRecorderApp_InitMode4, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode5 = { VsRecorderApp_InitMode5, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+static const OverlayManagerTemplate sOverlayTemplate_VsRecorderAppMode6 = { VsRecorderApp_InitMode6, VsRecorderApp_Main, VsRecorderApp_Exit, FS_OVERLAY_ID_NONE };
+
+static const FrontierBrainClasses sFrontierBrainTrainerClasses = {
+    { TRAINERCLASS_TOWER_TYCOON, TRAINERCLASS_HALL_MATRON, TRAINERCLASS_FACTORY_HEAD, TRAINERCLASS_ARCADE_STAR, TRAINERCLASS_CASTLE_VALET }
+};
+
+static const OverlayManagerTemplate *sVsRecorderAppTemplates[] = {
+    &gOverlayTemplate_VsRecorderApp,
+    &sOverlayTemplate_VsRecorderAppMode1,
+    &sOverlayTemplate_VsRecorderAppMode2,
+    &sOverlayTemplate_VsRecorderAppMode3,
+    &sOverlayTemplate_VsRecorderAppMode4,
+    &sOverlayTemplate_VsRecorderAppMode5,
+    &sOverlayTemplate_VsRecorderAppMode6,
+};
+
+const OverlayManagerTemplate *VsRecorderApp_GetTemplate(u8 mode) {
+    return sVsRecorderAppTemplates[mode];
+}
+
+// Fly point flag 27 (FLYPOINT_UNION_CAVE) doubles as the Battle Frontier's visited flag: the Frontier Access gatehouse
+// sets it on the first visit, and the Pokegear map shows the Battle Frontier once it is set. Until then the VS Recorder
+// leaves out its Battle Frontier parts.
+BOOL VsRecorderApp_HasVisitedBattleFrontier(VsRecorderWork *work) {
+    SaveVarsFlags *varsFlags = Save_VarsFlags_Get(work->saveData);
+    return Save_VarsFlags_FlypointFlagAction(varsFlags, 2, FLYPOINT_UNION_CAVE);
+}
+
+BOOL VsRecorderApp_IsFrontierBrainClass(u32 trainerClass) {
+    FrontierBrainClasses classes = sFrontierBrainTrainerClasses;
+    u32 i;
+    for (i = 0; i < 5; i++) {
+        if (trainerClass == classes.trainerClass[i]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+static BOOL VsRecorderMenu_InitCommon(OverlayManager *manager, int *state, BOOL fromTerminal) {
+    VsRecorderWork *recorder;
+
+    StopAllSE(0);
+    Heap_Create(HEAP_ID_3, HEAP_ID_109, 0x55000);
+    recorder = VsRecorderApp_GetRecorderWork(manager);
+    VsRecorder_MenuPop(recorder);
+    GF_SndHandleSetPlayerVolume(1, 0x2A);
+    GF_SndHandleSetPlayerVolume(7, 0x2A);
+    if (fromTerminal) {
+        FieldBGM_Play(NULL, SEQ_GS_WIFITOWER);
+    }
+    if (!fromTerminal) {
+        SaveMisc_GetVsRecorderColorScheme(Save_Misc_Get(recorder->saveData), &recorder->colorScheme);
+        if (recorder->colorScheme >= 7) {
+            recorder->colorScheme = 0;
+        }
+        recorder->blendColor = VsRecorder_GetBlendColor(recorder);
+    } else {
+        recorder->blendColor = 0x7FDD;
+    }
+    VsRecorder_InitResources(recorder);
+    return TRUE;
+}
+
+static int VsRecorderMenu_Init(OverlayManager *manager, int *state) {
+    return VsRecorderMenu_InitCommon(manager, state, FALSE);
+}
+
+static int VsRecorderMenu_InitFromTerminal(OverlayManager *manager, int *state) {
+    return VsRecorderMenu_InitCommon(manager, state, TRUE);
+}
+
+static BOOL VsRecorderMenu_Main(OverlayManager *manager, int *state) {
+    VsRecorderWork *recorder = VsRecorderApp_GetRecorderWork(manager);
+    recorder->screenPtr = state;
+    if (VsRecorder_Main(recorder, state)) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static BOOL VsRecorderMenu_Exit(OverlayManager *manager, int *state) {
+    VsRecorderWork *recorder = VsRecorderApp_GetRecorderWork(manager);
+
+    switch (*state) {
+    case VS_RECORDER_MENU_EXIT_DESTROY_TASKS:
+        VsRecorder_DestroyDecorTasks(recorder);
+        (*state)++;
+        break;
+    case VS_RECORDER_MENU_EXIT_DELETE_SPRITES:
+        VsRecorder_DeleteDecorSprites(recorder);
+        VsRecorder_DeleteMenuRowSprites(recorder);
+        VsRecorder_FreeMenuRowText(recorder);
+        (*state)++;
+        break;
+    case VS_RECORDER_MENU_EXIT_DELETE_CURSOR_1:
+        if (!OrbitCursor_Delete(recorder->orbitCursors[0])) {
+            (*state)++;
+        }
+        break;
+    case VS_RECORDER_MENU_EXIT_DELETE_CURSOR_2:
+        if (!OrbitCursor_Delete(recorder->orbitCursors[1])) {
+            (*state)++;
+        }
+        break;
+    default:
+        VsRecorder_FreeResources(recorder);
+        Heap_Destroy(HEAP_ID_109);
+        UnloadOverlayByID(FS_OVERLAY_ID(OVY_40));
+        gSystem.screensFlipped = FALSE;
+        GfGfx_SwapDisplay();
+        Field_ForceEnvironmentSoundRecheck();
+        return TRUE;
+    }
+    return FALSE;
+}
+
+const OverlayManagerTemplate gOverlayTemplate_VsRecorderMenuFromTerminal = { VsRecorderMenu_InitFromTerminal, VsRecorderMenu_Main, VsRecorderMenu_Exit, FS_OVERLAY_ID(OVY_40) };
+const OverlayManagerTemplate gOverlayTemplate_VsRecorderMenu = { VsRecorderMenu_Init, VsRecorderMenu_Main, VsRecorderMenu_Exit, FS_OVERLAY_ID(OVY_40) };
+
+static const VsRecorderMenuEntry *VsRecorderApp_GetRootMenu(int mode) {
+    if (mode >= 7) {
+        GF_ASSERT(mode < 7);
+        // falls back to the first mode's menu (sVsRecorderRootMenu[0].child)
+        return sVsRecorderRootMenu[0].child;
+    }
+    return sVsRecorderRootMenu[mode].child;
+}
+
+const VsRecorderMenuEntry *VsRecorderApp_GetStartMenu(VsRecorderWork *recorder, int mode) {
+    if (mode == 0 && !VsRecorderApp_HasVisitedBattleFrontier(recorder)) {
+        return sVsRecorderMode0MenuNoFrontier;
+    }
+    if (mode == 3 && !VsRecorderApp_HasVisitedBattleFrontier(recorder)) {
+        return sVsRecorderMode3MenuNoFrontier;
+    }
+    return VsRecorderApp_GetRootMenu(mode);
+}
+
+void VsRecorderApp_CountMenuChoices(VsRecorderWork *recorder) {
+    int i = 0;
+    const VsRecorderMenuEntry *entry = recorder->menu;
+
+    recorder->choiceCount = 0;
+    while (i < 5) {
+        if (entry->enabled) {
+            recorder->choiceCount++;
+        }
+        i++;
+        entry++;
+    }
+}

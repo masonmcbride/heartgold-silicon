@@ -1,0 +1,269 @@
+{
+  "schema": 1,
+  "rules": [
+    {
+      "id": "g32.layout",
+      "version": 1,
+      "operation": "layout",
+      "phase": 0,
+      "requires": [],
+      "provides": [
+        "guest32-layout"
+      ],
+      "depends": [],
+      "incompatible": [],
+      "invariants": [
+        "Original little-endian ARM32 data layout; unknown native layouts confer no ABI compatibility"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_compiler.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.allocation",
+      "version": 1,
+      "operation": "allocation",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Stack allocation extent is computed with original DataLayout; runtime checks ownership and lifetime"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_ds.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.interior",
+      "version": 1,
+      "operation": "interior",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "GEP offsets and strides use original layout and modulo 2^32 arithmetic before host resolution"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_compiler.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.memory",
+      "version": 1,
+      "operation": "memory",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Guest pointer memory words occupy four bytes; checked mode resolves original access extent"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_ds.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.pointer-word",
+      "version": 1,
+      "operation": "pointer-word",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Only guest coordinates and code identities pass through original integer casts; native pointers require typed boundaries"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_compiler.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.aggregate",
+      "version": 1,
+      "operation": "aggregate",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Embedded pointers are guest words; original offsets govern memory copies and recursive stores"
+      ],
+      "evidence": [
+        "3cc28c810d7ed17ca2338494e605d69496e76c5b"
+      ],
+      "tests": [
+        "tests/test_guest32_call_results.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.integer",
+      "version": 1,
+      "operation": "integer",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Original integer widths and operation codes are retained; no native widening or speculative overflow flags"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_compiler.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.callback",
+      "version": 1,
+      "operation": "callback",
+      "phase": 1,
+      "requires": [
+        "guest32-layout",
+        "image-catalog"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Existing dispatcher requires original code identity and compatible lowered signature; overlay checks remain in dispatcher"
+      ],
+      "evidence": [
+        "3b2cf151edf054faf50693e8579441040f719bd0"
+      ],
+      "tests": [
+        "tests/test_guest32_callbacks.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.bulk-memory",
+      "version": 1,
+      "operation": "bulk-memory",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Copy or move exactly the original byte count through checked spans, without widening embedded pointer words"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_shared.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.static-data",
+      "version": 1,
+      "operation": "static-data",
+      "phase": 1,
+      "requires": [
+        "guest32-layout"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations"
+      ],
+      "evidence": [
+        "3cc28c810d7ed17ca2338494e605d69496e76c5b"
+      ],
+      "tests": [
+        "tests/test_guest32_image.py"
+      ],
+      "status": "admitted"
+    },
+    {
+      "id": "g32.boundary",
+      "version": 1,
+      "operation": "boundary",
+      "phase": 1,
+      "requires": [
+        "guest32-layout",
+        "typed-boundary"
+      ],
+      "provides": [],
+      "depends": [
+        "g32.layout"
+      ],
+      "incompatible": [],
+      "invariants": [
+        "Existing per-function signature and extent/ownership contract governs host-pointer conversion; no symbol-name alias establishes ABI compatibility"
+      ],
+      "evidence": [
+        "4c6986d9fd4efc07e91c7b483fcc90a69f73b8f6"
+      ],
+      "tests": [
+        "tests/test_guest32_bridge.py"
+      ],
+      "status": "admitted"
+    }
+  ]
+}

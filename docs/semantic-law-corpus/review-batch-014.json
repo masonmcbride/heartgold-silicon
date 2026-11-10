@@ -1,0 +1,343 @@
+{
+  "change_reviews": [
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-ASSETS-PLAN",
+        "COR-REPRO-ASSETS-RECIPES",
+        "COR-REPRO-ASSETS-VERSION",
+        "COR-REPRO-ASSETS-OPENING",
+        "COR-REPRO-ASSETS-PRODUCER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-27c0016219f3998c135b880e",
+      "reason": "Complete file read, including every manifest selector/hash, supported expansion branch, recursive resource plan, all generated recipe branches and target ordering."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-ASSETS-PLAN",
+        "COR-REPRO-ASSETS-RECIPES",
+        "COR-REPRO-ASSETS-VERSION",
+        "COR-REPRO-ASSETS-OPENING",
+        "COR-REPRO-ASSETS-PRODUCER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-bbb4b5819b7878ada296b8f5",
+      "reason": "Complete file read, including every manifest selector/hash, supported expansion branch, recursive resource plan, all generated recipe branches and target ordering."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-ASSETS-PLAN",
+        "COR-REPRO-ASSETS-RECIPES",
+        "COR-REPRO-ASSETS-VERSION",
+        "COR-REPRO-ASSETS-OPENING",
+        "COR-REPRO-ASSETS-PRODUCER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4008940858eddb3f05f32147",
+      "reason": "Complete file read, including every manifest selector/hash, supported expansion branch, recursive resource plan, all generated recipe branches and target ordering."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-REPRO-ASSETS-PLAN",
+        "COR-REPRO-ASSETS-RECIPES",
+        "COR-REPRO-ASSETS-VERSION",
+        "COR-REPRO-ASSETS-OPENING",
+        "COR-REPRO-ASSETS-PRODUCER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-e70c7f1c4544605fb4fa983f",
+      "reason": "Complete196-line source read: actual staged directory/order/exclusions and all NARC records/index definitions/counts, deterministic repacking, independent mmodel/zukan bytes including lexical JSON iteration, flags/drift/missing inputs/wildcard additions/path spaces, encounter recipe drift and clean nested parallel header consumer with single producer. No tests executed in audit."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "These hashes guard inspected subset, not arbitrary Make semantics",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Archive plans reject unsupported original Make semantics",
+          "path": "cmake/asset_manifest.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-ASSETS-PLAN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Hash-check inspected16manifest/rule inputs and resulting member inventories; support bounded explicit variable/wildcard/notdir/addprefix/filter/substitution forms, reject unknown/recursive/unclosed expressions and ambiguous/missing inputs.",
+      "incorrect_host_behavior": "Permissive Make parsing can silently produce wrong resource lists/flags.",
+      "invariant": "Only source-validated recipe plans and inventories enter generation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TRANSFORM-GUARDS"
+      ],
+      "original_failure": "Permissive Make parsing can silently produce wrong resource lists/flags.",
+      "postconditions": [
+        "Only source-validated recipe plans and inventories enter generation."
+      ],
+      "preconditions": [
+        "These hashes guard inspected subset, not arbitrary Make semantics"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Sixteen original overlay resource manifests",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_asset_indices.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3276380fb2a5714b816899efcfbbc47a8d45a539729cc41595a0926b6cd0ffd"
+        }
+      ],
+      "title": "Archive plans reject unsupported original Make semantics"
+    },
+    {
+      "architectural_assumption": "Independent byte comparisons needed beyond recipe hashes; JSON object extraction does not uniformly reject relocations",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Manifest graphics retain original source recipes",
+          "path": "cmake/asset_manifest.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Manifest graphics retain original source recipes",
+          "path": "cmake/heartgold_manifest_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-ASSETS-RECIPES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Plan copy/gfx/json-asm steps from original prerequisites/rules, preserve flags/key files, run original JSONPROC/nitrogfx/ARM extraction and Nitroarc with actual tool dependencies.",
+      "incorrect_host_behavior": "Generic overlay generation loses exact bitdepth/LZ flags or original binary members.",
+      "invariant": "Every member is generated by its selected original recipe and retains original byte format.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-ALGORITHM"
+      ],
+      "original_failure": "Generic overlay generation loses exact bitdepth/LZ flags or original binary members.",
+      "postconditions": [
+        "Every member is generated by its selected original recipe and retains original byte format."
+      ],
+      "preconditions": [
+        "Independent byte comparisons needed beyond recipe hashes; JSON object extraction does not uniformly reject relocations"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original overlay asset pipelines",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_asset_indices.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3276380fb2a5714b816899efcfbbc47a8d45a539729cc41595a0926b6cd0ffd"
+        }
+      ],
+      "title": "Manifest graphics retain original source recipes"
+    },
+    {
+      "architectural_assumption": "Original recipe hash and exactly selected version; neutral rewriting changes names only",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Versioned members keep neutral original names",
+          "path": "cmake/asset_manifest.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Versioned members keep neutral original names",
+          "path": "cmake/heartgold_manifest_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Versioned members keep neutral original names",
+          "path": "cmake/neutral_naix.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-ASSETS-VERSION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Stage copied selected gold member under neutral name, retain versioned archive name and derive neutral naix by original _gold removal rule.",
+      "incorrect_host_behavior": "Original in-tree symlinks or wrong versioned member names alter neutral IDs and source cleanliness.",
+      "invariant": "Original neutral identifiers map to the selected original version bytes and unchanged numeric IDs.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Original in-tree symlinks or wrong versioned member names alter neutral IDs and source cleanliness.",
+      "postconditions": [
+        "Original neutral identifiers map to the selected original version bytes and unchanged numeric IDs."
+      ],
+      "preconditions": [
+        "Original recipe hash and exactly selected version; neutral rewriting changes names only"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Versioned Pokedex archive/index mapping",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_asset_indices.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3276380fb2a5714b816899efcfbbc47a8d45a539729cc41595a0926b6cd0ffd"
+        }
+      ],
+      "title": "Versioned members keep neutral original names"
+    },
+    {
+      "architectural_assumption": "Original metadata/manifest order is authoritative; independent execution not established",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Opening and title resource manifests preserve exact membership",
+          "path": "cmake/heartgold_manifest_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-ASSETS-OPENING",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Read original continued manifest assignments; require106opening/44title lexical members, exact four/eight-bit choice and original binary/LZ conversion paths.",
+      "incorrect_host_behavior": "Missing or misordered boot resources shift native consumers indices.",
+      "invariant": "Boot resource indices and intended payload conversions remain original.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Missing or misordered boot resources shift native consumers indices.",
+      "postconditions": [
+        "Boot resource indices and intended payload conversions remain original."
+      ],
+      "preconditions": [
+        "Original metadata/manifest order is authoritative; independent execution not established"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original opening/title archives",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_asset_indices.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3276380fb2a5714b816899efcfbbc47a8d45a539729cc41595a0926b6cd0ffd"
+        }
+      ],
+      "title": "Opening and title resource manifests preserve exact membership"
+    },
+    {
+      "architectural_assumption": "CMake target dependencies and selected binary directory remain coherent",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Neutral headers have one producer under parallel parent builds",
+          "path": "cmake/heartgold_manifest_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-ASSETS-PRODUCER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Declare archive/index outputs and dependent neutral target with explicit add_dependencies to versioned producer; track wildcard/source/recipe changes.",
+      "incorrect_host_behavior": "File-only neutral/versioned dependencies can duplicate producer rules across Make targets.",
+      "invariant": "One original resource producer completes before every generated-header consumer.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BUILD-DEPENDENCY"
+      ],
+      "original_failure": "File-only neutral/versioned dependencies can duplicate producer rules across Make targets.",
+      "postconditions": [
+        "One original resource producer completes before every generated-header consumer."
+      ],
+      "preconditions": [
+        "CMake target dependencies and selected binary directory remain coherent"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Nested project parallel archive generation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_asset_indices.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3276380fb2a5714b816899efcfbbc47a8d45a539729cc41595a0926b6cd0ffd"
+        }
+      ],
+      "title": "Neutral headers have one producer under parallel parent builds"
+    }
+  ],
+  "id": "review-batch-014",
+  "laws": [],
+  "unresolved": [],
+  "worktree_reviews": []
+}

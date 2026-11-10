@@ -470,3 +470,14 @@ target_include_directories(test_sound_storage PRIVATE "${native_root}/lib/includ
 target_compile_options(test_sound_storage PRIVATE "-idirafter${game_source}/lib/include" -O2)
 add_dependencies(test_sound_storage heartgold_native_headers)
 add_test(NAME sound_storage COMMAND test_sound_storage)
+
+
+# HG_WM_39_PRODUCTION_ADMISSION
+# Preserve original source bodies; no synthetic WM/WVR implementations.
+foreach(_wm_member wm_core wm_settings wvr)
+    set(_wm_source "${native_root}/lib/NitroSDK/src/${_wm_member}.c")
+    if(EXISTS "${_wm_source}")
+        target_sources(heartgold_main PRIVATE "${_wm_source}")
+        message(STATUS "HG WM production source: ${_wm_source}")
+    endif()
+endforeach()

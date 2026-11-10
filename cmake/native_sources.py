@@ -195,6 +195,9 @@ def dwc_native_callback_abi(relative, text):
     if relative in ('lib/NitroDWC/src/net_common.c', 'lib/NitroDWC/src/dwc_login.c'):
         text = text.replace('(NasAllocFunc)DWC_Alloc', 'DWC_Alloc')
         text = text.replace('(NasFreeFunc)DWC_Free', 'DWC_Free')
+    # HG_GAMESPY_B0_TYPED_STATE
+    from cmake.gamespy_b0_native import adapt as _adapt_gamespy_b0
+    text = _adapt_gamespy_b0(relative, text)
     if relative == 'lib/NitroDWC/src/ap_connect_control.c':
         text = '#include <dwc/auth_internal.h>\n' + text
         for old, new in (

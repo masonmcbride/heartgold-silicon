@@ -95,9 +95,12 @@ void *g32_create_ds(uint32_t static_end) {
     a->data = storage; a->base = G32_MAIN_RAM_BASE;
     a->capacity = G32_MAIN_RAM_SIZE;
     a->static_end = a->cursor = static_end - a->base;
-    a->stack = a->capacity;
-    a->stack_floor = a->static_end + (a->capacity - a->static_end)*3/4;
-    ASAN_POISON_MEMORY_REGION(a->data + a->static_end, a->capacity - a->static_end);
+    /* DS system RAM: physical upper 4 KiB reserved from guest stack. */
+    if(a->static_end>a->capacity-4096)fail("DS system RAM overlaps static image");
+    a->stack=a->capacity-4096;
+    a->stack_floor=a->static_end+(a->stack-a->static_end)*3/4;
+    ASAN_POISON_MEMORY_REGION(a->data+a->static_end,a->capacity-a->static_end);
+    ASAN_UNPOISON_MEMORY_REGION(a->data+a->stack,4096);
     return a;
 }
 void g32_destroy(void *ram) {
@@ -178,6 +181,13 @@ static Allocation *find(Arena *a, uint32_t offset, uint32_t bytes, int dead_ok) 
 void *g32_resolve(void *ram, uint32_t offset, uint32_t bytes, uint32_t nullable) {
     Arena *a = arena(ram);
     if (!offset) { if (!nullable) fail("null pointer"); return NULL; }
+    /* Original DS system-memory mirror, same physical bytes. */
+    if(a->base==G32_MAIN_RAM_BASE && offset>=0x027ff000u &&
+       (uint64_t)offset+bytes<=UINT64_C(0x02800000))
+        offset-=0x00400000u;
+    if(a->base==G32_MAIN_RAM_BASE && offset>=0x023ff000u &&
+       (uint64_t)offset+bytes<=UINT64_C(0x02400000))
+        return a->data+(offset-a->base);
     for(size_t i=0;i<a->typed_count;i++){
         G32_TypedRange *r=&a->typed[i];uint64_t end=(uint64_t)offset+bytes;
         if(offset>=r->guest_address && end<=(uint64_t)r->guest_address+r->guest_size){
@@ -346,7 +356,7 @@ void g32_bad_code(void *ram,uint32_t address){
 void *g32_memory_span(void *ram,uint32_t offset,uint32_t bytes){return bytes?g32_resolve(ram,offset,bytes,0):NULL;}
 /* Compiled execution state is switched independently of shared DS RAM. */
 void g32_execution_save(void *ram,void **frame,uint32_t *stack,uint32_t *floor){Arena *a=arena(ram);*frame=a->frame;*stack=a->stack;*floor=a->stack_floor;}
-void g32_execution_load(void *ram,void *frame,uint32_t stack,uint32_t floor){Arena *a=arena(ram);if(floor>=stack || stack>a->capacity)fail("execution stack bounds");a->frame=frame;a->stack=stack;a->stack_floor=floor;}
+void g32_execution_load(void *ram,void *frame,uint32_t stack,uint32_t floor){Arena *a=arena(ram);if(floor>=stack || stack>(a->base==G32_MAIN_RAM_BASE?a->capacity-4096:a->capacity))fail("execution stack bounds");a->frame=frame;a->stack=stack;a->stack_floor=floor;}
 void g32_execution_discard(void *ram){Arena *a=arena(ram);while(a->frame)g32_frame_leave(ram,a->frame);}
 uint32_t *g32_cpsr(void *ram){return &arena(ram)->cpsr;}
 unsigned char *g32_cp_state(void *ram){return arena(ram)->cp_state;}

@@ -1,0 +1,1043 @@
+{
+  "rules": [
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-LAYOUT"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-LAYOUT",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "layout",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.layout",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-LAYOUT"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-HIST-CHAT-CANONICAL-VIEWS",
+        "COR-HIST-ITERATOR-NATIVE",
+        "COR-INITIAL-WIRELESS-ASSERTS",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-REPRO-HEAP-LIST",
+        "COR-REPRO-ITERATOR",
+        "COR-REPRO-SOUND-ALIASES",
+        "COR-REPRO-WIFI-ARCHIVE",
+        "COR-WT-SLOT-LAYOUT",
+        "COR-WT-SLOT-NATIVE-DOMAIN",
+        "COR-WT-SLOT-OBSERVATIONS"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE",
+        "LAW-REPRESENTATION-SEPARATION",
+        "LAW-LAYOUT-PRESERVING-PROMOTION"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_compiler.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-ALLOCATION"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-ALLOCATION",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "allocation",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.allocation",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-ALLOCATION"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-DWC-EXTENT-AUTH",
+        "COR-DWC-EXTENT-HTTP",
+        "COR-DWC-EXTENT-NETCHECK",
+        "COR-DWC-EXTENT-SERVICE",
+        "COR-EARLY-ARENA-ALIGN",
+        "COR-EARLY-CARD-ALIGN",
+        "COR-EARLY-MEMORY-ALIGN",
+        "COR-FRAME-RECLAMATION",
+        "COR-INITIAL-SOUND-HEAP-ALIGN",
+        "COR-OS-HEAP-METADATA-ALIGN",
+        "COR-PORT-ARENA-ALIGN",
+        "COR-PORT-CARD-ALIGN",
+        "COR-PORT-MEMORY-ALIGN",
+        "COR-QSORT-SCRATCH",
+        "COR-REPRO-WIFI-ARCHIVE",
+        "COR-WT-INDIRECT-RESULT-ABI",
+        "COR-WT-NETSTART-CLEAR",
+        "COR-WT-RESULT-HOME-LIFETIME"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-ALLOCATION-COHERENCE",
+        "LAW-NATIVE-ALIGNMENT",
+        "LAW-FRAME-LIFETIME"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_ds.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "5ee364b77d55eb6da61b4513aaf0cdbca12995fce166446546ed41d2e6ece58f"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-INTERIOR"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-INTERIOR",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "interior",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.interior",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-INTERIOR"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-DWC-INTERIOR",
+        "COR-REPRO-SOUND-ALIASES",
+        "COR-WT-DATA-140620F4D9988B36",
+        "COR-WT-DATA-1F7E00B019B51C08",
+        "COR-WT-DATA-2E7BB08979A5E87E",
+        "COR-WT-DATA-3C5C4D4BCEBEDF33",
+        "COR-WT-DATA-434E5A35DB82CE29",
+        "COR-WT-DATA-45D518A547B8DB74",
+        "COR-WT-DATA-4C98A0777A87EFEB",
+        "COR-WT-DATA-52510527237793E4",
+        "COR-WT-DATA-6D92453D0146954A",
+        "COR-WT-DATA-7973DE6442C29402",
+        "COR-WT-DATA-853B14B3EEF4616C",
+        "COR-WT-DATA-87638EC462E49151",
+        "COR-WT-DATA-DBD4AE5CC15BB6F2",
+        "COR-WT-DATA-F7E57CCDAC6D5734",
+        "COR-WT-OVERLAY-CONSTANTS",
+        "COR-WT-RETAINED-SECTIONS"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-INTERIOR-OWNERSHIP",
+        "LAW-INTERIOR-ALIAS",
+        "LAW-ORIGINAL-PLACEMENT"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_compiler.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-MEMORY"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-MEMORY",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "memory",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.memory",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-MEMORY"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-GX-STATE-OWNER",
+        "COR-HIST-GUEST-PROVIDER-ORDER",
+        "COR-WT-DWC-CONTROL-STORAGE",
+        "COR-WT-DWC-STATE",
+        "COR-WT-SSA-ORDER"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-SSA-ELABORATION",
+        "LAW-SHARED-STATE-OWNER"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_ds.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "5ee364b77d55eb6da61b4513aaf0cdbca12995fce166446546ed41d2e6ece58f"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-POINTER-WORD"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-POINTER-WORD",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "pointer-word",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.pointer-word",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-POINTER-WORD"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-INITIAL-SOUND-CALLBACK-WORDS",
+        "COR-INITIAL-WAVE-PRESENCE",
+        "COR-INITIAL-WIRELESS-LOWBITS",
+        "COR-LOBBY-TAGGED-PARENTS",
+        "COR-PCM-NATIVE-PAYLOAD",
+        "COR-PXI-NATIVE-PAYLOAD",
+        "COR-REPRO-MIGRATE-ARG",
+        "COR-WT-SLOT-LIFETIME",
+        "COR-WT-SLOT-OBSERVATIONS"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-HOST-PAYLOAD",
+        "LAW-POINTER-PREDICATE",
+        "LAW-POINTER-REPRESENTATION-OBSERVATION"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_compiler.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-AGGREGATE"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-AGGREGATE",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "aggregate",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.aggregate",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-AGGREGATE"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-HIST-CHAT-CANONICAL-VIEWS",
+        "COR-HIST-ITERATOR-NATIVE",
+        "COR-INITIAL-WIRELESS-ASSERTS",
+        "COR-LOBBY-CHANNEL-LIFETIME",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-STRING-LAYOUT",
+        "COR-REPRO-BOX-COPY",
+        "COR-REPRO-HEAP-LIST",
+        "COR-REPRO-ITERATOR",
+        "COR-REPRO-SOUND-ALIASES",
+        "COR-REPRO-WEATHER-COPY",
+        "COR-REPRO-WIFI-ARCHIVE",
+        "COR-WT-EDGE-85EEFF88EC0ECDA1",
+        "COR-WT-EDGE-D53145A4D870CD39",
+        "COR-WT-EDGE-D5DB5BEDF0A0BB33",
+        "COR-WT-INDIRECT-RESULT-ABI",
+        "COR-WT-RESULT-HOME-LIFETIME"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-ARM-INDIRECT-RESULT",
+        "LAW-AGGREGATE-COPY",
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_call_results.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f7aa213e069b964f3fbf6d8480b61ca71cf33bbabb69e3a83c78c2b66e37a5d9"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-INTEGER"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-INTEGER",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-FOOTPRINT-MUL",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "integer",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.integer",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-INTEGER"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-DGT-WORD-WIDTH",
+        "COR-EARLY-SCALARS",
+        "COR-HIST-ARM-PAIR",
+        "COR-HIST-REGISTER-OWNER",
+        "COR-INITIAL-ASSET-TYPES",
+        "COR-INITIAL-ENCOUNTER-LAYOUT",
+        "COR-INITIAL-FIXED-ASSET-OBJECTS",
+        "COR-INITIAL-OWNER-FORMAT",
+        "COR-INITIAL-SOUND-INSTRUMENT-FORMAT",
+        "COR-INITIAL-ZONE-FORMAT",
+        "COR-PORT-SCALARS",
+        "COR-REPRO-MATCH-PARSE",
+        "COR-SQRT-TRIAL-WIDTH",
+        "COR-WT-EDGE-77A3DA73441B8F44",
+        "COR-WT-EDGE-78A22D48AD757F9C",
+        "COR-WT-EDGE-8C9B030C51FFB0AD",
+        "COR-WT-EDGE-B0408345D18E8BE0",
+        "COR-WT-EDGE-C5489CBEA10217AD",
+        "COR-WT-EDGE-F9E8E0A038CAC527",
+        "COR-WT-GLOBAL-ARM-RESULT",
+        "COR-WT-NARROW-ARM-RESULT",
+        "COR-WT-REGISTER-PROVENANCE"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-ARM-REGISTER-EDGE",
+        "LAW-ARM-REGISTER-PAIR",
+        "LAW-INTERMEDIATE-WIDTH",
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_compiler.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-CALLBACK"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-BALL-MENU",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-DWC-CALLBACK-WIDTH",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-G32-CALLBACK",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-INITIAL-PARTY-CODE-IDENTITY",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-REPRO-G3-TABLES",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "callback",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.callback",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-CALLBACK"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-DWC-CALLBACK-TYPE",
+        "COR-INITIAL-HOST-TIMER-RELEASE",
+        "COR-INITIAL-WVR-CALLBACK",
+        "COR-LOBBY-SPLIT-OWNERSHIP",
+        "COR-OVERLAY-LIFETIME",
+        "COR-OVERLAY-UNLOAD-ORDER",
+        "COR-WT-CALLBACK-RESIDENCY",
+        "COR-WT-CODE-DOMAIN"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-CALLBACK-ARGUMENTS",
+        "LAW-CALLBACK-LIFETIME",
+        "LAW-CODE-IDENTITY-DOMAIN",
+        "LAW-OVERLAY-LIFETIME"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_callbacks.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "032ee8ccdfbb44bf47cefd5f2c8c9dc7c39bad3a641dd91f44129bff1ee60e4c"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-BULK-MEMORY"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-G32-BULK-MEMORY",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "bulk-memory",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.bulk-memory",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-BULK-MEMORY"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-INITIAL-BACKWARD-ORDER",
+        "COR-WT-SLOT-LIFETIME",
+        "COR-WT-SLOT-OBSERVATIONS"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-BACKWARD-OVERLAP",
+        "LAW-POINTER-REPRESENTATION-OBSERVATION"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_shared.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "4e7911ff6e950d0aba2a95e3a172d7eaa7e6f0bf5623182c1d18683b6411f9bb"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-STATIC-DATA"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-BALL-DATA-ABI",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-G32-STATIC-DATA",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-CHAT-HANDLERS-DATA",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-FOOTPRINT-ANONYMOUS",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-LOBBY-VTABLE-DATA",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-MINIGAME-DATA-FOOTPRINT_STAMP",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-MINIGAME-DATA-PLAZA_GAME_MIME_JR_TOP",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-MINIGAME-DATA-PLAZA_GAME_SWALOT_PLOP",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-INITIAL-ARCHIVE-ORDER",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-INITIAL-MESSAGE-ORDER",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-REPRO-ASSETS-OPENING",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-REPRO-ASSETS-VERSION",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-REPRO-BUILD-ZUKAN-INDEX",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-140620F4D9988B36",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-1F7E00B019B51C08",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-2E7BB08979A5E87E",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-3C5C4D4BCEBEDF33",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-434E5A35DB82CE29",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-45D518A547B8DB74",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-4C98A0777A87EFEB",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-52510527237793E4",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-6D92453D0146954A",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-7973DE6442C29402",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-853B14B3EEF4616C",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-87638EC462E49151",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-DBD4AE5CC15BB6F2",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-WT-DATA-F7E57CCDAC6D5734",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "static-data",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.static-data",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-INITIAL-CHECKOUT-PRESERVATION",
+        "COR-INITIAL-COMM-PRIVATE",
+        "COR-INITIAL-SOURCE-MEMBERSHIP",
+        "COR-REPRO-BUILD-OVERLAY-SEPARATION",
+        "COR-REPRO-BUILD-PROVIDERS",
+        "COR-REPRO-PRIVATE-58ef44fe18f2",
+        "COR-REPRO-PRIVATE-8635436ae47a",
+        "COR-REPRO-PRIVATE-c571ad451179",
+        "COR-REPRO-PRIVATE-d105e3a997c5",
+        "COR-REPRO-PRIVATE-edfa0cbbad8d",
+        "COR-REPRO-SOUND-ALIASES",
+        "COR-REPRO-SOUND-STORAGE",
+        "COR-REPRO-SQRT-OWNER",
+        "COR-WT-ALARM-PARTITION",
+        "COR-WT-DATA-140620F4D9988B36",
+        "COR-WT-DATA-1F7E00B019B51C08",
+        "COR-WT-DATA-2E7BB08979A5E87E",
+        "COR-WT-DATA-3C5C4D4BCEBEDF33",
+        "COR-WT-DATA-434E5A35DB82CE29",
+        "COR-WT-DATA-45D518A547B8DB74",
+        "COR-WT-DATA-4C98A0777A87EFEB",
+        "COR-WT-DATA-52510527237793E4",
+        "COR-WT-DATA-6D92453D0146954A",
+        "COR-WT-DATA-7973DE6442C29402",
+        "COR-WT-DATA-853B14B3EEF4616C",
+        "COR-WT-DATA-87638EC462E49151",
+        "COR-WT-DATA-DBD4AE5CC15BB6F2",
+        "COR-WT-DATA-F7E57CCDAC6D5734",
+        "COR-WT-OVERLAY-CONSTANTS",
+        "COR-WT-RETAINED-SECTIONS"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-INTERIOR-ALIAS",
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_image.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "77c986dfae1692a306357f16dfc32bfa76bdf3ffe9c9d9929a51331f40772e06"
+        }
+      ]
+    },
+    {
+      "audit_status": "partially_mapped",
+      "catalog_status": "admitted",
+      "correction_ids": [
+        "COR-G32-BOUNDARY"
+      ],
+      "correction_relationships": [
+        {
+          "correction_id": "COR-DWC-BOUNDARY",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-G32-BOUNDARY",
+          "status": "source_related_gate_enforcement_requires_trace"
+        },
+        {
+          "correction_id": "COR-HIST-TYPED-BOUNDARY-CODE",
+          "status": "source_related_gate_enforcement_requires_trace"
+        }
+      ],
+      "covered_operations": "boundary",
+      "enforcement": "Closed operation gate checks facts and records applications; existing lowerer supplies transformations. Prose changes do not implement transformations.",
+      "gaps": [
+        "Individual historical corrections still require hunk review.",
+        "No test results independently executed or authenticated by this audit."
+      ],
+      "id": "g32.boundary",
+      "implementation": [
+        {
+          "path": "compiler/guest32/rules.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60b4b7a063930411a5623b0b3a37892d5814388fccf497b53fb9f7a5b82d3650"
+        },
+        {
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "law_ids": [
+        "LAW-BOUNDARY"
+      ],
+      "outside_coverage": [
+        "Provider ownership and physical image placement",
+        "General native ABI admission",
+        "Platform hardware semantics"
+      ],
+      "related_correction_ids": [
+        "COR-BOX-DECLARATION",
+        "COR-DECLARATION-LIBC",
+        "COR-EARLY-IRQ-TABLE",
+        "COR-HIST-CLOSURE-COMPLETION",
+        "COR-HIST-PROVIDER-PINS",
+        "COR-HIST-ROOT-OWNER",
+        "COR-HIST-WIFI-SUBSET-OWNER",
+        "COR-INITIAL-BLEND-ADDRESS",
+        "COR-INITIAL-CANONICAL-DECLARATIONS",
+        "COR-INITIAL-CRC-TYPE",
+        "COR-INITIAL-RAND-DECLARATION",
+        "COR-INITIAL-SOUND-CANONICAL-TYPES",
+        "COR-LOBBY-LIBC",
+        "COR-LOBBY-SEARCH-RESULT",
+        "COR-LOBBY-SPLIT-RESULT",
+        "COR-LOBBY-VECTOR-ABI",
+        "COR-METADATA-PROVIDER",
+        "COR-PORT-IRQ-TABLE",
+        "COR-PROVIDER-OWNERSHIP",
+        "COR-QSORT-COMPARE",
+        "COR-REPRO-BILLBOARD-HEADER",
+        "COR-REPRO-BLEND-CALLS",
+        "COR-REPRO-HTTP-COMPARE",
+        "COR-REPRO-LIBC-068c680b6d28",
+        "COR-REPRO-LIBC-086c407b496c",
+        "COR-REPRO-LIBC-0b5cc0cc2601",
+        "COR-REPRO-LIBC-0e4f7cb3ea9c",
+        "COR-REPRO-LIBC-15082ef7c95d",
+        "COR-REPRO-LIBC-18e89f799dcb",
+        "COR-REPRO-LIBC-250a83ecd976",
+        "COR-REPRO-LIBC-26bbaf3de01c",
+        "COR-REPRO-LIBC-2d656aaaf7bb",
+        "COR-REPRO-LIBC-3b747f499877",
+        "COR-REPRO-LIBC-3f837b86d1ce",
+        "COR-REPRO-LIBC-427af44badc3",
+        "COR-REPRO-LIBC-54e6b15a4c62",
+        "COR-REPRO-LIBC-57d99f21e8f9",
+        "COR-REPRO-LIBC-62888521f63d",
+        "COR-REPRO-LIBC-719da0fe0ec5",
+        "COR-REPRO-LIBC-73674ce277d6",
+        "COR-REPRO-LIBC-7594fb50bb1e",
+        "COR-REPRO-LIBC-77f345906fc3",
+        "COR-REPRO-LIBC-79b36fadf441",
+        "COR-REPRO-LIBC-7f642ff0cba9",
+        "COR-REPRO-LIBC-852d55be3d5f",
+        "COR-REPRO-LIBC-8c6e2c1fcdf6",
+        "COR-REPRO-LIBC-8eaf1c57a42f",
+        "COR-REPRO-LIBC-985692d15df3",
+        "COR-REPRO-LIBC-9b622ac50ec3",
+        "COR-REPRO-LIBC-9cfc6ed91ddc",
+        "COR-REPRO-LIBC-9dbe4720a268",
+        "COR-REPRO-LIBC-9de458b90532",
+        "COR-REPRO-LIBC-a6d347ca3b48",
+        "COR-REPRO-LIBC-b0f91cb7bb0c",
+        "COR-REPRO-LIBC-b6265c56ecc8",
+        "COR-REPRO-LIBC-b730c184b317",
+        "COR-REPRO-LIBC-b806df967764",
+        "COR-REPRO-LIBC-bbd8f3f41a86",
+        "COR-REPRO-LIBC-bedca9f48ea4",
+        "COR-REPRO-LIBC-c2979c06dca8",
+        "COR-REPRO-LIBC-c408380edb5c",
+        "COR-REPRO-LIBC-c7dadada031c",
+        "COR-REPRO-LIBC-d8fe5e7bcd6c",
+        "COR-REPRO-LIBC-db109129d92a",
+        "COR-REPRO-LIBC-db7d66780318",
+        "COR-REPRO-LIBC-e87ccc91c6f3",
+        "COR-REPRO-LIBC-ee0746b48681",
+        "COR-REPRO-LIBC-ff996655d223",
+        "COR-REPRO-MIC-VIEW",
+        "COR-REPRO-POKEDEX-RETURN",
+        "COR-REPRO-PRINTF",
+        "COR-REPRO-QSORT-41549f1cf0a1",
+        "COR-REPRO-QSORT-4e06c6b4bb7a",
+        "COR-REPRO-QSORT-89369c5e387a",
+        "COR-REPRO-QSORT-92dc640a70e3",
+        "COR-REPRO-QSORT-944108ab9401",
+        "COR-REPRO-QSORT-ecfe87d79ea9",
+        "COR-REPRO-QSORT-fb8199076874",
+        "COR-REPRO-SDK-DECLARATIONS",
+        "COR-STRING-LENGTH-SIGN",
+        "COR-WT-ADMISSION-INTEGRITY",
+        "COR-WT-ADMISSION-PINS",
+        "COR-WT-CPP-ABI",
+        "COR-WT-DEFINITION-CONFLICT",
+        "COR-WT-DUPLICATE-DATA-LABEL",
+        "COR-WT-PRIVATE-DECLARATIONS",
+        "COR-WT-RESIDENT-OWNERSHIP",
+        "COR-WT-SLOT-ABI"
+      ],
+      "related_mapping_limit": "Semantic relationship only. A shared concern does not establish this gate enforces these specialized transformations or authorizes their native runtime domain.",
+      "related_specialized_laws": [
+        "LAW-CALL-DECLARATION",
+        "LAW-PROVIDER-OWNERSHIP",
+        "LAW-ARTIFACT-ADMISSION",
+        "LAW-FRONTEND-SEMANTICS"
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/test_guest32_bridge.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d330e4398a2772c225b202f576d85fc037df0a7107f55999cf0c0681e55e0990"
+        }
+      ]
+    }
+  ],
+  "schema": 1,
+  "status": "partial"
+}

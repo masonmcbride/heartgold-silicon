@@ -1,0 +1,2 @@
+// Generated in the selected binary directory. SPDX-License-Identifier: MIT
+static constexpr const char *Guest32Rules = R"G32RULES(@GUEST32_RULE_CATALOG@)G32RULES";

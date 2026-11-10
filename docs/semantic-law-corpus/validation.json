@@ -1,0 +1,33 @@
+{
+  "conflicts_reported": [
+    "CONFLICT-DWC-INTERIOR-DOCUMENTS"
+  ],
+  "counts": {
+    "artifacts_inventoried": 175571,
+    "catalog_hypotheses": 11,
+    "commits_fully_reviewed": 16,
+    "commits_inventoried": 22,
+    "correction_candidates": 365,
+    "current_contracts_pending_history": 70,
+    "existing_rules_partially_mapped": 11,
+    "file_changes_fully_reviewed": 276,
+    "file_changes_inventoried": 605,
+    "historical_corrections_extracted": 276,
+    "in_scope_hunks_inventoried": 986,
+    "laws": 123,
+    "observed_failures": 8,
+    "worktree_changes_fully_reviewed": 59,
+    "worktree_changes_inventoried": 59
+  },
+  "errors": [],
+  "evidence_references_checked": 549,
+  "meaning": "Structural/reference validation only; historical reconstruction remains incomplete.",
+  "result": "PASS",
+  "schema": 1,
+  "warnings": [
+    "Semantic equivalence/overlap review incomplete; exact-text screen is not deduplication proof.",
+    "329 historical file changes and 0 current changes remain on review queue.",
+    "Named tree snapshots and diagnostic artifact inventory still need review.",
+    "DWC measured layouts and alternate-base match are preserved; older diagnostic derivation remains unresolved."
+  ]
+}

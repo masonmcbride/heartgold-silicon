@@ -1,0 +1,1900 @@
+{
+  "change_reviews": [
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-02385110d460cd53543c441b",
+      "reason": "Mechanically checked whole-file blob equality 95843dcbd534879a6e8aae17bfc1f99cf65a1077 with research/memory-pressure/memory_observer.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-933c454f9ed9a555e93d3cfa",
+      "reason": "Mechanically checked whole-file blob equality 95843dcbd534879a6e8aae17bfc1f99cf65a1077 with hardware_drivers/memory_observer.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-120fec75dab7213e3b9c8d68",
+      "reason": "Mechanically checked whole-file blob equality c2747af3440f3551c63b3cbdc90536e5cc544825 with cmake/assets/heartgold_scripts.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-468d14444e8b047626a0da93",
+      "reason": "Mechanically checked whole-file blob equality c2747af3440f3551c63b3cbdc90536e5cc544825 with cmake/heartgold_scripts.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-42ce22295de63607a07b0339",
+      "reason": "Mechanically checked whole-file blob equality 7450d95bcaa41c962094780ccce2b55eb04ee8af with cmake/assets/validate_heartgold_encounters.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-e1aa24cb4964b3c030a9ecb5",
+      "reason": "Mechanically checked whole-file blob equality 7450d95bcaa41c962094780ccce2b55eb04ee8af with cmake/validate_heartgold_encounters.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-46d75f64a7e39fbae2a7ba29",
+      "reason": "Mechanically checked whole-file blob equality 16174ffcdde405525dd131bd2a44ea8fb82e265e with cmake/assets/escape_gmm.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-bec13378be2f747ea6daf383",
+      "reason": "Mechanically checked whole-file blob equality 16174ffcdde405525dd131bd2a44ea8fb82e265e with cmake/escape_gmm.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-4bcf18d6f9cc40d6bca1ed5f",
+      "reason": "Mechanically checked whole-file blob equality 1bcc3729e8243f7d9cdd426dd80347d13c39a1eb with cmake/assets/heartgold_ppark.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-272bc6ecc05a8e05b7db4a01",
+      "reason": "Mechanically checked whole-file blob equality 1bcc3729e8243f7d9cdd426dd80347d13c39a1eb with cmake/heartgold_ppark.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-576907c7dc471dfba2692f19",
+      "reason": "Mechanically checked whole-file blob equality 57f6e8b043f8c4f7402d2b46b05ef49fa8795985 with cmake/assets/heartgold_item_data.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-7f0f83f3c8f762d6c511b4ab",
+      "reason": "Mechanically checked whole-file blob equality 57f6e8b043f8c4f7402d2b46b05ef49fa8795985 with cmake/heartgold_item_data.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-5ef20e873ecb4b72717e6821",
+      "reason": "Mechanically checked whole-file blob equality 5967eabe1182444d7afe55153d15e2b4ebf0c20b with cmake/assets/asset_manifest.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-5c2b589e95fe5072c7f24792",
+      "reason": "Mechanically checked whole-file blob equality 5967eabe1182444d7afe55153d15e2b4ebf0c20b with cmake/asset_manifest.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-6a2ab970688ab687e1b70cee",
+      "reason": "Mechanically checked whole-file blob equality 3ad3a9a5563c67d62ccd1c46af35221ca515d317 with hardware_drivers/os/ntr_native.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-67f30af3eaaa8361c5e41110",
+      "reason": "Mechanically checked whole-file blob equality 3ad3a9a5563c67d62ccd1c46af35221ca515d317 with hardware_drivers/ntr_native.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-706496290a2fe01767531cf6",
+      "reason": "Mechanically checked whole-file blob equality 1c3d2dda75b9fa4f94fc292895010b0958e21b25 with hardware_drivers/os/os.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-ea5a099a1c79e01424cd0690",
+      "reason": "Mechanically checked whole-file blob equality 1c3d2dda75b9fa4f94fc292895010b0958e21b25 with hardware_drivers/os.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-734e782bdbc5f88940925f56",
+      "reason": "Mechanically checked whole-file blob equality b559ab4bdd602e65100f36f5e58d3884db3bca6c with cmake/assets/heartgold_messages.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-9d87ef3c89fe3f0aaccd511a",
+      "reason": "Mechanically checked whole-file blob equality b559ab4bdd602e65100f36f5e58d3884db3bca6c with cmake/heartgold_messages.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-73e6a1da9184ce3401f6f1e8",
+      "reason": "Mechanically checked whole-file blob equality 9c09d8c830ef12ac300edf55e8ea53f435daa303 with research/memory-pressure/memory_demand.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-8301dd655f327c0473d963f0",
+      "reason": "Mechanically checked whole-file blob equality 9c09d8c830ef12ac300edf55e8ea53f435daa303 with hardware_drivers/memory_demand.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-74617f0b3729d999926f7f06",
+      "reason": "Mechanically checked whole-file blob equality 36320fde6c72d340d12dd70c25cdb105d8acf5b7 with research/memory-pressure/memory_platform.m. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-29699715dcdc7211c9bd5414",
+      "reason": "Mechanically checked whole-file blob equality 36320fde6c72d340d12dd70c25cdb105d8acf5b7 with hardware_drivers/memory_platform.m. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-82c0a0d7fe6a095e3529c5a1",
+      "reason": "Mechanically checked whole-file blob equality 6b1a3d5eec9147e24faeb4970223c2ed15143e6f with cmake/assets/heartgold_zukan_data.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-747b4d84e8b4f24d2d6e59d2",
+      "reason": "Mechanically checked whole-file blob equality 6b1a3d5eec9147e24faeb4970223c2ed15143e6f with cmake/heartgold_zukan_data.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-993011b0058f69fffe4580c1",
+      "reason": "Mechanically checked whole-file blob equality 54a4742db88e99f7f3391a40079530965488a2ed with research/memory-pressure/memory_metrics.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-75f26d1713250a6201643231",
+      "reason": "Mechanically checked whole-file blob equality 54a4742db88e99f7f3391a40079530965488a2ed with hardware_drivers/memory_metrics.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-9a835857146c196d93e83b06",
+      "reason": "Mechanically checked whole-file blob equality 664043ec510fd1f922873c25367ae58b96e3245d with cmake/assets/build_zone_event.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-1acc15ec69247512b4b68bf1",
+      "reason": "Mechanically checked whole-file blob equality 664043ec510fd1f922873c25367ae58b96e3245d with cmake/build_zone_event.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-9b84f9d76d304bc6efb9e258",
+      "reason": "Mechanically checked whole-file blob equality ac715dcc2d547a6b59ff5f625f12ade069193deb with cmake/assets/heartgold_encounters.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-4d0288d055bfcc7e0b0acf67",
+      "reason": "Mechanically checked whole-file blob equality ac715dcc2d547a6b59ff5f625f12ade069193deb with cmake/heartgold_encounters.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-a082ef31940a62ec43f25bdd",
+      "reason": "Mechanically checked whole-file blob equality 830593baee6d29721a3cb5cc3e44b291c4404b43 with cmake/assets/heartgold_graphics.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-28706dccfa8e39c107ccfdaf",
+      "reason": "Mechanically checked whole-file blob equality 830593baee6d29721a3cb5cc3e44b291c4404b43 with cmake/heartgold_graphics.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-b67b89d30560f9520699f023",
+      "reason": "Mechanically checked whole-file blob equality eafa37c70c5df7a53483f9fa2cda4b62de8d5253 with cmake/assets/heartgold_encounters.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-c6a7c8e5dca1e3edb5704ece",
+      "reason": "Mechanically checked whole-file blob equality eafa37c70c5df7a53483f9fa2cda4b62de8d5253 with cmake/heartgold_encounters.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-bde97676106091bb19ac90c0",
+      "reason": "Mechanically checked whole-file blob equality 91092486fa9e5d5233dac930339f8e329497f8d0 with hardware_drivers/os/ntr_native_internal.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-425c18fd125bab1320e7ef35",
+      "reason": "Mechanically checked whole-file blob equality 91092486fa9e5d5233dac930339f8e329497f8d0 with hardware_drivers/ntr_native_internal.h. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-c3e140d8ac8234e0d1d9288c",
+      "reason": "Mechanically checked whole-file blob equality 2305fc66417fc341736d6d5c9d58504192d36149 with hardware_drivers/os/mi.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-5dc360f012f1907c60584241",
+      "reason": "Mechanically checked whole-file blob equality 2305fc66417fc341736d6d5c9d58504192d36149 with hardware_drivers/mi.c. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-d36498d3dd938b007b26e460",
+      "reason": "Mechanically checked whole-file blob equality 521e29b438c381526f3c917fba16059ac038a8aa with cmake/assets/heartgold_resdat.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-3ba4948221f1b660b0e42256",
+      "reason": "Mechanically checked whole-file blob equality 521e29b438c381526f3c917fba16059ac038a8aa with cmake/heartgold_resdat.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-ead77e1bd25dab286ac1e278",
+      "reason": "Mechanically checked whole-file blob equality afa43dc23ff692c5fc261748302c62dd2cb88be5 with cmake/assets/build_heartgold_script.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-55022efeaa04eafde144607c",
+      "reason": "Mechanically checked whole-file blob equality afa43dc23ff692c5fc261748302c62dd2cb88be5 with cmake/build_heartgold_script.py. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-f12a7bd81d7d13e1009fddc3",
+      "reason": "Mechanically checked whole-file blob equality c1a7a8798ac2f9f0df1d79a1ed0e2f70d5731c1c with cmake/assets/neutral_naix.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-73f04f1f26d61b965878bee0",
+      "reason": "Mechanically checked whole-file blob equality c1a7a8798ac2f9f0df1d79a1ed0e2f70d5731c1c with cmake/neutral_naix.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-f2ead4b0e13bcad4f9970b17",
+      "reason": "Mechanically checked whole-file blob equality 4508a0ccc46dd0b658642a73e143be04954974eb with cmake/assets/heartgold_zone_event.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-adcdd4af7c96c9e6e3018267",
+      "reason": "Mechanically checked whole-file blob equality 4508a0ccc46dd0b658642a73e143be04954974eb with cmake/heartgold_zone_event.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-ff6b0ec4962614183e403903",
+      "reason": "Mechanically checked whole-file blob equality 80bbb41cb97ed16c4cfa50655acd6c58f5a1cdb6 with cmake/assets/heartgold_otherpoke.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-f2a7e20d43a164eadc63ff1d",
+      "reason": "Mechanically checked whole-file blob equality 80bbb41cb97ed16c4cfa50655acd6c58f5a1cdb6 with cmake/heartgold_otherpoke.cmake. Content unchanged; integration/dependency changes remain separately queued."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Original manifest and existing compiler/provider catalogs; projection is explicitly unadmitted",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "project",
+          "path": "compiler/guest32/whole_program.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "eda2c47a2962aefea411040a0def75493c46dc085f7198822c1cd1262e9c3af3"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-GLOBAL-UNKNOWN-EDGES",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reference existing definitions and retain unresolved, dynamic, missing-description, missing-placement and duplicate-state obligations.",
+      "incorrect_host_behavior": "Observed direct-call graph alone can be mistaken for a complete runtime call graph.",
+      "invariant": "Unknown execution edges remain explicit obligations and cannot authorize an ABI or lifetime boundary.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONSERVATIVE-DEPENDENCIES"
+      ],
+      "original_failure": "Observed direct-call graph alone can be mistaken for a complete runtime call graph.",
+      "postconditions": [
+        "Unknown execution edges remain explicit obligations and cannot authorize an ABI or lifetime boundary."
+      ],
+      "preconditions": [
+        "Original manifest and existing compiler/provider catalogs; projection is explicitly unadmitted"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Whole-program code/data dependency census",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_whole_program.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "315e817460d5e66a7af904425346579e61bc60b5e9164499ed88d58a57918cfa"
+        }
+      ],
+      "title": "Whole-program projection retains missing and dynamic edges"
+    },
+    {
+      "architectural_assumption": "Finite input graph with every target represented",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "components",
+          "path": "compiler/guest32/whole_program.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "eda2c47a2962aefea411040a0def75493c46dc085f7198822c1cd1262e9c3af3"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-GLOBAL-SCC",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Use iterative deterministic Kosaraju traversal and stable sorted output.",
+      "incorrect_host_behavior": "Recursive dependency traversal cannot represent a whole-game graph within ordinary Python recursion limits.",
+      "invariant": "Dependency analysis covers every supplied vertex and edge without a recursion-depth cutoff.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TOOLING-SCALE"
+      ],
+      "original_failure": "Recursive dependency traversal cannot represent a whole-game graph within ordinary Python recursion limits.",
+      "postconditions": [
+        "Dependency analysis covers every supplied vertex and edge without a recursion-depth cutoff."
+      ],
+      "preconditions": [
+        "Finite input graph with every target represented"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Compiler dependency tooling",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_whole_program.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "315e817460d5e66a7af904425346579e61bc60b5e9164499ed88d58a57918cfa"
+        }
+      ],
+      "title": "Whole-program SCC discovery does not consume Python recursion depth"
+    },
+    {
+      "architectural_assumption": "Views refer to the one original coordinate catalog; no new address allocation is performed",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "memory_constraints",
+          "path": "compiler/guest32/whole_program.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "eda2c47a2962aefea411040a0def75493c46dc085f7198822c1cd1262e9c3af3"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-GLOBAL-ALIAS-SPANS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Merge overlapping same-owner intervals, reject invalid u32 extents, preserve cross-owner overlap requirements and permanent-main conflicts.",
+      "incorrect_host_behavior": "Counting interior aliases as separate storage or ignoring overlap with main can give an invalid memory plan.",
+      "invariant": "At most one active logical image owns any overlapping guest RAM extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-OVERLAY-MEMORY-EXCLUSION"
+      ],
+      "original_failure": "Counting interior aliases as separate storage or ignoring overlap with main can give an invalid memory plan.",
+      "postconditions": [
+        "At most one active logical image owns any overlapping guest RAM extent."
+      ],
+      "preconditions": [
+        "Views refer to the one original coordinate catalog; no new address allocation is performed"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Catalog storage topology",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_whole_program.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "315e817460d5e66a7af904425346579e61bc60b5e9164499ed88d58a57918cfa"
+        }
+      ],
+      "title": "Alias views do not become independent allocations"
+    },
+    {
+      "architectural_assumption": "Existing shared catalog and unique original member descriptions",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "extend",
+          "path": "cmake/guest32_admission.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "db7a87466bd1d9c7e292707b303314086509288c0019c237f05f03e9ef022aa3"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-ADMISSION-PINS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain established definitions and handles, allow declaration-to-definition refinement only through existing pin merger, reject incompatible established definitions and duplicate storage.",
+      "incorrect_host_behavior": "A newly participating old-style caller declaration can replace a known provider signature or code handle.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "A newly participating old-style caller declaration can replace a known provider signature or code handle.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Existing shared catalog and unique original member descriptions"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Cross-image catalog extension",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Extending a catalog retains actual provider ABI over old declarations"
+    },
+    {
+      "architectural_assumption": "Original complete-image census and actual provider registry exist; unsupported obligations stay fatal",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "main",
+          "path": "cmake/guest32_admission.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "db7a87466bd1d9c7e292707b303314086509288c0019c237f05f03e9ef022aa3"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-ADMISSION-INTEGRITY",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Check exact original members/source hashes and real links/bind slots; keep native entry, callback, arena and shared-state barriers explicit and reject production admission.",
+      "incorrect_host_behavior": "Complete or linked guest objects can be confused with ABI-compatible native providers or startup execution.",
+      "invariant": "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARTIFACT-ADMISSION"
+      ],
+      "original_failure": "Complete or linked guest objects can be confused with ABI-compatible native providers or startup execution.",
+      "postconditions": [
+        "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes."
+      ],
+      "preconditions": [
+        "Original complete-image census and actual provider registry exist; unsupported obligations stay fatal"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Staged guest/native production admission",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_admission.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b3e5ef2b26b6da9f3d7c5a472dd60a2d51c4d6a59faea419cdffb4e9aefe1fed"
+        }
+      ],
+      "title": "Staged image links do not confer production ABI admission"
+    },
+    {
+      "architectural_assumption": "Native 64-bit pre-optimization module; original guest32 input excluded",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "readUnit/validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-NATIVE-DOMAIN",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Require eight-byte native pointer DataLayout and keep guest32 lowering separate.",
+      "incorrect_host_behavior": "Applying native pointer promotion to original four-byte guest storage would change DS records.",
+      "invariant": "Representation-specific transformations apply only in their proven domain; guest storage remains in its authoritative representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-REPRESENTATION-SEPARATION"
+      ],
+      "original_failure": "Applying native pointer promotion to original four-byte guest storage would change DS records.",
+      "postconditions": [
+        "Representation-specific transformations apply only in their proven domain; guest storage remains in its authoritative representation."
+      ],
+      "preconditions": [
+        "Native 64-bit pre-optimization module; original guest32 input excluded"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native pointer-slot legalization",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Native pointer-slot promotion never widens guest32 records"
+    },
+    {
+      "architectural_assumption": "All relevant declarations/layouts and typed consumers are included in census",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-LAYOUT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Compare original and candidate StructLayout size/alignment/every field offset; reject packed/incompatible declarations or any displacement.",
+      "incorrect_host_behavior": "Widening integer-carried pointers can change fields, allocation extents, aggregate alignment or array stride.",
+      "invariant": "Native pointer-slot promotion preserves every enclosing offset, extent, alignment and stride required by existing consumers.",
+      "known_counterexamples": [
+        "Individual layout checks are implementation evidence, not a proof that every enclosing multi-field combination is sound."
+      ],
+      "law_ids": [
+        "LAW-LAYOUT-PRESERVING-PROMOTION"
+      ],
+      "original_failure": "Widening integer-carried pointers can change fields, allocation extents, aggregate alignment or array stride.",
+      "postconditions": [
+        "Native pointer-slot promotion preserves every enclosing offset, extent, alignment and stride required by existing consumers."
+      ],
+      "preconditions": [
+        "All relevant declarations/layouts and typed consumers are included in census"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native integer field promoted to pointer",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Pointer slots may consume padding only with unchanged surrounding layout"
+    },
+    {
+      "architectural_assumption": "Closed observed caller set and supported casts/branches; unknown aliases remain barriers",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "range/number/address",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-PATHS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Compute original-width ranges and dominating predicates; specialize returns per call/environment; clear path reachability when collecting all callers.",
+      "incorrect_host_behavior": "Stripping selector casts chooses a wrong switch arm, while path-pruned argument alias unions omit other invocations.",
+      "invariant": "Alias facts overapproximate every applicable invocation while preserving original-width selector semantics.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ALIAS-ANALYSIS-SCOPE"
+      ],
+      "original_failure": "Stripping selector casts chooses a wrong switch arm, while path-pruned argument alias unions omit other invocations.",
+      "postconditions": [
+        "Alias facts overapproximate every applicable invocation while preserving original-width selector semantics."
+      ],
+      "preconditions": [
+        "Closed observed caller set and supported casts/branches; unknown aliases remain barriers"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native pointer-slot accessor analysis",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Accessor specialization respects integer casts and all callers"
+    },
+    {
+      "architectural_assumption": "Complete participating use/alias census; unproved consumers reject",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "uses/analyze/validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-OBSERVATIONS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reject unsupported integer users, ambiguous storage, raw-byte/aggregate observations, fixed offsets and unknown boundaries; permit only proven full zero initialization.",
+      "incorrect_host_behavior": "A value resembling a pointer is not safely widened if arithmetic, volatile access, byte copies or serialization observe its representation.",
+      "invariant": "A pointer representation change preserves all observable consumers or is rejected before rewriting.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-POINTER-REPRESENTATION-OBSERVATION"
+      ],
+      "original_failure": "A value resembling a pointer is not safely widened if arithmetic, volatile access, byte copies or serialization observe its representation.",
+      "postconditions": [
+        "A pointer representation change preserves all observable consumers or is rejected before rewriting."
+      ],
+      "preconditions": [
+        "Complete participating use/alias census; unproved consumers reject"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native pointer-bearing slots and enclosing owners",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Pointer promotion rejects integer and serialized observations"
+    },
+    {
+      "architectural_assumption": "Field-copy relations are recovered across all participating modules",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "storageLinks and rejection propagation",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-COMPONENT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Build storage links from field transfers and propagate rejection across the connected component.",
+      "incorrect_host_behavior": "Promoting one field while a copied-to or copied-from field remains integer can reintroduce truncation.",
+      "invariant": "Every connected storage path uses compatible pointer representations or the entire affected component remains unpromoted.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONNECTED-STORAGE"
+      ],
+      "original_failure": "Promoting one field while a copied-to or copied-from field remains integer can reintroduce truncation.",
+      "postconditions": [
+        "Every connected storage path uses compatible pointer representations or the entire affected component remains unpromoted."
+      ],
+      "preconditions": [
+        "Field-copy relations are recovered across all participating modules"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Pointer values transferred between native fields",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Connected pointer storage shares rejection constraints"
+    },
+    {
+      "architectural_assumption": "Exact original Heap_Free owner/hash and prefix-only behavior; other boundaries remain unproved",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Heap_Free release contract",
+          "path": "compiler/guest32/semantic_slot_lifetimes.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "cb239717e3cd646aeff36c7482e8d980ace0b8f8acb564e5322f00af602b234d"
+        },
+        {
+          "locator": "boundary owner/source validation",
+          "path": "compiler/guest32/semantic_slots.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "71fe81cdca41aff79c79780d45656a09ae8cf6b8532153843124d10de2cf7f77"
+        },
+        {
+          "locator": "releases and root flow",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-LIFETIME",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Admit only source-hashed production Heap_Free release evidence and stop payload root propagation at that argument.",
+      "incorrect_host_behavior": "Treating allocator-prefix access as payload observation blocks unrelated owners; treating arbitrary calls as release loses live observations.",
+      "invariant": "Payload representation obligations end at a proven release boundary while allocator-prefix and shared-state semantics remain intact.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-LIFETIME-BOUNDARY"
+      ],
+      "original_failure": "Treating allocator-prefix access as payload observation blocks unrelated owners; treating arbitrary calls as release loses live observations.",
+      "postconditions": [
+        "Payload representation obligations end at a proven release boundary while allocator-prefix and shared-state semantics remain intact."
+      ],
+      "preconditions": [
+        "Exact original Heap_Free owner/hash and prefix-only behavior; other boundaries remain unproved"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original allocation release boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Release stops payload observations only under a source-proven contract"
+    },
+    {
+      "architectural_assumption": "Compatible actual provider and admitted field uses; no hidden argument recovery by this pass",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "apply declaration and call remapping",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-ABI",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reconcile related declarations only at equal argument counts, preserve calling convention/attributes, remove integer extension only for pointer positions and rewrite pointer SSA consumers.",
+      "incorrect_host_behavior": "Pointer-return and pointer-argument declarations can disagree while an unrelated missing original argument must not be invented.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Pointer-return and pointer-argument declarations can disagree while an unrelated missing original argument must not be invented.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Compatible actual provider and admitted field uses; no hidden argument recovery by this pass"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native slot-related call declarations and pointer SSA",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Pointer ABI legalization retains actual provided arguments"
+    },
+    {
+      "architectural_assumption": "Annotation removed is an optimizer promise, not a behavioral effect",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Captures annotation removal",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-LLVM-DIALECT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Omit only redundant captures parameter annotations while retaining ABI extensions, alignment and memory effects; verify final module.",
+      "incorrect_host_behavior": "Apple LLVM reader predates LLVM23 captures() spelling.",
+      "invariant": "IR compatibility changes preserve ABI and memory-effect semantics rather than suppressing required behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-IR-COMPATIBILITY"
+      ],
+      "original_failure": "Apple LLVM reader predates LLVM23 captures() spelling.",
+      "postconditions": [
+        "IR compatibility changes preserve ABI and memory-effect semantics rather than suppressing required behavior."
+      ],
+      "preconditions": [
+        "Annotation removed is an optimizer promise, not a behavioral effect"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "LLVM23 to production Apple LLVM handoff",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Cross-version IR spelling does not discard semantic attributes"
+    },
+    {
+      "architectural_assumption": "Production-only TU selection, complete census and content-validated receipts",
+      "classification": "compiler_representation_change",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "census/launch",
+          "path": "compiler/guest32/semantic_slots.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "71fe81cdca41aff79c79780d45656a09ae8cf6b8532153843124d10de2cf7f77"
+        },
+        {
+          "locator": "whole-production target dependencies",
+          "path": "cmake/semantic_slots.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "132be499737f615e9f6cf2cc56cb7fd502274468e224a6f6e138eee1362101a0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SLOT-RECEIPTS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Use actual compile commands, compiler/environment/dependency and IR hashes; lock/atomically publish complete census, reject changed transformed commands and verify promoted/object receipts.",
+      "incorrect_host_behavior": "Stale command/header/compiler/IR receipts or a partial failed census can substitute incompatible transformed objects.",
+      "invariant": "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONTENT-VALIDATED-ARTIFACTS"
+      ],
+      "original_failure": "Stale command/header/compiler/IR receipts or a partial failed census can substitute incompatible transformed objects.",
+      "postconditions": [
+        "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission."
+      ],
+      "preconditions": [
+        "Production-only TU selection, complete census and content-validated receipts"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native compiler-launcher artifact admission",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_semantic_slots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+        }
+      ],
+      "title": "Pointer-slot census admission tracks actual production inputs"
+    }
+  ],
+  "id": "review-batch-004",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Whole-program code/data dependency census",
+      "E": [
+        {
+          "locator": "project",
+          "path": "compiler/guest32/whole_program.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "eda2c47a2962aefea411040a0def75493c46dc085f7198822c1cd1262e9c3af3"
+        }
+      ],
+      "P": [
+        "Original manifest and existing compiler/provider catalogs; projection is explicitly unadmitted"
+      ],
+      "Q": [
+        "Unknown execution edges remain explicit obligations and cannot authorize an ABI or lifetime boundary."
+      ],
+      "T": "Reference existing definitions and retain unresolved, dynamic, missing-description, missing-placement and duplicate-state obligations.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_whole_program.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "315e817460d5e66a7af904425346579e61bc60b5e9164499ed88d58a57918cfa"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Whole-program code/data dependency census",
+      "architectural_assumptions": [
+        "Original manifest and existing compiler/provider catalogs; projection is explicitly unadmitted"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONSERVATIVE-DEPENDENCIES",
+      "implementation_locations": [],
+      "invariant": "Unknown execution edges remain explicit obligations and cannot authorize an ABI or lifetime boundary.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Whole-program projection retains missing and dynamic edges",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Compiler dependency tooling",
+      "E": [
+        {
+          "locator": "components",
+          "path": "compiler/guest32/whole_program.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "eda2c47a2962aefea411040a0def75493c46dc085f7198822c1cd1262e9c3af3"
+        }
+      ],
+      "P": [
+        "Finite input graph with every target represented"
+      ],
+      "Q": [
+        "Dependency analysis covers every supplied vertex and edge without a recursion-depth cutoff."
+      ],
+      "T": "Use iterative deterministic Kosaraju traversal and stable sorted output.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_whole_program.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "315e817460d5e66a7af904425346579e61bc60b5e9164499ed88d58a57918cfa"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Compiler dependency tooling",
+      "architectural_assumptions": [
+        "Finite input graph with every target represented"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-TOOLING-SCALE",
+      "implementation_locations": [],
+      "invariant": "Dependency analysis covers every supplied vertex and edge without a recursion-depth cutoff.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Whole-program SCC discovery does not consume Python recursion depth",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Staged guest/native production admission",
+      "E": [
+        {
+          "locator": "main",
+          "path": "cmake/guest32_admission.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "db7a87466bd1d9c7e292707b303314086509288c0019c237f05f03e9ef022aa3"
+        }
+      ],
+      "P": [
+        "Original complete-image census and actual provider registry exist; unsupported obligations stay fatal"
+      ],
+      "Q": [
+        "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes."
+      ],
+      "T": "Check exact original members/source hashes and real links/bind slots; keep native entry, callback, arena and shared-state barriers explicit and reject production admission.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_admission.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "b3e5ef2b26b6da9f3d7c5a472dd60a2d51c4d6a59faea419cdffb4e9aefe1fed"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Staged guest/native production admission",
+      "architectural_assumptions": [
+        "Original complete-image census and actual provider registry exist; unsupported obligations stay fatal"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ARTIFACT-ADMISSION",
+      "implementation_locations": [],
+      "invariant": "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Staged image links do not confer production ABI admission",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native pointer-slot legalization",
+      "E": [
+        {
+          "locator": "readUnit/validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Native 64-bit pre-optimization module; original guest32 input excluded"
+      ],
+      "Q": [
+        "Representation-specific transformations apply only in their proven domain; guest storage remains in its authoritative representation."
+      ],
+      "T": "Require eight-byte native pointer DataLayout and keep guest32 lowering separate.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native pointer-slot legalization",
+      "architectural_assumptions": [
+        "Native 64-bit pre-optimization module; original guest32 input excluded"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-REPRESENTATION-SEPARATION",
+      "implementation_locations": [],
+      "invariant": "Representation-specific transformations apply only in their proven domain; guest storage remains in its authoritative representation.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Native pointer-slot promotion never widens guest32 records",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native integer field promoted to pointer",
+      "E": [
+        {
+          "locator": "validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "All relevant declarations/layouts and typed consumers are included in census"
+      ],
+      "Q": [
+        "Native pointer-slot promotion preserves every enclosing offset, extent, alignment and stride required by existing consumers."
+      ],
+      "T": "Compare original and candidate StructLayout size/alignment/every field offset; reject packed/incompatible declarations or any displacement.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native integer field promoted to pointer",
+      "architectural_assumptions": [
+        "All relevant declarations/layouts and typed consumers are included in census"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-LAYOUT-PRESERVING-PROMOTION",
+      "implementation_locations": [],
+      "invariant": "Native pointer-slot promotion preserves every enclosing offset, extent, alignment and stride required by existing consumers.",
+      "limitations": [
+        "Individual layout checks are implementation evidence, not a proof that every enclosing multi-field combination is sound."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Pointer slots may consume padding only with unchanged surrounding layout",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native pointer-slot accessor analysis",
+      "E": [
+        {
+          "locator": "range/number/address",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Closed observed caller set and supported casts/branches; unknown aliases remain barriers"
+      ],
+      "Q": [
+        "Alias facts overapproximate every applicable invocation while preserving original-width selector semantics."
+      ],
+      "T": "Compute original-width ranges and dominating predicates; specialize returns per call/environment; clear path reachability when collecting all callers.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native pointer-slot accessor analysis",
+      "architectural_assumptions": [
+        "Closed observed caller set and supported casts/branches; unknown aliases remain barriers"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ALIAS-ANALYSIS-SCOPE",
+      "implementation_locations": [],
+      "invariant": "Alias facts overapproximate every applicable invocation while preserving original-width selector semantics.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Accessor specialization respects integer casts and all callers",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native pointer-bearing slots and enclosing owners",
+      "E": [
+        {
+          "locator": "uses/analyze/validateLayouts",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Complete participating use/alias census; unproved consumers reject"
+      ],
+      "Q": [
+        "A pointer representation change preserves all observable consumers or is rejected before rewriting."
+      ],
+      "T": "Reject unsupported integer users, ambiguous storage, raw-byte/aggregate observations, fixed offsets and unknown boundaries; permit only proven full zero initialization.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native pointer-bearing slots and enclosing owners",
+      "architectural_assumptions": [
+        "Complete participating use/alias census; unproved consumers reject"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-POINTER-REPRESENTATION-OBSERVATION",
+      "implementation_locations": [],
+      "invariant": "A pointer representation change preserves all observable consumers or is rejected before rewriting.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Pointer promotion rejects integer and serialized observations",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Pointer values transferred between native fields",
+      "E": [
+        {
+          "locator": "storageLinks and rejection propagation",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Field-copy relations are recovered across all participating modules"
+      ],
+      "Q": [
+        "Every connected storage path uses compatible pointer representations or the entire affected component remains unpromoted."
+      ],
+      "T": "Build storage links from field transfers and propagate rejection across the connected component.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Pointer values transferred between native fields",
+      "architectural_assumptions": [
+        "Field-copy relations are recovered across all participating modules"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONNECTED-STORAGE",
+      "implementation_locations": [],
+      "invariant": "Every connected storage path uses compatible pointer representations or the entire affected component remains unpromoted.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Connected pointer storage shares rejection constraints",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original allocation release boundary",
+      "E": [
+        {
+          "locator": "Heap_Free release contract",
+          "path": "compiler/guest32/semantic_slot_lifetimes.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "cb239717e3cd646aeff36c7482e8d980ace0b8f8acb564e5322f00af602b234d"
+        },
+        {
+          "locator": "boundary owner/source validation",
+          "path": "compiler/guest32/semantic_slots.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "71fe81cdca41aff79c79780d45656a09ae8cf6b8532153843124d10de2cf7f77"
+        },
+        {
+          "locator": "releases and root flow",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Exact original Heap_Free owner/hash and prefix-only behavior; other boundaries remain unproved"
+      ],
+      "Q": [
+        "Payload representation obligations end at a proven release boundary while allocator-prefix and shared-state semantics remain intact."
+      ],
+      "T": "Admit only source-hashed production Heap_Free release evidence and stop payload root propagation at that argument.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original allocation release boundary",
+      "architectural_assumptions": [
+        "Exact original Heap_Free owner/hash and prefix-only behavior; other boundaries remain unproved"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-LIFETIME-BOUNDARY",
+      "implementation_locations": [],
+      "invariant": "Payload representation obligations end at a proven release boundary while allocator-prefix and shared-state semantics remain intact.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Release stops payload observations only under a source-proven contract",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "LLVM23 to production Apple LLVM handoff",
+      "E": [
+        {
+          "locator": "Captures annotation removal",
+          "path": "compiler/guest32/semantic_slots.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ec9771d3d5d55f5aa60cec192d878fac0a23b6f6c5caf666f8fe57f0e0c102da"
+        }
+      ],
+      "P": [
+        "Annotation removed is an optimizer promise, not a behavioral effect"
+      ],
+      "Q": [
+        "IR compatibility changes preserve ABI and memory-effect semantics rather than suppressing required behavior."
+      ],
+      "T": "Omit only redundant captures parameter annotations while retaining ABI extensions, alignment and memory effects; verify final module.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "LLVM23 to production Apple LLVM handoff",
+      "architectural_assumptions": [
+        "Annotation removed is an optimizer promise, not a behavioral effect"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-IR-COMPATIBILITY",
+      "implementation_locations": [],
+      "invariant": "IR compatibility changes preserve ABI and memory-effect semantics rather than suppressing required behavior.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Cross-version IR spelling does not discard semantic attributes",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native compiler-launcher artifact admission",
+      "E": [
+        {
+          "locator": "census/launch",
+          "path": "compiler/guest32/semantic_slots.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "71fe81cdca41aff79c79780d45656a09ae8cf6b8532153843124d10de2cf7f77"
+        },
+        {
+          "locator": "whole-production target dependencies",
+          "path": "cmake/semantic_slots.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "132be499737f615e9f6cf2cc56cb7fd502274468e224a6f6e138eee1362101a0"
+        }
+      ],
+      "P": [
+        "Production-only TU selection, complete census and content-validated receipts"
+      ],
+      "Q": [
+        "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission."
+      ],
+      "T": "Use actual compile commands, compiler/environment/dependency and IR hashes; lock/atomically publish complete census, reject changed transformed commands and verify promoted/object receipts.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_semantic_slots.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "dc1e5d5e6552f6313bbd755fecdc563a61ef1f14a5e9de53289329262aa967f3"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native compiler-launcher artifact admission",
+      "architectural_assumptions": [
+        "Production-only TU selection, complete census and content-validated receipts"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONTENT-VALIDATED-ARTIFACTS",
+      "implementation_locations": [],
+      "invariant": "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "compiler_representation_change",
+      "title": "Pointer-slot census admission tracks actual production inputs",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": [
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-GLOBAL-UNKNOWN-EDGES",
+        "COR-WT-GLOBAL-SCC",
+        "COR-WT-GLOBAL-ALIAS-SPANS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-ee3a510f9b0b7d883c732846",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-ADMISSION-PINS",
+        "COR-WT-ADMISSION-INTEGRITY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-08bda18e37a3c0840e678653",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-SLOT-NATIVE-DOMAIN",
+        "COR-WT-SLOT-LAYOUT",
+        "COR-WT-SLOT-PATHS",
+        "COR-WT-SLOT-OBSERVATIONS",
+        "COR-WT-SLOT-COMPONENT",
+        "COR-WT-SLOT-LIFETIME",
+        "COR-WT-SLOT-ABI",
+        "COR-WT-SLOT-LLVM-DIALECT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-c70bc08ef2d812c4b9f43afc",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-SLOT-LIFETIME"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-147c7935bcb0257c343a80e7",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-SLOT-LIFETIME",
+        "COR-WT-SLOT-RECEIPTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-ce3ec8d31c314ddb0860802b",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-SLOT-RECEIPTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-8f92f15a55da026d0975dc87",
+      "reason": "Complete current file read. Candidate implementation/contracts are classified separately from proof or successful production admission."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-SSA-ORDER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-3be696ff4a46df0ad710668f",
+      "reason": "Full current delta/source inspected. Forward textual definitions, PHI/backedge and preserved unreachable block execution regressions at O0/O2 with and without sanitizers. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-CODE-DOMAIN",
+        "COR-WT-GLOBAL-ARM-RESULT",
+        "COR-DWC-CALLBACK-WIDTH"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-0b64e3e0392b3ae3885c14f9",
+      "reason": "Full current delta/source inspected. Original AC callback declarations/stores and copy-after-release fixture; catalog identity rejection cases; original tested global SSA edges; shared pin reuse. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-ALARM-PARTITION",
+        "COR-WT-SSA-ORDER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-aabf0237d310dc4de20dee51",
+      "reason": "Full current delta/source inspected. Alarm partition ownership/field-byte checks and full original DHCP member pad_mem fixture; no network packet/startup inference. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-SPACE-PRODUCT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-dfd5eb501974e95496e68458",
+      "reason": "Full current delta/source inspected. Exact .space multiplication bytes and rejection of division/calls/unknown names. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-RESIDENT-OWNERSHIP",
+        "COR-WT-RESIDENT-EXPORTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-fc22e4e30c8c61975fcb29fc",
+      "reason": "Full current delta/source inspected. Actual Mach-O resident ownership/interface/export fixture and competing-definition rejection. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-NETSTART-CLEAR",
+        "COR-WT-NAS-ENTRY-UNIFICATION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-e56037ef06a4244ec7b91c33",
+      "reason": "Full current delta/source inspected. Independent expected net_common local clear and NAS allocation/clear/free extents. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-OVERLAY-EXCLUSION",
+        "COR-WT-RESIDENT-RESET"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-653209803cbd3c850be7fe03",
+      "reason": "Full current delta/source inspected. Resident lifecycle fixture checks copied initial bytes, exact entry ownership, arena mismatch, overlapping-image exclusion and reload reset. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-INDIRECT-RESULT-ABI",
+        "COR-WT-RESULT-HOME-LIFETIME"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-0f09d15514c6824b5cce63f5",
+      "reason": "Full current delta/source inspected. Machine evidence mutations; two-TU hidden result home and tested global fixture, loop reuse and rejected provider/extent shapes. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-GLOBAL-SCC",
+        "COR-WT-GLOBAL-UNKNOWN-EDGES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-bd59bec4e520cdd773225f9e",
+      "reason": "Full current delta/source inspected. Large SCC, deterministic directed components, same-owner aliases, invalid extents, missing/dynamic edges and storage obligations. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-RULE-FACTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-ac3a8fd06ba27f4b1f9acfb2",
+      "reason": "Full current delta/source inspected. Closed-rule graph/model rejection cases and exact deterministic application counts. Existing result provenance still requires separate review."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-475fa48797959d051b695de8",
+      "reason": "Full current delta/source read. Staged whole-image link/rejection evidence and source/code/storage barriers; no production admission."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-6c218f2ba34247009253467d",
+      "reason": "Full current delta/source read. Bounded original callback closure, exact membership/body evidence and real FS lifecycle; expressly excludes arbitrary callbacks and concurrent unload proof."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-063fed82239c6930d33ce0b9",
+      "reason": "Full current delta/source read. Native-only padding promotion, full-use rejection, release contract, production receipts and limits."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-18ed36984a5504117c16e98e",
+      "reason": "Full current delta/source read. Current added callback-copy lifetime, code-domain and SSA block-order limitations."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-8b575b1fe70ebc60a33ebbbe",
+      "reason": "Full current delta/source read. Literal embedded catalog template only; implementation resides in rules.h and lower.cpp."
+    }
+  ]
+}

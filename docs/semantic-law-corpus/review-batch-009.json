@@ -1,0 +1,2172 @@
+{
+  "change_reviews": [
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-INITIAL-PARTY-CODE-IDENTITY",
+        "COR-INITIAL-COMM-PRIVATE",
+        "COR-INITIAL-RAND-DECLARATION",
+        "COR-INITIAL-DWC-INIT-ADDRESS",
+        "COR-INITIAL-LINKED-STATES",
+        "COR-INITIAL-WIRELESS-ALIGN",
+        "COR-INITIAL-WIRELESS-ASSERTS",
+        "COR-INITIAL-WVR-CALLBACK",
+        "COR-INITIAL-WIRELESS-LOWBITS",
+        "COR-INITIAL-BLEND-ADDRESS",
+        "COR-INITIAL-CANONICAL-DECLARATIONS",
+        "COR-INITIAL-CLZ",
+        "COR-INITIAL-CRC-TYPE",
+        "COR-INITIAL-OWNER-FORMAT",
+        "COR-INITIAL-SOUND-CALLBACK-WORDS",
+        "COR-INITIAL-SOUND-CANONICAL-TYPES",
+        "COR-INITIAL-SOUND-HEAP-ALIGN",
+        "COR-INITIAL-SOUND-INSTRUMENT-FORMAT",
+        "COR-INITIAL-WAVE-PRESENCE",
+        "COR-INITIAL-ASSET-TYPES",
+        "COR-INITIAL-ASSEMBLER-TYPE",
+        "COR-INITIAL-ELF-BOUNDS",
+        "COR-INITIAL-ELF-STRINGS",
+        "COR-INITIAL-ELF-OWNERSHIP",
+        "COR-INITIAL-TRANSFORM-GUARDS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-df140c8e774deb0f8c9be6b4",
+      "reason": "Entire initial 351-line source adapter inspected; independent callback, address/layout, API, bit-operation, asset and ELF corrections recorded with unresolved native layout preconditions."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-INITIAL-BACKWARD-ORDER",
+        "COR-INITIAL-BACKWARD-CACHE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c612296b50ef8522436c5909",
+      "reason": "Complete initial file read and individual algorithm/service obligations extracted. Existing test source references are not newly executed results."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-INITIAL-HOST-THREAD",
+        "COR-INITIAL-HOST-MUTEX",
+        "COR-INITIAL-HOST-SEMAPHORE",
+        "COR-INITIAL-HOST-CLOCK",
+        "COR-INITIAL-HOST-TIMER",
+        "COR-INITIAL-HOST-TIMER-RELEASE",
+        "COR-INITIAL-HOST-MESSAGE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-edd590a85016f012a0b1bc4e",
+      "reason": "Complete initial file read and individual algorithm/service obligations extracted. Existing test source references are not newly executed results."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Table is complete, indices/callback types unchanged; invalid action traps",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "party_actions/adapt party_menu_list_items and party_menu",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-PARTY-CODE-IDENTITY",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Replace exactly thirty guarded entries with enum action identities; dispatch a bounded typed native function table at both invocation sites.",
+      "incorrect_host_behavior": "Original action table casts function addresses into u32 menu words.",
+      "invariant": "Selection invokes exactly the original selected callback without truncating a native pointer.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALLBACK"
+      ],
+      "original_failure": "Original action table casts function addresses into u32 menu words.",
+      "postconditions": [
+        "Selection invokes exactly the original selected callback without truncating a native pointer."
+      ],
+      "preconditions": [
+        "Table is complete, indices/callback types unchanged; invalid action traps"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Party context menu callback transport",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_sources.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+        }
+      ],
+      "title": "Party menu actions transport bounded code identities"
+    },
+    {
+      "architectural_assumption": "Exact original private helper set and matching declarations",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_state_private.h",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-COMM-PRIVATE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Remove only source-enumerated private extern declarations; do not export original local definitions.",
+      "incorrect_host_behavior": "External declarations conflict with seventy-seven original static helper definitions.",
+      "invariant": "The translated source membership preserves original definition ownership and shared storage without duplicate bodies.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "External declarations conflict with seventy-seven original static helper definitions.",
+      "postconditions": [
+        "The translated source membership preserves original definition ownership and shared storage without duplicate bodies."
+      ],
+      "preconditions": [
+        "Exact original private helper set and matching declarations"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original static CommState functions",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_sources.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+        }
+      ],
+      "title": "Communication helpers remain file-local"
+    },
+    {
+      "architectural_assumption": "Canonical SDK declaration is authoritative",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_state_private.h MATHRandContext32",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-RAND-DECLARATION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Drop the duplicate type and include original SDK rand declarations.",
+      "incorrect_host_behavior": "A private duplicate RNG declaration conflicts with the normal SDK header type.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "A private duplicate RNG declaration conflicts with the normal SDK header type.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Canonical SDK declaration is authoritative"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original random-context interface",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Communication RNG uses the actual SDK type"
+    },
+    {
+      "architectural_assumption": "Host runtime work allocation, not serialized guest coordinate",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_state.c and DWC_Init declaration",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-DWC-INIT-ADDRESS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use uintptr_t address/mask arithmetic and a pointer-typed initialization declaration.",
+      "incorrect_host_behavior": "u32 alignment and an int DWC_Init parameter truncate the aligned work pointer.",
+      "invariant": "Address predicates and alignment preserve full native address identity within the supplied allocation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "u32 alignment and an int DWC_Init parameter truncate the aligned work pointer.",
+      "postconditions": [
+        "Address predicates and alignment preserve full native address identity within the supplied allocation."
+      ],
+      "preconditions": [
+        "Host runtime work allocation, not serialized guest coordinate"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native aligned DWC work pointer",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Communication work alignment preserves native address bits"
+    },
+    {
+      "architectural_assumption": "Original table remains immutable and live over every use",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_state.c linkedStates",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-LINKED-STATES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use a const callback-table pointer to the original table.",
+      "incorrect_host_behavior": "ARRAY_ASSIGN initialization of a const callback array is not accepted by the native C compiler.",
+      "invariant": "Replacing a local readonly aggregate copy by a view preserves reads only while original contents and lifetime remain equivalent.",
+      "known_counterexamples": [
+        "Aliasing is not equivalent to a copy if another writer can change the original table; independently establish this precondition."
+      ],
+      "law_ids": [
+        "LAW-READONLY-AGGREGATE-VIEW"
+      ],
+      "original_failure": "ARRAY_ASSIGN initialization of a const callback array is not accepted by the native C compiler.",
+      "postconditions": [
+        "Replacing a local readonly aggregate copy by a view preserves reads only while original contents and lifetime remain equivalent."
+      ],
+      "preconditions": [
+        "Original table remains immutable and live over every use"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Three-entry communication callback table",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Readonly state-table alias requires stable original contents"
+    },
+    {
+      "architectural_assumption": "Host allocation has enough supplied alignment slack",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt wireless_manager.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-WIRELESS-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use uintptr_t round-up to 32 bytes.",
+      "incorrect_host_behavior": "u32 buffer variable and shift-based alignment truncate native addresses.",
+      "invariant": "Address predicates and alignment preserve full native address identity within the supplied allocation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "u32 buffer variable and shift-based alignment truncate native addresses.",
+      "postconditions": [
+        "Address predicates and alignment preserve full native address identity within the supplied allocation."
+      ],
+      "preconditions": [
+        "Host allocation has enough supplied alignment slack"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Wireless work buffer alignment",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Wireless buffer alignment retains host coordinates"
+    },
+    {
+      "architectural_assumption": "Runtime-only structures; all allocation extents and consumers need separate proof",
+      "classification": "incomplete_correctness_attempt",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt wireless_manager.c/comm_wireless.c/orbit_cursor.h/tree-iterator4.h",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-WIRELESS-ASSERTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Keep original DS checks in DS builds; use scoped native alignment/pointer-size checks or guard runtime-only size assertions.",
+      "incorrect_host_behavior": "Original four-byte-pointer extent assertions reject widened private native records.",
+      "invariant": "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation.",
+      "known_counterexamples": [
+        "Guarding a DS assertion does not prove native allocations, serialized formats or all consumers are correct."
+      ],
+      "law_ids": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "original_failure": "Original four-byte-pointer extent assertions reject widened private native records.",
+      "postconditions": [
+        "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation."
+      ],
+      "preconditions": [
+        "Runtime-only structures; all allocation extents and consumers need separate proof"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Private wireless/cursor/iterator runtime records",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "DS-only runtime layout assertions do not prove native ABI"
+    },
+    {
+      "architectural_assumption": "Canonical WVR enum and callback ABI; error termination remains observable",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_wireless.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-WVR-CALLBACK",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Drop wrong declarations; use typed wrappers converting startup success/failure and checking termination error before original completion callback; compare WVR_RESULT_OPERATING.",
+      "incorrect_host_behavior": "Private WVR declarations and old callback signatures disagree with the actual SDK callback/result contract.",
+      "invariant": "Dispatch preserves every observable callback argument and return convention.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALLBACK-ARGUMENTS"
+      ],
+      "original_failure": "Private WVR declarations and old callback signatures disagree with the actual SDK callback/result contract.",
+      "postconditions": [
+        "Dispatch preserves every observable callback argument and return convention."
+      ],
+      "preconditions": [
+        "Canonical WVR enum and callback ABI; error termination remains observable"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Wireless startup/termination callbacks",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Wireless callbacks translate actual WVR result signatures"
+    },
+    {
+      "architectural_assumption": "Only low five bits are required by the original alignment operation",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt comm_wireless.c misalignment",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-WIRELESS-LOWBITS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Mask uintptr_t with 0x1f first, then narrow the bounded residue.",
+      "incorrect_host_behavior": "Narrowing a host pointer before taking alignment bits obscures the intended native address operation.",
+      "invariant": "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-POINTER-PREDICATE"
+      ],
+      "original_failure": "Narrowing a host pointer before taking alignment bits obscures the intended native address operation.",
+      "postconditions": [
+        "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity."
+      ],
+      "preconditions": [
+        "Only low five bits are required by the original alignment operation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native buffer misalignment calculation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Only explicit alignment low bits may narrow"
+    },
+    {
+      "architectural_assumption": "Actual host SDK address parameter is native-width",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt code_entry.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-BLEND-ADDRESS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Pass the native-width u64 register address at the two original blend calls.",
+      "incorrect_host_behavior": "Register-address constants passed through the original narrow scalar argument lose host register addresses.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Register-address constants passed through the original narrow scalar argument lose host register addresses.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Actual host SDK address parameter is native-width"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native blend-register service boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Blend APIs receive native-width register addresses"
+    },
+    {
+      "architectural_assumption": "Public original SDK contracts are authoritative",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt declaration-only routes",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-CANONICAL-DECLARATIONS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Repair missing cell-transfer return type; remove conflicting local prototypes/inline duplicate and const-qualify upload sources consistently.",
+      "incorrect_host_behavior": "Private cell-transfer, math population, fog, matrix result, upload and hblank declarations disagree with SDK declarations.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private cell-transfer, math population, fog, matrix result, upload and hblank declarations disagree with SDK declarations.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Public original SDK contracts are authoritative"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original/private SDK interface declarations",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_sources.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+        }
+      ],
+      "title": "Duplicated native SDK declarations use authoritative headers"
+    },
+    {
+      "architectural_assumption": "Operand is the original 32-bit word; no native widening",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt g2d canvas source routes",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-CLZ",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use native unsigned builtin only for nonzero input and return 32 for zero.",
+      "incorrect_host_behavior": "ARM inline clz is not native host assembly; builtin_clz(0) has no defined result.",
+      "invariant": "Translated bit operations preserve original operand width and all architectural edge cases, including zero.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BIT-OPERATION"
+      ],
+      "original_failure": "ARM inline clz is not native host assembly; builtin_clz(0) has no defined result.",
+      "postconditions": [
+        "Translated bit operations preserve original operand width and all architectural edge cases, including zero."
+      ],
+      "preconditions": [
+        "Operand is the original 32-bit word; no native widening"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original 32-bit ARM CLZ",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Leading-zero translation defines the zero case"
+    },
+    {
+      "architectural_assumption": "Canonical SDK table keeps original CRC algorithm and data layout",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt save_fashion.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-CRC-TYPE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Remove private declarations and instantiate MATHCRC32Table storage passed through the canonical type.",
+      "incorrect_host_behavior": "Private u32-array prototypes differ from the actual SDK CRC table interface.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private u32-array prototypes differ from the actual SDK CRC table interface.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Canonical SDK table keeps original CRC algorithm and data layout"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original CRC32 table interface",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Fashion CRC uses actual table and function interfaces"
+    },
+    {
+      "architectural_assumption": "Sizes 2/84 and offsets 2/4/26/28/82 are asserted, not widened",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt ownerInfo.h",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-OWNER-FORMAT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Source-hash guard original wrapper and use canonical SDK type with exact size and field-offset assertions.",
+      "incorrect_host_behavior": "Duplicated owner-info declarations risk native layout disagreement in fixed data.",
+      "invariant": "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Duplicated owner-info declarations risk native layout disagreement in fixed data.",
+      "postconditions": [
+        "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation."
+      ],
+      "preconditions": [
+        "Sizes 2/84 and offsets 2/4/26/28/82 are asserted, not widened"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original birthday/owner text record",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Owner information remains an original fixed record"
+    },
+    {
+      "architectural_assumption": "Fields are runtime callback storage; serialized DS wave/record fields remain fixed",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "callbacks and SOUND_FILES",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SOUND-CALLBACK-WORDS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Widen only registered native runtime callback payload declarations to uintptr_t and corresponding casts.",
+      "incorrect_host_behavior": "u32 callback data1/data2 words lose native archive/table pointer bits.",
+      "invariant": "Host transport preserves complete native pointer identity while hardware serialization retains its fixed bit contract.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-PAYLOAD"
+      ],
+      "original_failure": "u32 callback data1/data2 words lose native archive/table pointer bits.",
+      "postconditions": [
+        "Host transport preserves complete native pointer identity while hardware serialization retains its fixed bit contract."
+      ],
+      "preconditions": [
+        "Fields are runtime callback storage; serialized DS wave/record fields remain fixed"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native sound heap disposal callback payloads",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_sound.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60e46c44e06f913283fc0dd48fa9525c15719d398ad038cc471af05dd264cd9f"
+        }
+      ],
+      "title": "Sound heap callbacks preserve complete native payload pointers"
+    },
+    {
+      "architectural_assumption": "Correct public SDK provider; no inference of complete sound-system support",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SOUND_FILES snd_internal and system/stream",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SOUND-CANONICAL-TYPES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use PMSleepCallbackInfo/SNDDriverInfo, actual callback member names and public sound prototypes.",
+      "incorrect_host_behavior": "Private sleep callback/driver structures and sound API prototypes disagree with actual SDK definitions.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Private sleep callback/driver structures and sound API prototypes disagree with actual SDK definitions.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Correct public SDK provider; no inference of complete sound-system support"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native sound sleep and driver interfaces",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Sound runtime/driver declarations match actual SDK APIs"
+    },
+    {
+      "architectural_assumption": "Provided range has sufficient aligned extent",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SOUND_FILES snd_arc_internal.h/snd_heap.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SOUND-HEAP-ALIGN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Align SndHeapBlock to 32 and round heap start using native metadata alignment with full-width masks.",
+      "incorrect_host_behavior": "Four-byte original heap alignment does not satisfy native pointer-bearing metadata and 32-byte payload contract.",
+      "invariant": "Native object placement satisfies its alignment and remains inside the supplied extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-NATIVE-ALIGNMENT"
+      ],
+      "original_failure": "Four-byte original heap alignment does not satisfy native pointer-bearing metadata and 32-byte payload contract.",
+      "postconditions": [
+        "Native object placement satisfies its alignment and remains inside the supplied extent."
+      ],
+      "preconditions": [
+        "Provided range has sufficient aligned extent"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native sound heap block and heap start",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Sound payloads and heap metadata have native alignment"
+    },
+    {
+      "architectural_assumption": "Native callback payload widening must not widen these fixed records",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SOUND_FILES snd_arc_strm_internal.h/snd_arc_loader_wave.c",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SOUND-INSTRUMENT-FORMAT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use SNDInstPos/SNDInstData and param.wave fields, with sizes 8/12 and wave offsets 2/4 assertions.",
+      "incorrect_host_behavior": "Private instrument type/member names disagree with canonical serialized instrument data.",
+      "invariant": "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Private instrument type/member names disagree with canonical serialized instrument data.",
+      "postconditions": [
+        "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation."
+      ],
+      "preconditions": [
+        "Native callback payload widening must not widen these fixed records"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original sound instrument serialized records",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Instrument records retain their fixed DS layout"
+    },
+    {
+      "architectural_assumption": "Original operation observes only nullness, not numeric address",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "snd_arc_loader_wave.c SND_GetWaveDataAddress",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-WAVE-PRESENCE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use the original pointer != NULL predicate directly.",
+      "incorrect_host_behavior": "A non-null high native pointer can have a zero low word and appear absent after u32 cast.",
+      "invariant": "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-POINTER-PREDICATE"
+      ],
+      "original_failure": "A non-null high native pointer can have a zero low word and appear absent after u32 cast.",
+      "postconditions": [
+        "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity."
+      ],
+      "preconditions": [
+        "Original operation observes only nullness, not numeric address"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native wave-address existence test",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Wave presence is tested without truncating the pointer"
+    },
+    {
+      "architectural_assumption": "Original declarations copied; no alternative asset algorithm introduced",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asset_types ppark-types/resdat-types",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ASSET-TYPES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Extract exact original declarations and assert Pal Park six-byte records, enum/resource sizes and resource list offsets.",
+      "incorrect_host_behavior": "Compiling host asset declarations with game runtime headers or native pointer shapes can change emitted original formats.",
+      "invariant": "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Compiling host asset declarations with game runtime headers or native pointer shapes can change emitted original formats.",
+      "postconditions": [
+        "Fixed original word arrays retain their specified widths, offsets and arithmetic interpretation."
+      ],
+      "preconditions": [
+        "Original declarations copied; no alternative asset algorithm introduced"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original Pal Park and sprite resource asset records",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Asset C record extraction keeps original fixed layouts"
+    },
+    {
+      "architectural_assumption": "Exactly expected template markers; target assembler syntax",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asset_types zukan-template",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ASSEMBLER-TYPE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Replace exactly twelve object type markers with %object.",
+      "incorrect_host_behavior": "@object is parsed as a comment under ARM assembler syntax.",
+      "invariant": "Tool syntax adaptations preserve original data and symbol metadata without altering program semantics.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TOOL-SYNTAX"
+      ],
+      "original_failure": "@object is parsed as a comment under ARM assembler syntax.",
+      "postconditions": [
+        "Tool syntax adaptations preserve original data and symbol metadata without altering program semantics."
+      ],
+      "preconditions": [
+        "Exactly expected template markers; target assembler syntax"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original zukan generated assembly metadata",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "ARM object metadata avoids assembler comment syntax"
+    },
+    {
+      "architectural_assumption": "Little-endian ELF32 input, exactly one symbol table and supported object symbols",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ELF_OPEN header/sections/symbol validation",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ELF-BOUNDS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Validate ELF class/endian/version/header sizes, table bounds, NOBITS exceptions and linked table indices before reading.",
+      "incorrect_host_behavior": "Truncated or incompatible ELF32 input can make section/symbol reads escape the file.",
+      "invariant": "Every consumed binary range is validated against its containing file/section before access.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BINARY-INPUT-BOUNDS"
+      ],
+      "original_failure": "Truncated or incompatible ELF32 input can make section/symbol reads escape the file.",
+      "postconditions": [
+        "Every consumed binary range is validated against its containing file/section before access."
+      ],
+      "preconditions": [
+        "Little-endian ELF32 input, exactly one symbol table and supported object symbols"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original object-to-archive ELF reader",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_elf_reader.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f78408267e505810f1db9c4cc8f2f25c29989b576d9b97f56ad96fb1a8de10be"
+        }
+      ],
+      "title": "ELF asset reader validates all declared byte ranges"
+    },
+    {
+      "architectural_assumption": "Names reside in validated independent string-table allocations",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ELF_OPEN strings and memchr checks",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ELF-STRINGS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Validate both string table type/size and every symbol/section name offset/termination.",
+      "incorrect_host_behavior": "String offsets and missing terminators can read beyond either name table.",
+      "invariant": "Every consumed binary range is validated against its containing file/section before access.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BINARY-INPUT-BOUNDS"
+      ],
+      "original_failure": "String offsets and missing terminators can read beyond either name table.",
+      "postconditions": [
+        "Every consumed binary range is validated against its containing file/section before access."
+      ],
+      "preconditions": [
+        "Names reside in validated independent string-table allocations"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "ELF section/symbol strings",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_elf_reader.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f78408267e505810f1db9c4cc8f2f25c29989b576d9b97f56ad96fb1a8de10be"
+        }
+      ],
+      "title": "ELF names are bounded null-terminated string-table views"
+    },
+    {
+      "architectural_assumption": "Original independent destructor deletes remain unchanged",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ELF_OPEN section_names/symbol_names",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ELF-OWNERSHIP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Load the two name tables into separate owned allocations before publishing them.",
+      "incorrect_host_behavior": "Original destructor independently deletes strtab and shstrtab even if file tables alias the same section.",
+      "invariant": "Each owning deallocation corresponds to one live allocation identity; aliased file views do not imply shared owning heap pointers.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ALLOCATION-OWNERSHIP"
+      ],
+      "original_failure": "Original destructor independently deletes strtab and shstrtab even if file tables alias the same section.",
+      "postconditions": [
+        "Each owning deallocation corresponds to one live allocation identity; aliased file views do not imply shared owning heap pointers."
+      ],
+      "preconditions": [
+        "Original independent destructor deletes remain unchanged"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "ELF reader string-table lifetime",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_elf_reader.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f78408267e505810f1db9c4cc8f2f25c29989b576d9b97f56ad96fb1a8de10be"
+        }
+      ],
+      "title": "ELF string tables retain separate destructor ownership"
+    },
+    {
+      "architectural_assumption": "Registered input/kind and expected fragments; no general rewrite framework",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "replace/drop/span/main/write_if_changed",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-TRANSFORM-GUARDS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Require exact fragment counts/selected hashes and one declared output outside original root; preserve source line identities and unchanged-output timestamps.",
+      "incorrect_host_behavior": "Unguarded text edits can silently alter wrong occurrences or overwrite authoritative original sources.",
+      "invariant": "All supported generator entry points apply the same source-validated transformation exactly once.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-GENERATOR-CONSISTENCY"
+      ],
+      "original_failure": "Unguarded text edits can silently alter wrong occurrences or overwrite authoritative original sources.",
+      "postconditions": [
+        "All supported generator entry points apply the same source-validated transformation exactly once."
+      ],
+      "preconditions": [
+        "Registered input/kind and expected fragments; no general rewrite framework"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Source adaptation tooling",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Per-input adapters reject drift and original-tree outputs"
+    },
+    {
+      "architectural_assumption": "Valid size-less original stream and enough writable expansion space",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MIi_UncompressBackward",
+          "path": "hardware_drivers/mi.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-BACKWARD-ORDER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Decode original little-endian header, consume flag/data bytes backwards and perform source read before destination predecrement on each match byte.",
+      "incorrect_host_behavior": "Generic forward copy or memcpy is not equivalent to the original overlapping backward stream expansion.",
+      "invariant": "Backward expansion preserves original input consumption, output order and immediate reuse of newly written match bytes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BACKWARD-OVERLAP"
+      ],
+      "original_failure": "Generic forward copy or memcpy is not equivalent to the original overlapping backward stream expansion.",
+      "postconditions": [
+        "Backward expansion preserves original input consumption, output order and immediate reuse of newly written match bytes."
+      ],
+      "preconditions": [
+        "Valid size-less original stream and enough writable expansion space"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original backward compression stream",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_uncompress.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "abe62b826828e0a41eac4f23a83a6740aab1d3c03abe7e0ac46ea39ce07fba0f"
+        }
+      ],
+      "title": "Backward decompression retains original overlap/write order"
+    },
+    {
+      "architectural_assumption": "Valid expanded range; native cache APIs provide the selected host contract",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MIi_UncompressBackward epilogue",
+          "path": "hardware_drivers/mi.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-BACKWARD-CACHE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Flush data and invalidate instructions over the actual expanded byte range using native cache APIs.",
+      "incorrect_host_behavior": "Original CP15 line operations are not a native Apple cache service and rounded C pointers can leave the caller allocation.",
+      "invariant": "Translated executable writes become visible through the required host data/instruction cache synchronization without out-of-range pointer arithmetic.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CACHE-SYNCHRONIZATION"
+      ],
+      "original_failure": "Original CP15 line operations are not a native Apple cache service and rounded C pointers can leave the caller allocation.",
+      "postconditions": [
+        "Translated executable writes become visible through the required host data/instruction cache synchronization without out-of-range pointer arithmetic."
+      ],
+      "preconditions": [
+        "Valid expanded range; native cache APIs provide the selected host contract"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Backward decompression cache completion",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_uncompress.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "abe62b826828e0a41eac4f23a83a6740aab1d3c03abe7e0ac46ea39ce07fba0f"
+        }
+      ],
+      "title": "Expanded native code/data uses host cache synchronization"
+    },
+    {
+      "architectural_assumption": "Caller obeys create/join ownership and native status interface",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_CreateThread/HG_GetThreadID/HG_WaitThread",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-THREAD",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Own a pthread-backed thread record, run entry(arg), retain integer status, expose native-width identity and join before freeing.",
+      "incorrect_host_behavior": "SDK host services otherwise depend on unavailable SDL thread objects.",
+      "invariant": "The host thread boundary preserves entry arguments, current-thread identity and join completion.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-THREAD"
+      ],
+      "original_failure": "SDK host services otherwise depend on unavailable SDL thread objects.",
+      "postconditions": [
+        "The host thread boundary preserves entry arguments, current-thread identity and join completion."
+      ],
+      "preconditions": [
+        "Caller obeys create/join ownership and native status interface"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host thread boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "Native thread lifecycle preserves entry, identity and join result"
+    },
+    {
+      "architectural_assumption": "Valid live mutex and balanced original lock usage",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_CreateMutex/Lock/Unlock/TryLock/Destroy",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-MUTEX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Create recursive pthread mutexes; map acquired/busy/error to 0/1/-1 and destroy owned resources.",
+      "incorrect_host_behavior": "A nonrecursive or differently coded native lock changes SDK mutex behavior.",
+      "invariant": "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MUTEX"
+      ],
+      "original_failure": "A nonrecursive or differently coded native lock changes SDK mutex behavior.",
+      "postconditions": [
+        "Lock acquisition, exclusion, recursion requirements and try-lock results agree with the selected SDK mutex contract."
+      ],
+      "preconditions": [
+        "Valid live mutex and balanced original lock usage"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host SDK mutexes",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "Native mutexes retain recursion and try-lock results"
+    },
+    {
+      "architectural_assumption": "Live semaphore and supported indefinite timeout sentinel",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_SemPost/HG_SemWaitTimeout",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-SEMAPHORE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Protect count with a mutex, reject overflow, loop on spurious wake, use one monotonic deadline and consume any actual token at the timeout boundary.",
+      "incorrect_host_behavior": "Spurious wakes, count overflow and timeout-boundary posts can lose or invent notification tokens.",
+      "invariant": "Wait/post notifications preserve the original queue blocking and wakeup behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-SEMAPHORE"
+      ],
+      "original_failure": "Spurious wakes, count overflow and timeout-boundary posts can lose or invent notification tokens.",
+      "postconditions": [
+        "Wait/post notifications preserve the original queue blocking and wakeup behavior."
+      ],
+      "preconditions": [
+        "Live semaphore and supported indefinite timeout sentinel"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host SDK semaphores",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "Semaphore wait/post atomically preserve token ownership"
+    },
+    {
+      "architectural_assumption": "Successful native clock primitives; failures remain observable",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "monotonic_ns/HG_GetTicks64/HG_Delay/wait_until",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-CLOCK",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use one pthread-once monotonic origin and relative condition waits; resume interrupted nanosleep with remaining duration.",
+      "incorrect_host_behavior": "Wall clock changes and EINTR can invalidate timeout duration or shorten SDK delay.",
+      "invariant": "Time observations use a consistent monotonic origin and original SDK units.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-CLOCK"
+      ],
+      "original_failure": "Wall clock changes and EINTR can invalidate timeout duration or shorten SDK delay.",
+      "postconditions": [
+        "Time observations use a consistent monotonic origin and original SDK units."
+      ],
+      "preconditions": [
+        "Successful native clock primitives; failures remain observable"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host millisecond clock and waits",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "SDK clock and delay use monotonic time"
+    },
+    {
+      "architectural_assumption": "Valid callback, monotonic clock and synchronized timer record",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "run_timer/HG_AddTimer",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-TIMER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Run timer callback outside internal lock, carry original interval/arg, repeat with returned positive interval and stop on cancellation/zero.",
+      "incorrect_host_behavior": "Native alarms need actual delayed callback delivery with zero-return stop and renewed intervals.",
+      "invariant": "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-TIMER"
+      ],
+      "original_failure": "Native alarms need actual delayed callback delivery with zero-return stop and renewed intervals.",
+      "postconditions": [
+        "The selected host timer service preserves callback arguments, recurrence and cancellation semantics required by SDK alarms."
+      ],
+      "preconditions": [
+        "Valid callback, monotonic clock and synchronized timer record"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK host timer callback boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "Native timer recurrence follows callback interval result"
+    },
+    {
+      "architectural_assumption": "Timer list and record locks are respected; callbacks may remove their own timer",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_RemoveTimer/run_timer/destroy_timer",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-TIMER-RELEASE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Unlink/cancel under locks; external removal joins then frees, self-removal detaches and defers free until worker exit; automatic expiry owns one cleanup.",
+      "incorrect_host_behavior": "Joining self deadlocks and freeing self callback storage before return is a use-after-free.",
+      "invariant": "Callback state remains live until invocation completes; cancellation and release transfer ownership exactly once.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALLBACK-LIFETIME"
+      ],
+      "original_failure": "Joining self deadlocks and freeing self callback storage before return is a use-after-free.",
+      "postconditions": [
+        "Callback state remains live until invocation completes; cancellation and release transfer ownership exactly once."
+      ],
+      "preconditions": [
+        "Timer list and record locks are respected; callbacks may remove their own timer"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host timer cancellation/lifetime",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_host.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+        }
+      ],
+      "title": "Timer cancellation avoids freeing an active callback record"
+    },
+    {
+      "architectural_assumption": "Valid null-terminated input strings; host service may fail",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_ShowMessage",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-HOST-MESSAGE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Create UTF-8 CoreFoundation title/body, report allocation/display failure and release both strings on every path.",
+      "incorrect_host_behavior": "SDK diagnostics require a host UI service instead of SDL ABI.",
+      "invariant": "Host diagnostic services preserve the SDK caller message and failure observability.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-HOST-MESSAGE"
+      ],
+      "original_failure": "SDK diagnostics require a host UI service instead of SDL ABI.",
+      "postconditions": [
+        "Host diagnostic services preserve the SDK caller message and failure observability."
+      ],
+      "preconditions": [
+        "Valid null-terminated input strings; host service may fail"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Host message boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native message service preserves text and object ownership"
+    }
+  ],
+  "id": "review-batch-009",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Three-entry communication callback table",
+      "E": [
+        {
+          "locator": "adapt comm_state.c linkedStates",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Original table remains immutable and live over every use"
+      ],
+      "Q": [
+        "Replacing a local readonly aggregate copy by a view preserves reads only while original contents and lifetime remain equivalent."
+      ],
+      "T": "Use a const callback-table pointer to the original table.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Three-entry communication callback table",
+      "architectural_assumptions": [
+        "Original table remains immutable and live over every use"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-READONLY-AGGREGATE-VIEW",
+      "implementation_locations": [],
+      "invariant": "Replacing a local readonly aggregate copy by a view preserves reads only while original contents and lifetime remain equivalent.",
+      "limitations": [
+        "Aliasing is not equivalent to a copy if another writer can change the original table; independently establish this precondition."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Readonly state-table alias requires stable original contents",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native buffer misalignment calculation",
+      "E": [
+        {
+          "locator": "adapt comm_wireless.c misalignment",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Only low five bits are required by the original alignment operation"
+      ],
+      "Q": [
+        "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity."
+      ],
+      "T": "Mask uintptr_t with 0x1f first, then narrow the bounded residue.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native buffer misalignment calculation",
+      "architectural_assumptions": [
+        "Only low five bits are required by the original alignment operation"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-POINTER-PREDICATE",
+      "implementation_locations": [],
+      "invariant": "Pointer-derived scalar observations preserve the exact intended predicate or bounded bit projection without truncating address identity.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Only explicit alignment low bits may narrow",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original 32-bit ARM CLZ",
+      "E": [
+        {
+          "locator": "adapt g2d canvas source routes",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Operand is the original 32-bit word; no native widening"
+      ],
+      "Q": [
+        "Translated bit operations preserve original operand width and all architectural edge cases, including zero."
+      ],
+      "T": "Use native unsigned builtin only for nonzero input and return 32 for zero.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original 32-bit ARM CLZ",
+      "architectural_assumptions": [
+        "Operand is the original 32-bit word; no native widening"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-BIT-OPERATION",
+      "implementation_locations": [],
+      "invariant": "Translated bit operations preserve original operand width and all architectural edge cases, including zero.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Leading-zero translation defines the zero case",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original zukan generated assembly metadata",
+      "E": [
+        {
+          "locator": "asset_types zukan-template",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Exactly expected template markers; target assembler syntax"
+      ],
+      "Q": [
+        "Tool syntax adaptations preserve original data and symbol metadata without altering program semantics."
+      ],
+      "T": "Replace exactly twelve object type markers with %object.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original zukan generated assembly metadata",
+      "architectural_assumptions": [
+        "Exactly expected template markers; target assembler syntax"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-TOOL-SYNTAX",
+      "implementation_locations": [],
+      "invariant": "Tool syntax adaptations preserve original data and symbol metadata without altering program semantics.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "ARM object metadata avoids assembler comment syntax",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original object-to-archive ELF reader",
+      "E": [
+        {
+          "locator": "ELF_OPEN header/sections/symbol validation",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Little-endian ELF32 input, exactly one symbol table and supported object symbols"
+      ],
+      "Q": [
+        "Every consumed binary range is validated against its containing file/section before access."
+      ],
+      "T": "Validate ELF class/endian/version/header sizes, table bounds, NOBITS exceptions and linked table indices before reading.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_elf_reader.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "f78408267e505810f1db9c4cc8f2f25c29989b576d9b97f56ad96fb1a8de10be"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original object-to-archive ELF reader",
+      "architectural_assumptions": [
+        "Little-endian ELF32 input, exactly one symbol table and supported object symbols"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-BINARY-INPUT-BOUNDS",
+      "implementation_locations": [],
+      "invariant": "Every consumed binary range is validated against its containing file/section before access.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "ELF asset reader validates all declared byte ranges",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "ELF reader string-table lifetime",
+      "E": [
+        {
+          "locator": "ELF_OPEN section_names/symbol_names",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Original independent destructor deletes remain unchanged"
+      ],
+      "Q": [
+        "Each owning deallocation corresponds to one live allocation identity; aliased file views do not imply shared owning heap pointers."
+      ],
+      "T": "Load the two name tables into separate owned allocations before publishing them.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_elf_reader.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "f78408267e505810f1db9c4cc8f2f25c29989b576d9b97f56ad96fb1a8de10be"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "ELF reader string-table lifetime",
+      "architectural_assumptions": [
+        "Original independent destructor deletes remain unchanged"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ALLOCATION-OWNERSHIP",
+      "implementation_locations": [],
+      "invariant": "Each owning deallocation corresponds to one live allocation identity; aliased file views do not imply shared owning heap pointers.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "ELF string tables retain separate destructor ownership",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original backward compression stream",
+      "E": [
+        {
+          "locator": "MIi_UncompressBackward",
+          "path": "hardware_drivers/mi.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Valid size-less original stream and enough writable expansion space"
+      ],
+      "Q": [
+        "Backward expansion preserves original input consumption, output order and immediate reuse of newly written match bytes."
+      ],
+      "T": "Decode original little-endian header, consume flag/data bytes backwards and perform source read before destination predecrement on each match byte.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_uncompress.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "abe62b826828e0a41eac4f23a83a6740aab1d3c03abe7e0ac46ea39ce07fba0f"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original backward compression stream",
+      "architectural_assumptions": [
+        "Valid size-less original stream and enough writable expansion space"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-BACKWARD-OVERLAP",
+      "implementation_locations": [],
+      "invariant": "Backward expansion preserves original input consumption, output order and immediate reuse of newly written match bytes.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Backward decompression retains original overlap/write order",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Backward decompression cache completion",
+      "E": [
+        {
+          "locator": "MIi_UncompressBackward epilogue",
+          "path": "hardware_drivers/mi.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Valid expanded range; native cache APIs provide the selected host contract"
+      ],
+      "Q": [
+        "Translated executable writes become visible through the required host data/instruction cache synchronization without out-of-range pointer arithmetic."
+      ],
+      "T": "Flush data and invalidate instructions over the actual expanded byte range using native cache APIs.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_uncompress.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "abe62b826828e0a41eac4f23a83a6740aab1d3c03abe7e0ac46ea39ce07fba0f"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Backward decompression cache completion",
+      "architectural_assumptions": [
+        "Valid expanded range; native cache APIs provide the selected host contract"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CACHE-SYNCHRONIZATION",
+      "implementation_locations": [],
+      "invariant": "Translated executable writes become visible through the required host data/instruction cache synchronization without out-of-range pointer arithmetic.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Expanded native code/data uses host cache synchronization",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Host timer cancellation/lifetime",
+      "E": [
+        {
+          "locator": "HG_RemoveTimer/run_timer/destroy_timer",
+          "path": "hardware_drivers/os.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Timer list and record locks are respected; callbacks may remove their own timer"
+      ],
+      "Q": [
+        "Callback state remains live until invocation completes; cancellation and release transfer ownership exactly once."
+      ],
+      "T": "Unlink/cancel under locks; external removal joins then frees, self-removal detaches and defers free until worker exit; automatic expiry owns one cleanup.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_host.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "56212cb0f3d8880e67a6dff038bf48d632b2d4d4a1deb7e6950b30dfab6a04ee"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Host timer cancellation/lifetime",
+      "architectural_assumptions": [
+        "Timer list and record locks are respected; callbacks may remove their own timer"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CALLBACK-LIFETIME",
+      "implementation_locations": [],
+      "invariant": "Callback state remains live until invocation completes; cancellation and release transfer ownership exactly once.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Timer cancellation avoids freeing an active callback record",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": []
+}

@@ -1,0 +1,1119 @@
+{
+  "change_reviews": [
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-GRAPHICS-RECIPES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0aa7c211600a9689aa672771",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "regression_evidence_disabled",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-1bf87900973f751158a27d17",
+      "reason": "Complete248-line test read: native metadata alignment, region partition/nonoverlap, allocation directions/search/split boundaries/resize/coalesce/nested heaps/stress/high addresses/canaries. Disabled because original heap truncates addresses; no pass claimed."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ZONE-FORMAT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-1ee03b52a6372e379b577f32",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-CHECKOUT-PRESERVATION",
+        "COR-INITIAL-ORIGINAL-GENERATORS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-28a37587093a61c1ecfe741e",
+      "reason": "Complete file read: pins/checkouts, original fixed constants, manifest-selected SDKs, real host services, main enabled by default; disabled heap test explicit, no successful game runtime inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-FIXED-ASSET-OBJECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-29aa2b7158b7b42880222a3a",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [
+        "COR-INITIAL-ENCOUNTER-ORACLE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-3fbdf30cb651bf5e3217513a",
+      "reason": "Complete independent oracle examined: versions/constants/all record bytes, bounded chunks/FAT, indices and map references. No execution this audit."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-GRAPHICS-RECIPES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-43da73b337b3c8cee8c43662",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "startup_entry",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-468a50a5984ae3571688ff1d",
+      "reason": "Complete seven-line original NitroMain entry read. Does not establish execution."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ORIGINAL-GENERATORS",
+        "COR-INITIAL-ARCHIVE-ORDER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4f13864eb22270684bcc0c78",
+      "reason": "Complete file read: original tools and explicit archive outputs/dependencies; common archive helper retains original metadata."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ARCHIVE-ORDER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-52584b0fbf947b0a6635cb16",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-FIXED-ASSET-OBJECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-58dd5ad9777651a1378db403",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "incomplete_correctness_attempt",
+      "correction_ids": [
+        "COR-INITIAL-WIRELESS-ASSERTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-607302482f3038091c54aab5",
+      "reason": "Complete file read: standalone generated iterator size assertion adapts runtime pointer width; assertion alone proves no full ABI or allocation correctness. Not used by current unified inclusion in this checkpoint."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-624ecf39b488c428e4da8dec",
+      "reason": "Complete40-line test read: fixed instrument sizes/offsets, native64-byte32-aligned block and actual original disposal callbacks with high userdata. Does not establish full sound support."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ARCHIVE-ORDER",
+        "COR-INITIAL-ZONE-FORMAT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-6d2013dd1cfc2c056d874568",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-7661ffabbae5b2259492d10c",
+      "reason": "Complete40-line test read: tabs/lowercase n, both macros/zero ID, no cross-line consumption and rejection of extra/unsupported args. Source only."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-SOURCE-MEMBERSHIP"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-78ec266b5b4dfd43850805e8",
+      "reason": "Complete file read: source ownership, deterministic guarded outputs, SDK include order, asset dependencies and original startup entry."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ENCOUNTER-LAYOUT",
+        "COR-INITIAL-ENCOUNTER-ORACLE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-7b327253f7302b96916305e6",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-7d77ec52379589f30450ad3f",
+      "reason": "Complete89-line test read: independently constructed shared/separate/unrelated string-table ELF fixtures and invalid sh_link failure; invokes actual original tool. No new execution."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ITEM-CONSTANTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-821755b39276e178af559f2d",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-9a159ccc9467edeb906f6a2e",
+      "reason": "Complete72-line test read: thirty party mappings/three cancel values/distinct TakeMail, original body preservation, two dispatches,77private helpers, high-width init declaration, drift rejection and unchanged output timestamp."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-9f6e2b4fed62c4eccec928a1",
+      "reason": "Complete163-line test read: independently encoded known bytes, original reference tool, all32 alignment residues/canaries, overlap/extreme tokens/padding/prefix, header-only and zero-growth SDK distinctions, input exhaustion. No ARM32 runtime execution or new test run."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-SCRIPT-SYNTAX",
+        "COR-INITIAL-SCRIPT-EXTRACTION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-b9185ae1855447635e234f98",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "diagnostic_evidence",
+      "correction_ids": [
+        "COR-INITIAL-LINK-DIAGNOSTIC"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c352d4a20f9ea935598e30dc",
+      "reason": "Complete diagnostic script read; definition regex/source image index supplies candidates and explicitly requires ABI review."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-MESSAGE-ESCAPE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c4fb2235c61a20da9798bc73",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-MESSAGE-ORDER",
+        "COR-INITIAL-MESSAGE-ESCAPE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d6b739a17a96105d1aeb2b40",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-ENCOUNTER-LAYOUT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d7855702b5461ed3ca760340",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-INITIAL-PARTY-CODE-IDENTITY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-dae43c84a5f1afe0bcf1ecda",
+      "reason": "Complete file read: historical parallel callback-ID adaptation with minimum-count guard and typed bounded dispatch. Current unified adapter supersedes it; preserve both implementation provenance."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-INITIAL-FIXED-ASSET-OBJECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-dce4124b30b0621f5873a15a",
+      "reason": "Complete original file read; original recipe, declared inputs/outputs, target/format selection and validation obligations extracted."
+    },
+    {
+      "classification": "nonsemantic_infrastructure",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-dfe6c7de5c4ed7d70022b7d2",
+      "reason": "Complete file read: local instruction/dependency/build/editor ignores."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-e92ba054db50d0932fac77d9",
+      "reason": "Complete99-line test read: recursive/contended mutex, thread identities/join status, semaphore tokens/timeouts, monotonic delays, recurrence/external/self cancellation. Source only."
+    },
+    {
+      "classification": "regression_evidence",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-ff433b40d75f63b4e393f1e8",
+      "reason": "Complete59-line test read: native ABI flags, fixed constants, OS_Init arena/launcher/IRQ/PXI and repeated-init state; does not validate OS context restore/scheduler."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Git checkout and absent-commit checks succeed; a matching libntr pin may retain local modifications",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Dependency pins do not discard existing work",
+          "path": "CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-CHECKOUT-PRESERVATION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Check current pin and dirty state; clone only absent repositories, fetch only absent commits, detach without overwrite-ignore and verify exact revision; require original source clean.",
+      "incorrect_host_behavior": "Unconditional clone/fetch/reset or switching dirty trees would replace local evidence and break offline reproducibility.",
+      "invariant": "Selected dependency sources match explicit pins without silently discarding existing work.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "Unconditional clone/fetch/reset or switching dirty trees would replace local evidence and break offline reproducibility.",
+      "postconditions": [
+        "Selected dependency sources match explicit pins without silently discarding existing work."
+      ],
+      "preconditions": [
+        "Git checkout and absent-commit checks succeed; a matching libntr pin may retain local modifications"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Source checkout ownership",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Dependency pins do not discard existing work"
+    },
+    {
+      "architectural_assumption": "Original main.lsf is authoritative; compilation is not successful linking",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Main-image membership follows original link manifest",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SOURCE-MEMBERSHIP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select original C only for main group in main.lsf and inventory other groups/assembly/C++ separately; require each adapted source be a selected member.",
+      "incorrect_host_behavior": "Globally merging overlays or all discovered files introduces duplicate storage and changes image residency.",
+      "invariant": "Each linked definition retains its original image ownership and selected source membership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "Globally merging overlays or all discovered files introduces duplicate storage and changes image residency.",
+      "postconditions": [
+        "Each linked definition retains its original image ownership and selected source membership."
+      ],
+      "preconditions": [
+        "Original main.lsf is authoritative; compilation is not successful linking"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Main ARM9 image source selection",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Main-image membership follows original link manifest"
+    },
+    {
+      "architectural_assumption": "Native generator representations must satisfy each fixed-format contract",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native build retains original asset generators",
+          "path": "CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Native build retains original asset generators",
+          "path": "cmake/assets.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ORIGINAL-GENERATORS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Compile original generator/tools with original pinned input CSV and dependencies; preserve original command flags and archive metadata.",
+      "incorrect_host_behavior": "Replacing original fixed-point/graphics/archive encoders risks changed engine constants and bytes.",
+      "invariant": "Generated original data retains source algorithm, format and member order.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-ALGORITHM"
+      ],
+      "original_failure": "Replacing original fixed-point/graphics/archive encoders risks changed engine constants and bytes.",
+      "postconditions": [
+        "Generated original data retains source algorithm, format and member order."
+      ],
+      "preconditions": [
+        "Native generator representations must satisfy each fixed-format contract"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native host asset generators",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native build retains original asset generators"
+    },
+    {
+      "architectural_assumption": "Original metadata/order are complete; stale staged files require separate scrutiny",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Archives retain explicit member order and exclusions",
+          "path": "cmake/assets.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Archives retain explicit member order and exclusions",
+          "path": "cmake/heartgold_scripts.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Archives retain explicit member order and exclusions",
+          "path": "cmake/heartgold_zone_event.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ARCHIVE-ORDER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Declare exact inputs, copy original narcorder/narcignore metadata, reject empty recipes and noncontiguous script/zone IDs, emit archive/index together.",
+      "incorrect_host_behavior": "Implicit directory order or missing member IDs shifts runtime archive references.",
+      "invariant": "Every original member index resolves to its intended byte payload.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Implicit directory order or missing member IDs shifts runtime archive references.",
+      "postconditions": [
+        "Every original member index resolves to its intended byte payload."
+      ],
+      "preconditions": [
+        "Original metadata/order are complete; stale staged files require separate scrutiny"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "NARC production and archive indices",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Archives retain explicit member order and exclusions"
+    },
+    {
+      "architectural_assumption": "Only supported include/directive syntax and one redundant zero; unsupported arguments rejected",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Script conversion changes only supported assembler syntax",
+          "path": "cmake/build_heartgold_script.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SCRIPT-SYNTAX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Expand assembly includes with cycle checks, strip semicolon comments outside quotes, preserve header macros, normalize only supported initializer arguments after preprocessing and assemble ARMv5TE data.",
+      "incorrect_host_behavior": "MWAS includes/comments/alignment directive and redundant macro zero are incompatible with native LLVM assembler.",
+      "invariant": "Syntax translation preserves original bytecode operands, macro boundaries and data layout.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TOOL-SYNTAX"
+      ],
+      "original_failure": "MWAS includes/comments/alignment directive and redundant macro zero are incompatible with native LLVM assembler.",
+      "postconditions": [
+        "Syntax translation preserves original bytecode operands, macro boundaries and data layout."
+      ],
+      "preconditions": [
+        "Only supported include/directive syntax and one redundant zero; unsupported arguments rejected"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original script assembly bytecode",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_scripts.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "bb89f49343d04699645a02fafe5769b04d5683b1b26ae45387ef259e017d4241"
+        }
+      ],
+      "title": "Script conversion changes only supported assembler syntax"
+    },
+    {
+      "architectural_assumption": "Tool output parser recognizes expected LLVM diagnostics; equality to historical archive is separate evidence",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Script extraction rejects code and unresolved relocations",
+          "path": "cmake/build_heartgold_script.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-SCRIPT-EXTRACTION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Remove stale output, require no relocations, empty text and nonempty binary exactly matching rodata size; track expanded includes in depfile.",
+      "incorrect_host_behavior": "Extracting an unresolved or executable object creates apparently valid but incorrect data.",
+      "invariant": "Only fully resolved original data is admitted as a generated script member.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BINARY-INPUT-BOUNDS"
+      ],
+      "original_failure": "Extracting an unresolved or executable object creates apparently valid but incorrect data.",
+      "postconditions": [
+        "Only fully resolved original data is admitted as a generated script member."
+      ],
+      "preconditions": [
+        "Tool output parser recognizes expected LLVM diagnostics; equality to historical archive is separate evidence"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "ARM object data extraction",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Script extraction rejects code and unresolved relocations"
+    },
+    {
+      "architectural_assumption": "Original JSON/template is authoritative; size alone is not full byte equivalence",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Zone events use original DS record emission",
+          "path": "cmake/build_zone_event.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Zone events use original DS record emission",
+          "path": "cmake/heartgold_zone_event.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ZONE-FORMAT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Run original JSONPROC/template, preserve macro headers, assemble ARMv5TE, require relocation-free extraction and expected 16+20*bgs+32*objects+12*warps+16*coords bytes; delete stale or wrong-sized output.",
+      "incorrect_host_behavior": "Host compilation or unresolved assembly can change original event sizes and offsets.",
+      "invariant": "Serialized event records preserve original fixed DS field widths and record extents.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Host compilation or unresolved assembly can change original event sizes and offsets.",
+      "postconditions": [
+        "Serialized event records preserve original fixed DS field widths and record extents."
+      ],
+      "preconditions": [
+        "Original JSON/template is authoritative; size alone is not full byte equivalence"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Zone-event binary generation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Zone events use original DS record emission"
+    },
+    {
+      "architectural_assumption": "Pointer-free original records satisfy all compile-time assertions",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Encounter emitter verifies every fixed record offset",
+          "path": "cmake/heartgold_encounters.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Encounter emitter verifies every fixed record offset",
+          "path": "cmake/heartgold_encounters.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ENCOUNTER-LAYOUT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Compile original JSONPROC/template C with both version selectors; assert little endian, u32 width, EncounterData196/Land84/Slot4 and every top-level/nested offset; write exact records with IO error checks.",
+      "incorrect_host_behavior": "Native record emission without layout checks can silently change serialized encounter bytes.",
+      "invariant": "Native data emission is admissible only when its entire relevant layout equals the original serialized format.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Native record emission without layout checks can silently change serialized encounter bytes.",
+      "postconditions": [
+        "Native data emission is admissible only when its entire relevant layout equals the original serialized format."
+      ],
+      "preconditions": [
+        "Pointer-free original records satisfy all compile-time assertions"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "HeartGold/SoulSilver encounter archive records",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Encounter emitter verifies every fixed record offset"
+    },
+    {
+      "architectural_assumption": "Oracle independently implements documented fixed layout; passing results require actual execution",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Encounter archive has an independent byte and index oracle",
+          "path": "cmake/validate_heartgold_encounters.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Encounter archive has an independent byte and index oracle",
+          "path": "cmake/heartgold_encounters.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ENCOUNTER-ORACLE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Independently pack every expected byte from original JSON/constants; validate NARC headers/chunks/FAT bounds and each record; verify naix order and referenced banks, allowing only genuinely unused extra declarations.",
+      "incorrect_host_behavior": "A size-only check misses wrong constants, version selection, member indices and map references.",
+      "invariant": "Every emitted byte and referenced member identity agrees with an independent original-data oracle.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-INDEPENDENT-ORACLE"
+      ],
+      "original_failure": "A size-only check misses wrong constants, version selection, member indices and map references.",
+      "postconditions": [
+        "Every emitted byte and referenced member identity agrees with an independent original-data oracle."
+      ],
+      "preconditions": [
+        "Oracle independently implements documented fixed layout; passing results require actual execution"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Encounter generation validation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Encounter archive has an independent byte and index oracle"
+    },
+    {
+      "architectural_assumption": "Original msg.mk and charmap are authoritative",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Generated trainer messages keep their original archive index",
+          "path": "cmake/heartgold_messages.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-MESSAGE-ORDER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Sort by filename, emit explicit bin-only archive order and apply per-file original encryption keys/charmap.",
+      "incorrect_host_behavior": "Sorting absolute source paths places generated trainer messages at a different archive index.",
+      "invariant": "Runtime message indices and encoding resolve to original intended text.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Sorting absolute source paths places generated trainer messages at a different archive index.",
+      "postconditions": [
+        "Runtime message indices and encoding resolve to original intended text."
+      ],
+      "preconditions": [
+        "Original msg.mk and charmap are authoritative"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Message archive generation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Generated trainer messages keep their original archive index"
+    },
+    {
+      "architectural_assumption": "Input ampersands are raw text rather than preescaped entities; this script alone does not prove that precondition",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Generated trainer XML escapes ampersands",
+          "path": "cmake/escape_gmm.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Generated trainer XML escapes ampersands",
+          "path": "cmake/heartgold_messages.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-MESSAGE-ESCAPE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Escape ampersands in generated GMM before original msgenc parses it.",
+      "incorrect_host_behavior": "Unescaped ampersands in JSON-generated GMM are invalid XML.",
+      "invariant": "Text parser receives the intended literal original trainer text.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TOOL-SYNTAX"
+      ],
+      "original_failure": "Unescaped ampersands in JSON-generated GMM are invalid XML.",
+      "postconditions": [
+        "Text parser receives the intended literal original trainer text."
+      ],
+      "preconditions": [
+        "Input ampersands are raw text rather than preescaped entities; this script alone does not prove that precondition"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Generated GMM XML",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Generated trainer XML escapes ampersands"
+    },
+    {
+      "architectural_assumption": "Recipe fidelity still needs independent byte comparison; source-count checks alone are insufficient",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Graphics conversion preserves original recipe flags",
+          "path": "cmake/heartgold_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Graphics conversion preserves original recipe flags",
+          "path": "cmake/heartgold_otherpoke.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-GRAPHICS-RECIPES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Run original nitrogfx with per-recipe bitdepth/padding/version/sopc/pcmp/key dependencies; preserve original binary members and palettes; validate preview pairs, nineteen namein files and261 otherpoke instructions.",
+      "incorrect_host_behavior": "Generic conversion can change palette/bitdepth/compression and member mappings.",
+      "invariant": "Original graphics payload algorithms and archive member identities are preserved.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-ALGORITHM"
+      ],
+      "original_failure": "Generic conversion can change palette/bitdepth/compression and member mappings.",
+      "postconditions": [
+        "Original graphics payload algorithms and archive member identities are preserved."
+      ],
+      "preconditions": [
+        "Recipe fidelity still needs independent byte comparison; source-count checks alone are insufficient"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original graphics asset build",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Graphics conversion preserves original recipe flags"
+    },
+    {
+      "architectural_assumption": "Guarded type adapter and original templates are authoritative; unresolved-section validation is not uniform across these recipes",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Pal Park and sprite resources use DS object layouts",
+          "path": "cmake/heartgold_ppark.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Pal Park and sprite resources use DS object layouts",
+          "path": "cmake/heartgold_resdat.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Pal Park and sprite resources use DS object layouts",
+          "path": "cmake/heartgold_zukan_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-FIXED-ASSET-OBJECTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Compile guarded fixed declarations/assembly as ARMv5TE and extract named original sections; enforce ninety contiguous resdat members and original normal/Giratina variants with FF padding.",
+      "incorrect_host_behavior": "Native pointer layouts or extracting the wrong section changes fixed DS assets.",
+      "invariant": "Fixed original record widths, variants and member numbering remain stable.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FIXED-SCALAR-FORMAT"
+      ],
+      "original_failure": "Native pointer layouts or extracting the wrong section changes fixed DS assets.",
+      "postconditions": [
+        "Fixed original record widths, variants and member numbering remain stable."
+      ],
+      "preconditions": [
+        "Guarded type adapter and original templates are authoritative; unresolved-section validation is not uniform across these recipes"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Pal Park/resdat/Pokedex assets",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Pal Park and sprite resources use DS object layouts"
+    },
+    {
+      "architectural_assumption": "Manifest grammar is supported and every referenced header is tracked",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Item data uses original CSV encoder and constants",
+          "path": "cmake/heartgold_item_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-ITEM-CONSTANTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Build original csv2bin; derive referenced headers from manifest and declare them as dependencies; preserve original FF padding and generated naix.",
+      "incorrect_host_behavior": "Missing manifest constant dependencies or replacement encoding can create stale or incorrect item data.",
+      "invariant": "Item data bytes and indices follow original CSV schema and constants.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-ALGORITHM"
+      ],
+      "original_failure": "Missing manifest constant dependencies or replacement encoding can create stale or incorrect item data.",
+      "postconditions": [
+        "Item data bytes and indices follow original CSV schema and constants."
+      ],
+      "preconditions": [
+        "Manifest grammar is supported and every referenced header is tracked"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Item CSV asset generation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Item data uses original CSV encoder and constants"
+    },
+    {
+      "architectural_assumption": "Regex index is a candidate locator, not proof of callable ABI or native implementation",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Link inventories distinguish failures from successful execution",
+          "path": "cmake/link_symbols.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-INITIAL-LINK-DIAGNOSTIC",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Parse actual latest undefined-symbol report, reset on successful target, index definition syntax and original image groups, distinguish ARM assembly/data/native candidates and emit required followup actions.",
+      "incorrect_host_behavior": "Compiler failure or regex declaration hits can be misreported as a successful link or usable implementation.",
+      "invariant": "Diagnostic evidence is admitted only at the stage and semantic strength it actually establishes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-EVIDENCE-ADMISSION"
+      ],
+      "original_failure": "Compiler failure or regex declaration hits can be misreported as a successful link or usable implementation.",
+      "postconditions": [
+        "Diagnostic evidence is admitted only at the stage and semantic strength it actually establishes."
+      ],
+      "preconditions": [
+        "Regex index is a candidate locator, not proof of callable ABI or native implementation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native linker source inventory",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Link inventories distinguish failures from successful execution"
+    }
+  ],
+  "id": "review-batch-011",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Encounter generation validation",
+      "E": [
+        {
+          "locator": "Encounter archive has an independent byte and index oracle",
+          "path": "cmake/validate_heartgold_encounters.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        },
+        {
+          "locator": "Encounter archive has an independent byte and index oracle",
+          "path": "cmake/heartgold_encounters.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Oracle independently implements documented fixed layout; passing results require actual execution"
+      ],
+      "Q": [
+        "Every emitted byte and referenced member identity agrees with an independent original-data oracle."
+      ],
+      "T": "Independently pack every expected byte from original JSON/constants; validate NARC headers/chunks/FAT bounds and each record; verify naix order and referenced banks, allowing only genuinely unused extra declarations.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Encounter generation validation",
+      "architectural_assumptions": [
+        "Oracle independently implements documented fixed layout; passing results require actual execution"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-INDEPENDENT-ORACLE",
+      "implementation_locations": [],
+      "invariant": "Every emitted byte and referenced member identity agrees with an independent original-data oracle.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "build_or_asset_correctness",
+      "title": "Encounter archive has an independent byte and index oracle",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native linker source inventory",
+      "E": [
+        {
+          "locator": "Link inventories distinguish failures from successful execution",
+          "path": "cmake/link_symbols.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "86f31cd6d5bc190f88f9b93f68e69e4793a7c17a"
+        }
+      ],
+      "P": [
+        "Regex index is a candidate locator, not proof of callable ABI or native implementation"
+      ],
+      "Q": [
+        "Diagnostic evidence is admitted only at the stage and semantic strength it actually establishes."
+      ],
+      "T": "Parse actual latest undefined-symbol report, reset on successful target, index definition syntax and original image groups, distinguish ARM assembly/data/native candidates and emit required followup actions.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native linker source inventory",
+      "architectural_assumptions": [
+        "Regex index is a candidate locator, not proof of callable ABI or native implementation"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-EVIDENCE-ADMISSION",
+      "implementation_locations": [],
+      "invariant": "Diagnostic evidence is admitted only at the stage and semantic strength it actually establishes.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "build_or_asset_correctness",
+      "title": "Link inventories distinguish failures from successful execution",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": []
+}

@@ -1,0 +1,136 @@
+{
+  "conflicts": [
+    {
+      "base_analysis": "Exact original NetCheckState: ARM32 fields httpParams/authParams at 24/52; ARM64 at 32/72. Assembly coordinates also give 28/56 relative to the preceding gDwcHttpTestServer, not gDwcNetCheckState. No diagnostic derivation confirms that alternate base was used.",
+      "claims": [
+        "docs/NATIVE_LINK_CLOSURE.md reports original +0x1c/+0x38",
+        "Original assembly and test_guest32_dwc_rules.py give +0x18/+0x34"
+      ],
+      "evidence": [
+        {
+          "path": "docs/semantic-law-corpus/dwc-layout-evidence.json",
+          "provenance_category": "diagnostic-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "cc428132bdbf85cc6f2e406eccf9290e39900751475e72f396626566c890d004"
+        }
+      ],
+      "id": "CONFLICT-DWC-INTERIOR-DOCUMENTS",
+      "law_ids": [
+        "LAW-INTERIOR-OWNERSHIP"
+      ],
+      "resolution": "ARM64 expansion is not the source of 28/56 for these declarations. Preserve old claims; origin remains unresolved despite a numeric alternate-base match.",
+      "status": "target_layouts_measured_older_claim_origin_unresolved"
+    }
+  ],
+  "duplicate_review": {
+    "method": "Exact duplicate law IDs merged for shared callback, allocation and boundary invariants; broader semantic overlaps still require manual review.",
+    "remaining": "123 candidate laws include specialized G3 operation contracts and broader representation families. Preserve all correction IDs before any semantic merge; exact text identity is not sufficient.",
+    "status": "partial_after_individual_extraction_incomplete_history"
+  },
+  "relations": [
+    {
+      "from": "LAW-ALLOCATION-COHERENCE",
+      "kind": "requires_joint_representation_decision",
+      "reason": "Resizing root storage alone does not relocate interior aliases.",
+      "to": "LAW-INTERIOR-OWNERSHIP"
+    },
+    {
+      "from": "LAW-ARM-INDIRECT-RESULT",
+      "kind": "requires",
+      "reason": "Hidden result homes must remain live through consumers and expire with the guest invocation.",
+      "to": "LAW-FRAME-LIFETIME"
+    },
+    {
+      "from": "LAW-ARTIFACT-ADMISSION",
+      "kind": "requires",
+      "reason": "Successful staging/linking cannot replace positive semantic boundary facts.",
+      "to": "LAW-POSITIVE-ADMISSION"
+    },
+    {
+      "from": "LAW-BOUNDARY",
+      "kind": "requires",
+      "reason": "The native call boundary must agree with its actual provider declaration and result convention.",
+      "to": "LAW-CALL-DECLARATION"
+    },
+    {
+      "from": "LAW-BOUNDARY",
+      "kind": "requires",
+      "reason": "ABI-compatible signatures do not establish unique symbol ownership.",
+      "to": "LAW-PROVIDER-OWNERSHIP"
+    },
+    {
+      "from": "LAW-CALLBACK",
+      "kind": "requires",
+      "reason": "Identity preservation does not establish argument semantics.",
+      "to": "LAW-CALLBACK-ARGUMENTS"
+    },
+    {
+      "from": "LAW-CALLBACK",
+      "kind": "requires",
+      "reason": "Correct identity and arguments do not establish callback-state lifetime.",
+      "to": "LAW-CALLBACK-LIFETIME"
+    },
+    {
+      "from": "LAW-CALLBACK",
+      "kind": "requires",
+      "reason": "Code identity alone does not establish logical residency.",
+      "to": "LAW-OVERLAY-LIFETIME"
+    },
+    {
+      "from": "LAW-INTERIOR-ALIAS",
+      "kind": "requires",
+      "reason": "Member offsets and strides depend on the actual canonical owner layout.",
+      "to": "LAW-NATIVE-AGGREGATE-COHERENCE"
+    },
+    {
+      "from": "LAW-INTERIOR-ALIAS",
+      "kind": "requires",
+      "reason": "An interior label must refer to one live original storage owner.",
+      "to": "LAW-SOURCE-OWNERSHIP"
+    },
+    {
+      "from": "LAW-LAYOUT-PRESERVING-PROMOTION",
+      "kind": "requires",
+      "reason": "Every reachable consumer must satisfy the admitted observation contract.",
+      "to": "LAW-ALIAS-ANALYSIS-SCOPE"
+    },
+    {
+      "from": "LAW-LAYOUT-PRESERVING-PROMOTION",
+      "kind": "requires",
+      "reason": "The admission census must match the exact production inputs actually compiled.",
+      "to": "LAW-CONTENT-VALIDATED-ARTIFACTS"
+    },
+    {
+      "from": "LAW-LAYOUT-PRESERVING-PROMOTION",
+      "kind": "requires",
+      "reason": "Unchanged aggregate extent alone does not preserve integer/raw-byte observations.",
+      "to": "LAW-POINTER-REPRESENTATION-OBSERVATION"
+    },
+    {
+      "from": "LAW-LAYOUT-PRESERVING-PROMOTION",
+      "kind": "requires",
+      "reason": "Padding promotion is scoped to native-only runtime storage, never serialized or guest32 object formats.",
+      "to": "LAW-REPRESENTATION-SEPARATION"
+    },
+    {
+      "from": "LAW-LIFETIME-BOUNDARY",
+      "kind": "requires",
+      "reason": "Opaque release is safe only when a source-proven contract excludes further payload observation.",
+      "to": "LAW-POINTER-REPRESENTATION-OBSERVATION"
+    },
+    {
+      "from": "LAW-ORIGINAL-PLACEMENT",
+      "kind": "requires",
+      "reason": "Anchors, retained section bytes and relocations jointly determine original data identity.",
+      "to": "LAW-STATIC-DATA"
+    },
+    {
+      "from": "LAW-OVERLAY-LIFETIME",
+      "kind": "requires",
+      "reason": "Logical residency must respect mutually exclusive ownership of original RAM ranges.",
+      "to": "LAW-OVERLAY-MEMORY-EXCLUSION"
+    }
+  ],
+  "schema": 1
+}

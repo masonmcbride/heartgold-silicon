@@ -1,0 +1,961 @@
+{
+  "change_reviews": [
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-TYPED-BOUNDARY-CODE",
+        "COR-HIST-THREAD-CONSTRUCTION-HOOK"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0c1994ad09bc4dcb63e2f2aa",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-CONTEXT-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-14c64dbe65d4256258e90a83",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-16f44382536f555cba9ef029",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-1b10f37cade5072ca7317505",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-VFS-EFFECTIVE-INPUT",
+        "COR-HIST-EXECUTABLE-DOMAIN",
+        "COR-HIST-THREAD-ENTRY-DOMAIN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2c477fd49668f4f518b1e134",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-2e4ba47227d12e0f87a6d52e",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-38f66afdaefe65e1357fa5bf",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [
+        "COR-HIST-GUEST-PROVIDER-ORDER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-4e90eea749d978bccd053b1e",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-64e986fbf870667262085966",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-CONTEXT-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-7cd66d33890018a802beb3a6",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-7d987e6acce1475b6d95588f",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [
+        "COR-HIST-CLOSURE-COMPLETION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-98b925ba4087d67b74bebbed",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [
+        "COR-HIST-GUEST-PROVIDER-ORDER",
+        "COR-HIST-CLOSURE-COMPLETION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-98d9058d54a37fae1d2e41f5",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-THREAD-CONSTRUCTION-HOOK",
+        "COR-HIST-THREAD-ENTRY-DOMAIN"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-ad9018b33d4d04b15dad0c2f",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-VFS-EFFECTIVE-INPUT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-aeb3957b7a878b16a1ed4a2b",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-afb36ade56c1af309d42172c",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-EXECUTABLE-DOMAIN",
+        "COR-HIST-ARM-PAIR",
+        "COR-HIST-TYPED-BOUNDARY-CODE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-bf59fcc314200d09f0d2cfc3",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-cbd1525b25e53d672900c8a5",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-ec19b6c82bb5c1259fb8e013",
+      "reason": "Complete file diff read; focused original ABI, effective-input, context-owner and strict-link corrections linked. Documentation test counts remain historical reports, not newly authenticated execution results."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Canonical virtual paths and use-external-name:false with a successful compiler dependency file",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "effective/compiler_dependencies",
+          "path": "compiler/guest32/incremental.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "virtual_files and cached_run",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-VFS-EFFECTIVE-INPUT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Resolve each depfile path through the VFS map and hash the effective bytes; retain output hashes and ignore unrelated earlier coarse-VFS dependencies.",
+      "incorrect_host_behavior": "Clang canonical depfile paths refer to unchanged upstream headers even when VFS maps different effective contents; prepared adaptations were newer than cached IR.",
+      "invariant": "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission.",
+      "known_counterexamples": [
+        "Failed discovery reuse in this revision checks unchanged source and own VFS status, not a complete dependency/tool fingerprint; failure-cache soundness remains unresolved."
+      ],
+      "law_ids": [
+        "LAW-CONTENT-VALIDATED-ARTIFACTS"
+      ],
+      "original_failure": "Clang canonical depfile paths refer to unchanged upstream headers even when VFS maps different effective contents; prepared adaptations were newer than cached IR.",
+      "postconditions": [
+        "Generated artifacts correspond to the exact declared source, dependency, toolchain and representation inputs used for admission."
+      ],
+      "preconditions": [
+        "Canonical virtual paths and use-external-name:false with a successful compiler dependency file"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original guest frontend effective input receipts",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_effective_inputs.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "cc4c9b09379a123e3b665481f0398cd290f6456010884192f046457a1af44485"
+        }
+      ],
+      "title": "Incremental receipts hash actual VFS-mapped header bytes"
+    },
+    {
+      "architectural_assumption": "Whole-member compiled status and original ownership are explicit",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "execution_domain and convergence",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "indirectDispatcher executable filter",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-EXECUTABLE-DOMAIN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Keep original coordinates/dependencies, track executable status from actual compiled owners, rebuild to a checked stable domain and exclude unavailable callback targets.",
+      "incorrect_host_behavior": "83 unavailable address-taken main definitions created synthetic dispatcher imports absent from the original overlay IR.",
+      "invariant": "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-EXECUTABLE-ADMISSION"
+      ],
+      "original_failure": "83 unavailable address-taken main definitions created synthetic dispatcher imports absent from the original overlay IR.",
+      "postconditions": [
+        "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution."
+      ],
+      "preconditions": [
+        "Whole-member compiled status and original ownership are explicit"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original catalog indirect-call domain",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_image.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "77c986dfae1692a306357f16dfc32bfa76bdf3ffe9c9d9929a51331f40772e06"
+        }
+      ],
+      "title": "Source discovery does not authorize indirect execution"
+    },
+    {
+      "architectural_assumption": "Known nonvariadic provider signature and complete aligned caller word pair",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "guestCall word-pair reconstruction",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-ARM-PAIR",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Pack only complete even-lane i32 pairs into the known i64 parameter; retain all high bits and require every operand consumed.",
+      "incorrect_host_behavior": "SOC_Poll provider expects s64 timeout while reconstructed caller passes low/high words separately.",
+      "invariant": "ARM word-pair translation preserves lane alignment, low/high bit order and the full original 64-bit argument without inventing missing words.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-PAIR"
+      ],
+      "original_failure": "SOC_Poll provider expects s64 timeout while reconstructed caller passes low/high words separately.",
+      "postconditions": [
+        "ARM word-pair translation preserves lane alignment, low/high bit order and the full original 64-bit argument without inventing missing words."
+      ],
+      "preconditions": [
+        "Known nonvariadic provider signature and complete aligned caller word pair"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original ARM32 scalar call register lanes",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_varargs.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e75b51c1bb61d901b221811a2b8ebeb0eef012005c876dd7e6abf1c1f58fc01e"
+        },
+        {
+          "path": "tests/guest32_pair_provider.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f19d15dd9f4d581aed9ef9ebd18e081dd7a1145d720a02644297217750ae1155"
+        }
+      ],
+      "title": "Two original words form one complete aligned 64-bit argument"
+    },
+    {
+      "architectural_assumption": "Validated ABI manifest and actual native module/provider declaration",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "nativeBoundary assignment",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "constantValue definition/nativeBoundary branch",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-TYPED-BOUNDARY-CODE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Mark only actually validated ABI calls as native boundaries and allow their catalog code identity; keep unproved declarations unresolved.",
+      "incorrect_host_behavior": "A valid explicit native callback boundary was treated like an unresolved declaration and demanded a nonexistent code-coordinate export.",
+      "invariant": "Existing per-function signature and extent/ownership contract governs host-pointer conversion; no symbol-name alias establishes ABI compatibility.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BOUNDARY"
+      ],
+      "original_failure": "A valid explicit native callback boundary was treated like an unresolved declaration and demanded a nonexistent code-coordinate export.",
+      "postconditions": [
+        "Existing per-function signature and extent/ownership contract governs host-pointer conversion; no symbol-name alias establishes ABI compatibility."
+      ],
+      "preconditions": [
+        "Validated ABI manifest and actual native module/provider declaration"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Typed callback boundary code constants",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "A typed native callback boundary can own a guest code identity"
+    },
+    {
+      "architectural_assumption": "Exact original context/thread layouts and a validated completed thread construction event",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_InitContext/g32_bind_thread_context/context load",
+          "path": "hardware_drivers/guest32_context.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "completion hook",
+          "path": "hardware_drivers/guest32_context.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-CONTEXT-OWNER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Clear thread ownership on generic context initialization; establish it only after source-validated OS_CreateThread completion and checked stack stores/extents.",
+      "incorrect_host_behavior": "Reading thread state at context+100 accesses beyond standalone 100-byte contexts; initialization alone did not prove a 192-byte OSThread owner.",
+      "invariant": "Context storage, thread storage and stack ownership remain distinct until an original construction event proves their relationship.",
+      "known_counterexamples": [
+        "Active destructor-stack reset remains rejected; this is not a proof of arbitrary ARM execution contexts."
+      ],
+      "law_ids": [
+        "LAW-CONTEXT-OBJECT-BOUNDARY"
+      ],
+      "original_failure": "Reading thread state at context+100 accesses beyond standalone 100-byte contexts; initialization alone did not prove a 192-byte OSThread owner.",
+      "postconditions": [
+        "Context storage, thread storage and stack ownership remain distinct until an original construction event proves their relationship."
+      ],
+      "preconditions": [
+        "Exact original context/thread layouts and a validated completed thread construction event"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Context save/load and cold thread start",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/guest32_scheduler_guest.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "afacae9298f6384e0171a503691849f64a336a56185bf4fe5fd5fa212171a140"
+        },
+        {
+          "path": "tests/test_guest32_execution170.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+        }
+      ],
+      "title": "A standalone context is not an enclosing thread object"
+    },
+    {
+      "architectural_assumption": "Verified source/header hashes, exact parameter/return shape and checked hook argument indices",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "apply",
+          "path": "compiler/guest32/runtime_contracts.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "returnHook emission",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-THREAD-CONSTRUCTION-HOOK",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Hash-check original function and headers, require exact ABI and emit the binding hook on completion using original arguments.",
+      "incorrect_host_behavior": "Binding thread/context ownership before the original constructor stores would record incomplete stack state.",
+      "invariant": "A derived lifecycle relationship becomes valid only after the authoritative original construction operations have completed.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONSTRUCTION-EVENT"
+      ],
+      "original_failure": "Binding thread/context ownership before the original constructor stores would record incomplete stack state.",
+      "postconditions": [
+        "A derived lifecycle relationship becomes valid only after the authoritative original construction operations have completed."
+      ],
+      "preconditions": [
+        "Verified source/header hashes, exact parameter/return shape and checked hook argument indices"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original OS_CreateThread completion",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_execution170.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+        }
+      ],
+      "title": "Lifecycle hooks run after original construction side effects"
+    },
+    {
+      "architectural_assumption": "Resident original main owner, executable compiled provider, supported callback signature",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "dispatcher",
+          "path": "compiler/guest32/runtime_contracts.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "thread-entry manifest generation",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-THREAD-ENTRY-DOMAIN",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Generate the dispatcher from emitted admitted main definitions with exact supported void/zero-or-one-word signatures and reject all other handles.",
+      "incorrect_host_behavior": "Any located address-taken function, incompatible signature or nonresident overlay coordinate could become a bootstrap entry.",
+      "invariant": "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-EXECUTABLE-ADMISSION"
+      ],
+      "original_failure": "Any located address-taken function, incompatible signature or nonresident overlay coordinate could become a bootstrap entry.",
+      "postconditions": [
+        "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution."
+      ],
+      "preconditions": [
+        "Resident original main owner, executable compiled provider, supported callback signature"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Guest thread bootstrap code handles",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_execution170.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+        }
+      ],
+      "title": "Thread bootstrap dispatch uses admitted resident main definitions"
+    },
+    {
+      "architectural_assumption": "Actual emitted archive exports and provider registry available; no permissive undefined binding",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "global runtime archives and provider order",
+          "path": "cmake/guest32_closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "actual binding verification",
+          "path": "compiler/guest32/finish.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-GUEST-PROVIDER-ORDER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Link selected guest runtime/context/cache providers first and verify actual Mach-O imports against emitted original owner and guest32 representation; reject unprefixed VCT bridges.",
+      "incorrect_host_behavior": "Pulling native VCT adapters can instantiate state already owned by original guest VCT providers.",
+      "invariant": "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SHARED-STATE-OWNER"
+      ],
+      "original_failure": "Pulling native VCT adapters can instantiate state already owned by original guest VCT providers.",
+      "postconditions": [
+        "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership."
+      ],
+      "preconditions": [
+        "Actual emitted archive exports and provider registry available; no permissive undefined binding"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Global overlay link provider selection",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original guest state providers precede optional native scalar bridges"
+    },
+    {
+      "architectural_assumption": "Exact original image membership and strict actual link results; executable/startup/hardware support remain separate",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "3b2cf151edf054faf50693e8579441040f719bd0",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "orchestration and complete.stamp",
+          "path": "compiler/guest32/finish.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "explicit completion/data fixtures",
+          "path": "cmake/guest32.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-CLOSURE-COMPLETION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Refresh content-validated closure, emit original data, rebuild complete original images, require zero unresolveds, preflight and actual provider binds before stamping.",
+      "incorrect_host_behavior": "A compile census alone could be reported as complete overlay or whole-game execution.",
+      "invariant": "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARTIFACT-ADMISSION"
+      ],
+      "original_failure": "A compile census alone could be reported as complete overlay or whole-game execution.",
+      "postconditions": [
+        "An artifact is admitted only for the exact ownership, ABI, inputs and lifecycle obligations its evidence establishes."
+      ],
+      "preconditions": [
+        "Exact original image membership and strict actual link results; executable/startup/hardware support remain separate"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Two original overlay link milestone",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Completion stamp requires strict real links and bindings"
+    }
+  ],
+  "id": "review-batch-007",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original catalog indirect-call domain",
+      "E": [
+        {
+          "locator": "execution_domain and convergence",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "indirectDispatcher executable filter",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "P": [
+        "Whole-member compiled status and original ownership are explicit"
+      ],
+      "Q": [
+        "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution."
+      ],
+      "T": "Keep original coordinates/dependencies, track executable status from actual compiled owners, rebuild to a checked stable domain and exclude unavailable callback targets.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_image.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "77c986dfae1692a306357f16dfc32bfa76bdf3ffe9c9d9929a51331f40772e06"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original catalog indirect-call domain",
+      "architectural_assumptions": [
+        "Whole-member compiled status and original ownership are explicit"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-EXECUTABLE-ADMISSION",
+      "implementation_locations": [],
+      "invariant": "A known source definition is callable only when its actual provider and representation are admitted; unavailable targets retain obligations and reject execution.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Source discovery does not authorize indirect execution",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original ARM32 scalar call register lanes",
+      "E": [
+        {
+          "locator": "guestCall word-pair reconstruction",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "P": [
+        "Known nonvariadic provider signature and complete aligned caller word pair"
+      ],
+      "Q": [
+        "ARM word-pair translation preserves lane alignment, low/high bit order and the full original 64-bit argument without inventing missing words."
+      ],
+      "T": "Pack only complete even-lane i32 pairs into the known i64 parameter; retain all high bits and require every operand consumed.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_varargs.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "e75b51c1bb61d901b221811a2b8ebeb0eef012005c876dd7e6abf1c1f58fc01e"
+          },
+          {
+            "path": "tests/guest32_pair_provider.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "f19d15dd9f4d581aed9ef9ebd18e081dd7a1145d720a02644297217750ae1155"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original ARM32 scalar call register lanes",
+      "architectural_assumptions": [
+        "Known nonvariadic provider signature and complete aligned caller word pair"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ARM-REGISTER-PAIR",
+      "implementation_locations": [],
+      "invariant": "ARM word-pair translation preserves lane alignment, low/high bit order and the full original 64-bit argument without inventing missing words.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Two original words form one complete aligned 64-bit argument",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Context save/load and cold thread start",
+      "E": [
+        {
+          "locator": "OS_InitContext/g32_bind_thread_context/context load",
+          "path": "hardware_drivers/guest32_context.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "completion hook",
+          "path": "hardware_drivers/guest32_context.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "P": [
+        "Exact original context/thread layouts and a validated completed thread construction event"
+      ],
+      "Q": [
+        "Context storage, thread storage and stack ownership remain distinct until an original construction event proves their relationship."
+      ],
+      "T": "Clear thread ownership on generic context initialization; establish it only after source-validated OS_CreateThread completion and checked stack stores/extents.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/guest32_scheduler_guest.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "afacae9298f6384e0171a503691849f64a336a56185bf4fe5fd5fa212171a140"
+          },
+          {
+            "path": "tests/test_guest32_execution170.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Context save/load and cold thread start",
+      "architectural_assumptions": [
+        "Exact original context/thread layouts and a validated completed thread construction event"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONTEXT-OBJECT-BOUNDARY",
+      "implementation_locations": [],
+      "invariant": "Context storage, thread storage and stack ownership remain distinct until an original construction event proves their relationship.",
+      "limitations": [
+        "Active destructor-stack reset remains rejected; this is not a proof of arbitrary ARM execution contexts."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "A standalone context is not an enclosing thread object",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original OS_CreateThread completion",
+      "E": [
+        {
+          "locator": "apply",
+          "path": "compiler/guest32/runtime_contracts.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        },
+        {
+          "locator": "returnHook emission",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "3b2cf151edf054faf50693e8579441040f719bd0"
+        }
+      ],
+      "P": [
+        "Verified source/header hashes, exact parameter/return shape and checked hook argument indices"
+      ],
+      "Q": [
+        "A derived lifecycle relationship becomes valid only after the authoritative original construction operations have completed."
+      ],
+      "T": "Hash-check original function and headers, require exact ABI and emit the binding hook on completion using original arguments.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_execution170.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original OS_CreateThread completion",
+      "architectural_assumptions": [
+        "Verified source/header hashes, exact parameter/return shape and checked hook argument indices"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONSTRUCTION-EVENT",
+      "implementation_locations": [],
+      "invariant": "A derived lifecycle relationship becomes valid only after the authoritative original construction operations have completed.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Lifecycle hooks run after original construction side effects",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [
+    {
+      "correction_id": "COR-HIST-VFS-EFFECTIVE-INPUT",
+      "id": "UNRESOLVED-FAILED-DISCOVERY-DEPENDENCIES",
+      "obligation": "The --reuse-discovery shortcut for prior frontend failures reuses unchanged source outside direct VFS mapping without checking all effective included headers or tool identity. Recover an actual failure/update counterexample or prove the surrounding invalidation conditions; do not claim general content-correct failure caching.",
+      "status": "open"
+    }
+  ],
+  "worktree_reviews": []
+}

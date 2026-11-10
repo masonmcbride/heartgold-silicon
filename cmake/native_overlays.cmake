@@ -716,3 +716,23 @@ if(TARGET heartgold_overlay_45)
         "$<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:SHELL:-include ${CMAKE_SOURCE_DIR}/native-adaptations/OVY_45/tree-iterator-native.h>"
     )
 endif()
+
+# HG_WM39_ORIGINAL_NATIVE_PACKAGE
+target_link_libraries(heartgold PRIVATE
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_core_native_original.a"
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_native_candidates.a"
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wvr_original.a"
+)
+
+# HG_WM_CANONICAL_STORAGE
+# Keep the existing native gWmWork owner.
+target_link_options(hg_wm_arm9 PRIVATE "LINKER:-exported_symbol,_gWmWork")
+target_link_libraries(heartgold PRIVATE
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_original_work_storage.a"
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_original_scalar_storage.a"
+)
+
+# HG_DWC_THREE_TYPED_STORAGE
+target_link_libraries(heartgold PRIVATE
+    "/Users/mason/w/cs/fun/heartgold-silicon/build/dwc-9-storage/libheartgold_dwc_original_typed_storage.a"
+)

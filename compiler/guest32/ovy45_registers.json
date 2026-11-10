@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "owner": "OVY_45",
+  "provenance": {
+    "commit": "3c0b3057fcb3a81446b20ab4d1119bf507304b58",
+    "path": "asm/overlay_45.s",
+    "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
+  },
+  "source_hashes": {
+    "src/lobby/lobby_chat_initialize.cpp": "a3fca559c390cbf69efd4d0c2734cf0b2589385cf51b706d867be696a82b10fe",
+    "src/lobby/lobby_mem.c": "f5265783de611e16bac49850cb48eee714779be7d51c0a4bb7749113f1159392",
+    "src/lobby/lobby_sort_adaptive.cpp": "1d8d717c27f8b51d9622af68830480fd963a58916b728f7d550d643c91463912",
+    "src/lobby/lobby_sort_rotate.c": "065ab67e2659e904f834843b36e547f7a0c0b9055405f93a91b00a2729d36c4f",
+    "include/lobby_sort.h": "adfe479b4b5f5f0328d0c82157e5178eda11cc2627ca8498c801c6bac8c05e5c"
+  },
+  "original_functions": {
+    "LobbyChat_Initialize": "\tarm_func_start ov45_02240B10\nov45_02240B10: @ 0x02240B10\n\tpush {r3, r4, r5, r6, r7, r8, sb, sl, lr}\n\tsub sp, sp, #0x13c\n\tmov sl, r0\n\tldr r0, _02240F30 @ =0x02000C88\n\tmov sb, r1\n\tmov r8, r2\n\tmov r7, r3\n\tbl OSi_ReferSymbol\n\tldr r0, _02240F34 @ =0x022577DC\n\tldr r0, [r0]\n\tcmp r0, #0\n\taddne sp, sp, #0x13c\n\tmovne r0, #4\n\tpopne {r3, r4, r5, r6, r7, r8, sb, sl, pc}\n\tldr r1, [sp, #0x160]\n\tadd r0, sp, #0x130\n\tbl ov45_022429E0\n\tldr r1, _02240F38 @ =0x02255308\n\tadd r0, sp, #0x124\n\tbl ov45_02237B58\n\tldr r1, _02240F3C @ =0x02255310\n\tadd r0, sp, #0x118\n\tbl ov45_02237B58\n\tmov r4, #0\n\tmov r0, #0xac\n\tmov r5, r4\n\tbl ov45_02242394\n\tmovs r6, r0\n\tbeq _02240BE0\n\tadd r0, sp, #0xf8\n\tmov r1, sb\n\tbl ov45_02237B58\n\tadd r0, sp, #0xec\n\tmov r1, sl\n\tmov r4, #1\n\tbl ov45_02237B58\n\tldr r1, [sp, #0x160]\n\tadd r0, sp, #0x130\n\tstr r1, [sp]\n\tstr r0, [sp, #4]\n\tadd r1, sp, #0x124\n\tstr r1, [sp, #8]\n\tadd r0, sp, #0x118\n\tstr r0, [sp, #0xc]\n\tadd r1, sp, #0xec\n\tadd r2, sp, #0xf8\n\tmov r3, r8\n\tmov r0, r6\n\tstr r7, [sp, #0x10]\n\tmov r5, r4\n\tbl ov45_0224268C\n\tmov r6, r0\n_02240BE0:\n\tldr r0, _02240F34 @ =0x022577DC\n\tcmp r5, #0\n\tstr r6, [r0]\n\tbeq _02240BF8\n\tadd r0, sp, #0xec\n\tbl ov45_02237BC8\n_02240BF8:\n\tcmp r4, #0\n\tbeq _02240C08\n\tadd r0, sp, #0xf8\n\tbl ov45_02237BC8\n_02240C08:\n\tldr r0, _02240F34 @ =0x022577DC\n\tldr r0, [r0]\n\tcmp r0, #0\n\tbne _02240C3C\n\tadd r0, sp, #0x118\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x124\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x130\n\tbl ov45_02237BC8\n\tadd sp, sp, #0x13c\n\tmov r0, #1\n\tpop {r3, r4, r5, r6, r7, r8, sb, sl, pc}\n_02240C3C:\n\tbl ov45_0224246C\n\tcmp r0, #0\n\tmoveq r4, #1\n\tbeq _02240EC8\n\tadd r0, sp, #0x104\n\tmov r1, #0\n\tmov r2, #0x14\n\tbl FUN_020D4994\n\tldr r4, _02240F40 @ =ov45_0223ED00\n\tldr r3, _02240F44 @ =ov45_0223ED1C\n\tldr r1, _02240F48 @ =ov45_0223F1C8\n\tldr r2, _02240F4C @ =ov45_0223EDD8\n\tldr r0, _02240F34 @ =0x022577DC\n\tstr r1, [sp, #0x110]\n\tldr r1, [r0]\n\tstr r4, [sp, #0x104]\n\tstr r3, [sp, #0x108]\n\tstr r2, [sp, #0x10c]\n\tldr r2, [r7, #8]\n\tadd r0, sp, #0xe0\n\tstr r2, [sp, #0x114]\n\tbl ov45_02240F6C\n\tldr r2, _02240F50 @ =0x02255318\n\tadd r0, sp, #0xd4\n\tadd r1, sp, #0xe0\n\tbl ov45_02233ABC\n\tldr r2, _02240F54 @ =0x0225531C\n\tadd r0, sp, #0xc8\n\tadd r1, sp, #0xd4\n\tbl ov45_02233ABC\n\tldr r1, _02240F34 @ =0x022577DC\n\tadd r0, sp, #0xbc\n\tldr r1, [r1]\n\tbl ov45_0223FC5C\n\tldr r1, _02240F34 @ =0x022577DC\n\tadd r0, sp, #0xb0\n\tldr r1, [r1]\n\tbl ov45_02240F7C\n\tldr r1, _02240F34 @ =0x022577DC\n\tadd r0, sp, #0xa4\n\tldr r1, [r1]\n\tbl ov45_02240F6C\n\tldr r1, _02240F34 @ =0x022577DC\n\tadd r0, sp, #0x98\n\tldr r1, [r1]\n\tbl ov45_02240F8C\n\tldr r0, [sp, #0x98]\n\tlsl r0, r0, #0x1f\n\tlsrs r0, r0, #0x1f\n\tldr r0, [sp, #0xa4]\n\taddeq r1, sp, #0x99\n\tlsl r0, r0, #0x1f\n\tldrne r1, [sp, #0xa0]\n\tlsrs r0, r0, #0x1f\n\tldr r0, [sp, #0xb0]\n\taddeq r4, sp, #0xa5\n\tlsl r0, r0, #0x1f\n\tldrne r4, [sp, #0xac]\n\tlsrs r0, r0, #0x1f\n\tldr r0, [sp, #0xbc]\n\taddeq r3, sp, #0xb1\n\tlsl r0, r0, #0x1f\n\tldrne r3, [sp, #0xb8]\n\tlsrs r0, r0, #0x1f\n\tldr r0, [sp, #0xc8]\n\taddeq r2, sp, #0xbd\n\tlsl r0, r0, #0x1f\n\tldrne r2, [sp, #0xc4]\n\tlsrs r0, r0, #0x1f\n\taddeq r0, sp, #0xc9\n\tldrne r0, [sp, #0xd0]\n\tstr r4, [sp]\n\tstr r1, [sp, #4]\n\tadd r4, sp, #0x104\n\tstr r4, [sp, #8]\n\tldr r1, _02240F58 @ =ov45_0223FA3C\n\tldr r4, _02240F5C @ =ov45_0223F9C4\n\tstr r1, [sp, #0xc]\n\tldr r1, _02240F60 @ =ov45_0223F92C\n\tstr r4, [sp, #0x10]\n\tstr r1, [sp, #0x14]\n\tldr r4, [r7, #8]\n\tldr r1, _02240F64 @ =0x00001A0B\n\tstr r4, [sp, #0x18]\n\tmov r4, #0\n\tstr r4, [sp, #0x1c]\n\tbl ov45_022502D0\n\tmov r4, r0\n\tadd r0, sp, #0x98\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xa4\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xb0\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xbc\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xc8\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xd4\n\tbl ov45_02237BC8\n\tadd r0, sp, #0xe0\n\tbl ov45_02237BC8\n\tcmp r4, #0\n\tmoveq r4, #2\n\tbeq _02240EC8\n\tldr r0, _02240F34 @ =0x022577DC\n\tldr r2, _02240F34 @ =0x022577DC\n\tldr r1, [r0]\n\tstr r4, [r1]\n\tldr r1, [r0]\n\tldr r0, [r1, #4]\n\tcmp r0, #5\n\tmovne r0, #1\n\tstrne r0, [r1, #4]\n\tadd r0, sp, #0x88\n\tadd r1, sp, #0x7c\n\tldr r5, [r2]\n\tbl FUN_021ECB94\n\tadd r0, sp, #0x88\n\tadd r1, sp, #0x7c\n\tbl FUN_020DC330\n\tldr r3, _02240F68 @ =ov45_02240850\n\tstr r0, [sp, #0x2c]\n\tstr r1, [sp, #0x30]\n\tmov r4, #0x1e\n\tmov r1, #0\n\tadd r0, sp, #0x44\n\tadd r2, sp, #0x2c\n\tstr r4, [sp, #0x34]\n\tstr r1, [sp, #0x38]\n\tstr r5, [sp, #0x3c]\n\tstr r3, [sp, #0x40]\n\tbl ov45_02232AE8\n\tmov r0, #0\n\tadd r2, sp, #0x48\n\tstrb r0, [sp, #0x21]\n\tstrb r0, [sp, #0x20]\n\tldr r0, [sp, #0x44]\n\tadd r7, sp, #0x64\n\tstr r0, [sp, #0x60]\n\tadd r1, r5, #0x9c\n\tadd r6, r2, #8\n\tldr r4, [r2, #0x10]\n\tldr r0, [r2, #0x14]\n\tldm r2, {r2, r3}\n\tstm r7, {r2, r3}\n\tadd r5, r7, #8\n\tldm r6, {r2, r3}\n\tstm r5, {r2, r3}\n\tstr r0, [r7, #0x14]\n\tadd r0, sp, #0x24\n\tadd r2, sp, #0x60\n\tstr r4, [r7, #0x10]\n\tbl ov45_02236BA8\n\tadd r0, sp, #0x118\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x124\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x130\n\tbl ov45_02237BC8\n\tadd sp, sp, #0x13c\n\tmov r0, #0\n\tpop {r3, r4, r5, r6, r7, r8, sb, sl, pc}\n_02240EC8:\n\tbl ov45_022424DC\n\tldr r0, _02240F34 @ =0x022577DC\n\tldr r5, [r0]\n\tcmp r5, #0\n\tbeq _02240F0C\n\tbeq _02240F00\n\tmov r0, r5\n\tbl ov45_02242858\n\tcmp r5, #0\n\tbeq _02240F00\n\tmov r0, #0\n\tmov r1, r5\n\tmov r2, r0\n\tbl FUN_021EC2EC\n_02240F00:\n\tldr r0, _02240F34 @ =0x022577DC\n\tmov r1, #0\n\tstr r1, [r0]\n_02240F0C:\n\tadd r0, sp, #0x118\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x124\n\tbl ov45_02237BC8\n\tadd r0, sp, #0x130\n\tbl ov45_02237BC8\n\tmov r0, r4\n\tadd sp, sp, #0x13c\n\tpop {r3, r4, r5, r6, r7, r8, sb, sl, pc}\n\t.align 2, 0\n_02240F30: .4byte 0x02000C88\n_02240F34: .4byte 0x022577DC\n_02240F38: .4byte 0x02255308\n_02240F3C: .4byte 0x02255310\n_02240F40: .4byte ov45_0223ED00\n_02240F44: .4byte ov45_0223ED1C\n_02240F48: .4byte ov45_0223F1C8\n_02240F4C: .4byte ov45_0223EDD8\n_02240F50: .4byte 0x02255318\n_02240F54: .4byte 0x0225531C\n_02240F58: .4byte ov45_0223FA3C\n_02240F5C: .4byte ov45_0223F9C4\n_02240F60: .4byte ov45_0223F92C\n_02240F64: .4byte 0x00001A0B\n_02240F68: .4byte ov45_02240850\n\tarm_func_end ov45_02240B10",
+    "LobbySort_MergeAdaptive": "\tarm_func_start ov45_02239518\nov45_02239518: @ 0x02239518\n\tpush {r0, r1, r2, r3}\n\tpush {r4, r5, r6, r7, r8, lr}\n\tsub sp, sp, #0x88\n\tldr r8, [sp, #0xb0]\n\tldr r7, [sp, #0xb4]\n\tcmp r8, #0\n\tcmpne r7, #0\n\tmov r4, r3\n\taddeq sp, sp, #0x88\n\tpopeq {r4, r5, r6, r7, r8, lr}\n\taddeq sp, sp, #0x10\n\tbxeq lr\n\tadd r0, r8, r7\n\tcmp r0, #2\n\tbne _022395B4\n\tldr r6, [sp, #0xa4]\n\tldr r1, [sp, #0xa0]\n\tldr r5, [r6]\n\tldr r0, [r1]\n\tcmp r5, r0\n\taddge sp, sp, #0x88\n\tpopge {r4, r5, r6, r7, r8, lr}\n\taddge sp, sp, #0x10\n\tbxge lr\n\tldr r4, [r1]\n\tldr r3, [r1, #4]\n\tldr r2, [sp, #0xa0]\n\tldr r0, [sp, #0xa4]\n\tstr r5, [r2]\n\tldr r1, [r6, #4]\n\tstr r4, [sp, #0x54]\n\tstr r1, [r2, #4]\n\tstr r4, [r0]\n\tstr r3, [sp, #0x58]\n\tstr r3, [r0, #4]\n\tadd sp, sp, #0x88\n\tpop {r4, r5, r6, r7, r8, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n_022395B4:\n\tldr r1, [sp, #0xc0]\n\tldr r0, [sp, #0xb8]\n\tcmp r8, r7\n\tsub r1, r1, r0\n\tasr r0, r1, #2\n\tadd r0, r1, r0, lsr #29\n\tcmple r8, r0, asr #3\n\tbgt _022396FC\n\tldr r1, [sp, #0xa4]\n\tldr r0, [sp, #0xa0]\n\tldr r3, [sp, #0xb8]\n\tldr r2, [sp, #0xbc]\n\tstr r0, [sp, #0x50]\n\tcmp r0, r1\n\tmovne r0, #1\n\tmoveq r0, #0\n\tstr r3, [sp, #0x44]\n\tstr r2, [sp, #0x48]\n\tstr r1, [sp, #0x4c]\n\tcmp r0, #0\n\tbeq _022396A0\n\tcmp r0, #0\n\tadd r1, sp, #0x3c\n\tbeq _022396A0\n\tldr r5, [sp, #0x50]\n\tldr r3, [sp, #0x4c]\n_0223961C:\n\tldr r0, [sp, #0x44]\n\tldr r6, [sp, #0x48]\n\tstr r0, [sp, #0x3c]\n\tstr r6, [sp, #0x40]\n\tldr r2, [r6, #8]\n\tldr r6, [r6, #4]\n\tsub r7, r0, r2\n\tasr r2, r7, #2\n\tadd r2, r7, r2, lsr #29\n\tcmp r6, r2, asr #3\n\tble _0223965C\n\tldr r2, [r5]\n\tstr r2, [r0]\n\tldr r2, [r5, #4]\n\tstr r2, [r0, #4]\n\tb _02239684\n_0223965C:\n\tcmp r0, #0\n\tbeq _02239674\n\tldr r6, [r5]\n\tldr r2, [r5, #4]\n\tstr r6, [r0]\n\tstr r2, [r0, #4]\n_02239674:\n\tldr r2, [r1, #4]\n\tldr r0, [r2, #4]\n\tadd r0, r0, #1\n\tstr r0, [r2, #4]\n_02239684:\n\tldr r0, [sp, #0x44]\n\tadd r5, r5, #8\n\tadd r0, r0, #8\n\tstr r0, [sp, #0x44]\n\tcmp r5, r3\n\tbne _0223961C\n\tstr r5, [sp, #0x50]\n_022396A0:\n\tldr r0, [sp, #0xa4]\n\tldr r1, [sp, #0xa8]\n\tstr r0, [sp, #4]\n\tstr r1, [sp, #8]\n\tldr r0, [sp, #0xa0]\n\tldr r5, [sp, #0x44]\n\tstr r0, [sp, #0xc]\n\tldr r2, [sp, #0x48]\n\tstr r4, [sp, #0x10]\n\tsub r0, sp, #4\n\tstr r5, [r0]\n\tstr r2, [r0, #4]\n\tldr r3, [r0]\n\tadd r1, sp, #0xb8\n\tstr r2, [sp, #0x78]\n\tadd r0, sp, #0x7c\n\tstr r5, [sp, #0x74]\n\tldm r1, {r1, r2}\n\tbl ov45_02239DF0\n\tadd sp, sp, #0x88\n\tpop {r4, r5, r6, r7, r8, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n_022396FC:\n\tcmp r7, r0, asr #3\n\tbgt _02239830\n\tldr r1, [sp, #0xa4]\n\tldr r0, [sp, #0xa8]\n\tldr r3, [sp, #0xb8]\n\tldr r2, [sp, #0xbc]\n\tcmp r1, r0\n\tmovne r0, #1\n\tmoveq r0, #0\n\tstr r3, [sp, #0x30]\n\tstr r2, [sp, #0x34]\n\tstr r1, [sp, #0x38]\n\tcmp r0, #0\n\tbeq _022397CC\n\tcmp r0, #0\n\tadd r1, sp, #0x28\n\tbeq _022397CC\n\tldr r5, [sp, #0x38]\n\tldr r3, [sp, #0xa8]\n_02239748:\n\tldr r0, [sp, #0x30]\n\tldr r6, [sp, #0x34]\n\tstr r0, [sp, #0x28]\n\tstr r6, [sp, #0x2c]\n\tldr r2, [r6, #8]\n\tldr r6, [r6, #4]\n\tsub r7, r0, r2\n\tasr r2, r7, #2\n\tadd r2, r7, r2, lsr #29\n\tcmp r6, r2, asr #3\n\tble _02239788\n\tldr r2, [r5]\n\tstr r2, [r0]\n\tldr r2, [r5, #4]\n\tstr r2, [r0, #4]\n\tb _022397B0\n_02239788:\n\tcmp r0, #0\n\tbeq _022397A0\n\tldr r6, [r5]\n\tldr r2, [r5, #4]\n\tstr r6, [r0]\n\tstr r2, [r0, #4]\n_022397A0:\n\tldr r2, [r1, #4]\n\tldr r0, [r2, #4]\n\tadd r0, r0, #1\n\tstr r0, [r2, #4]\n_022397B0:\n\tldr r0, [sp, #0x30]\n\tadd r5, r5, #8\n\tadd r0, r0, #8\n\tstr r0, [sp, #0x30]\n\tcmp r5, r3\n\tbne _02239748\n\tstr r5, [sp, #0x38]\n_022397CC:\n\tldr r6, [sp, #0x30]\n\tldr r5, [sp, #0x34]\n\tstr r6, [sp, #4]\n\tldr r0, [sp, #0xa8]\n\tstr r5, [sp, #8]\n\tstr r0, [sp, #0xc]\n\tstr r4, [sp, #0x10]\n\tadd r1, sp, #0xa0\n\tldr r3, [sp, #0xb8]\n\tsub r4, sp, #4\n\tldr r2, [sp, #0xbc]\n\tstr r3, [r4]\n\tstr r2, [r4, #4]\n\tadd r0, sp, #0xa4\n\tldr r2, [r0]\n\tldr r3, [r4]\n\tldr r1, [r1]\n\tadd r0, sp, #0x70\n\tstr r6, [sp, #0x68]\n\tstr r5, [sp, #0x6c]\n\tbl ov45_02239BBC\n\tadd sp, sp, #0x88\n\tpop {r4, r5, r6, r7, r8, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n_02239830:\n\tcmp r8, r7\n\tbgt _02239890\n\tadd r1, sp, #0xa0\n\tadd r2, sp, #0xa4\n\tadd r0, r7, r7, lsr #31\n\tasr r6, r0, #1\n\tldr r3, [sp, #0xa4]\n\tldr r1, [r1]\n\tadd r3, r3, r6, lsl #3\n\tldr r2, [r2]\n\tadd r0, sp, #0x64\n\tstr r4, [sp]\n\tstr r3, [sp, #0x80]\n\tbl ov45_02239B3C\n\tldr r3, [sp, #0x64]\n\tldr r2, [sp, #0xa0]\n\tstr r3, [sp, #0x84]\n\tsub r1, r3, r2\n\tasr r0, r1, #2\n\tadd r0, r1, r0, lsr #29\n\tstr r3, [sp, #0x20]\n\tstr r2, [sp, #0x24]\n\tasr r5, r0, #3\n\tb _022398E4\n_02239890:\n\tadd r1, sp, #0xa4\n\tadd r2, sp, #0xa8\n\tadd r0, r8, r8, lsr #31\n\tasr r5, r0, #1\n\tldr r3, [sp, #0xa0]\n\tldr r1, [r1]\n\tadd r3, r3, r5, lsl #3\n\tldr r2, [r2]\n\tadd r0, sp, #0x60\n\tstr r4, [sp]\n\tstr r3, [sp, #0x84]\n\tbl ov45_02239ABC\n\tldr r3, [sp, #0x60]\n\tldr r2, [sp, #0xa4]\n\tstr r3, [sp, #0x80]\n\tsub r1, r3, r2\n\tasr r0, r1, #2\n\tadd r0, r1, r0, lsr #29\n\tstr r3, [sp, #0x18]\n\tstr r2, [sp, #0x1c]\n\tasr r6, r0, #3\n_022398E4:\n\tadd r1, sp, #0x84\n\tadd r2, sp, #0xa4\n\tadd r0, sp, #0x80\n\tldr r3, [r0]\n\tldr r1, [r1]\n\tldr r2, [r2]\n\tadd r0, sp, #0x5c\n\tbl ov45_022399A8\n\tldr r2, [sp, #0x5c]\n\tadd r0, sp, #0xa0\n\tadd r1, sp, #0x84\n\tldr r3, [sp, #0xb8]\n\tstm sp, {r5, r6}\n\tstr r3, [sp, #8]\n\tldr ip, [sp, #0xbc]\n\tldr r3, [sp, #0xc0]\n\tstr ip, [sp, #0xc]\n\tstr r3, [sp, #0x10]\n\tldr ip, [sp, #0xc4]\n\tldr r0, [r0]\n\tldr r1, [r1]\n\tmov r3, r4\n\tstr ip, [sp, #0x14]\n\tstr r2, [sp, #0xa4]\n\tbl ov45_02239518\n\tsub r2, r8, r5\n\tstr r2, [sp]\n\tsub r5, r7, r6\n\tstr r5, [sp, #4]\n\tldr r3, [sp, #0xb8]\n\tadd r0, sp, #0xa4\n\tadd r1, sp, #0x80\n\tadd r2, sp, #0xa8\n\tstr r3, [sp, #8]\n\tldr r5, [sp, #0xbc]\n\tldr r3, [sp, #0xc0]\n\tstr r5, [sp, #0xc]\n\tstr r3, [sp, #0x10]\n\tldr r5, [sp, #0xc4]\n\tldr r0, [r0]\n\tldr r1, [r1]\n\tldr r2, [r2]\n\tmov r3, r4\n\tstr r5, [sp, #0x14]\n\tbl ov45_02239518\n\tadd sp, sp, #0x88\n\tpop {r4, r5, r6, r7, r8, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n\tarm_func_end ov45_02239518",
+    "LobbySort_UpperBound": "\tarm_func_start ov45_02239B3C\nov45_02239B3C: @ 0x02239B3C\n\tpush {r0, r1, r2, r3}\n\tpush {r3, r4, lr}\n\tsub sp, sp, #4\n\tldr ip, [sp, #0x14]\n\tldr r1, [sp, #0x18]\n\tstr ip, [sp]\n\tsub r2, r1, ip\n\tasr r1, r2, #2\n\tadd r1, r2, r1, lsr #29\n\tasr lr, r1, #3\n\tcmp lr, #0\n\tble _02239BA4\n\tldr r4, [r3]\n_02239B70:\n\tadd r1, lr, lr, lsr #31\n\tasr r3, r1, #1\n\tldr r1, [ip, r3, lsl #3]\n\tadd r2, ip, r3, lsl #3\n\tcmp r4, r1\n\tmovlt lr, r3\n\tblt _02239B9C\n\tadd ip, r2, #8\n\tadd r1, r3, #1\n\tstr ip, [sp, #0x14]\n\tsub lr, lr, r1\n_02239B9C:\n\tcmp lr, #0\n\tbgt _02239B70\n_02239BA4:\n\tldr r1, [sp, #0x14]\n\tstr r1, [r0]\n\tadd sp, sp, #4\n\tpop {r3, r4, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n\tarm_func_end ov45_02239B3C",
+    "LobbySort_LowerBound": "\tarm_func_start ov45_02239ABC\nov45_02239ABC: @ 0x02239ABC\n\tpush {r0, r1, r2, r3}\n\tpush {r3, r4, lr}\n\tsub sp, sp, #4\n\tldr ip, [sp, #0x14]\n\tldr r1, [sp, #0x18]\n\tstr ip, [sp]\n\tsub r2, r1, ip\n\tasr r1, r2, #2\n\tadd r1, r2, r1, lsr #29\n\tasr lr, r1, #3\n\tcmp lr, #0\n\tble _02239B24\n\tldr r4, [r3]\n_02239AF0:\n\tadd r1, lr, lr, lsr #31\n\tasr r3, r1, #1\n\tldr r1, [ip, r3, lsl #3]\n\tadd r2, ip, r3, lsl #3\n\tcmp r1, r4\n\tmovge lr, r3\n\tbge _02239B1C\n\tadd ip, r2, #8\n\tadd r1, r3, #1\n\tstr ip, [sp, #0x14]\n\tsub lr, lr, r1\n_02239B1C:\n\tcmp lr, #0\n\tbgt _02239AF0\n_02239B24:\n\tldr r1, [sp, #0x14]\n\tstr r1, [r0]\n\tadd sp, sp, #4\n\tpop {r3, r4, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n\tarm_func_end ov45_02239ABC",
+    "LobbySort_Rotate": "\tarm_func_start ov45_022399A8\nov45_022399A8: @ 0x022399A8\n\tpush {r0, r1, r2, r3}\n\tpush {r4, r5, r6, lr}\n\tsub sp, sp, #0x10\n\tldr r4, [sp, #0x24]\n\tldr lr, [sp, #0x28]\n\tcmp r4, lr\n\tldreq r1, [sp, #0x2c]\n\taddeq sp, sp, #0x10\n\tstreq r1, [r0]\n\tpopeq {r4, r5, r6, lr}\n\taddeq sp, sp, #0x10\n\tbxeq lr\n\tldr ip, [sp, #0x2c]\n\tcmp lr, ip\n\tldreq r1, [sp, #0x24]\n\taddeq sp, sp, #0x10\n\tstreq r1, [r0]\n\tpopeq {r4, r5, r6, lr}\n\taddeq sp, sp, #0x10\n\tbxeq lr\n\tldr r5, [sp, #0x28]\n_022399FC:\n\tldr r3, [r4]\n\tldr r2, [r4, #4]\n\tldr r1, [r5]\n\tstr r3, [sp, #8]\n\tstr r1, [r4]\n\tldr r1, [r5, #4]\n\tstr r2, [sp, #0xc]\n\tstr r1, [r4, #4]\n\tstr r3, [r5]\n\tstr r2, [r5, #4]\n\tadd r5, r5, #8\n\tcmp r5, ip\n\tadd r4, r4, #8\n\tbeq _02239A40\n\tcmp r4, lr\n\tmoveq lr, r5\n\tb _022399FC\n_02239A40:\n\tmov r5, r4\n\tcmp r4, lr\n\tbeq _02239AA8\n\tldr r1, [sp, #0x2c]\n\tmov r6, lr\n_02239A54:\n\tldr ip, [r4]\n\tldr r3, [r4, #4]\n\tldr r2, [r6]\n\tstr ip, [sp]\n\tstr r2, [r4]\n\tldr r2, [r6, #4]\n\tstr r3, [sp, #4]\n\tstr r2, [r4, #4]\n\tstr ip, [r6]\n\tstr r3, [r6, #4]\n\tadd r6, r6, #8\n\tcmp r6, r1\n\tadd r4, r4, #8\n\tbne _02239A9C\n\tcmp r4, lr\n\tbeq _02239AA8\n\tmov r6, lr\n\tb _02239A54\n_02239A9C:\n\tcmp r4, lr\n\tmoveq lr, r6\n\tb _02239A54\n_02239AA8:\n\tstr r5, [r0]\n\tadd sp, sp, #0x10\n\tpop {r4, r5, r6, lr}\n\tadd sp, sp, #0x10\n\tbx lr\n\tarm_func_end ov45_022399A8"
+  },
+  "implicit_r0": [],
+  "edges": [
+    {
+      "function": "LobbyChat_Initialize",
+      "target": "LobbyMem_InstallOutOfMemoryHandler",
+      "source": "src/lobby/lobby_chat_initialize.cpp",
+      "line": 194,
+      "mode": "dominating-global",
+      "offset": 0,
+      "evidence": "\tldr r0, _02240F34 @ =0x022577DC\n\tldr r0, [r0]\n\tcmp r0, #0\n\tbne _02240C3C",
+      "global": "gLobbyChatManager",
+      "arm_target": "ov45_0224246C",
+      "arm_literal": "_02240F34",
+      "arm_continuation": "_02240C3C",
+      "arm_global_address": "0x022577DC"
+    },
+    {
+      "source": "src/lobby/lobby_sort_adaptive.cpp",
+      "function": "LobbySort_MergeAdaptive",
+      "target": "LobbySort_UpperBound",
+      "line": 63,
+      "mode": "indirect-result",
+      "result_bytes": 4,
+      "arm_target": "ov45_02239B3C",
+      "arm_result_offset": "0x64",
+      "evidence": "\tadd r0, sp, #0x64\n\tstr r4, [sp]\n\tstr r3, [sp, #0x80]\n\tbl ov45_02239B3C\n\tldr r3, [sp, #0x64]"
+    },
+    {
+      "source": "src/lobby/lobby_sort_adaptive.cpp",
+      "function": "LobbySort_MergeAdaptive",
+      "target": "LobbySort_LowerBound",
+      "line": 68,
+      "mode": "indirect-result",
+      "result_bytes": 4,
+      "arm_target": "ov45_02239ABC",
+      "arm_result_offset": "0x60",
+      "evidence": "\tadd r0, sp, #0x60\n\tstr r4, [sp]\n\tstr r3, [sp, #0x84]\n\tbl ov45_02239ABC\n\tldr r3, [sp, #0x60]"
+    },
+    {
+      "source": "src/lobby/lobby_sort_adaptive.cpp",
+      "function": "LobbySort_MergeAdaptive",
+      "target": "LobbySort_Rotate",
+      "line": 71,
+      "mode": "indirect-result",
+      "result_bytes": 4,
+      "arm_target": "ov45_022399A8",
+      "arm_result_offset": "0x5c",
+      "evidence": "\tadd r0, sp, #0x5c\n\tbl ov45_022399A8\n\tldr r2, [sp, #0x5c]"
+    }
+  ],
+  "machine_rule": "arm-call-contracts-v1",
+  "renames": [
+    {
+      "commit": "2baf2c2b60c553230dee6a72666c8ce3c3a8ed2e",
+      "path": "src/lobby_mem.c",
+      "old": "ov45_0224246C",
+      "new": "LobbyMem_InstallOutOfMemoryHandler",
+      "evidence": [
+        "-BOOL ov45_0224246C(u8 *obj);",
+        "+BOOL LobbyMem_InstallOutOfMemoryHandler(u8 *obj);"
+      ],
+      "previous_path": "src/ov45_02242288.c"
+    },
+    {
+      "commit": "c8f79c2f147b43c62016820b34669048ab4283cb",
+      "path": "src/lobby_sort_merge_adaptive.cpp",
+      "old": "ov45_02239ABC",
+      "new": "LobbySort_LowerBound",
+      "evidence": [
+        "-extern \"C\" Cursor ov45_02239ABC(Cursor, Cursor, const Pair &, void *);",
+        "+extern \"C\" Cursor LobbySort_LowerBound(Cursor, Cursor, const Pair &, void *);"
+      ],
+      "previous_path": "src/ov45_02239518.cpp"
+    },
+    {
+      "commit": "c8f79c2f147b43c62016820b34669048ab4283cb",
+      "path": "src/lobby_sort_merge_adaptive.cpp",
+      "old": "ov45_02239B3C",
+      "new": "LobbySort_UpperBound",
+      "evidence": [
+        "-extern \"C\" Cursor ov45_02239B3C(Cursor, Cursor, const Pair &, void *);",
+        "+extern \"C\" Cursor LobbySort_UpperBound(Cursor, Cursor, const Pair &, void *);"
+      ],
+      "previous_path": "src/ov45_02239518.cpp"
+    },
+    {
+      "commit": "c8f79c2f147b43c62016820b34669048ab4283cb",
+      "path": "src/lobby_sort_merge_adaptive.cpp",
+      "old": "ov45_022399A8",
+      "new": "LobbySort_Rotate",
+      "evidence": [
+        "-extern \"C\" Cursor ov45_022399A8(Cursor, Cursor, Cursor);",
+        "+extern \"C\" Cursor LobbySort_Rotate(Cursor, Cursor, Cursor);"
+      ],
+      "previous_path": "src/ov45_02239518.cpp"
+    },
+    {
+      "commit": "11a4c097f9fce75badbe7e9516df65cb0077482e",
+      "path": "lib/NitroDWC/asm/dwc_lobby_data.s",
+      "old": "ov45_022577DC",
+      "new": "gLobbyChatManager",
+      "evidence": [
+        "-\t.public ov45_022577DC",
+        "+\t.public gLobbyChatManager"
+      ]
+    }
+  ]
+}

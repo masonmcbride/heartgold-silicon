@@ -1,0 +1,3999 @@
+{
+  "change_reviews": [
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-0c06782d5ce29d5927227727",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-IRQ-RESTORE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-215c1d3ef314f9511d3e1736",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-47888c70e8ac7ad634efb45c",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-49ffa2cdcb2bd36c0c318c8c",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-FRAME-IRQ"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-597924c49254a27cc7031ffc",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-MATRIX-ACCUMULATION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-5db4f7c6310e65fd81f96a00",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-REGISTER-TABLES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-652ae284389a14fa149f8f51",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-MESSAGE-LIFETIME",
+        "COR-FORK-G3-IMMEDIATE-EFFECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-884640977469cd9ae2a79f63",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-COMMAND-COVERAGE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-a108a91d28c514c30afeca4a",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-IMMEDIATE-EFFECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-bb7bab1b01fd44a9b2bff001",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-STATE-RESET",
+        "COR-FORK-G3-STATE-MODE",
+        "COR-FORK-G3-STATE-LOAD",
+        "COR-FORK-G3-STATE-MULTIPLY",
+        "COR-FORK-G3-STATE-SCALE",
+        "COR-FORK-G3-STATE-TRANSLATE",
+        "COR-FORK-G3-STATE-STORE",
+        "COR-FORK-G3-STATE-RESTORE",
+        "COR-FORK-G3-STATE-PUSH",
+        "COR-FORK-G3-STATE-POP",
+        "COR-FORK-G3-STATE-MATERIAL",
+        "COR-FORK-G3-STATE-LIGHT-VECTOR",
+        "COR-FORK-G3-STATE-NORMAL",
+        "COR-FORK-G3-STATE-BEGIN-END",
+        "COR-FORK-G3-STATE-TEXTURE",
+        "COR-FORK-G3-STATE-VERTEX",
+        "COR-FORK-G3-STATE-POLYGON-CULL",
+        "COR-FORK-G3-STATE-POLYGON-CAPACITY",
+        "COR-FORK-G3-STATE-POLYGON-WIRE",
+        "COR-FORK-G3-STATE-TEST-RESULTS",
+        "COR-FORK-G3-STATE-SWAP",
+        "COR-FORK-G3-STATE-FRAME"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-c74cb89f59ec8ce9bfc39ac1",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-COMMAND-VALIDATION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d0b66c2c4f28ddbd82c44193",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-MATRIX-ACCUMULATION",
+        "COR-FORK-G3-LIGHTING",
+        "COR-FORK-G3-CLIPPING"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-dc9b18f9c1e27ef81e3d1d0f",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-STACK-WIDTH"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-e9d3449ab4e9d5eae35d8923",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-MESSAGE-LIFETIME",
+        "COR-FORK-G3-IMMEDIATE-EFFECTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-f15ce235db0d94aff77228b3",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    },
+    {
+      "classification": "platform_hardware_service_implementation",
+      "correction_ids": [
+        "COR-FORK-G3-REGISTER-TABLES"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-f96a9065c1f81c509d08d809",
+      "reason": "Entire file diff/source examined, including native register aliases, command payloads, fixed arithmetic, state and frame boundaries. Implementation claims remain candidates requiring original hardware validation."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Saved interrupt state belongs to this invocation",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_WaitIrq native G3 return",
+          "path": "libraries/os/src/os_irqHandler.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-IRQ-RESTORE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Restore the saved interrupt state before returning from the SDK_NATIVE_G3 path.",
+      "incorrect_host_behavior": "Native render/VBlank early return skipped OS_RestoreInterrupts(enabled).",
+      "invariant": "A synchronous service restores the original interrupt masking state when its contract returns control.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-INTERRUPT-STATE"
+      ],
+      "original_failure": "Native render/VBlank early return skipped OS_RestoreInterrupts(enabled).",
+      "postconditions": [
+        "A synchronous service restores the original interrupt masking state when its contract returns control."
+      ],
+      "preconditions": [
+        "Saved interrupt state belongs to this invocation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original OS_WaitIrq fast path",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "VBlank wait restores the caller interrupt state"
+    },
+    {
+      "architectural_assumption": "SDK_PORT thread fields carry native addresses",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "OS_CreateThread stackTop/stackBottom",
+          "path": "libraries/os/src/os_thread.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STACK-WIDTH",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Store u64 host stack and stack-size subtraction under SDK_PORT; retain original u32 DS path.",
+      "incorrect_host_behavior": "Casting native stack to u32 truncates host thread stack bounds.",
+      "invariant": "Address predicates and alignment preserve full native address identity within the supplied allocation.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-HOST-ADDRESS-ARITHMETIC"
+      ],
+      "original_failure": "Casting native stack to u32 truncates host thread stack bounds.",
+      "postconditions": [
+        "Address predicates and alignment preserve full native address identity within the supplied allocation."
+      ],
+      "preconditions": [
+        "SDK_PORT thread fields carry native addresses"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native thread stack boundary metadata",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native SDK thread bounds retain full stack addresses"
+    },
+    {
+      "architectural_assumption": "SDK_NATIVE_G3 on a little-endian host; original fixed register widths remain unchanged",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "native fog/toon/matrix aliases",
+          "path": "include/nitro/hw/X86/ioreg_G3X.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "native table and matrix backing",
+          "path": "libraries/sim/src/sim_vars.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-REGISTER-TABLES",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Provide 24-word fog/toon and 25-word clip/vector arrays; map halfword/word result names to the same native little-endian storage.",
+      "incorrect_host_behavior": "Distinct C globals and independent halfword globals do not establish adjacent/bulk MMIO aliases.",
+      "invariant": "Adjacent hardware register views alias the same contiguous correctly aligned bytes.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-REGISTER-CONTIGUITY"
+      ],
+      "original_failure": "Distinct C globals and independent halfword globals do not establish adjacent/bulk MMIO aliases.",
+      "postconditions": [
+        "Adjacent hardware register views alias the same contiguous correctly aligned bytes."
+      ],
+      "preconditions": [
+        "SDK_NATIVE_G3 on a little-endian host; original fixed register widths remain unchanged"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK geometry table/result register copies",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Geometry bulk register views share actual backing arrays"
+    },
+    {
+      "architectural_assumption": "Selected dispatch is synchronous; asynchronous desktop transport is outside this optimization",
+      "classification": "performance_optimization",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "native draw_msg_t storage",
+          "path": "include/nitro/gx/g3imm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "native draw_msg_t storage",
+          "path": "libraries/gx/src/g3imm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-MESSAGE-LIFETIME",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use stack draw messages only in the synchronous native dispatch branch, retaining heap messages for the desktop branch.",
+      "incorrect_host_behavior": "Heap allocation/free around every immediate command adds avoidable allocation work.",
+      "invariant": "A stack-backed command message may be borrowed only while the consumer completes synchronously and retains no caller pointer.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-SYNCHRONOUS-BORROW"
+      ],
+      "original_failure": "Heap allocation/free around every immediate command adds avoidable allocation work.",
+      "postconditions": [
+        "A stack-backed command message may be borrowed only while the consumer completes synchronously and retains no caller pointer."
+      ],
+      "preconditions": [
+        "Selected dispatch is synchronous; asynchronous desktop transport is outside this optimization"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "SDK immediate command message lifetime",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Synchronous command dispatch can borrow stack messages"
+    },
+    {
+      "architectural_assumption": "Original parameter packers and native command arities agree",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3_Direct0..3 and immediate helpers",
+          "path": "include/nitro/gx/g3imm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "matrix, shininess and mult-trans entry points",
+          "path": "libraries/gx/src/g3imm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "G3Native_Execute declaration",
+          "path": "include/simulator/drawmsg.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-IMMEDIATE-EFFECTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Route native direct/normal/light/end/viewport/box/position/vector commands through packed original parameters and the native executor; use real matrix handlers for bulk operations.",
+      "incorrect_host_behavior": "Writing plain host MMIO variables does not execute parameterized geometry commands.",
+      "invariant": "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-COMMAND-EFFECT"
+      ],
+      "original_failure": "Writing plain host MMIO variables does not execute parameterized geometry commands.",
+      "postconditions": [
+        "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes."
+      ],
+      "preconditions": [
+        "Original parameter packers and native command arities agree"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original immediate SDK G3 command APIs",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Immediate SDK geometry writes dispatch real command effects"
+    },
+    {
+      "architectural_assumption": "Stable readable input buffer for both passes; fixed original four-byte parameter words",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "words/CommandList/Execute",
+          "path": "libraries/sim/src/native/g3_commands.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-COMMAND-VALIDATION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Validate all opcode arities and buffer bounds in a first pass, then execute exact word parameters in a second; reject invalid direct arities/null inputs.",
+      "incorrect_host_behavior": "An unsupported or truncated FIFO list can partially alter geometry state before failure.",
+      "invariant": "A rejected command stream leaves prior state intact when the original service requires validation before committing effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-COMMAND-TRANSACTION"
+      ],
+      "original_failure": "An unsupported or truncated FIFO list can partially alter geometry state before failure.",
+      "postconditions": [
+        "A rejected command stream leaves prior state intact when the original service requires validation before committing effects."
+      ],
+      "preconditions": [
+        "Stable readable input buffer for both passes; fixed original four-byte parameter words"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native packed geometry command transport",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Malformed packed command lists fail before state mutation"
+    },
+    {
+      "architectural_assumption": "The message payload has the original command-specific packed representation",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "native direct/end/shininess/test/swap/viewport/list cases",
+          "path": "libraries/sim/src/sim_g3_CommandProcessor.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-COMMAND-COVERAGE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Dispatch native variants to implemented handlers, add DRAW_CMD_G3_VTX alias, consume/free list storage and abort rejected execution instead of reporting success.",
+      "incorrect_host_behavior": "Legacy dispatch omitted native command variants or used generic payloads for signed packed vertex/test inputs.",
+      "invariant": "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-COMMAND-EFFECT"
+      ],
+      "original_failure": "Legacy dispatch omitted native command variants or used generic payloads for signed packed vertex/test inputs.",
+      "postconditions": [
+        "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes."
+      ],
+      "preconditions": [
+        "The message payload has the original command-specific packed representation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native SDK draw-message command decoder",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Decoded commands retain specialized payload shapes"
+    },
+    {
+      "architectural_assumption": "This implementation claims a final-shift geometry contract; equivalence to original device arithmetic remains to be established",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "product/narrow/MultiplyScalar/TransformScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "arithmetic contract",
+          "path": "include/simulator/g3_native_math.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-MATRIX-ACCUMULATION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Accumulate signed products modulo 2^64, shift once by 12 and retain the low signed 32 bits; use temporary records so exact input/output aliasing is supported.",
+      "incorrect_host_behavior": "Floating or per-product-rounded arithmetic cannot establish the required fixed-point accumulated result bits.",
+      "invariant": "Fixed-point translation preserves intermediate width, accumulation order, final shift/narrowing and supported aliasing.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-FIXED-ACCUMULATION"
+      ],
+      "original_failure": "Floating or per-product-rounded arithmetic cannot establish the required fixed-point accumulated result bits.",
+      "postconditions": [
+        "Fixed-point translation preserves intermediate width, accumulation order, final shift/narrowing and supported aliasing."
+      ],
+      "preconditions": [
+        "This implementation claims a final-shift geometry contract; equivalence to original device arithmetic remains to be established"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Row-vector 20.12 matrix multiplication/transformation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native_math.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+        }
+      ],
+      "title": "Fixed matrix sums narrow after the complete accumulation"
+    },
+    {
+      "architectural_assumption": "Original light/material and shininess interpretation still requires independent hardware/source evidence",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "dot9/LightScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-LIGHTING",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use modulo-64 dot sums, nine-bit narrowing, bounded diffuse/specular terms, optional shine lookup and five-bit final color saturation.",
+      "incorrect_host_behavior": "A native lighting replacement without explicit dot-product widths, lookup and clamps changes observable color values.",
+      "invariant": "Lighting translation preserves original fixed-point domain, lookup indices, accumulation and output clamps.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-FIXED-LIGHTING"
+      ],
+      "original_failure": "A native lighting replacement without explicit dot-product widths, lookup and clamps changes observable color values.",
+      "postconditions": [
+        "Lighting translation preserves original fixed-point domain, lookup indices, accumulation and output clamps."
+      ],
+      "preconditions": [
+        "Original light/material and shininess interpretation still requires independent hardware/source evidence"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native scalar geometry lighting",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native_math.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+        }
+      ],
+      "title": "Lighting retains bounded fixed-point intermediates"
+    },
+    {
+      "architectural_assumption": "Three/four input vertices; adequate output capacity; original device interpolation contract remains unproved",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "distance/intersection/ClipScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-CLIPPING",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Clip Z/Y/X positive then negative, interpolate from the inside endpoint with wide temporary and truncating division, preserve position/color/texcoord and check capacities.",
+      "incorrect_host_behavior": "Plane reordering, host overflow or rounding/interpolation endpoint changes can change clipped vertex attributes.",
+      "invariant": "Clipping preserves original plane order, inside classification, interpolation rounding and attribute association.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-CLIP-ORDER"
+      ],
+      "original_failure": "Plane reordering, host overflow or rounding/interpolation endpoint changes can change clipped vertex attributes.",
+      "postconditions": [
+        "Clipping preserves original plane order, inside classification, interpolation rounding and attribute association."
+      ],
+      "preconditions": [
+        "Three/four input vertices; adequate output capacity; original device interpolation contract remains unproved"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native convex DS triangle/quad clipping",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native_math.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+        }
+      ],
+      "title": "Clipping preserves plane and interpolation order"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3Native_Reset",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-RESET",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Clear native matrices/stacks/material/geometry/pending queues, reset counters/mode/default viewport and publish register results.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Reset effects reestablish the specified initial state across every participating state owner.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-RESET"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Reset effects reestablish the specified initial state across every participating state owner."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3Native_Reset",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry reset"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_MtxMode",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-MODE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select the low two mode bits.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Subsequent matrix operations use the same selected original matrix domain.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-MODE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Subsequent matrix operations use the same selected original matrix domain."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_MtxMode",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry mode"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "load/G3SIM_Identity/G3SIM_MtxLoad44/G3SIM_MtxLoad43",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-LOAD",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Load selected matrix, extend 4x3 with identity components and coordinate position/vector mode before publishing results.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Matrix loads preserve original dimensions, implicit components and selected state effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-LOAD"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Matrix loads preserve original dimensions, implicit components and selected state effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation load/G3SIM_Identity/G3SIM_MtxLoad44/G3SIM_MtxLoad43",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry load"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "mult/G3SIM_MtxMult44/G3SIM_MtxMult43/G3SIM_MtxMult33",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-MULTIPLY",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Multiply with the selected matrix and dimension extension; position/vector mode updates both domains except scale exclusion.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Matrix multiplication preserves mode-dependent target state, dimensions and operation order.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-MULTIPLY"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Matrix multiplication preserves mode-dependent target state, dimensions and operation order."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation mult/G3SIM_MtxMult44/G3SIM_MtxMult43/G3SIM_MtxMult33",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry multiply"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_MtxScale",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-SCALE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Apply diagonal scale in selected position domain without scaling its paired vector matrix.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Scale updates only the original operation-defined matrix domains.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-SCALE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Scale updates only the original operation-defined matrix domains."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_MtxScale",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry scale"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_MtxTranslate",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-TRANSLATE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Build row translation and apply selected mode multiplication.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Translation preserves row-vector placement and mode-specific effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-TRANSLATE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Translation preserves row-vector placement and mode-specific effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_MtxTranslate",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry translate"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "store/G3SIM_MtxStore",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-STORE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Store paired position/vector stacks or selected nonposition slot and publish stack-error state for invalid indices.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Stack store preserves paired state and original index/error semantics.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-STORE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Stack store preserves paired state and original index/error semantics."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation store/G3SIM_MtxStore",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry store"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "restore/G3SIM_MtxRestore",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-RESTORE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Restore paired stacks or selected nonposition slot and republish matrix result registers.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Stack restore preserves original saved matrix identity and register effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-RESTORE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Stack restore preserves original saved matrix identity and register effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation restore/G3SIM_MtxRestore",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry restore"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_MtxPush",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-PUSH",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Push using original mode-specific stack depth/wrapping and error-bit updates.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Matrix push preserves mode-specific stack depth, wrapping and overflow effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-PUSH"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Matrix push preserves mode-specific stack depth, wrapping and overflow effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_MtxPush",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry push"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_MtxPop",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-POP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Sign-extend six-bit position offset; update stack position and mode-specific underflow effects before restore.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Matrix pop preserves signed relative indexing and original underflow/state behavior.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-POP"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Matrix pop preserves signed relative indexing and original underflow/state behavior."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_MtxPop",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry pop"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_Color/G3SIM_DiffAmb/G3SIM_SpecEmi",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-MATERIAL",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Decode five-bit material channels, immediate diffuse color flag and shininess-enable bit.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Material decoding preserves packed channel values and their command-timing effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-MATERIAL"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Material decoding preserves packed channel values and their command-timing effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_Color/G3SIM_DiffAmb/G3SIM_SpecEmi",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry material"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_LightVector",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-LIGHT-VECTOR",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Unpack signed ten-bit direction, transform by vector matrix and construct bounded direction/half vector.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Light direction translation preserves sign extension, transformation domain and half-vector construction.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-LIGHT-VECTOR"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Light direction translation preserves sign extension, transformation domain and half-vector construction."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_LightVector",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry light vector"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_Normal",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-NORMAL",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Apply optional texture generation and vector transform, narrow normal inputs, select lights and invoke scalar lighting.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Normal processing preserves the original transformation and material state dependency order.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-NORMAL"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Normal processing preserves the original transformation and material state dependency order."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_Normal",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry normal"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_Begin/G3Native_End",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-BEGIN-END",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Latch pending polygon attributes on begin, reset strip counters and reject vertices outside an active primitive.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Primitive state changes latch attributes at the specified command boundary and preserve vertex grouping.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-BEGIN-END"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Primitive state changes latch attributes at the specified command boundary and preserve vertex grouping."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_Begin/G3Native_End",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry begin end"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_TexImageParam/G3SIM_TexPlttBase/G3SIM_TexCoord",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-TEXTURE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Decode original texture bits/sizes/palette units and signed coordinate transforms using the selected texture mode.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Texture state preserves original packed formats, address units, signs and transform mode dependencies.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-TEXTURE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Texture state preserves original packed formats, address units, signs and transform mode dependencies."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_TexImageParam/G3SIM_TexPlttBase/G3SIM_TexCoord",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry texture"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_Vtx",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-VERTEX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Transform position, preserve fixed color/texture attributes and assemble original triangle/quad/strip grouping.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Vertex attributes remain associated with the correct transformed vertex and primitive topology.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-VERTEX"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Vertex attributes remain associated with the correct transformed vertex and primitive topology."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_Vtx",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry vertex"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_SubmitPolygon homogeneous determinant",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-POLYGON-CULL",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Cull with a wide homogeneous determinant after clipping, retaining original winding flags.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Polygon visibility preserves original winding and culling without introducing perspective-division rounding.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-POLYGON-CULL"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Polygon visibility preserves original winding and culling without introducing perspective-division rounding."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_SubmitPolygon homogeneous determinant",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry polygon cull"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_SubmitPolygon counters",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-POLYGON-CAPACITY",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Enforce vertex/polygon capacities including strip reuse and set overflow status rather than writing past buffers.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Geometry capacity accounting preserves original resource limits and overflow effects.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-POLYGON-CAPACITY"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Geometry capacity accounting preserves original resource limits and overflow effects."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_SubmitPolygon counters",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry polygon capacity"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3SIM_SubmitPolygon wire path",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-POLYGON-WIRE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Emit a closed edge loop for zero-alpha wireframe or triangulate clipped filled polygons with preserved attributes.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Primitive emission preserves the original wire/fill mode and attribute ordering.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-POLYGON-WIRE"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Primitive emission preserves the original wire/fill mode and attribute ordering."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3SIM_SubmitPolygon wire path",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry polygon wire"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3Native_PositionTest/G3Native_VectorTest/G3SIM_BoxTest",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-TEST-RESULTS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Evaluate native matrix test operations and write their original result/status register views.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Observable test-result registers correspond to the requested geometry operation and its current state.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-TEST-RESULTS"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Observable test-result registers correspond to the requested geometry operation and its current state."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3Native_PositionTest/G3Native_VectorTest/G3SIM_BoxTest",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry test results"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3Native_Swap",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-SWAP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Move completed geometry to pending storage, retain active/swap flags and reject a second swap before frame consumption.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Frame swap preserves completed-buffer identity and ordering across the frame boundary.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-SWAP"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Frame swap preserves completed-buffer identity and ordering across the frame boundary."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3Native_Swap",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry swap"
+    },
+    {
+      "architectural_assumption": "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "G3Native_RenderFrame/G3SIM_FlushArray",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-STATE-FRAME",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Snapshot registers/VRAM inputs, stable-sort original polygon spans, coalesce only compatible consecutive draws and preserve explicit flush boundaries; submit once and reject failure.",
+      "incorrect_host_behavior": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "invariant": "Frame batching preserves command state boundaries, ordering and borrowed-buffer lifetime.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-G3-FRAME"
+      ],
+      "original_failure": "The selected native geometry path lacked this state operation; desktop ownership or inert register storage did not establish it.",
+      "postconditions": [
+        "Frame batching preserves command state boundaries, ordering and borrowed-buffer lifetime."
+      ],
+      "preconditions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Geometry operation G3Native_RenderFrame/G3SIM_FlushArray",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_g3_native.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+        },
+        {
+          "path": "tests/test_g3_native_model.cpp",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+        }
+      ],
+      "title": "Native geometry frame"
+    },
+    {
+      "architectural_assumption": "No claim of original interrupt timing, 2D presentation or guest scheduler replacement",
+      "classification": "platform_hardware_service_implementation",
+      "commit_provenance": [
+        {
+          "commit": "51c868593a7098b6912406d4638b990d28916a76",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr"
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "SIM_PreRenderVBlank/SIM_Render/SIM_PostRenderVBlank",
+          "path": "libraries/sim/src/native/sim_frame.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-FORK-G3-FRAME-IRQ",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Set entry/exit register state, render pending geometry, deliver enabled original IRQ callback and update original VBlank check/count storage.",
+      "incorrect_host_behavior": "Removing the desktop semaphore/render thread can otherwise remove VCOUNT/DISPSTAT, IRQ callback and VBlank counter effects.",
+      "invariant": "A translated frame event preserves required register transitions, registered callbacks and event counters in the required order.",
+      "known_counterexamples": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "law_ids": [
+        "LAW-FRAME-EVENT"
+      ],
+      "original_failure": "Removing the desktop semaphore/render thread can otherwise remove VCOUNT/DISPSTAT, IRQ callback and VBlank counter effects.",
+      "postconditions": [
+        "A translated frame event preserves required register transitions, registered callbacks and event counters in the required order."
+      ],
+      "preconditions": [
+        "No claim of original interrupt timing, 2D presentation or guest scheduler replacement"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native synchronous VBlank/render host boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native frame boundary preserves original registered VBlank callback delivery"
+    }
+  ],
+  "id": "review-batch-008",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original OS_WaitIrq fast path",
+      "E": [
+        {
+          "locator": "OS_WaitIrq native G3 return",
+          "path": "libraries/os/src/os_irqHandler.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Saved interrupt state belongs to this invocation"
+      ],
+      "Q": [
+        "A synchronous service restores the original interrupt masking state when its contract returns control."
+      ],
+      "T": "Restore the saved interrupt state before returning from the SDK_NATIVE_G3 path.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original OS_WaitIrq fast path",
+      "architectural_assumptions": [
+        "Saved interrupt state belongs to this invocation"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-INTERRUPT-STATE",
+      "implementation_locations": [],
+      "invariant": "A synchronous service restores the original interrupt masking state when its contract returns control.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "VBlank wait restores the caller interrupt state",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "SDK immediate command message lifetime",
+      "E": [
+        {
+          "locator": "native draw_msg_t storage",
+          "path": "include/nitro/gx/g3imm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "native draw_msg_t storage",
+          "path": "libraries/gx/src/g3imm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Selected dispatch is synchronous; asynchronous desktop transport is outside this optimization"
+      ],
+      "Q": [
+        "A stack-backed command message may be borrowed only while the consumer completes synchronously and retains no caller pointer."
+      ],
+      "T": "Use stack draw messages only in the synchronous native dispatch branch, retaining heap messages for the desktop branch.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "SDK immediate command message lifetime",
+      "architectural_assumptions": [
+        "Selected dispatch is synchronous; asynchronous desktop transport is outside this optimization"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-SYNCHRONOUS-BORROW",
+      "implementation_locations": [],
+      "invariant": "A stack-backed command message may be borrowed only while the consumer completes synchronously and retains no caller pointer.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "performance_optimization",
+      "title": "Synchronous command dispatch can borrow stack messages",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original immediate SDK G3 command APIs",
+      "E": [
+        {
+          "locator": "G3_Direct0..3 and immediate helpers",
+          "path": "include/nitro/gx/g3imm.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "matrix, shininess and mult-trans entry points",
+          "path": "libraries/gx/src/g3imm.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "G3Native_Execute declaration",
+          "path": "include/simulator/drawmsg.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Original parameter packers and native command arities agree"
+      ],
+      "Q": [
+        "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes."
+      ],
+      "T": "Route native direct/normal/light/end/viewport/box/position/vector commands through packed original parameters and the native executor; use real matrix handlers for bulk operations.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original immediate SDK G3 command APIs",
+      "architectural_assumptions": [
+        "Original parameter packers and native command arities agree"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-COMMAND-EFFECT",
+      "implementation_locations": [],
+      "invariant": "A translated command preserves opcode, parameter bit layout, ordering and required state effects rather than merely storing register bytes.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Immediate SDK geometry writes dispatch real command effects",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native packed geometry command transport",
+      "E": [
+        {
+          "locator": "words/CommandList/Execute",
+          "path": "libraries/sim/src/native/g3_commands.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Stable readable input buffer for both passes; fixed original four-byte parameter words"
+      ],
+      "Q": [
+        "A rejected command stream leaves prior state intact when the original service requires validation before committing effects."
+      ],
+      "T": "Validate all opcode arities and buffer bounds in a first pass, then execute exact word parameters in a second; reject invalid direct arities/null inputs.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native packed geometry command transport",
+      "architectural_assumptions": [
+        "Stable readable input buffer for both passes; fixed original four-byte parameter words"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-COMMAND-TRANSACTION",
+      "implementation_locations": [],
+      "invariant": "A rejected command stream leaves prior state intact when the original service requires validation before committing effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Malformed packed command lists fail before state mutation",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Row-vector 20.12 matrix multiplication/transformation",
+      "E": [
+        {
+          "locator": "product/narrow/MultiplyScalar/TransformScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        },
+        {
+          "locator": "arithmetic contract",
+          "path": "include/simulator/g3_native_math.h",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "This implementation claims a final-shift geometry contract; equivalence to original device arithmetic remains to be established"
+      ],
+      "Q": [
+        "Fixed-point translation preserves intermediate width, accumulation order, final shift/narrowing and supported aliasing."
+      ],
+      "T": "Accumulate signed products modulo 2^64, shift once by 12 and retain the low signed 32 bits; use temporary records so exact input/output aliasing is supported.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native_math.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Row-vector 20.12 matrix multiplication/transformation",
+      "architectural_assumptions": [
+        "This implementation claims a final-shift geometry contract; equivalence to original device arithmetic remains to be established"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-FIXED-ACCUMULATION",
+      "implementation_locations": [],
+      "invariant": "Fixed-point translation preserves intermediate width, accumulation order, final shift/narrowing and supported aliasing.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Fixed matrix sums narrow after the complete accumulation",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native scalar geometry lighting",
+      "E": [
+        {
+          "locator": "dot9/LightScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Original light/material and shininess interpretation still requires independent hardware/source evidence"
+      ],
+      "Q": [
+        "Lighting translation preserves original fixed-point domain, lookup indices, accumulation and output clamps."
+      ],
+      "T": "Use modulo-64 dot sums, nine-bit narrowing, bounded diffuse/specular terms, optional shine lookup and five-bit final color saturation.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native_math.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native scalar geometry lighting",
+      "architectural_assumptions": [
+        "Original light/material and shininess interpretation still requires independent hardware/source evidence"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-FIXED-LIGHTING",
+      "implementation_locations": [],
+      "invariant": "Lighting translation preserves original fixed-point domain, lookup indices, accumulation and output clamps.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Lighting retains bounded fixed-point intermediates",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native convex DS triangle/quad clipping",
+      "E": [
+        {
+          "locator": "distance/intersection/ClipScalar",
+          "path": "libraries/sim/src/native/g3_math.c",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Three/four input vertices; adequate output capacity; original device interpolation contract remains unproved"
+      ],
+      "Q": [
+        "Clipping preserves original plane order, inside classification, interpolation rounding and attribute association."
+      ],
+      "T": "Clip Z/Y/X positive then negative, interpolate from the inside endpoint with wide temporary and truncating division, preserve position/color/texcoord and check capacities.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native_math.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "1f18d14d2af3f78fdcf657585309da0832031668105292b5fe1bded2385a95b4"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native convex DS triangle/quad clipping",
+      "architectural_assumptions": [
+        "Three/four input vertices; adequate output capacity; original device interpolation contract remains unproved"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CLIP-ORDER",
+      "implementation_locations": [],
+      "invariant": "Clipping preserves original plane order, inside classification, interpolation rounding and attribute association.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Clipping preserves plane and interpolation order",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3Native_Reset",
+      "E": [
+        {
+          "locator": "G3Native_Reset",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Reset effects reestablish the specified initial state across every participating state owner."
+      ],
+      "T": "Clear native matrices/stacks/material/geometry/pending queues, reset counters/mode/default viewport and publish register results.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3Native_Reset",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-RESET",
+      "implementation_locations": [],
+      "invariant": "Reset effects reestablish the specified initial state across every participating state owner.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry reset",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_MtxMode",
+      "E": [
+        {
+          "locator": "G3SIM_MtxMode",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Subsequent matrix operations use the same selected original matrix domain."
+      ],
+      "T": "Select the low two mode bits.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_MtxMode",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-MODE",
+      "implementation_locations": [],
+      "invariant": "Subsequent matrix operations use the same selected original matrix domain.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry mode",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation load/G3SIM_Identity/G3SIM_MtxLoad44/G3SIM_MtxLoad43",
+      "E": [
+        {
+          "locator": "load/G3SIM_Identity/G3SIM_MtxLoad44/G3SIM_MtxLoad43",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Matrix loads preserve original dimensions, implicit components and selected state effects."
+      ],
+      "T": "Load selected matrix, extend 4x3 with identity components and coordinate position/vector mode before publishing results.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation load/G3SIM_Identity/G3SIM_MtxLoad44/G3SIM_MtxLoad43",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-LOAD",
+      "implementation_locations": [],
+      "invariant": "Matrix loads preserve original dimensions, implicit components and selected state effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry load",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation mult/G3SIM_MtxMult44/G3SIM_MtxMult43/G3SIM_MtxMult33",
+      "E": [
+        {
+          "locator": "mult/G3SIM_MtxMult44/G3SIM_MtxMult43/G3SIM_MtxMult33",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Matrix multiplication preserves mode-dependent target state, dimensions and operation order."
+      ],
+      "T": "Multiply with the selected matrix and dimension extension; position/vector mode updates both domains except scale exclusion.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation mult/G3SIM_MtxMult44/G3SIM_MtxMult43/G3SIM_MtxMult33",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-MULTIPLY",
+      "implementation_locations": [],
+      "invariant": "Matrix multiplication preserves mode-dependent target state, dimensions and operation order.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry multiply",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_MtxScale",
+      "E": [
+        {
+          "locator": "G3SIM_MtxScale",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Scale updates only the original operation-defined matrix domains."
+      ],
+      "T": "Apply diagonal scale in selected position domain without scaling its paired vector matrix.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_MtxScale",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-SCALE",
+      "implementation_locations": [],
+      "invariant": "Scale updates only the original operation-defined matrix domains.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry scale",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_MtxTranslate",
+      "E": [
+        {
+          "locator": "G3SIM_MtxTranslate",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Translation preserves row-vector placement and mode-specific effects."
+      ],
+      "T": "Build row translation and apply selected mode multiplication.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_MtxTranslate",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-TRANSLATE",
+      "implementation_locations": [],
+      "invariant": "Translation preserves row-vector placement and mode-specific effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry translate",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation store/G3SIM_MtxStore",
+      "E": [
+        {
+          "locator": "store/G3SIM_MtxStore",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Stack store preserves paired state and original index/error semantics."
+      ],
+      "T": "Store paired position/vector stacks or selected nonposition slot and publish stack-error state for invalid indices.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation store/G3SIM_MtxStore",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-STORE",
+      "implementation_locations": [],
+      "invariant": "Stack store preserves paired state and original index/error semantics.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry store",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation restore/G3SIM_MtxRestore",
+      "E": [
+        {
+          "locator": "restore/G3SIM_MtxRestore",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Stack restore preserves original saved matrix identity and register effects."
+      ],
+      "T": "Restore paired stacks or selected nonposition slot and republish matrix result registers.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation restore/G3SIM_MtxRestore",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-RESTORE",
+      "implementation_locations": [],
+      "invariant": "Stack restore preserves original saved matrix identity and register effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry restore",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_MtxPush",
+      "E": [
+        {
+          "locator": "G3SIM_MtxPush",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Matrix push preserves mode-specific stack depth, wrapping and overflow effects."
+      ],
+      "T": "Push using original mode-specific stack depth/wrapping and error-bit updates.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_MtxPush",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-PUSH",
+      "implementation_locations": [],
+      "invariant": "Matrix push preserves mode-specific stack depth, wrapping and overflow effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry push",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_MtxPop",
+      "E": [
+        {
+          "locator": "G3SIM_MtxPop",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Matrix pop preserves signed relative indexing and original underflow/state behavior."
+      ],
+      "T": "Sign-extend six-bit position offset; update stack position and mode-specific underflow effects before restore.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_MtxPop",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-POP",
+      "implementation_locations": [],
+      "invariant": "Matrix pop preserves signed relative indexing and original underflow/state behavior.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry pop",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_Color/G3SIM_DiffAmb/G3SIM_SpecEmi",
+      "E": [
+        {
+          "locator": "G3SIM_Color/G3SIM_DiffAmb/G3SIM_SpecEmi",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Material decoding preserves packed channel values and their command-timing effects."
+      ],
+      "T": "Decode five-bit material channels, immediate diffuse color flag and shininess-enable bit.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_Color/G3SIM_DiffAmb/G3SIM_SpecEmi",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-MATERIAL",
+      "implementation_locations": [],
+      "invariant": "Material decoding preserves packed channel values and their command-timing effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry material",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_LightVector",
+      "E": [
+        {
+          "locator": "G3SIM_LightVector",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Light direction translation preserves sign extension, transformation domain and half-vector construction."
+      ],
+      "T": "Unpack signed ten-bit direction, transform by vector matrix and construct bounded direction/half vector.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_LightVector",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-LIGHT-VECTOR",
+      "implementation_locations": [],
+      "invariant": "Light direction translation preserves sign extension, transformation domain and half-vector construction.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry light vector",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_Normal",
+      "E": [
+        {
+          "locator": "G3SIM_Normal",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Normal processing preserves the original transformation and material state dependency order."
+      ],
+      "T": "Apply optional texture generation and vector transform, narrow normal inputs, select lights and invoke scalar lighting.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_Normal",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-NORMAL",
+      "implementation_locations": [],
+      "invariant": "Normal processing preserves the original transformation and material state dependency order.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry normal",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_Begin/G3Native_End",
+      "E": [
+        {
+          "locator": "G3SIM_Begin/G3Native_End",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Primitive state changes latch attributes at the specified command boundary and preserve vertex grouping."
+      ],
+      "T": "Latch pending polygon attributes on begin, reset strip counters and reject vertices outside an active primitive.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_Begin/G3Native_End",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-BEGIN-END",
+      "implementation_locations": [],
+      "invariant": "Primitive state changes latch attributes at the specified command boundary and preserve vertex grouping.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry begin end",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_TexImageParam/G3SIM_TexPlttBase/G3SIM_TexCoord",
+      "E": [
+        {
+          "locator": "G3SIM_TexImageParam/G3SIM_TexPlttBase/G3SIM_TexCoord",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Texture state preserves original packed formats, address units, signs and transform mode dependencies."
+      ],
+      "T": "Decode original texture bits/sizes/palette units and signed coordinate transforms using the selected texture mode.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_TexImageParam/G3SIM_TexPlttBase/G3SIM_TexCoord",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-TEXTURE",
+      "implementation_locations": [],
+      "invariant": "Texture state preserves original packed formats, address units, signs and transform mode dependencies.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry texture",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_Vtx",
+      "E": [
+        {
+          "locator": "G3SIM_Vtx",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Vertex attributes remain associated with the correct transformed vertex and primitive topology."
+      ],
+      "T": "Transform position, preserve fixed color/texture attributes and assemble original triangle/quad/strip grouping.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_Vtx",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-VERTEX",
+      "implementation_locations": [],
+      "invariant": "Vertex attributes remain associated with the correct transformed vertex and primitive topology.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry vertex",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_SubmitPolygon homogeneous determinant",
+      "E": [
+        {
+          "locator": "G3SIM_SubmitPolygon homogeneous determinant",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Polygon visibility preserves original winding and culling without introducing perspective-division rounding."
+      ],
+      "T": "Cull with a wide homogeneous determinant after clipping, retaining original winding flags.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_SubmitPolygon homogeneous determinant",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-POLYGON-CULL",
+      "implementation_locations": [],
+      "invariant": "Polygon visibility preserves original winding and culling without introducing perspective-division rounding.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry polygon cull",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_SubmitPolygon counters",
+      "E": [
+        {
+          "locator": "G3SIM_SubmitPolygon counters",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Geometry capacity accounting preserves original resource limits and overflow effects."
+      ],
+      "T": "Enforce vertex/polygon capacities including strip reuse and set overflow status rather than writing past buffers.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_SubmitPolygon counters",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-POLYGON-CAPACITY",
+      "implementation_locations": [],
+      "invariant": "Geometry capacity accounting preserves original resource limits and overflow effects.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry polygon capacity",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3SIM_SubmitPolygon wire path",
+      "E": [
+        {
+          "locator": "G3SIM_SubmitPolygon wire path",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Primitive emission preserves the original wire/fill mode and attribute ordering."
+      ],
+      "T": "Emit a closed edge loop for zero-alpha wireframe or triangulate clipped filled polygons with preserved attributes.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3SIM_SubmitPolygon wire path",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-POLYGON-WIRE",
+      "implementation_locations": [],
+      "invariant": "Primitive emission preserves the original wire/fill mode and attribute ordering.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry polygon wire",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3Native_PositionTest/G3Native_VectorTest/G3SIM_BoxTest",
+      "E": [
+        {
+          "locator": "G3Native_PositionTest/G3Native_VectorTest/G3SIM_BoxTest",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Observable test-result registers correspond to the requested geometry operation and its current state."
+      ],
+      "T": "Evaluate native matrix test operations and write their original result/status register views.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3Native_PositionTest/G3Native_VectorTest/G3SIM_BoxTest",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-TEST-RESULTS",
+      "implementation_locations": [],
+      "invariant": "Observable test-result registers correspond to the requested geometry operation and its current state.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry test results",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3Native_Swap",
+      "E": [
+        {
+          "locator": "G3Native_Swap",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Frame swap preserves completed-buffer identity and ordering across the frame boundary."
+      ],
+      "T": "Move completed geometry to pending storage, retain active/swap flags and reject a second swap before frame consumption.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3Native_Swap",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-SWAP",
+      "implementation_locations": [],
+      "invariant": "Frame swap preserves completed-buffer identity and ordering across the frame boundary.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry swap",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Geometry operation G3Native_RenderFrame/G3SIM_FlushArray",
+      "E": [
+        {
+          "locator": "G3Native_RenderFrame/G3SIM_FlushArray",
+          "path": "libraries/sim/src/native/g3_state.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "Q": [
+        "Frame batching preserves command state boundaries, ordering and borrowed-buffer lifetime."
+      ],
+      "T": "Snapshot registers/VRAM inputs, stable-sort original polygon spans, coalesce only compatible consecutive draws and preserve explicit flush boundaries; submit once and reject failure.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_g3_native.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "35ab340c57c4686ce44537ea1f50087b3b035263208145a07ffe843d1877037e"
+          },
+          {
+            "path": "tests/test_g3_native_model.cpp",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "7ea67268a034b255ebd9f4a6a1f0bdd0cf2cfcf342368cb9e568a647b940bc34"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Geometry operation G3Native_RenderFrame/G3SIM_FlushArray",
+      "architectural_assumptions": [
+        "Implementation contract is observed; full equivalence to Nintendo device state/timing remains unverified"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-G3-FRAME",
+      "implementation_locations": [],
+      "invariant": "Frame batching preserves command state boundaries, ordering and borrowed-buffer lifetime.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native geometry frame",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native synchronous VBlank/render host boundary",
+      "E": [
+        {
+          "locator": "SIM_PreRenderVBlank/SIM_Render/SIM_PostRenderVBlank",
+          "path": "libraries/sim/src/native/sim_frame.cpp",
+          "provenance_category": "porting-history",
+          "repository": "upstream/libntr",
+          "revision": "51c868593a7098b6912406d4638b990d28916a76"
+        }
+      ],
+      "P": [
+        "No claim of original interrupt timing, 2D presentation or guest scheduler replacement"
+      ],
+      "Q": [
+        "A translated frame event preserves required register transitions, registered callbacks and event counters in the required order."
+      ],
+      "T": "Set entry/exit register state, render pending geometry, deliver enabled original IRQ callback and update original VBlank check/count storage.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native synchronous VBlank/render host boundary",
+      "architectural_assumptions": [
+        "No claim of original interrupt timing, 2D presentation or guest scheduler replacement"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-FRAME-EVENT",
+      "implementation_locations": [],
+      "invariant": "A translated frame event preserves required register transitions, registered callbacks and event counters in the required order.",
+      "limitations": [
+        "Native implementation existence is not hardware-equivalence proof; original device contracts and recorded regressions require independent verification."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "platform_hardware_service_implementation",
+      "title": "Native frame boundary preserves original registered VBlank callback delivery",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "UNRESOLVED-NATIVE-GEOMETRY-HARDWARE-EQUIVALENCE",
+      "obligation": "Verify the 51c8685 native geometry implementation against original hardware/source contracts, especially reset defaults, stack error/wrap behavior, lighting, clipping interpolation, texture generation, polygon capacity/order and frame timing. Native fixture coverage is bounded; implementation presence and graphics output are not general equivalence proofs.",
+      "status": "open"
+    }
+  ],
+  "worktree_reviews": []
+}

@@ -1,0 +1,3233 @@
+{
+  "change_reviews": [],
+  "corrections": [
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 39",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/global_terminal_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/global_terminal_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "e355d236efbffd5ed6a87f76d2c9d255b39ce741"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-140620F4D9988B36",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 39"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 39,
+        "provenance": {
+          "commit": "e355d236efbffd5ed6a87f76d2c9d255b39ce741",
+          "path": "asm/global_terminal_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "315cf38270b758f69afef23c76a4357b1420481b8aa6c8f6534d65ecd6b6c6c4"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 35825988,
+            "bytes_sha256": "44995d36904825586452678072775c28ca2f3d6ac56e678507bc54a0e3ebdff6",
+            "historical_offset": 112,
+            "relocations": [],
+            "size": 104
+          }
+        },
+        "source_sha256": "d22955241605118cc2ddafbd20b6dd7b7f4bfbc8f81d5b450e1174b7b21f31c4"
+      },
+      "source_construct": "Original member asm/global_terminal_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/global_terminal_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 39",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/global_terminal_socket_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/global_terminal_socket_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "daa898e93a41b40179e43cff13405966a5056397"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-2E7BB08979A5E87E",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 39"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 39,
+        "provenance": {
+          "commit": "daa898e93a41b40179e43cff13405966a5056397",
+          "path": "asm/global_terminal_socket_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "5978b98fcbeb4072fbf1e1e0eaea8f69dcaffa2d976f603859a1f2f25fb4cecb"
+        },
+        "sections": {
+          ".bss": {
+            "address": 35826564,
+            "bytes_sha256": "090ce29001257c5a4c44f0e1913f5d8031559bc71a6dfdc7e076c1ad5a7e6b68",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 2908
+          },
+          ".data": {
+            "address": 35826264,
+            "bytes_sha256": "af69dd4f067e27deadfb23bd4d2df06e55437ccab01a80f567ec66dc992e62b9",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 296
+          },
+          ".rodata": {
+            "address": 35826092,
+            "bytes_sha256": "8bb682563ff1f94ee474b6b8645860a4d97799a65ac0c37747e1d937a9210494",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 96
+          }
+        },
+        "source_sha256": "5978b98fcbeb4072fbf1e1e0eaea8f69dcaffa2d976f603859a1f2f25fb4cecb"
+      },
+      "source_construct": "Original member asm/global_terminal_socket_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/global_terminal_socket_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 73",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/nintendo_wfc_connect_unused_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/nintendo_wfc_connect_unused_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "773ea5b99b8cbedbaf402d70a537a0bcf23befe1"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-45D518A547B8DB74",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 73"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 73,
+        "provenance": {
+          "commit": "773ea5b99b8cbedbaf402d70a537a0bcf23befe1",
+          "path": "asm/nintendo_wfc_connect_unused_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "7f6452f17c9ef8981c0d2e5fb07f541560aa844b34ea1c92a04bcf03a44c9d03"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 35563132,
+            "bytes_sha256": "ea55675d916ddee4a09f15219da399dadddbb09075e96454bce958a99c4b9e9d",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 16
+          }
+        },
+        "source_sha256": "7f6452f17c9ef8981c0d2e5fb07f541560aa844b34ea1c92a04bcf03a44c9d03"
+      },
+      "source_construct": "Original member asm/nintendo_wfc_connect_unused_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/nintendo_wfc_connect_unused_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 73",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/record_mixing_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/record_mixing_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "0ee0d383139bf5721a776d582097b927ec23d930"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-F7E57CCDAC6D5734",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 73"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 73,
+        "provenance": {
+          "commit": "0ee0d383139bf5721a776d582097b927ec23d930",
+          "path": "asm/record_mixing_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "37e8374e5099b60e523a30dc95ac1aee7c7bfafe8cf7b849770018d585718084"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 35563332,
+            "bytes_sha256": "6edd9f6f9cc92cded36e6c4a580933f9c9f1b90562b46903b806f21902a1a54f",
+            "historical_offset": 552,
+            "relocations": [
+              {
+                "expression": "RecordMixing_FriendGroup_GetSize",
+                "offset": 0,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_FriendGroup_Load",
+                "offset": 4,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_FriendGroup_Merge",
+                "offset": 8,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Fashion_GetSize",
+                "offset": 12,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Fashion_Load",
+                "offset": 16,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Fashion_Merge",
+                "offset": 20,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List0_GetSize",
+                "offset": 24,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List0_Load",
+                "offset": 28,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List1_GetSize",
+                "offset": 36,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List1_Load",
+                "offset": 40,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List2_GetSize",
+                "offset": 48,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List2_Load",
+                "offset": 52,
+                "width": 4
+              },
+              {
+                "expression": "Save_Rankings_GetMixingSize",
+                "offset": 60,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Rankings_Load",
+                "offset": 64,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Rankings_Merge",
+                "offset": 68,
+                "width": 4
+              },
+              {
+                "expression": "BattleRoomTrainer_sizeof",
+                "offset": 72,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_BattleRoomTrainer_Load",
+                "offset": 76,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_BattleRoomTrainer_Merge",
+                "offset": 80,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List0_GetSize",
+                "offset": 84,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List0_Load2",
+                "offset": 88,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List1_GetSize",
+                "offset": 96,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List1_Load2",
+                "offset": 100,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List2_GetSize",
+                "offset": 108,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23List2_Load2",
+                "offset": 112,
+                "width": 4
+              },
+              {
+                "expression": "RecordMixing_Block23_Merge",
+                "offset": 116,
+                "width": 4
+              }
+            ],
+            "size": 120
+          }
+        },
+        "source_sha256": "fcd98dfe9afb936190c75bbaa6ae975196fb26e78c325cf8f148fe9d0b45643b"
+      },
+      "source_construct": "Original member asm/record_mixing_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/record_mixing_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 90",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/plaza_game_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/plaza_game_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "a377c711b52d03354f6a7915b030037878530fc5"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-87638EC462E49151",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 90"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 90,
+        "provenance": {
+          "commit": "a377c711b52d03354f6a7915b030037878530fc5",
+          "path": "asm/plaza_game_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "0aa1ca34fbec343910232ceee0e517eee53af541effecd14eab05e718c10fbfc"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 36028896,
+            "bytes_sha256": "e112f60c8e0e0c1c1a213f025789b1f294826ebaa4a067ec9ec5e1687a10ad1d",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "PlazaGame_HandleVoteYesCommand",
+                "offset": 796,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_GetCommandSizeNone",
+                "offset": 800,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_HandleVoteNoCommand",
+                "offset": 808,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_GetCommandSizeNone",
+                "offset": 812,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_HandleContinueCommand",
+                "offset": 820,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_GetCommandSizeNone",
+                "offset": 824,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_HandleQuitCommand",
+                "offset": 832,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_GetCommandSizeNone",
+                "offset": 836,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_HandleSelectionCommand",
+                "offset": 844,
+                "width": 4
+              },
+              {
+                "expression": "PlazaGame_GetCommandSizeU32",
+                "offset": 848,
+                "width": 4
+              }
+            ],
+            "size": 856
+          }
+        },
+        "source_sha256": "2db307d75366c9646ebb2f0ed2f111cb2a3e8a9feca4354f3c9797954d10c8b0"
+      },
+      "source_construct": "Original member asm/plaza_game_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/plaza_game_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 91",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/plaza_game_swalot_plop_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/plaza_game_swalot_plop_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "3ed9b70c2e749e8f058c9069d4b4d755a7dcbee0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-7973DE6442C29402",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 91"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 91,
+        "provenance": {
+          "commit": "3ed9b70c2e749e8f058c9069d4b4d755a7dcbee0",
+          "path": "asm/plaza_game_swalot_plop_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "e10593a781a30f7138d8c7b253e736988ee6e1e12888d35f0d272261995d60e7"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 36051960,
+            "bytes_sha256": "fe2f8168b73a77f30fe414408ed738b293f808a57c03627ff72f0ca277412e7f",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "SwalotPlopBody_GetTiltNormal",
+                "offset": 96,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlopBody_GetTiltFast",
+                "offset": 100,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlopBody_GetTiltFastest",
+                "offset": 104,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleStart",
+                "offset": 2908,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetNoDataSize",
+                "offset": 2912,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleFinish",
+                "offset": 2920,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetNoDataSize",
+                "offset": 2924,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleShot",
+                "offset": 2932,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetShotSize",
+                "offset": 2936,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleFinalScore",
+                "offset": 2944,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetScoreSize",
+                "offset": 2948,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleScores",
+                "offset": 2956,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetScoresSize",
+                "offset": 2960,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleLevel",
+                "offset": 2968,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetLevelSize",
+                "offset": 2972,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleScoreReport",
+                "offset": 2980,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetScoreSize",
+                "offset": 2984,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_HandleSync",
+                "offset": 2992,
+                "width": 4
+              },
+              {
+                "expression": "SwalotPlop_GetNoDataSize",
+                "offset": 2996,
+                "width": 4
+              }
+            ],
+            "size": 3004
+          }
+        },
+        "source_sha256": "cbdf69c75339aab8cae672399351bd842047f01bfc28a6462f2c224dbd45f695"
+      },
+      "source_construct": "Original member asm/plaza_game_swalot_plop_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/plaza_game_swalot_plop_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 92",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/plaza_game_mime_jr_top_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/plaza_game_mime_jr_top_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "daa898e93a41b40179e43cff13405966a5056397"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-4C98A0777A87EFEB",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 92"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 92,
+        "provenance": {
+          "commit": "daa898e93a41b40179e43cff13405966a5056397",
+          "path": "asm/plaza_game_mime_jr_top_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "3d1316e90eebc82ec844618bcaff194f73fc8e14fa26a8e26f5fd3aa2c5f4456"
+        },
+        "sections": {
+          ".data": {
+            "address": 36061216,
+            "bytes_sha256": "6a8ba217d675679df4e7c76fabb1319f0297f16cbf3519dc14fc05debcdfb799",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 320
+          },
+          ".rodata": {
+            "address": 36059256,
+            "bytes_sha256": "738b7e1cc2ea4c7e1da666f3213d54abd5fb2d79f805d8757045ee630dd3b3d6",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "MimeJrTopDance_Routine1",
+                "offset": 1652,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine2",
+                "offset": 1692,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine2",
+                "offset": 1732,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine3",
+                "offset": 1772,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine3",
+                "offset": 1812,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine4",
+                "offset": 1852,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine5",
+                "offset": 1892,
+                "width": 4
+              },
+              {
+                "expression": "MimeJrTopDance_Routine5",
+                "offset": 1932,
+                "width": 4
+              }
+            ],
+            "size": 1936
+          }
+        },
+        "source_sha256": "ed0c6d0216998e45644012be954d7c01f66da9b61a26454b44c967928dab602d"
+      },
+      "source_construct": "Original member asm/plaza_game_mime_jr_top_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/plaza_game_mime_jr_top_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 93",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/wobbuffet_pop_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/wobbuffet_pop_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "c35ef03b5454ddf965bff9799e0c1906806dcbe7"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-1F7E00B019B51C08",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 93"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 93,
+        "provenance": {
+          "commit": "c35ef03b5454ddf965bff9799e0c1906806dcbe7",
+          "path": "asm/wobbuffet_pop_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "4b574cb8426d3234d0815df4fc3ea1e54f5ae1e08f5c825d11f32a16059db0d7"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 36055576,
+            "bytes_sha256": "3b083b4bfeb2057a025b2b5ddcde7485cd7f8a8db159c22a6ec076c888a3c8f0",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "WobbuffetPop_HostStartGame",
+                "offset": 8,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HostPlayGame",
+                "offset": 12,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HostFinishGame",
+                "offset": 16,
+                "width": 4
+              }
+            ],
+            "size": 492
+          }
+        },
+        "source_sha256": "b894cf9e3df910083f5eccbaed9cb925be369fe2b454038f02508a0ebc2bb663"
+      },
+      "source_construct": "Original member asm/wobbuffet_pop_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/wobbuffet_pop_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 93",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/wobbuffet_pop_balloon_mesh_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/wobbuffet_pop_balloon_mesh_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "787267e94b8ac555148873140e2bbeecf9040942"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-853B14B3EEF4616C",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 93"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 93,
+        "provenance": {
+          "commit": "787267e94b8ac555148873140e2bbeecf9040942",
+          "path": "asm/wobbuffet_pop_balloon_mesh_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "42b1f2e1640af68007643854008b784aa21f292f8d502758eec2a5739568a3f1"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 36056068,
+            "bytes_sha256": "0e04f5a5039a6225dafe09d03d69bd2f91d89d48a752c6be615de965cc3ca94e",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 104
+          }
+        },
+        "source_sha256": "42b1f2e1640af68007643854008b784aa21f292f8d502758eec2a5739568a3f1"
+      },
+      "source_construct": "Original member asm/wobbuffet_pop_balloon_mesh_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/wobbuffet_pop_balloon_mesh_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 93",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/wobbuffet_pop_scene_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/wobbuffet_pop_scene_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "c35ef03b5454ddf965bff9799e0c1906806dcbe7"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-434E5A35DB82CE29",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 93"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 93,
+        "provenance": {
+          "commit": "c35ef03b5454ddf965bff9799e0c1906806dcbe7",
+          "path": "asm/wobbuffet_pop_scene_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "bd6141879e9447a05e7a3b12127e5b6481ee70acd4509b511f8d74e14426b7df"
+        },
+        "sections": {
+          ".rodata": {
+            "address": 36057304,
+            "bytes_sha256": "b0f0d1ac6e8a44943aadc4b0b7e6261bd2bdef6d283e843e9f808271fcbd73c3",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "CommCmd_GetSize0",
+                "offset": 16,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_RecvPlayerValue",
+                "offset": 24,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_GetPlayerValueCommandSize",
+                "offset": 28,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_RecvEvent",
+                "offset": 36,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_GetEventCommandSize",
+                "offset": 40,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_RecvFinished",
+                "offset": 48,
+                "width": 4
+              },
+              {
+                "expression": "CommCmd_GetSize0",
+                "offset": 52,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandlePumpEvent",
+                "offset": 64,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandlePopEvent",
+                "offset": 68,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandleNewBalloonEvent",
+                "offset": 72,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandleCountdownEvent",
+                "offset": 76,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandleFinishEvent",
+                "offset": 80,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandleSyncEvent",
+                "offset": 84,
+                "width": 4
+              },
+              {
+                "expression": "WobbuffetPop_HandleDemoEvent",
+                "offset": 88,
+                "width": 4
+              }
+            ],
+            "size": 92
+          }
+        },
+        "source_sha256": "18eb82bb628107f5a60650d7b3d65c10e417ab9a1373dba5967f87b0477cfa62"
+      },
+      "source_construct": "Original member asm/wobbuffet_pop_scene_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/wobbuffet_pop_scene_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 45",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/wifi_plaza_lobby_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/wifi_plaza_lobby_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "64529187fbc80d3165727403fb816cd0870e3cc7"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-52510527237793E4",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 45"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 45,
+        "provenance": {
+          "commit": "64529187fbc80d3165727403fb816cd0870e3cc7",
+          "path": "asm/wifi_plaza_lobby_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "ab31bdfc42e8358ebf02c5c11e2eb70f7dee91883e77fdde0272cde4bf292d0d"
+        },
+        "sections": {
+          ".data": {
+            "address": 35999528,
+            "bytes_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "WiFiPlazaPlayerObject_ShowStandingSprite",
+                "offset": 0,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_HoldWalkFrameThenRestart",
+                "offset": 4,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 8,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayWalkingSequence",
+                "offset": 12,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_ShowStandingSprite",
+                "offset": 16,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 20,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 24,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 28,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 32,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 36,
+                "width": 4
+              },
+              {
+                "expression": "WiFiPlazaPlayerObject_PlayStandingSequence",
+                "offset": 40,
+                "width": 4
+              }
+            ],
+            "size": 48
+          }
+        },
+        "source_sha256": "022c003040402aa16ecf0ef4d139908657a43884edaffefd38b0c52f6798b465"
+      },
+      "source_construct": "Original member asm/wifi_plaza_lobby_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/wifi_plaza_lobby_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 45",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "lib/NitroDWC/asm/dwc_lobby_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "lib/NitroDWC/asm/dwc_lobby_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "d414e429ec36d1ac629efdfb28c6353f470e60e5"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-DBD4AE5CC15BB6F2",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 45"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 45,
+        "provenance": {
+          "commit": "d414e429ec36d1ac629efdfb28c6353f470e60e5",
+          "path": "lib/NitroDWC/asm/dwc_lobby_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "2f2a15327bb3b8c0b4c2bb73bf8e9652cd860597c466067ed8114278f852de13"
+        },
+        "sections": {
+          ".bss": {
+            "address": 36009924,
+            "bytes_sha256": "295e2dd76e231bc65d291fcc12f1004681fcb3f4b19e4a5d88f67d366dd3ba17",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 4156
+          },
+          ".rodata": {
+            "address": 35998980,
+            "bytes_sha256": "4b3bfc900389a3bb1355ab0bb8bf86bf5ff74395291b85c13067135c0fbd7185",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "gLobbyStr_M",
+                "offset": 0,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_F1",
+                "offset": 4,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_F2",
+                "offset": 8,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_C",
+                "offset": 12,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_N",
+                "offset": 16,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_Invalid",
+                "offset": 20,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_R",
+                "offset": 192,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D",
+                "offset": 196,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D1",
+                "offset": 200,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D2",
+                "offset": 204,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D3",
+                "offset": 208,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D4",
+                "offset": 212,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D5",
+                "offset": 216,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D6",
+                "offset": 220,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D7",
+                "offset": 224,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D8",
+                "offset": 228,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_D9",
+                "offset": 232,
+                "width": 4
+              },
+              {
+                "expression": "gLobbyStr_T",
+                "offset": 236,
+                "width": 4
+              }
+            ],
+            "size": 274
+          }
+        },
+        "source_sha256": "2f2a15327bb3b8c0b4c2bb73bf8e9652cd860597c466067ed8114278f852de13"
+      },
+      "source_construct": "Original member lib/NitroDWC/asm/dwc_lobby_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for lib/NitroDWC/asm/dwc_lobby_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 45",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "lib/NitroDWC/asm/dwc_lobby_chat_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "lib/NitroDWC/asm/dwc_lobby_chat_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "d414e429ec36d1ac629efdfb28c6353f470e60e5"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-3C5C4D4BCEBEDF33",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 45"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 45,
+        "provenance": {
+          "commit": "d414e429ec36d1ac629efdfb28c6353f470e60e5",
+          "path": "lib/NitroDWC/asm/dwc_lobby_chat_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "08075ead2bf28dca9086cfe113f6053731865c9f13e89498fa6ecce8873c3355"
+        },
+        "sections": {
+          ".data": {
+            "address": 35999604,
+            "bytes_sha256": "75481f94f4562e8a31e3067b124410ae23e40c9514e3db6bfd5fcb45f2c084e4",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "PPWLobbyPlayers_Destroy",
+                "offset": 44,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyPlayers_Delete",
+                "offset": 48,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyPlayer_Destroy",
+                "offset": 60,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyPlayer_Delete",
+                "offset": 64,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyWebRequest_Destroy",
+                "offset": 76,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyWebRequest_Delete",
+                "offset": 80,
+                "width": 4
+              },
+              {
+                "expression": "PPWLobbyPlayer_HasProfiles",
+                "offset": 656,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_Destroy",
+                "offset": 708,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_Delete",
+                "offset": 712,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 716,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 720,
+                "width": 4
+              },
+              {
+                "expression": "LobbyGetChannelModeRequest_Destroy",
+                "offset": 732,
+                "width": 4
+              },
+              {
+                "expression": "LobbyGetChannelModeRequest_Delete",
+                "offset": 736,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 740,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 744,
+                "width": 4
+              },
+              {
+                "expression": "LobbyGetChannelKeysRequest_Destroy",
+                "offset": 756,
+                "width": 4
+              },
+              {
+                "expression": "LobbyGetChannelKeysRequest_Delete",
+                "offset": 760,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 764,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 768,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnterChannelRequest_Destroy",
+                "offset": 780,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnterChannelRequest_Delete",
+                "offset": 784,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 788,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 792,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnumUsersRequest_Destroy",
+                "offset": 804,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnumUsersRequest_Delete",
+                "offset": 808,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 812,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 816,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnumChannelsRequest_Destroy",
+                "offset": 828,
+                "width": 4
+              },
+              {
+                "expression": "LobbyEnumChannelsRequest_Delete",
+                "offset": 832,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetId",
+                "offset": 836,
+                "width": 4
+              },
+              {
+                "expression": "LobbyRequest_GetParam",
+                "offset": 840,
+                "width": 4
+              },
+              {
+                "expression": "LobbyChat_RemoveUserIfUnused",
+                "offset": 1004,
+                "width": 4
+              },
+              {
+                "address": 36003416,
+                "offset": 5276,
+                "width": 4
+              },
+              {
+                "expression": "ciPrivmsgHandler",
+                "offset": 5280,
+                "width": 4
+              },
+              {
+                "address": 36003408,
+                "offset": 5284,
+                "width": 4
+              },
+              {
+                "expression": "ciNoticeHandler",
+                "offset": 5288,
+                "width": 4
+              },
+              {
+                "address": 36003164,
+                "offset": 5292,
+                "width": 4
+              },
+              {
+                "expression": "ciUTMHandler",
+                "offset": 5296,
+                "width": 4
+              },
+              {
+                "address": 36003296,
+                "offset": 5300,
+                "width": 4
+              },
+              {
+                "expression": "ciATMHandler",
+                "offset": 5304,
+                "width": 4
+              },
+              {
+                "address": 36003376,
+                "offset": 5308,
+                "width": 4
+              },
+              {
+                "expression": "ciPingHandler",
+                "offset": 5312,
+                "width": 4
+              },
+              {
+                "address": 36003336,
+                "offset": 5316,
+                "width": 4
+              },
+              {
+                "expression": "ciNickHandler",
+                "offset": 5320,
+                "width": 4
+              },
+              {
+                "address": 36003360,
+                "offset": 5324,
+                "width": 4
+              },
+              {
+                "expression": "ciJoinHandler",
+                "offset": 5328,
+                "width": 4
+              },
+              {
+                "address": 36003344,
+                "offset": 5332,
+                "width": 4
+              },
+              {
+                "expression": "ciPartHandler",
+                "offset": 5336,
+                "width": 4
+              },
+              {
+                "address": 36003328,
+                "offset": 5340,
+                "width": 4
+              },
+              {
+                "expression": "ciKickHandler",
+                "offset": 5344,
+                "width": 4
+              },
+              {
+                "address": 36003352,
+                "offset": 5348,
+                "width": 4
+              },
+              {
+                "expression": "ciQuitHandler",
+                "offset": 5352,
+                "width": 4
+              },
+              {
+                "address": 36003368,
+                "offset": 5356,
+                "width": 4
+              },
+              {
+                "expression": "ciKillHandler",
+                "offset": 5360,
+                "width": 4
+              },
+              {
+                "address": 36003384,
+                "offset": 5364,
+                "width": 4
+              },
+              {
+                "expression": "ciTopicHandler",
+                "offset": 5368,
+                "width": 4
+              },
+              {
+                "address": 36003320,
+                "offset": 5372,
+                "width": 4
+              },
+              {
+                "expression": "ciModeHandler",
+                "offset": 5376,
+                "width": 4
+              },
+              {
+                "address": 36003392,
+                "offset": 5380,
+                "width": 4
+              },
+              {
+                "expression": "ciErrorHandler",
+                "offset": 5384,
+                "width": 4
+              },
+              {
+                "address": 36003400,
+                "offset": 5388,
+                "width": 4
+              },
+              {
+                "expression": "ciInviteHandler",
+                "offset": 5392,
+                "width": 4
+              },
+              {
+                "address": 36003240,
+                "offset": 5396,
+                "width": 4
+              },
+              {
+                "expression": "ciNameReplyHandler",
+                "offset": 5400,
+                "width": 4
+              },
+              {
+                "address": 36003168,
+                "offset": 5404,
+                "width": 4
+              },
+              {
+                "expression": "ciEndOfNamesHandler",
+                "offset": 5408,
+                "width": 4
+              },
+              {
+                "address": 36003252,
+                "offset": 5412,
+                "width": 4
+              },
+              {
+                "expression": "ciRplTopicHandler",
+                "offset": 5416,
+                "width": 4
+              },
+              {
+                "address": 36003228,
+                "offset": 5420,
+                "width": 4
+              },
+              {
+                "expression": "ciRplNoTopicHandler",
+                "offset": 5424,
+                "width": 4
+              },
+              {
+                "address": 36003184,
+                "offset": 5428,
+                "width": 4
+              },
+              {
+                "expression": "ciRplWhoReplyHandler",
+                "offset": 5432,
+                "width": 4
+              },
+              {
+                "address": 36003156,
+                "offset": 5436,
+                "width": 4
+              },
+              {
+                "expression": "ciRplUserIPHandler",
+                "offset": 5440,
+                "width": 4
+              },
+              {
+                "address": 36003268,
+                "offset": 5444,
+                "width": 4
+              },
+              {
+                "expression": "ciRplListStartHandler",
+                "offset": 5448,
+                "width": 4
+              },
+              {
+                "address": 36003260,
+                "offset": 5452,
+                "width": 4
+              },
+              {
+                "expression": "ciRplListHandler",
+                "offset": 5456,
+                "width": 4
+              },
+              {
+                "address": 36003192,
+                "offset": 5460,
+                "width": 4
+              },
+              {
+                "expression": "ciRplListEndHandler",
+                "offset": 5464,
+                "width": 4
+              },
+              {
+                "address": 36003200,
+                "offset": 5468,
+                "width": 4
+              },
+              {
+                "expression": "ciRplChannelModeIsHandler",
+                "offset": 5472,
+                "width": 4
+              },
+              {
+                "address": 36003284,
+                "offset": 5476,
+                "width": 4
+              },
+              {
+                "expression": "ciRplWhoisUserHandler",
+                "offset": 5480,
+                "width": 4
+              },
+              {
+                "address": 36003244,
+                "offset": 5484,
+                "width": 4
+              },
+              {
+                "expression": "ciRplWhoisChannelsHandler",
+                "offset": 5488,
+                "width": 4
+              },
+              {
+                "address": 36003256,
+                "offset": 5492,
+                "width": 4
+              },
+              {
+                "expression": "ciRplEndOfWhoisHandler",
+                "offset": 5496,
+                "width": 4
+              },
+              {
+                "address": 36003288,
+                "offset": 5500,
+                "width": 4
+              },
+              {
+                "expression": "ciRplBanListHandler",
+                "offset": 5504,
+                "width": 4
+              },
+              {
+                "address": 36003300,
+                "offset": 5508,
+                "width": 4
+              },
+              {
+                "expression": "ciRplEndOfBanListHandler",
+                "offset": 5512,
+                "width": 4
+              },
+              {
+                "address": 36003248,
+                "offset": 5516,
+                "width": 4
+              },
+              {
+                "expression": "ciRplWelcomeHandler",
+                "offset": 5520,
+                "width": 4
+              },
+              {
+                "address": 36003292,
+                "offset": 5524,
+                "width": 4
+              },
+              {
+                "expression": "ciRplEndOfWhoHandler",
+                "offset": 5528,
+                "width": 4
+              },
+              {
+                "address": 36003264,
+                "offset": 5532,
+                "width": 4
+              },
+              {
+                "expression": "ciRplGetKeyHandler",
+                "offset": 5536,
+                "width": 4
+              },
+              {
+                "address": 36003172,
+                "offset": 5540,
+                "width": 4
+              },
+              {
+                "expression": "ciRplEndGetKeyHandler",
+                "offset": 5544,
+                "width": 4
+              },
+              {
+                "address": 36003220,
+                "offset": 5548,
+                "width": 4
+              },
+              {
+                "expression": "ciRplGetCKeyHandler",
+                "offset": 5552,
+                "width": 4
+              },
+              {
+                "address": 36003272,
+                "offset": 5556,
+                "width": 4
+              },
+              {
+                "expression": "ciRplEndGetCKeyHandler",
+                "offset": 5560,
+                "width": 4
+              },
+              {
+                "address": 36003204,
+                "offset": 5564,
+                "width": 4
+              },
+              {
+                "expression": "ciRplGetChanKeyHandler",
+                "offset": 5568,
+                "width": 4
+              },
+              {
+                "address": 36003212,
+                "offset": 5572,
+                "width": 4
+              },
+              {
+                "expression": "ciRplSecureKeyHandler",
+                "offset": 5576,
+                "width": 4
+              },
+              {
+                "address": 36003276,
+                "offset": 5580,
+                "width": 4
+              },
+              {
+                "expression": "ciRplCDKeyHandler",
+                "offset": 5584,
+                "width": 4
+              },
+              {
+                "address": 36003180,
+                "offset": 5588,
+                "width": 4
+              },
+              {
+                "expression": "ciRplLoginHandler",
+                "offset": 5592,
+                "width": 4
+              },
+              {
+                "address": 36003176,
+                "offset": 5596,
+                "width": 4
+              },
+              {
+                "expression": "ciErrNickInUseHandler",
+                "offset": 5600,
+                "width": 4
+              },
+              {
+                "address": 36003316,
+                "offset": 5604,
+                "width": 4
+              },
+              {
+                "expression": "ciErrNoSuchChannelHandler",
+                "offset": 5608,
+                "width": 4
+              },
+              {
+                "address": 36003216,
+                "offset": 5612,
+                "width": 4
+              },
+              {
+                "expression": "ciErrTooManyChannelsHandler",
+                "offset": 5616,
+                "width": 4
+              },
+              {
+                "address": 36003224,
+                "offset": 5620,
+                "width": 4
+              },
+              {
+                "expression": "ciErrChannelIsFullHandler",
+                "offset": 5624,
+                "width": 4
+              },
+              {
+                "address": 36003236,
+                "offset": 5628,
+                "width": 4
+              },
+              {
+                "expression": "ciErrInviteOnlyChanHandler",
+                "offset": 5632,
+                "width": 4
+              },
+              {
+                "address": 36003208,
+                "offset": 5636,
+                "width": 4
+              },
+              {
+                "expression": "ciErrBannedFromChanHandler",
+                "offset": 5640,
+                "width": 4
+              },
+              {
+                "address": 36003152,
+                "offset": 5644,
+                "width": 4
+              },
+              {
+                "expression": "ciErrBadChannelKeyHandler",
+                "offset": 5648,
+                "width": 4
+              },
+              {
+                "address": 36003196,
+                "offset": 5652,
+                "width": 4
+              },
+              {
+                "expression": "ciErrBadChanMaskHandler",
+                "offset": 5656,
+                "width": 4
+              },
+              {
+                "address": 36003160,
+                "offset": 5660,
+                "width": 4
+              },
+              {
+                "expression": "ciErrNoSuchNickHandler",
+                "offset": 5664,
+                "width": 4
+              },
+              {
+                "address": 36003280,
+                "offset": 5668,
+                "width": 4
+              },
+              {
+                "expression": "ciErrErroneusNicknameHandler",
+                "offset": 5672,
+                "width": 4
+              },
+              {
+                "address": 36003304,
+                "offset": 5676,
+                "width": 4
+              },
+              {
+                "expression": "ciErrLoginFailedHandler",
+                "offset": 5680,
+                "width": 4
+              },
+              {
+                "address": 36003312,
+                "offset": 5684,
+                "width": 4
+              },
+              {
+                "expression": "ciErrNoUniqueNickHandler",
+                "offset": 5688,
+                "width": 4
+              },
+              {
+                "address": 36003308,
+                "offset": 5692,
+                "width": 4
+              },
+              {
+                "expression": "ciErrUniqueNickExpiredHandler",
+                "offset": 5696,
+                "width": 4
+              },
+              {
+                "address": 36003188,
+                "offset": 5700,
+                "width": 4
+              },
+              {
+                "expression": "ciErrRegisterNickFailedHandler",
+                "offset": 5704,
+                "width": 4
+              }
+            ],
+            "size": 10316
+          }
+        },
+        "source_sha256": "08075ead2bf28dca9086cfe113f6053731865c9f13e89498fa6ecce8873c3355"
+      },
+      "source_construct": "Original member lib/NitroDWC/asm/dwc_lobby_chat_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for lib/NitroDWC/asm/dwc_lobby_chat_data.s"
+    },
+    {
+      "architectural_assumption": "Original source and retained-range proof match image 70",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/gts_data.s",
+          "path": "compiler/guest32/original_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "7742e644530cad4d6ab43ad685850a8bec18b7599c32a16d2ee14a38069ba317"
+        },
+        {
+          "locator": "Archived source used only to resolve this port placement; unrelated upstream history is excluded.",
+          "path": "asm/gts_data.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "4e726ae6e64ef32fda2687b8a5aa3756f90014a4"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DATA-6D92453D0146954A",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Add the archived-source/owner/range/byte-hash/relocation contract for each retained section.",
+      "incorrect_host_behavior": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [
+        "A catalog entry is not proof; its regression and independent byte/relocation validation still require result provenance review."
+      ],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT",
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original member had no admitted section placement; synthetic placement or substring similarity cannot preserve its interior addresses.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original source and retained-range proof match image 70"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "recorded_layout_contract": {
+        "image_id": 70,
+        "provenance": {
+          "commit": "4e726ae6e64ef32fda2687b8a5aa3756f90014a4",
+          "path": "asm/gts_data.s",
+          "rule": "anchored-retained-range-v1",
+          "sha256": "968e840b2fff7145ff8e58d73432c99c04e26223c0cd9ab2419c4d40ff3f52fe"
+        },
+        "sections": {
+          ".bss": {
+            "address": 35940352,
+            "bytes_sha256": "627f6149015f853f26db2f3dffba1b7c30b3b74b87c5cfb9f346c1616e3636d0",
+            "historical_offset": 0,
+            "relocations": [],
+            "size": 352
+          },
+          ".rodata": {
+            "address": 35936524,
+            "bytes_sha256": "83ba2c67e055553b9f77d680998b84b8b9adfdf5933f10bf2a82805325c59b7b",
+            "historical_offset": 0,
+            "relocations": [
+              {
+                "expression": "TradeSequence_Init",
+                "offset": 1092,
+                "width": 4
+              },
+              {
+                "expression": "TradeSequence_Main",
+                "offset": 1096,
+                "width": 4
+              },
+              {
+                "expression": "TradeSequence_Exit",
+                "offset": 1100,
+                "width": 4
+              }
+            ],
+            "size": 1924
+          }
+        },
+        "source_sha256": "07891de95081199694d3247da50e5f42530a59992174d00b15e91fed36da43e5"
+      },
+      "source_construct": "Original member asm/gts_data.s",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "Recover retained original storage for asm/gts_data.s"
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "WifiClub_PlayRoomBgm line 3177",
+          "path": "compiler/guest32/ovy44_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ce41b4add488cfe41932c8f70a9bdb3ed69bd7de9f924894705bc3c946006910"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_44.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "47e0855242035f82d3002d962fdc8d018bf2be4f"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-F9E8E0A038CAC527",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "argument": 0,
+        "arm_target": "GF_GetVolumeBySeqNo",
+        "evidence": "\tbl GF_GetCurrentPlayingBGM\n\tbl GF_GetVolumeBySeqNo",
+        "function": "WifiClub_PlayRoomBgm",
+        "line": 3177,
+        "mode": "previous-result",
+        "previous": "GF_GetCurrentPlayingBGM",
+        "source": "src/wifi_club/wifi_club_app.c",
+        "target": "GF_GetVolumeBySeqNo"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "47e0855242035f82d3002d962fdc8d018bf2be4f",
+          "path": "asm/overlay_44.s",
+          "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call WifiClub_PlayRoomBgm -> GF_GetVolumeBySeqNo",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "WifiClub_PlayRoomBgm -> GF_GetVolumeBySeqNo original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "WifiClubGameEntry_EnableVoiceChat line 828",
+          "path": "compiler/guest32/ovy44_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ce41b4add488cfe41932c8f70a9bdb3ed69bd7de9f924894705bc3c946006910"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_44.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "47e0855242035f82d3002d962fdc8d018bf2be4f"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-77A3DA73441B8F44",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "argument": 0,
+        "arm_target": "sub_02005448",
+        "evidence": "\tbl GF_GetCurrentPlayingBGM\n\tbl sub_02005448",
+        "function": "WifiClubGameEntry_EnableVoiceChat",
+        "line": 828,
+        "mode": "previous-result",
+        "previous": "GF_GetCurrentPlayingBGM",
+        "source": "src/wifi_club/wifi_club_game_entry.c",
+        "target": "Sound_ApplyVoiceChatVolumeForSeq"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "47e0855242035f82d3002d962fdc8d018bf2be4f",
+          "path": "asm/overlay_44.s",
+          "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call WifiClubGameEntry_EnableVoiceChat -> Sound_ApplyVoiceChatVolumeForSeq",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "WifiClubGameEntry_EnableVoiceChat -> Sound_ApplyVoiceChatVolumeForSeq original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "WifiClub_State_Start line 1512",
+          "path": "compiler/guest32/ovy44_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ce41b4add488cfe41932c8f70a9bdb3ed69bd7de9f924894705bc3c946006910"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_44.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "47e0855242035f82d3002d962fdc8d018bf2be4f"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-B0408345D18E8BE0",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "argument": 0,
+        "arm_previous": "sub_0202C08C",
+        "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckHasProfile",
+        "function": "WifiClub_State_Start",
+        "line": 1512,
+        "mode": "previous-result",
+        "previous": "FriendRoster_GetUserData",
+        "source": "src/wifi_club/wifi_club_app.c",
+        "target": "DWC_CheckHasProfile"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "47e0855242035f82d3002d962fdc8d018bf2be4f",
+          "path": "asm/overlay_44.s",
+          "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call WifiClub_State_Start -> DWC_CheckHasProfile",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "WifiClub_State_Start -> DWC_CheckHasProfile original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "WifiClub_State_Start line 1522",
+          "path": "compiler/guest32/ovy44_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "ce41b4add488cfe41932c8f70a9bdb3ed69bd7de9f924894705bc3c946006910"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_44.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "47e0855242035f82d3002d962fdc8d018bf2be4f"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-8C9B030C51FFB0AD",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "argument": 0,
+        "arm_previous": "sub_0202C08C",
+        "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckValidConsole",
+        "function": "WifiClub_State_Start",
+        "line": 1522,
+        "mode": "previous-result",
+        "previous": "FriendRoster_GetUserData",
+        "source": "src/wifi_club/wifi_club_app.c",
+        "target": "DWC_CheckValidConsole"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "47e0855242035f82d3002d962fdc8d018bf2be4f",
+          "path": "asm/overlay_44.s",
+          "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call WifiClub_State_Start -> DWC_CheckValidConsole",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "WifiClub_State_Start -> DWC_CheckValidConsole original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "LobbyChat_Initialize line 194",
+          "path": "compiler/guest32/ovy45_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "8b5967e3140edf757cc18ad3fcd1adfd0a5437c7c867346d8296c546c0ee2bee"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_45.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "3c0b3057fcb3a81446b20ab4d1119bf507304b58"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-78A22D48AD757F9C",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "arm_continuation": "_02240C3C",
+        "arm_global_address": "0x022577DC",
+        "arm_literal": "_02240F34",
+        "arm_target": "ov45_0224246C",
+        "evidence": "\tldr r0, _02240F34 @ =0x022577DC\n\tldr r0, [r0]\n\tcmp r0, #0\n\tbne _02240C3C",
+        "function": "LobbyChat_Initialize",
+        "global": "gLobbyChatManager",
+        "line": 194,
+        "mode": "dominating-global",
+        "offset": 0,
+        "source": "src/lobby/lobby_chat_initialize.cpp",
+        "target": "LobbyMem_InstallOutOfMemoryHandler"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "3c0b3057fcb3a81446b20ab4d1119bf507304b58",
+          "path": "asm/overlay_45.s",
+          "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call LobbyChat_Initialize -> LobbyMem_InstallOutOfMemoryHandler",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_call_results.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f7aa213e069b964f3fbf6d8480b61ca71cf33bbabb69e3a83c78c2b66e37a5d9"
+        }
+      ],
+      "title": "LobbyChat_Initialize -> LobbyMem_InstallOutOfMemoryHandler original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "LobbySort_MergeAdaptive line 63",
+          "path": "compiler/guest32/ovy45_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "8b5967e3140edf757cc18ad3fcd1adfd0a5437c7c867346d8296c546c0ee2bee"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_45.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "3c0b3057fcb3a81446b20ab4d1119bf507304b58"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-85EEFF88EC0ECDA1",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Caller and callee agree on the original result storage address, extent and observable returned word.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-INDIRECT-RESULT"
+      ],
+      "machine_edge": {
+        "arm_result_offset": "0x64",
+        "arm_target": "ov45_02239B3C",
+        "evidence": "\tadd r0, sp, #0x64\n\tstr r4, [sp]\n\tstr r3, [sp, #0x80]\n\tbl ov45_02239B3C\n\tldr r3, [sp, #0x64]",
+        "function": "LobbySort_MergeAdaptive",
+        "line": 63,
+        "mode": "indirect-result",
+        "result_bytes": 4,
+        "source": "src/lobby/lobby_sort_adaptive.cpp",
+        "target": "LobbySort_UpperBound"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "3c0b3057fcb3a81446b20ab4d1119bf507304b58",
+          "path": "asm/overlay_45.s",
+          "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
+        }
+      ],
+      "postconditions": [
+        "Caller and callee agree on the original result storage address, extent and observable returned word."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call LobbySort_MergeAdaptive -> LobbySort_UpperBound",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_call_results.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f7aa213e069b964f3fbf6d8480b61ca71cf33bbabb69e3a83c78c2b66e37a5d9"
+        }
+      ],
+      "title": "LobbySort_MergeAdaptive -> LobbySort_UpperBound original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "LobbySort_MergeAdaptive line 68",
+          "path": "compiler/guest32/ovy45_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "8b5967e3140edf757cc18ad3fcd1adfd0a5437c7c867346d8296c546c0ee2bee"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_45.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "3c0b3057fcb3a81446b20ab4d1119bf507304b58"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-D53145A4D870CD39",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Caller and callee agree on the original result storage address, extent and observable returned word.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-INDIRECT-RESULT"
+      ],
+      "machine_edge": {
+        "arm_result_offset": "0x60",
+        "arm_target": "ov45_02239ABC",
+        "evidence": "\tadd r0, sp, #0x60\n\tstr r4, [sp]\n\tstr r3, [sp, #0x84]\n\tbl ov45_02239ABC\n\tldr r3, [sp, #0x60]",
+        "function": "LobbySort_MergeAdaptive",
+        "line": 68,
+        "mode": "indirect-result",
+        "result_bytes": 4,
+        "source": "src/lobby/lobby_sort_adaptive.cpp",
+        "target": "LobbySort_LowerBound"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "3c0b3057fcb3a81446b20ab4d1119bf507304b58",
+          "path": "asm/overlay_45.s",
+          "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
+        }
+      ],
+      "postconditions": [
+        "Caller and callee agree on the original result storage address, extent and observable returned word."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call LobbySort_MergeAdaptive -> LobbySort_LowerBound",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_call_results.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f7aa213e069b964f3fbf6d8480b61ca71cf33bbabb69e3a83c78c2b66e37a5d9"
+        }
+      ],
+      "title": "LobbySort_MergeAdaptive -> LobbySort_LowerBound original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "LobbySort_MergeAdaptive line 71",
+          "path": "compiler/guest32/ovy45_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "8b5967e3140edf757cc18ad3fcd1adfd0a5437c7c867346d8296c546c0ee2bee"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "asm/overlay_45.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "3c0b3057fcb3a81446b20ab4d1119bf507304b58"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-D5DB5BEDF0A0BB33",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Caller and callee agree on the original result storage address, extent and observable returned word.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-INDIRECT-RESULT"
+      ],
+      "machine_edge": {
+        "arm_result_offset": "0x5c",
+        "arm_target": "ov45_022399A8",
+        "evidence": "\tadd r0, sp, #0x5c\n\tbl ov45_022399A8\n\tldr r2, [sp, #0x5c]",
+        "function": "LobbySort_MergeAdaptive",
+        "line": 71,
+        "mode": "indirect-result",
+        "result_bytes": 4,
+        "source": "src/lobby/lobby_sort_adaptive.cpp",
+        "target": "LobbySort_Rotate"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "3c0b3057fcb3a81446b20ab4d1119bf507304b58",
+          "path": "asm/overlay_45.s",
+          "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
+        }
+      ],
+      "postconditions": [
+        "Caller and callee agree on the original result storage address, extent and observable returned word."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call LobbySort_MergeAdaptive -> LobbySort_Rotate",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_call_results.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f7aa213e069b964f3fbf6d8480b61ca71cf33bbabb69e3a83c78c2b66e37a5d9"
+        }
+      ],
+      "title": "LobbySort_MergeAdaptive -> LobbySort_Rotate original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    },
+    {
+      "architectural_assumption": "Original assembly and rename provenance must match the admitted edge shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "scavenger line 116",
+          "path": "compiler/guest32/ovy0_registers.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "10ed6cc2aa231dbc99357c6b6ca5fa8008add983a87e4414dc5345c211622012"
+        },
+        {
+          "locator": "Exact original machine evidence for this port register correction; not upstream history audit.",
+          "path": "lib/asm/wifi.s",
+          "provenance_category": "original-source-contract",
+          "repository": "upstream/pokeheartgold",
+          "revision": "cb87c94469c54aac982bf465df746bd4cc61ba69"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-EDGE-C5489CBEA10217AD",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Retain this exact source/hash/line and original machine excerpt as the narrow lowerer obligation.",
+      "incorrect_host_behavior": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "machine_edge": {
+        "evidence": "\tldr r0, [r0, #0x2c]\n\tcmp r0, #0\n\tbeq _020A7644\n\tsubs sl, sl, #1\n\tbne _020A7644\n\tbl send_arprequest",
+        "function": "scavenger",
+        "global": "gCpsState",
+        "line": 116,
+        "mode": "dominating-global",
+        "offset": 44,
+        "source": "lib/libCPS/src/cps_scavenger.c",
+        "target": "send_arprequest"
+      },
+      "original_failure": "Reconstructed source call omits an original observable register value or hidden result address.",
+      "original_provenance": [
+        {
+          "commit": "cb87c94469c54aac982bf465df746bd4cc61ba69",
+          "functions": [
+            "scavenger"
+          ],
+          "path": "lib/asm/wifi.s",
+          "sha256": "a5c15ade1f84499e6c10566a2bf78fa75e866cd2cb94c2c00761a2ed3a02039a"
+        }
+      ],
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Original assembly and rename provenance must match the admitted edge shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original ARM call scavenger -> send_arprequest",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_rules.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "198df05076705eda97fc80846f2d185b7564eb308ed7dc8e839713c6169df1a5"
+        }
+      ],
+      "title": "scavenger -> send_arprequest original register contract",
+      "unresolved_obligations": [
+        "Authenticate existing regression run results; confirm all original return-extension and machine-pattern assumptions at this edge."
+      ]
+    }
+  ],
+  "id": "review-batch-006",
+  "laws": [],
+  "unresolved": [
+    {
+      "id": "UNRESOLVED-CURRENT-ADMISSION-EXPECTATIONS",
+      "obligation": "Current rejection test hard-codes native subset counts and some frontend/inline expectations. RULES.md reports an expectation failure with both compilers. Authenticate recorded run inputs/results before using this test as passing evidence; do not weaken it or infer complete images from stale coverage.",
+      "status": "open"
+    }
+  ],
+  "worktree_reviews": [
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-DATA-140620F4D9988B36",
+        "COR-WT-DATA-2E7BB08979A5E87E",
+        "COR-WT-DATA-45D518A547B8DB74",
+        "COR-WT-DATA-F7E57CCDAC6D5734",
+        "COR-WT-DATA-87638EC462E49151",
+        "COR-WT-DATA-7973DE6442C29402",
+        "COR-WT-DATA-4C98A0777A87EFEB",
+        "COR-WT-DATA-1F7E00B019B51C08",
+        "COR-WT-DATA-853B14B3EEF4616C",
+        "COR-WT-DATA-434E5A35DB82CE29",
+        "COR-WT-DATA-52510527237793E4",
+        "COR-WT-DATA-DBD4AE5CC15BB6F2",
+        "COR-WT-DATA-3C5C4D4BCEBEDF33",
+        "COR-WT-DATA-6D92453D0146954A"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-2ee44fa516a1b5a3e74c3069",
+      "reason": "All fourteen changed input contracts classified separately, with exact archived-source revisions, original owners, sections, extents and relocation records retained. Numerical correctness is source-supported, not newly compiler-verified."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-EDGE-F9E8E0A038CAC527",
+        "COR-WT-EDGE-77A3DA73441B8F44",
+        "COR-WT-EDGE-B0408345D18E8BE0",
+        "COR-WT-EDGE-8C9B030C51FFB0AD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-b489f5a20b1d646aa070c191",
+      "reason": "All added source hashes, machine-edge metadata and provenance excerpts classified by individual call site; archived source/rename references are evidence, not port commits."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-EDGE-78A22D48AD757F9C",
+        "COR-WT-EDGE-85EEFF88EC0ECDA1",
+        "COR-WT-EDGE-D53145A4D870CD39",
+        "COR-WT-EDGE-D5DB5BEDF0A0BB33"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-2ea6a838d62dc631be11373c",
+      "reason": "All added source hashes, machine-edge metadata and provenance excerpts classified by individual call site; archived source/rename references are evidence, not port commits."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-EDGE-C5489CBEA10217AD"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-d772e1a42f563016e58c2c04",
+      "reason": "All added source hashes, machine-edge metadata and provenance excerpts classified by individual call site; archived source/rename references are evidence, not port commits."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-RULE-FACTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-75424c1f704df635b1cb2730",
+      "reason": "Complete closed capability parser, DFS phase/dependency/conflict checks, input layout/fact validation, finite instruction matching and application metadata."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-WT-RULE-FACTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-cdae209f519b1087042b5ed1",
+      "reason": "All eleven operation contracts, provenance strings and tests read; admitted labels are catalog labels and do not establish formal verification."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-c0daef580b2a5b7ee17be6da",
+      "reason": "Full document reviewed, including broad checkpoint history, retained specialized obligations, rejection/negative tests, known failures and startup limits."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-SLOT-LAYOUT",
+        "COR-WT-SLOT-OBSERVATIONS",
+        "COR-WT-SLOT-COMPONENT",
+        "COR-WT-SLOT-RECEIPTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-2951a2c1cb5ce2da3c1ea6a5",
+      "reason": "Full production receipt census and original accessor/task queue fixtures read; path/cast, connected-component, raw-byte, unknown-owner, partial-clear, ABI, DS-layout and lifetime cases. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-ADMISSION-INTEGRITY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-6ba973d19e7b42b6d14d7e35",
+      "reason": "Full rejection script read; real source/member, binding, incomplete C++ and state expectations; hard-coded counts can become stale and are not current pass evidence. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-DWC-STATE",
+        "COR-WT-NETSTART-CLEAR"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-49dc8dfa533857696e1a1c93",
+      "reason": "Full native allocator/error fixture read: original state bytes, native declarations, 257 grow/shrink/failure cases and fatal latch; excludes AC/auth lifecycle. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-RETAINED-SECTIONS",
+        "COR-WT-REGISTER-PROVENANCE",
+        "COR-WT-INLINE-IDENTITY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-e1ade03fa71358d9b29c00a5",
+      "reason": "Full source read: retained-section negative cases, all original data loaders, per-edge rejection, opaque/TLS handling and original/fixture inline identity. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-WT-CALLBACK-RESIDENCY",
+        "COR-WT-RESIDENT-RESET"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-0e64a582a79847a2231d3599",
+      "reason": "Full source read: actual original closure extraction/body hashes, local linkage restoration, strict cyclic dylib binding and consolidated image lifecycle; overlay slice intentionally uninstrumented. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-DWC-CALLBACK-WIDTH",
+        "COR-WT-RULE-FACTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-c11e45caf0f87c6b315e6aaf",
+      "reason": "Full source read: complete original TUs compile, exact original declarations and bounded extracted AC allocator callback fixture; no full AC startup. No test execution performed by this review batch."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [
+        "COR-DWC-CALLBACK-WIDTH",
+        "COR-DWC-CALLBACK-TYPE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-c32ad99aeb65e2aa06fcf31e",
+      "reason": "Full source read previously in bounded DWC investigation; negative native layout/type/truncation fixture, not AC implementation. No test execution performed by this review batch."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-68a4d3a373b27511b487128d",
+      "reason": "Complete exploratory script read: observed dependency reachability and actual nm matches across candidate build variants. Filename matches remain heuristic; no ABI/admission inference; console limit does not truncate its full JSON output."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-8f9c6d9879b540b092d879d6",
+      "reason": "Complete exploratory script read: observed direct dependency union/intersection and heuristic DWC classification, with explicit unknowns and no execution inference."
+    },
+    {
+      "classification": "refactor_or_unrelated",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-14df03402b356321e981c796",
+      "reason": "Complete diagnostic narrative read; partial-provider corrections and rejection evidence map to existing records. Historical count snapshots and old offset claim remain contextual evidence, not assertions about current completion."
+    }
+  ]
+}

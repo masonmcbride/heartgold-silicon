@@ -1,0 +1,1501 @@
+{
+  "change_reviews": [
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-STABLE-CODE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0cf2d208caded1139f12a127",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-ITERATOR-NATIVE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-0d40f5f61b1bf2bcf94b7029",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-116536c61bbbc4c47fd8a214",
+      "reason": "All file diff hunks inspected; tests cover stable pins/roots/registration ownership; not successful game admission."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-1372ddb3ad9285865d0ce8ea",
+      "reason": "All file diff hunks inspected; tests cover stable pins/roots/registration ownership; not successful game admission."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-CHAT-CANONICAL-VIEWS",
+        "COR-HIST-CHAT-MEMBER-CALL"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-190dec52d4fa2b240f30ea9e",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-REGISTER-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-23b29d46ed1aaf1023591b65",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-CHAT-CANONICAL-VIEWS",
+        "COR-HIST-LOBBY-VTABLE-DATA",
+        "COR-HIST-CHAT-HANDLERS-DATA"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-27240770283eea274dbbee58",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-45938b245dec1d4fad2a1873",
+      "reason": "All file diff hunks inspected; tests cover stable pins/roots/registration ownership; not successful game admission."
+    },
+    {
+      "classification": "test_only_change",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-6bcf6d549695e6d3a9bd7c97",
+      "reason": "All file diff hunks inspected; tests cover stable pins/roots/registration ownership; not successful game admission."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-CHAT-CANONICAL-VIEWS",
+        "COR-HIST-CHAT-MEMBER-CALL"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-898e188891df1a9a9d48f6c9",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-ITERATOR-NATIVE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-973a73c0cf1808c01926d87d",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-ITERATOR-NATIVE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-bc3fc1f892f7f51a8eaff2e0",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-STABLE-CODE",
+        "COR-HIST-STABLE-STORAGE",
+        "COR-HIST-REGISTER-DEDUP"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-cb6ae1afb3ce09ffdb843c37",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-STABLE-CODE",
+        "COR-HIST-PROVIDER-PINS",
+        "COR-HIST-ROOT-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-e04acb2c15142bcc408826c9",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-HIST-REGISTER-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-f3a7d328aa0819eb9593625e",
+      "reason": "All file diff hunks inspected; tests cover the linked independent corrections and explicit WIP native ABI assumptions."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-HIST-FOOTPRINT-MUL",
+        "COR-HIST-MIME-FLOAT"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-e04affb7bd9ad2eaf06908f5",
+      "reason": "Complete changed recipe, source-adaptation and provider-selection hunks examined; no test execution inferred."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-HIST-WIFI-SUBSET-OWNER"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-37aa5240c48e4b794953650a",
+      "reason": "Complete changed recipe, source-adaptation and provider-selection hunks examined; no test execution inferred."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-HIST-FOOTPRINT-ANONYMOUS",
+        "COR-HIST-SWALOT-SPACE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-28c23f8ee93c32d2ae603312",
+      "reason": "Complete changed recipe, source-adaptation and provider-selection hunks examined; no test execution inferred."
+    },
+    {
+      "classification": "compiler_representation_change",
+      "correction_ids": [
+        "COR-HIST-FOOTPRINT-ANONYMOUS",
+        "COR-HIST-MINIGAME-DATA-FOOTPRINT_STAMP",
+        "COR-HIST-MINIGAME-DATA-PLAZA_GAME_SWALOT_PLOP",
+        "COR-HIST-MINIGAME-DATA-PLAZA_GAME_MIME_JR_TOP"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-21b4451ca0d042062003aa4e",
+      "reason": "Complete changed recipe, source-adaptation and provider-selection hunks examined; no test execution inferred."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "Original source-local key, compatible signature and explicit previous catalog",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "candidate/allocate",
+          "path": "compiler/guest32/code_ids.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "plan",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "address allocation",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-STABLE-CODE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Pin previous valid identities, derive checkout-independent hash candidates for new keys and reject ABI changes/collisions.",
+      "incorrect_host_behavior": "Sequential address assignment changes old callback words when new functions/images participate.",
+      "invariant": "Established guest code identities remain stable and unique across catalog extension without becoming original ARM/Thumb PCs.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CODE-IDENTITY-STABILITY"
+      ],
+      "original_failure": "Sequential address assignment changes old callback words when new functions/images participate.",
+      "postconditions": [
+        "Established guest code identities remain stable and unique across catalog extension without becoming original ARM/Thumb PCs."
+      ],
+      "preconditions": [
+        "Original source-local key, compatible signature and explicit previous catalog"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Persistent guest code catalogs",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_stable_ids.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+        }
+      ],
+      "title": "Adding images preserves existing synthetic function handles"
+    },
+    {
+      "architectural_assumption": "Prior plan and original alias-group geometry available",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "prior_views/pinned cursor",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-STABLE-STORAGE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Validate pinned extents and agreeing original anchor/base; retain original coordinates and start new allocation after prior static_end.",
+      "incorrect_host_behavior": "Replanning added images can move old C globals or reuse old reserved extent.",
+      "invariant": "Existing object and interior-view coordinates retain their identity and extents across plan extension.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STORAGE-IDENTITY-STABILITY"
+      ],
+      "original_failure": "Replanning added images can move old C globals or reuse old reserved extent.",
+      "postconditions": [
+        "Existing object and interior-view coordinates retain their identity and extents across plan extension."
+      ],
+      "preconditions": [
+        "Prior plan and original alias-group geometry available"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Shared original C object coordinates",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_stable_ids.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+        }
+      ],
+      "title": "Additional images cannot move previously placed C storage"
+    },
+    {
+      "architectural_assumption": "Exact record equality, not function-name similarity",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "seen_register_edges",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-REGISTER-DEDUP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Deduplicate exact canonical JSON fingerprints; retain all distinct records for lowerer conflict checking.",
+      "incorrect_host_behavior": "Merged image catalogs can repeat identical metadata and trigger false duplicate-edge errors.",
+      "invariant": "Only identical evidence records coalesce; differing constraints remain visible for rejection or resolution.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-EVIDENCE-IDENTITY"
+      ],
+      "original_failure": "Merged image catalogs can repeat identical metadata and trigger false duplicate-edge errors.",
+      "postconditions": [
+        "Only identical evidence records coalesce; differing constraints remain visible for rejection or resolution."
+      ],
+      "preconditions": [
+        "Exact record equality, not function-name similarity"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Shared original register metadata",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_stable_ids.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+        }
+      ],
+      "title": "Identical register edges deduplicate without hiding conflicts"
+    },
+    {
+      "architectural_assumption": "Actual original definitions and old handles known; call operands still require lowerer checks",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "merge_main_overlay_pins",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-PROVIDER-PINS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Keep definition metadata over declaration, refine undefined declaration with actual definition and reject conflicting same-kind ABI/address evidence.",
+      "incorrect_host_behavior": "An old-style overlay declaration can replace an actual main provider ABI when merging pins.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "An old-style overlay declaration can replace an actual main provider ABI when merging pins.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Actual original definitions and old handles known; call operands still require lowerer checks"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Main/overlay code pin merger",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_catalog_pins.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "da7ab4660c9aa7bc68f27455285a447a45e056add6565350ddd950d50f4429a4"
+        }
+      ],
+      "title": "Definition metadata outranks caller declarations while retaining handles"
+    },
+    {
+      "architectural_assumption": "Complete original main descriptions available",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "original_root_owners/root_symbol",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-ROOT-OWNER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Require exactly one nonlocal original definition and seed complete-member closure from that owner.",
+      "incorrect_host_behavior": "Link-demand additions may select a declaration or guessed subset provider instead of actual original main member.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "Link-demand additions may select a declaration or guessed subset provider instead of actual original main member.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Complete original main descriptions available"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Explicit additional closure roots",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_extra_roots.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "da0aec23e226c3961016865e3d229e4dce8a942395d0dacf9b0dab3462b8550d"
+        }
+      ],
+      "title": "Additional demanded roots resolve to unique original definitions"
+    },
+    {
+      "architectural_assumption": "This historical revision explicitly reviews only OVY_0/38; later extensions require their own source evidence",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "scoped_spec",
+          "path": "compiler/guest32/registration_scope.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "scoped_spec invocation",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-REGISTER-OWNER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Keep reviewed OVY_0/38 specs and recursively clear collection contents for other owners.",
+      "incorrect_host_behavior": "Default OVY_0 register metadata was available to unrelated overlay plans.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "original_failure": "Default OVY_0 register metadata was available to unrelated overlay plans.",
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "This historical revision explicitly reviews only OVY_0/38; later extensions require their own source evidence"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Per-image register contracts",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_registration_scope.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "934fc14099c91f995d1724374d90cce321d329b09209d5f4d4d973d239cd6263"
+        }
+      ],
+      "title": "Unreviewed overlay cannot borrow another image register evidence"
+    },
+    {
+      "architectural_assumption": "Private runtime records; source layouts and every participating consumer must be coordinated",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "LobbyChat_RemoveChannel/MapNode/Root",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "MapNode and Root layout changes",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "dwc_lobby_chat_data.o abi_views",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-CHAT-CANONICAL-VIEWS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use LobbyChannelMapNode/LobbyChatManager/Iterator and canonical users/root/first fields; update consumer ABI-view evidence.",
+      "incorrect_host_behavior": "Private DS-shaped views use MapNode offsets 28/32/40 and Root.channels 128 while canonical native fields are 48/56/64 and 184.",
+      "invariant": "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation.",
+      "known_counterexamples": [
+        "WIP adaptation/source replacement is evidence of an attempt, not complete OVY_45 execution."
+      ],
+      "law_ids": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "original_failure": "Private DS-shaped views use MapNode offsets 28/32/40 and Root.channels 128 while canonical native fields are 48/56/64 and 184.",
+      "postconditions": [
+        "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation."
+      ],
+      "preconditions": [
+        "Private runtime records; source layouts and every participating consumer must be coordinated"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Lobby channel map and user-set traversal",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Lobby removal uses canonical pointer-bearing native types"
+    },
+    {
+      "architectural_assumption": "Original table is a direct zero-adjustment case with proven target signature",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "MemberTable/Bound",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "Method typedef",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-CHAT-MEMBER-CALL",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use the explicit BOOL (*)(Root*,int) entry with record size 16 and method offset 8 checks; invoke with the original receiver.",
+      "incorrect_host_behavior": "Native C++ member-pointer representation is not the original direct callback record.",
+      "invariant": "A member-call representation preserves target, receiver adjustment and signature; arbitrary native member-pointer bits are not interchangeable.",
+      "known_counterexamples": [
+        "Does not admit virtual or adjusted C++ member-pointer encodings."
+      ],
+      "law_ids": [
+        "LAW-MEMBER-FUNCTION-BOUNDARY"
+      ],
+      "original_failure": "Native C++ member-pointer representation is not the original direct callback record.",
+      "postconditions": [
+        "A member-call representation preserves target, receiver adjustment and signature; arbitrary native member-pointer bits are not interchangeable."
+      ],
+      "preconditions": [
+        "Original table is a direct zero-adjustment case with proven target signature"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Direct member callback data/call boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Direct zero-adjustment member callback has a typed native call boundary"
+    },
+    {
+      "architectural_assumption": "Iterator is runtime-only; pinned DS declaration remains authoritative for original representation",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Iterator",
+          "path": "native-adaptations/OVY_45/tree-iterator-native.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "original TU wrapper",
+          "path": "native-adaptations/OVY_45/ppw_lobby_get_work_native.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "OVY45 native source/iterator overrides",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-ITERATOR-NATIVE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Preinclude a pointer-sized runtime Iterator in selected native members/target and compile original implementation through wrapper; fail if expected source member is missing.",
+      "incorrect_host_behavior": "Original sizeof(Iterator)==4 declaration cannot describe a full native pointer iterator.",
+      "invariant": "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation.",
+      "known_counterexamples": [
+        "Historical wrapper/target-wide preinclude is an attempt with remaining cross-member review obligations."
+      ],
+      "law_ids": [
+        "LAW-NATIVE-AGGREGATE-COHERENCE"
+      ],
+      "original_failure": "Original sizeof(Iterator)==4 declaration cannot describe a full native pointer iterator.",
+      "postconditions": [
+        "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation."
+      ],
+      "preconditions": [
+        "Iterator is runtime-only; pinned DS declaration remains authoritative for original representation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native-only lobby iterator ABI",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original pointer iterator has a coordinated native-width view"
+    },
+    {
+      "architectural_assumption": "Source and consumer guards match; native recipe applies only to reviewed native providers",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "dwc_lobby_chat_data.o vtable layouts",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-LOBBY-VTABLE-DATA",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Add explicit pointer offsets for nine original player/request vtables while preserving scalar suffixes.",
+      "incorrect_host_behavior": "Original four-byte vtable entries do not emit native callback pointers without a source layout recipe.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Original four-byte vtable entries do not emit native callback pointers without a source layout recipe.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Source and consumer guards match; native recipe applies only to reviewed native providers"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original lobby vtable static data",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Lobby request vtables preserve relocated function identities"
+    },
+    {
+      "architectural_assumption": "Original source/consumer hashes and matching compiled consumers",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "ef61b8a876f3755b46a61844b13de85bfe97d28d",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ciServerMessageHandlers",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-CHAT-HANDLERS-DATA",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Declare original four-byte pointer offsets 0 through 428 without changing scalar data algorithms.",
+      "incorrect_host_behavior": "The original 432-byte string/function table contains 108 pointer words needing native relocation.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "The original 432-byte string/function table contains 108 pointer words needing native relocation.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Original source/consumer hashes and matching compiled consumers"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Chat server handler string/function pairs",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Chat message-handler table widens only declared pointer words"
+    },
+    {
+      "architectural_assumption": "Exactly one expected section and source-hashed input",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "_normalize_minigame_assembly footprint branch",
+          "path": "cmake/native_data_layouts.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        },
+        {
+          "locator": "asm/footprint_stamp_data.o",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-FOOTPRINT-ANONYMOUS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Insert one private label after the unique .rodata declaration, preserving the original 16-byte prefix.",
+      "incorrect_host_behavior": "Original bytes before the first public label have no block owner in the assembly parser.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Original bytes before the first public label have no block owner in the assembly parser.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Exactly one expected section and source-hashed input"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Footprint stamp anonymous data prefix",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Unnamed original data prefix retains its own storage identity"
+    },
+    {
+      "architectural_assumption": "Finite source-guarded expression grammar",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "_normalize_minigame_assembly Swalot branch",
+          "path": "cmake/native_data_layouts.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-SWALOT-SPACE",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Evaluate only integer AST constants and multiply/add/subtract with an explicit nonnegative extent bound.",
+      "incorrect_host_behavior": "Original multiplication/addition/subtraction .space syntax was not accepted by the data parser.",
+      "invariant": "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONSTANT-EXPRESSION"
+      ],
+      "original_failure": "Original multiplication/addition/subtraction .space syntax was not accepted by the data parser.",
+      "postconditions": [
+        "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code."
+      ],
+      "preconditions": [
+        "Finite source-guarded expression grammar"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Swalot original assembly reservations",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original minigame space expressions have a bounded evaluator"
+    },
+    {
+      "architectural_assumption": "Unmodified original data and coordinated native consumer ABI",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/footprint_stamp_data.o",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-MINIGAME-DATA-FOOTPRINT_STAMP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Record source/consumer hashes, all original blocks and pointer/padding maps; enforce expected block/relocation counts.",
+      "incorrect_host_behavior": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Unmodified original data and coordinated native consumer ABI"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original footprint_stamp static data",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native data layout recipe for footprint_stamp"
+    },
+    {
+      "architectural_assumption": "Unmodified original data and coordinated native consumer ABI",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/plaza_game_swalot_plop_data.o",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-MINIGAME-DATA-PLAZA_GAME_SWALOT_PLOP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Record source/consumer hashes, all original blocks and pointer/padding maps; enforce expected block/relocation counts.",
+      "incorrect_host_behavior": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Unmodified original data and coordinated native consumer ABI"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original plaza_game_swalot_plop static data",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native data layout recipe for plaza_game_swalot_plop"
+    },
+    {
+      "architectural_assumption": "Unmodified original data and coordinated native consumer ABI",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "asm/plaza_game_mime_jr_top_data.o",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-MINIGAME-DATA-PLAZA_GAME_MIME_JR_TOP",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Record source/consumer hashes, all original blocks and pointer/padding maps; enforce expected block/relocation counts.",
+      "incorrect_host_behavior": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "invariant": "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Native consumer lacks source-reviewed provider bytes/pointer strides for the original member.",
+      "postconditions": [
+        "Original DataLayout offsets, zero padding, and relocation identities govern explicit initialization; unresolved coordinates remain link obligations."
+      ],
+      "preconditions": [
+        "Unmodified original data and coordinated native consumer ABI"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Original plaza_game_mime_jr_top static data",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native data layout recipe for plaza_game_mime_jr_top"
+    },
+    {
+      "architectural_assumption": "Original source hashes and exact two intrinsic occurrences; source arithmetic before the helper remains original",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "COMPILER_BOUNDED_OPERATIONS footprint_stamp_effects",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-FOOTPRINT-MUL",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Perform signed-converted operands in unsigned 64-bit multiplication and reinterpret the low result as s64.",
+      "incorrect_host_behavior": "Original _ll_mul intrinsic is unavailable to native C, and signed-overflow assumptions can change wrap behavior.",
+      "invariant": "Original integer widths and operation codes are retained; no native widening or speculative overflow flags.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-INTEGER"
+      ],
+      "original_failure": "Original _ll_mul intrinsic is unavailable to native C, and signed-overflow assumptions can change wrap behavior.",
+      "postconditions": [
+        "Original integer widths and operation codes are retained; no native widening or speculative overflow flags."
+      ],
+      "preconditions": [
+        "Original source hashes and exact two intrinsic occurrences; source arithmetic before the helper remains original"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Signed fixed-point scale/length helper",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Footprint arithmetic keeps the low original 64 product bits"
+    },
+    {
+      "architectural_assumption": "Original helper semantics and target floating rounding require independent confirmation",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "COMPILER_BOUNDED_OPERATIONS plaza_game_mime_jr_top",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-MIME-FLOAT",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Replace only source-guarded sin/cos helper calls with explicit f32 value conversion.",
+      "incorrect_host_behavior": "Original _f_lltof helper cannot be linked as an ordinary native symbol.",
+      "invariant": "Numeric value conversions preserve original signedness, precision and rounding obligations rather than reinterpreting bit patterns.",
+      "known_counterexamples": [
+        "Not a proof of all original floating helper behavior."
+      ],
+      "law_ids": [
+        "LAW-NUMERIC-CONVERSION"
+      ],
+      "original_failure": "Original _f_lltof helper cannot be linked as an ordinary native symbol.",
+      "postconditions": [
+        "Numeric value conversions preserve original signedness, precision and rounding obligations rather than reinterpreting bit patterns."
+      ],
+      "preconditions": [
+        "Original helper semantics and target floating rounding require independent confirmation"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Signed integer-to-f32 compiler helper",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Mime Jr integer-to-float helper uses the original value conversion"
+    },
+    {
+      "architectural_assumption": "Reviewed native ABI only; no claim of guest/native interchangeability",
+      "classification": "correctness_fix",
+      "commit_provenance": [
+        {
+          "commit": "89b421c0de471d2a93432cb6446480f3c7e5aa8c",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "hg_ovy0_wifi_subset",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-HIST-WIFI-SUBSET-OWNER",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Reject simultaneous full owner selection; compile the original Wi-Fi member with real production flags, main interface and explicit exports, then link OVY_80 to it.",
+      "incorrect_host_behavior": "A partial Wi-Fi provider could coexist with complete OVY_0 definitions or import from an incorrect interface.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "A partial Wi-Fi provider could coexist with complete OVY_0 definitions or import from an incorrect interface.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Reviewed native ABI only; no claim of guest/native interchangeability"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Partial original OVY_0 Wi-Fi native provider",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native Wi-Fi subset cannot duplicate complete OVY_0"
+    }
+  ],
+  "id": "review-batch-005",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Persistent guest code catalogs",
+      "E": [
+        {
+          "locator": "candidate/allocate",
+          "path": "compiler/guest32/code_ids.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "plan",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "address allocation",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "P": [
+        "Original source-local key, compatible signature and explicit previous catalog"
+      ],
+      "Q": [
+        "Established guest code identities remain stable and unique across catalog extension without becoming original ARM/Thumb PCs."
+      ],
+      "T": "Pin previous valid identities, derive checkout-independent hash candidates for new keys and reject ABI changes/collisions.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_stable_ids.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Persistent guest code catalogs",
+      "architectural_assumptions": [
+        "Original source-local key, compatible signature and explicit previous catalog"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CODE-IDENTITY-STABILITY",
+      "implementation_locations": [],
+      "invariant": "Established guest code identities remain stable and unique across catalog extension without becoming original ARM/Thumb PCs.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Adding images preserves existing synthetic function handles",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Shared original C object coordinates",
+      "E": [
+        {
+          "locator": "prior_views/pinned cursor",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "P": [
+        "Prior plan and original alias-group geometry available"
+      ],
+      "Q": [
+        "Existing object and interior-view coordinates retain their identity and extents across plan extension."
+      ],
+      "T": "Validate pinned extents and agreeing original anchor/base; retain original coordinates and start new allocation after prior static_end.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_stable_ids.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Shared original C object coordinates",
+      "architectural_assumptions": [
+        "Prior plan and original alias-group geometry available"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-STORAGE-IDENTITY-STABILITY",
+      "implementation_locations": [],
+      "invariant": "Existing object and interior-view coordinates retain their identity and extents across plan extension.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Additional images cannot move previously placed C storage",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Shared original register metadata",
+      "E": [
+        {
+          "locator": "seen_register_edges",
+          "path": "compiler/guest32/shared.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "P": [
+        "Exact record equality, not function-name similarity"
+      ],
+      "Q": [
+        "Only identical evidence records coalesce; differing constraints remain visible for rejection or resolution."
+      ],
+      "T": "Deduplicate exact canonical JSON fingerprints; retain all distinct records for lowerer conflict checking.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_stable_ids.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "fb804fe4f947f60d1b43592199d93cdc31b8d8da8192dc65438ae4c27fa3c919"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Shared original register metadata",
+      "architectural_assumptions": [
+        "Exact record equality, not function-name similarity"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-EVIDENCE-IDENTITY",
+      "implementation_locations": [],
+      "invariant": "Only identical evidence records coalesce; differing constraints remain visible for rejection or resolution.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Identical register edges deduplicate without hiding conflicts",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Lobby channel map and user-set traversal",
+      "E": [
+        {
+          "locator": "LobbyChat_RemoveChannel/MapNode/Root",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "MapNode and Root layout changes",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "dwc_lobby_chat_data.o abi_views",
+          "path": "cmake/native_data_layouts.json",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "P": [
+        "Private runtime records; source layouts and every participating consumer must be coordinated"
+      ],
+      "Q": [
+        "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation."
+      ],
+      "T": "Use LobbyChannelMapNode/LobbyChatManager/Iterator and canonical users/root/first fields; update consumer ABI-view evidence.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Lobby channel map and user-set traversal",
+      "architectural_assumptions": [
+        "Private runtime records; source layouts and every participating consumer must be coordinated"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-NATIVE-AGGREGATE-COHERENCE",
+      "implementation_locations": [],
+      "invariant": "Every native consumer of one original object agrees on its canonical field layout, ownership and allocation representation.",
+      "limitations": [
+        "WIP adaptation/source replacement is evidence of an attempt, not complete OVY_45 execution."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Lobby removal uses canonical pointer-bearing native types",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Direct member callback data/call boundary",
+      "E": [
+        {
+          "locator": "MemberTable/Bound",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        },
+        {
+          "locator": "Method typedef",
+          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
+        }
+      ],
+      "P": [
+        "Original table is a direct zero-adjustment case with proven target signature"
+      ],
+      "Q": [
+        "A member-call representation preserves target, receiver adjustment and signature; arbitrary native member-pointer bits are not interchangeable."
+      ],
+      "T": "Use the explicit BOOL (*)(Root*,int) entry with record size 16 and method offset 8 checks; invoke with the original receiver.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Direct member callback data/call boundary",
+      "architectural_assumptions": [
+        "Original table is a direct zero-adjustment case with proven target signature"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-MEMBER-FUNCTION-BOUNDARY",
+      "implementation_locations": [],
+      "invariant": "A member-call representation preserves target, receiver adjustment and signature; arbitrary native member-pointer bits are not interchangeable.",
+      "limitations": [
+        "Does not admit virtual or adjusted C++ member-pointer encodings."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Direct zero-adjustment member callback has a typed native call boundary",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Signed integer-to-f32 compiler helper",
+      "E": [
+        {
+          "locator": "COMPILER_BOUNDED_OPERATIONS plaza_game_mime_jr_top",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "89b421c0de471d2a93432cb6446480f3c7e5aa8c"
+        }
+      ],
+      "P": [
+        "Original helper semantics and target floating rounding require independent confirmation"
+      ],
+      "Q": [
+        "Numeric value conversions preserve original signedness, precision and rounding obligations rather than reinterpreting bit patterns."
+      ],
+      "T": "Replace only source-guarded sin/cos helper calls with explicit f32 value conversion.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Signed integer-to-f32 compiler helper",
+      "architectural_assumptions": [
+        "Original helper semantics and target floating rounding require independent confirmation"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-NUMERIC-CONVERSION",
+      "implementation_locations": [],
+      "invariant": "Numeric value conversions preserve original signedness, precision and rounding obligations rather than reinterpreting bit patterns.",
+      "limitations": [
+        "Not a proof of all original floating helper behavior."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Mime Jr integer-to-float helper uses the original value conversion",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": []
+}

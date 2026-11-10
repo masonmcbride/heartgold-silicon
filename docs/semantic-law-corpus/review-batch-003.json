@@ -1,0 +1,2246 @@
+{
+  "change_reviews": [],
+  "corrections": [
+    {
+      "architectural_assumption": "Original common.mk and per-member Makefile exception policy parse unambiguously",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "cxx_flags",
+          "path": "compiler/guest32/frontend.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1d1690998476ac1d0b96feaac36768e79c884c259b77f87212035f1172961e09"
+        },
+        {
+          "locator": "C++ frontend and coverage",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        },
+        {
+          "locator": "C++ compiled membership",
+          "path": "compiler/guest32/archive.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2c8c7ce0516fb46db290366513f492488aa6f86f49edca92f9f5d92bf3a8c3a5"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-CPP-ABI",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Compile C++ with clang++, original gnu++98 and source-verified global/per-member exception flags; count emitted C++ members as code.",
+      "incorrect_host_behavior": "Treating C++ as assembly or C would omit code, lose mangled identity or guess exceptions policy.",
+      "invariant": "Frontend language and feature policy preserve the original program declarations, identities and enabled exception behavior.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FRONTEND-SEMANTICS"
+      ],
+      "original_failure": "Treating C++ as assembly or C would omit code, lose mangled identity or guess exceptions policy.",
+      "postconditions": [
+        "Frontend language and feature policy preserve the original program declarations, identities and enabled exception behavior."
+      ],
+      "preconditions": [
+        "Original common.mk and per-member Makefile exception policy parse unambiguously"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original C++ overlay members",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "C++ frontend follows original exception policy"
+    },
+    {
+      "architectural_assumption": "Source-validated private declaration adaptation; no native layout rewrite",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "private_overlay",
+          "path": "compiler/guest32/frontend.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1d1690998476ac1d0b96feaac36768e79c884c259b77f87212035f1172961e09"
+        },
+        {
+          "locator": "guest32_frontend private_declarations",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-PRIVATE-DECLARATIONS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Use declaration-only VFS adaptations and retain original source paths.",
+      "incorrect_host_behavior": "Missing private declarations prevent compilation; applying native layout adaptations during guest frontend could change guest ABI.",
+      "invariant": "A call declaration agrees with its linked provider signature, linkage and argument representation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CALL-DECLARATION"
+      ],
+      "original_failure": "Missing private declarations prevent compilation; applying native layout adaptations during guest frontend could change guest ABI.",
+      "postconditions": [
+        "A call declaration agrees with its linked provider signature, linkage and argument representation."
+      ],
+      "preconditions": [
+        "Source-validated private declaration adaptation; no native layout rewrite"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original private function declarations",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Private declaration repairs retain original ABI ownership"
+    },
+    {
+      "architectural_assumption": "Closed member census; source/debug origin and direct-use evidence available",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "sourceInlineDefinition/privateInlineEligible",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a886f090edf7a72308ae6324746e37a94e1a3901cc5a3d52f088953f822f157b"
+        },
+        {
+          "locator": "private_inline_plan",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        },
+        {
+          "locator": "PrivateInlines",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-INLINE-IDENTITY",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Prove original inline origin and direct-only uses, reject external uses/relocations, propagate unsafe callers to callees, then internalize eligible bodies before key assignment.",
+      "incorrect_host_behavior": "Conflicting source-local C++ inline definitions can incorrectly coalesce or acquire one cross-TU identity.",
+      "invariant": "Local code identities remain distinct unless original linkage and complete use evidence justify coalescing.",
+      "known_counterexamples": [
+        "C++ ODR and compiler-generated helpers outside the admitted source patterns remain rejected."
+      ],
+      "law_ids": [
+        "LAW-LOCAL-CODE-IDENTITY"
+      ],
+      "original_failure": "Conflicting source-local C++ inline definitions can incorrectly coalesce or acquire one cross-TU identity.",
+      "postconditions": [
+        "Local code identities remain distinct unless original linkage and complete use evidence justify coalescing."
+      ],
+      "preconditions": [
+        "Closed member census; source/debug origin and direct-use evidence available"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "C++ inline body ownership",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Only closed nonescaping inline bodies become TU-private"
+    },
+    {
+      "architectural_assumption": "Complete original member descriptions available",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "definitions and ownership_conflicts",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DEFINITION-CONFLICT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Record all duplicate definitions; reject nonidentical origin/signature/body sets and require explicit inline coalescing evidence.",
+      "incorrect_host_behavior": "Selecting a definition before comparing origins/signatures/hashes can hide conflicting original providers.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "Selecting a definition before comparing origins/signatures/hashes can hide conflicting original providers.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Complete original member descriptions available"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Shared code catalog duplicate providers",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Duplicate bodies cannot silently choose a provider"
+    },
+    {
+      "architectural_assumption": "Explicit original code catalog; zero is reserved for unassigned direct-only identities",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Image::read/constantValue",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a886f090edf7a72308ae6324746e37a94e1a3901cc5a3d52f088953f822f157b"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-CODE-DOMAIN",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reject out-of-u32 identities, zero address-taken handles and duplicate keys/nonzero addresses; require nonzero when constant code identity is used.",
+      "incorrect_host_behavior": "Overflowing handles truncate, duplicate keys/addresses retain an arbitrary entry, or zero becomes an executable callback identity.",
+      "invariant": "Every executable code handle is representable, nonzero and uniquely identifies its compatible original target.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CODE-IDENTITY-DOMAIN"
+      ],
+      "original_failure": "Overflowing handles truncate, duplicate keys/addresses retain an arbitrary entry, or zero becomes an executable callback identity.",
+      "postconditions": [
+        "Every executable code handle is representable, nonzero and uniquely identifies its compatible original target."
+      ],
+      "preconditions": [
+        "Explicit original code catalog; zero is reserved for unassigned direct-only identities"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Guest code catalog and function constants",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Code handles have a validated nonzero unique domain"
+    },
+    {
+      "architectural_assumption": "Source-specific adjacent-call proof and known sign/zero extension attributes",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "previous-result edge",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-NARROW-ARM-RESULT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Require zero call arguments, one result word and unique sign/zero extension evidence; extend to i32 or reject.",
+      "incorrect_host_behavior": "Forwarding a narrow LLVM integer does not establish the original upper r0 bits.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "original_failure": "Forwarding a narrow LLVM integer does not establish the original upper r0 bits.",
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Source-specific adjacent-call proof and known sign/zero extension attributes"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "ARM32 caller/callee register boundary",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Adjacent calls preserve the defined full ARM result word"
+    },
+    {
+      "architectural_assumption": "Verified source/member/line/global contract and supported original branch shape",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "dominating-global edge",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-GLOBAL-ARM-RESULT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Prove a linear predecessor chain and matching nonzero test/load/global/offset with no intervening call; pass that SSA load.",
+      "incorrect_host_behavior": "Reloading mutable global storage or guessing live-in r0 can observe a different value after a call.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "original_failure": "Reloading mutable global storage or guessing live-in r0 can observe a different value after a call.",
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Verified source/member/line/global contract and supported original branch shape"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original branch-tested global register continuation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Global continuation uses the original tested SSA value"
+    },
+    {
+      "architectural_assumption": "Machine evidence proves an original four-byte stack home and provider store",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "indirect-result edges/ResultHomes",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-INDIRECT-RESULT-ABI",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Validate the original void provider and first pointer parameter, pass a four-byte guest result home, then load the result from checked storage.",
+      "incorrect_host_behavior": "An original pointer-based output call exposed as scalar return in reconstructed C has an incompatible LLVM signature.",
+      "invariant": "Caller and callee agree on the original result storage address, extent and observable returned word.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-INDIRECT-RESULT"
+      ],
+      "original_failure": "An original pointer-based output call exposed as scalar return in reconstructed C has an incompatible LLVM signature.",
+      "postconditions": [
+        "Caller and callee agree on the original result storage address, extent and observable returned word."
+      ],
+      "preconditions": [
+        "Machine evidence proves an original four-byte stack home and provider store"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original small aggregate or hidden indirect call result",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original hidden result homes remain explicit call storage"
+    },
+    {
+      "architectural_assumption": "Static call identified; frame is established and home is not an escaping allocation",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ResultHomes preallocation",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RESULT-HOME-LIFETIME",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Allocate one home per static call in entry, reuse within the invocation, release with the guest frame.",
+      "incorrect_host_behavior": "Allocating a guest result home at each loop iteration grows guest stack storage unnecessarily.",
+      "invariant": "Frame exit invalidates frame-owned extents and releases their bookkeeping without invalidating unrelated allocations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-FRAME-LIFETIME"
+      ],
+      "original_failure": "Allocating a guest result home at each loop iteration grows guest stack storage unnecessarily.",
+      "postconditions": [
+        "Frame exit invalidates frame-owned extents and releases their bookkeeping without invalidating unrelated allocations."
+      ],
+      "preconditions": [
+        "Static call identified; frame is established and home is not an escaping allocation"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Guest hidden result stack homes",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Loop call result homes are bounded by invocation lifetime"
+    },
+    {
+      "architectural_assumption": "Verified original module; PHI nodes are created before translating edges",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "ReversePostOrderTraversal",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SSA-ORDER",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Lower reachable blocks in reverse postorder, preserve unreachable blocks and resolve PHI/backedges separately without changing CFG.",
+      "incorrect_host_behavior": "Valid original LLVM IR can textually place a dominated use before the block defining its operand.",
+      "invariant": "Elaboration preserves the original CFG and SSA dependency relations independent of textual block order.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SSA-ELABORATION"
+      ],
+      "original_failure": "Valid original LLVM IR can textually place a dominated use before the block defining its operand.",
+      "postconditions": [
+        "Elaboration preserves the original CFG and SSA dependency relations independent of textual block order."
+      ],
+      "preconditions": [
+        "Verified original module; PHI nodes are created before translating edges"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "LLVM SSA basic blocks",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_compiler.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+        }
+      ],
+      "title": "Lower definitions before non-PHI uses regardless of block text order"
+    },
+    {
+      "architectural_assumption": "Guest external mode and owning image placement are proven",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "unsized global declarations",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-INCOMPLETE-ADDRESS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Admit only a placed guest external declaration with an authoritative coordinate; reject unsized definitions, nondefault address spaces and TLS.",
+      "incorrect_host_behavior": "Requiring every externally declared address to have a sized LLVM type rejects a valid address-only use or invites guessed storage.",
+      "invariant": "Address identity may be preserved without inventing object extent; typed access still requires a concrete layout and ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ADDRESS-WITHOUT-LAYOUT"
+      ],
+      "original_failure": "Requiring every externally declared address to have a sized LLVM type rejects a valid address-only use or invites guessed storage.",
+      "postconditions": [
+        "Address identity may be preserved without inventing object extent; typed access still requires a concrete layout and ownership."
+      ],
+      "preconditions": [
+        "Guest external mode and owning image placement are proven"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Incomplete external global declaration addresses",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Taking an incomplete external address needs no guessed allocation"
+    },
+    {
+      "architectural_assumption": "Catalog and lowerer implementation capabilities agree; diagnostic checking does not apply transformations",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Rules Contracts and boundary fact copies",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        },
+        {
+          "locator": "configured embedded rule catalog",
+          "path": "compiler/guest32/CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a20bf2211f48e917920e5ac647003f87e395f1b8b97229277e074539029d8634"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RULE-FACTS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Validate fixed closed rule capabilities, establish layout once and supply typed-boundary facts only for the validated current boundary; record actual applications.",
+      "incorrect_host_behavior": "A manifest admitted label or unrelated typed call could otherwise stand in for missing representation evidence.",
+      "invariant": "Each applied operation has its required facts established in the correct scope; catalog prose supplies no new facts.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-POSITIVE-ADMISSION"
+      ],
+      "original_failure": "A manifest admitted label or unrelated typed call could otherwise stand in for missing representation evidence.",
+      "postconditions": [
+        "Each applied operation has its required facts established in the correct scope; catalog prose supplies no new facts."
+      ],
+      "preconditions": [
+        "Catalog and lowerer implementation capabilities agree; diagnostic checking does not apply transformations"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Guest compiler operation admission",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Rule application uses scoped positive representation facts"
+    },
+    {
+      "architectural_assumption": "Exact archived assembly evidence is available; only listed finite patterns are admitted",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "validate_machine_edges/scoped_spec",
+          "path": "compiler/guest32/registration_scope.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "77749b3a7e7e571336bd18a0095a4ef1c71ded75922c7fd0ec94846c12221c7a"
+        },
+        {
+          "locator": "register_path and owner validation",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-REGISTER-PROVENANCE",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Validate exact original assembly blob hash, complete function excerpts, machine patterns and rename diffs; require matching owner.",
+      "incorrect_host_behavior": "Borrowing OVY_0 edges for another image or trusting unverified rename prose invents caller inputs.",
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ARM-REGISTER-EDGE"
+      ],
+      "original_failure": "Borrowing OVY_0 edges for another image or trusting unverified rename prose invents caller inputs.",
+      "postconditions": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "preconditions": [
+        "Exact archived assembly evidence is available; only listed finite patterns are admitted"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Per-overlay ARM call evidence",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Register rules remain scoped to verified original machine edges"
+    },
+    {
+      "architectural_assumption": "Original anchored historical snapshot and current untouched source are available",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "recover_sections/verify_recovery",
+          "path": "compiler/guest32/original_layout.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "90c0751b7914c51c70824eccb6a7f863f5f098253ad92f4bb2ce98e77e526a13"
+        },
+        {
+          "locator": "historical source recovery",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RETAINED-SECTIONS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Verify unique original owner, archived source hash, agreeing anchor labels, identical retained bytes and relocation targets/widths; reject straddling/overlapping spans.",
+      "incorrect_host_behavior": "Similar bytes or unvalidated catalog coordinates do not prove an original global placement, especially for retained interior ranges.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT"
+      ],
+      "original_failure": "Similar bytes or unvalidated catalog coordinates do not prove an original global placement, especially for retained interior ranges.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Original anchored historical snapshot and current untouched source are available"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Recovered original assembly sections and interior aliases",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Retained section placement requires anchored bytes and relocations"
+    },
+    {
+      "architectural_assumption": "Verified original FS_OVERLAY_ID macro and authoritative image manifest",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "overlay_id_constants",
+          "path": "compiler/guest32/original_layout.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "90c0751b7914c51c70824eccb6a7f863f5f098253ad92f4bb2ce98e77e526a13"
+        },
+        {
+          "locator": "parse constants/dependency inputs",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-OVERLAY-CONSTANTS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Validate original macro definition and resolve using original main.lsf IDs; include defining header in dependencies.",
+      "incorrect_host_behavior": "Assembly FS_OVERLAY_ID expressions cannot be guessed or treated as arbitrary names.",
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ORIGINAL-PLACEMENT"
+      ],
+      "original_failure": "Assembly FS_OVERLAY_ID expressions cannot be guessed or treated as arbitrary names.",
+      "postconditions": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "preconditions": [
+        "Verified original FS_OVERLAY_ID macro and authoritative image manifest"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original assembly overlay ID expressions",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Assembly overlay IDs derive from original image declarations"
+    },
+    {
+      "architectural_assumption": "Expression contains only admitted integer constants/operators",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "integer multiplication operator",
+          "path": "cmake/native_data_ir.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "de7ecafac94503966f96688b64e6688d193564e6228d0a62499694a7c688ea04"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-SPACE-PRODUCT",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Admit integer multiplication through the bounded AST evaluator.",
+      "incorrect_host_behavior": "Original .space 16 * 11 was unsupported despite a fixed constant extent.",
+      "invariant": "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CONSTANT-EXPRESSION"
+      ],
+      "original_failure": "Original .space 16 * 11 was unsupported despite a fixed constant extent.",
+      "postconditions": [
+        "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code."
+      ],
+      "preconditions": [
+        "Expression contains only admitted integer constants/operators"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Assembly integer expressions",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_data_ir.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "3894fc3bbf6a8e7b846fb5828de57a3bc64f52c286457f95c4e7c13ced77ae2f"
+        }
+      ],
+      "title": "Assembly reservation products retain exact extents"
+    },
+    {
+      "architectural_assumption": "One original source namespace",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "raw_layout label uniqueness",
+          "path": "cmake/native_data_ir.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "de7ecafac94503966f96688b64e6688d193564e6228d0a62499694a7c688ea04"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DUPLICATE-DATA-LABEL",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reject duplicate original labels before assigning coordinates.",
+      "incorrect_host_behavior": "A repeated label previously replaced the earlier section/offset mapping.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "A repeated label previously replaced the earlier section/offset mapping.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "One original source namespace"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original assembly data label map",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original data labels cannot silently overwrite ownership"
+    },
+    {
+      "architectural_assumption": "Actual emitted archive definitions and original image ownership recorded",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "resident_owners and competing provider checks",
+          "path": "cmake/native_overlay_link.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "6be3fc73dfaca091fcc4636cac575c34806b6ec2f2ce5dd035da40e4fef6786f"
+        },
+        {
+          "locator": "resident DWC provider",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "81b54a7428ad12e18b0824eb74d3225a608ab04eec89994a478a602e60acdf9e"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RESIDENT-OWNERSHIP",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Require resident owner archives actually linked into main, reject competing definitions and retain original image owner separately from representation.",
+      "incorrect_host_behavior": "Resident machine placement could relabel OVY_0 providers as main or admit duplicate providers.",
+      "invariant": "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-PROVIDER-OWNERSHIP"
+      ],
+      "original_failure": "Resident machine placement could relabel OVY_0 providers as main or admit duplicate providers.",
+      "postconditions": [
+        "Each admitted symbol has an authoritative owner and ABI-compatible provider; matching spelling alone is insufficient."
+      ],
+      "preconditions": [
+        "Actual emitted archive definitions and original image ownership recorded"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Resident native code provider registry",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_provider_registry.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "9ae00fc7d5a075007583c9825038b70b5f5d776e830c0c0b7c3bca0c8374a7e9"
+        }
+      ],
+      "title": "Resident code retains original logical overlay ownership"
+    },
+    {
+      "architectural_assumption": "Emitted definitions and consumer import sets available",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "resident_consumers/resident_roots",
+          "path": "cmake/native_overlay_link.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "6be3fc73dfaca091fcc4636cac575c34806b6ec2f2ce5dd035da40e4fef6786f"
+        },
+        {
+          "locator": "hg_ovy0_wifi_code and resident roots",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "81b54a7428ad12e18b0824eb74d3225a608ab04eec89994a478a602e60acdf9e"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RESIDENT-EXPORTS",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Scan actual consumer objects, add explicit proven roots, reject roots with no definition and export through the main interface.",
+      "incorrect_host_behavior": "A resident definition can be absent from main exports when its consumer is a partial provider outside ordinary overlay imports.",
+      "invariant": "Source-required definitions survive the compiler retention stage; final linker retention remains a separate obligation.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SYMBOL-RETENTION"
+      ],
+      "original_failure": "A resident definition can be absent from main exports when its consumer is a partial provider outside ordinary overlay imports.",
+      "postconditions": [
+        "Source-required definitions survive the compiler retention stage; final linker retention remains a separate obligation."
+      ],
+      "preconditions": [
+        "Emitted definitions and consumer import sets available"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Main interface resident exports",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_provider_registry.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "9ae00fc7d5a075007583c9825038b70b5f5d776e830c0c0b7c3bca0c8374a7e9"
+        }
+      ],
+      "title": "Resident exports include actual partial-consumer demands"
+    },
+    {
+      "architectural_assumption": "Private native record; serialized DS formats remain unchanged",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt net_common MI_CpuFill8 sizeof(p)",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-NETSTART-CLEAR",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Clear sizeof(p) in the native-only adaptation.",
+      "incorrect_host_behavior": "Clearing the original 12 bytes of native 24-byte NetStartParams leaves flags uninitialized.",
+      "invariant": "Every accessed field lies within a live allocation and initialization covers required observable bytes.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ALLOCATION-COHERENCE"
+      ],
+      "original_failure": "Clearing the original 12 bytes of native 24-byte NetStartParams leaves flags uninitialized.",
+      "postconditions": [
+        "Every accessed field lies within a live allocation and initialization covers required observable bytes."
+      ],
+      "preconditions": [
+        "Private native record; serialized DS formats remain unchanged"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native local callback-bearing initialization",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_sources.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+        },
+        {
+          "path": "tests/test_dwc_common_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f9fd1d1b376d4dbf10d7a8aa4150f17cdfa11af3dd489a3d99d15cbfb9a5e021"
+        }
+      ],
+      "title": "Native net-start initialization covers the widened local record"
+    },
+    {
+      "architectural_assumption": "Same original source and selected adaptation",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "adapt versus CLI-only adaptation",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-NAS-ENTRY-UNIFICATION",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Move adapt_dwc_nas_native_allocation into shared adapt() and remove duplicate CLI invocation.",
+      "incorrect_host_behavior": "Programmatic adapt() omitted a native NAS extent correction that CLI generation applied.",
+      "invariant": "All supported generator entry points apply the same source-validated transformation exactly once.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-GENERATOR-CONSISTENCY"
+      ],
+      "original_failure": "Programmatic adapt() omitted a native NAS extent correction that CLI generation applied.",
+      "postconditions": [
+        "All supported generator entry points apply the same source-validated transformation exactly once."
+      ],
+      "preconditions": [
+        "Same original source and selected adaptation"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native source generator API and CLI",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_native_sources.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+        }
+      ],
+      "title": "All native adaptation entry points apply the NAS storage contract"
+    },
+    {
+      "architectural_assumption": "Original partition profile and EXPECTED boundary exactly match source",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "guest32_frontend alarm sources",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        },
+        {
+          "locator": "alarm frontend VFS inputs",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1f0598220963d0a50fa5df379dc805b42bd43a4dfc3eb375b896b3aa0911f16e"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-ALARM-PARTITION",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Validate original partition profile/source/module hashes; keep each unchanged body in its sole owner and use extern shared state in suffix.",
+      "incorrect_host_behavior": "Compiling identical original prefix/suffix alarm sources without original ELF partitioning duplicates bodies and shared globals.",
+      "invariant": "The translated source membership preserves original definition ownership and shared storage without duplicate bodies.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "Compiling identical original prefix/suffix alarm sources without original ELF partitioning duplicates bodies and shared globals.",
+      "postconditions": [
+        "The translated source membership preserves original definition ownership and shared storage without duplicate bodies."
+      ],
+      "preconditions": [
+        "Original partition profile and EXPECTED boundary exactly match source"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Original alarm prefix/suffix split",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_execution170.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+        }
+      ],
+      "title": "Alarm source partitioning preserves one function/global owner"
+    },
+    {
+      "architectural_assumption": "Explicit logical owner, code handle and actual entry are known",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "dispatcher overlayOwner guard",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a886f090edf7a72308ae6324746e37a94e1a3901cc5a3d52f088953f822f157b"
+        },
+        {
+          "locator": "overlay entry guard",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        },
+        {
+          "locator": "g32_check_code_image",
+          "path": "hardware_drivers/guest32_overlay.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "711e04bcebacad0a991fa6a7809c0ebbdecea8ee6a529adf610471f8730d1ef8"
+        },
+        {
+          "locator": "guard declaration",
+          "path": "hardware_drivers/guest32.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "75789dc8ab7d553095d50eff2fcab695c38f00592fb10d5d170e42099ab73a37"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-CALLBACK-RESIDENCY",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Carry original owner in code catalog, guard dispatcher and entry, reject native-boundary overlay callbacks, require registered owner entry/residency/arena.",
+      "incorrect_host_behavior": "Machine-resident guest callback code remains callable after logical unload or from the wrong guest arena.",
+      "invariant": "An executable callback requires its owning logical image to be resident throughout invocation.",
+      "known_counterexamples": [
+        "These pre-entry checks alone do not prove atomicity against concurrent unload."
+      ],
+      "law_ids": [
+        "LAW-OVERLAY-LIFETIME"
+      ],
+      "original_failure": "Machine-resident guest callback code remains callable after logical unload or from the wrong guest arena.",
+      "postconditions": [
+        "An executable callback requires its owning logical image to be resident throughout invocation."
+      ],
+      "preconditions": [
+        "Explicit logical owner, code handle and actual entry are known"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Guest overlay callback execution",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_guest32_callbacks.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "032ee8ccdfbb44bf47cefd5f2c8c9dc7c39bad3a641dd91f44129bff1ee60e4c"
+        }
+      ],
+      "title": "Guest entries enforce logical owner, residency and arena identity"
+    },
+    {
+      "architectural_assumption": "Resolved guest spans and initial snapshots precede activation",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_RegisterResidentOverlay/OwnsAddress/Release",
+          "path": "hardware_drivers/os/overlay_native.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "798c9ee56a28993e170afc8be982c2e809d4e02a14cd4f8b745817bafb47f832"
+        },
+        {
+          "locator": "HG_OverlayData and registration contract",
+          "path": "hardware_drivers/os/overlay_native.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "d07cd8d1a757f68c51a74bdad5beb4b2c9ff292752354f79bd024d1edecd7693"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RESIDENT-METADATA",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Copy exact non-null unique entry identities and initial bytes; validate spans/overflow/overlap, clean up failure and release owned metadata.",
+      "incorrect_host_behavior": "Consolidated native code has no distinct dyld segment for each original logical owner; borrowed metadata can expire.",
+      "invariant": "Destructor membership preserves the original ownership predicate using complete native image ranges.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-ADDRESS-OWNERSHIP"
+      ],
+      "original_failure": "Consolidated native code has no distinct dyld segment for each original logical owner; borrowed metadata can expire.",
+      "postconditions": [
+        "Destructor membership preserves the original ownership predicate using complete native image ranges."
+      ],
+      "preconditions": [
+        "Resolved guest spans and initial snapshots precede activation"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Logical image entry and data registration",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_overlay_native.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f22b3c3027b56cf88c25d8d5180f796ef16ccaf5beeb6627e8a4c1cccadacf4c"
+        }
+      ],
+      "title": "Resident image registration copies validated ownership metadata"
+    },
+    {
+      "architectural_assumption": "Image ranges are validated; inactive overlays may reuse the same extent",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_LoadOverlayImage overlap predicate",
+          "path": "hardware_drivers/os/overlay_native.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "798c9ee56a28993e170afc8be982c2e809d4e02a14cd4f8b745817bafb47f832"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-OVERLAY-EXCLUSION",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Reject activation if an active peer owns an overlapping span before copying initial bytes.",
+      "incorrect_host_behavior": "Different machine-resident logical overlays can activate the same guest RAM simultaneously and overwrite live state.",
+      "invariant": "At most one active logical image owns any overlapping guest RAM extent.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-OVERLAY-MEMORY-EXCLUSION"
+      ],
+      "original_failure": "Different machine-resident logical overlays can activate the same guest RAM simultaneously and overwrite live state.",
+      "postconditions": [
+        "At most one active logical image owns any overlapping guest RAM extent."
+      ],
+      "preconditions": [
+        "Image ranges are validated; inactive overlays may reuse the same extent"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Logical overlay data activation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_overlay_native.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f22b3c3027b56cf88c25d8d5180f796ef16ccaf5beeb6627e8a4c1cccadacf4c"
+        }
+      ],
+      "title": "Logical images cannot concurrently own overlapping RAM"
+    },
+    {
+      "architectural_assumption": "Valid INACTIVE/LOADED state transitions and stable owned initial snapshot",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "HG_StartOverlayImage start/context and load snapshots",
+          "path": "hardware_drivers/os/overlay_native.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "798c9ee56a28993e170afc8be982c2e809d4e02a14cd4f8b745817bafb47f832"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-RESIDENT-RESET",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Restore copied initial bytes on load and execute supplied start(context) after native initializers in the lifecycle start transition.",
+      "incorrect_host_behavior": "Resident code retention does not itself restore original data or rerun the logical initialization sequence on a later load.",
+      "invariant": "Image initialization preserves initializer identity, ordering and exactly-once effects for the lifecycle contract.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-IMAGE-INITIALIZATION"
+      ],
+      "original_failure": "Resident code retention does not itself restore original data or rerun the logical initialization sequence on a later load.",
+      "postconditions": [
+        "Image initialization preserves initializer identity, ordering and exactly-once effects for the lifecycle contract."
+      ],
+      "preconditions": [
+        "Valid INACTIVE/LOADED state transitions and stable owned initial snapshot"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Logical resident overlay load/start cycles",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_overlay_native.c",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f22b3c3027b56cf88c25d8d5180f796ef16ccaf5beeb6627e8a4c1cccadacf4c"
+        }
+      ],
+      "title": "Reload restores initial state and invokes the guest start hook"
+    },
+    {
+      "architectural_assumption": "Provider remains partial; native callback fields may widen but fixed allocation prefix/connection formats must not",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "four original common state definitions",
+          "path": "hardware_drivers/wireless/dwc_common_state.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "b489731709e9a8327e8c228f5cf6e878673930fcb4f98ccaaa325527c8d6789c"
+        },
+        {
+          "locator": "hg_dwc_status",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "81b54a7428ad12e18b0824eb74d3225a608ab04eec89994a478a602e60acdf9e"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DWC-STATE",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Define one native state translation unit with exact fixed-format and native-pointer assertions; retain complete-BSS incompatibility.",
+      "incorrect_host_behavior": "Partial error-only storage omitted allocator/connection/NAS state; mixing complete original BSS with partial native storage would duplicate owners.",
+      "invariant": "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SHARED-STATE-OWNER"
+      ],
+      "original_failure": "Partial error-only storage omitted allocator/connection/NAS state; mixing complete original BSS with partial native storage would duplicate owners.",
+      "postconditions": [
+        "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership."
+      ],
+      "preconditions": [
+        "Provider remains partial; native callback fields may widen but fixed allocation prefix/connection formats must not"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Native net_common global state",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [
+        {
+          "path": "tests/test_dwc_common_native.py",
+          "provenance_category": "regression-evidence",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "f9fd1d1b376d4dbf10d7a8aa4150f17cdfa11af3dd489a3d99d15cbfb9a5e021"
+        }
+      ],
+      "title": "Partial DWC provider owns one consistent native state set"
+    },
+    {
+      "architectural_assumption": "Complete guest32 and native representations remain separate provider identities",
+      "classification": "correctness_fix",
+      "commit_provenance": [],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "hg_dwc_control_storage/hg_dwc_main",
+          "path": "cmake/native_overlays.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "81b54a7428ad12e18b0824eb74d3225a608ab04eec89994a478a602e60acdf9e"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-WT-DWC-CONTROL-STORAGE",
+      "implementation_status": "worktree_implementation_reviewed_not_executed",
+      "implemented_correction": "Provide a native DwcControl* and separate four-byte error global for the partial original dwc_main provider.",
+      "incorrect_host_behavior": "Original BSS pointer at +0 and error word +4 cannot both retain native pointer bits in overlapping LP64 storage.",
+      "invariant": "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SHARED-STATE-OWNER"
+      ],
+      "original_failure": "Original BSS pointer at +0 and error word +4 cannot both retain native pointer bits in overlapping LP64 storage.",
+      "postconditions": [
+        "All consumers of shared state observe one authoritative storage instance independent of optional entry-point ownership."
+      ],
+      "preconditions": [
+        "Complete guest32 and native representations remain separate provider identities"
+      ],
+      "record_kind": "current_contract_pending_history",
+      "source_construct": "Partial native original DWC main state",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Native DWC control pointer has independent error-word storage"
+    }
+  ],
+  "id": "review-batch-003",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original C++ overlay members",
+      "E": [
+        {
+          "locator": "cxx_flags",
+          "path": "compiler/guest32/frontend.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1d1690998476ac1d0b96feaac36768e79c884c259b77f87212035f1172961e09"
+        },
+        {
+          "locator": "C++ frontend and coverage",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        },
+        {
+          "locator": "C++ compiled membership",
+          "path": "compiler/guest32/archive.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2c8c7ce0516fb46db290366513f492488aa6f86f49edca92f9f5d92bf3a8c3a5"
+        }
+      ],
+      "P": [
+        "Original common.mk and per-member Makefile exception policy parse unambiguously"
+      ],
+      "Q": [
+        "Frontend language and feature policy preserve the original program declarations, identities and enabled exception behavior."
+      ],
+      "T": "Compile C++ with clang++, original gnu++98 and source-verified global/per-member exception flags; count emitted C++ members as code.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original C++ overlay members",
+      "architectural_assumptions": [
+        "Original common.mk and per-member Makefile exception policy parse unambiguously"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-FRONTEND-SEMANTICS",
+      "implementation_locations": [],
+      "invariant": "Frontend language and feature policy preserve the original program declarations, identities and enabled exception behavior.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "C++ frontend follows original exception policy",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "C++ inline body ownership",
+      "E": [
+        {
+          "locator": "sourceInlineDefinition/privateInlineEligible",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a886f090edf7a72308ae6324746e37a94e1a3901cc5a3d52f088953f822f157b"
+        },
+        {
+          "locator": "private_inline_plan",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        },
+        {
+          "locator": "PrivateInlines",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "P": [
+        "Closed member census; source/debug origin and direct-use evidence available"
+      ],
+      "Q": [
+        "Local code identities remain distinct unless original linkage and complete use evidence justify coalescing."
+      ],
+      "T": "Prove original inline origin and direct-only uses, reject external uses/relocations, propagate unsafe callers to callees, then internalize eligible bodies before key assignment.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "C++ inline body ownership",
+      "architectural_assumptions": [
+        "Closed member census; source/debug origin and direct-use evidence available"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-LOCAL-CODE-IDENTITY",
+      "implementation_locations": [],
+      "invariant": "Local code identities remain distinct unless original linkage and complete use evidence justify coalescing.",
+      "limitations": [
+        "C++ ODR and compiler-generated helpers outside the admitted source patterns remain rejected."
+      ],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Only closed nonescaping inline bodies become TU-private",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Guest code catalog and function constants",
+      "E": [
+        {
+          "locator": "Image::read/constantValue",
+          "path": "compiler/guest32/image.h",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "a886f090edf7a72308ae6324746e37a94e1a3901cc5a3d52f088953f822f157b"
+        }
+      ],
+      "P": [
+        "Explicit original code catalog; zero is reserved for unassigned direct-only identities"
+      ],
+      "Q": [
+        "Every executable code handle is representable, nonzero and uniquely identifies its compatible original target."
+      ],
+      "T": "Reject out-of-u32 identities, zero address-taken handles and duplicate keys/nonzero addresses; require nonzero when constant code identity is used.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Guest code catalog and function constants",
+      "architectural_assumptions": [
+        "Explicit original code catalog; zero is reserved for unassigned direct-only identities"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CODE-IDENTITY-DOMAIN",
+      "implementation_locations": [],
+      "invariant": "Every executable code handle is representable, nonzero and uniquely identifies its compatible original target.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Code handles have a validated nonzero unique domain",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "ARM32 caller/callee register boundary",
+      "E": [
+        {
+          "locator": "previous-result edge",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "P": [
+        "Source-specific adjacent-call proof and known sign/zero extension attributes"
+      ],
+      "Q": [
+        "Recovered call edges preserve the exact original register value and do not invent unspecified bits."
+      ],
+      "T": "Require zero call arguments, one result word and unique sign/zero extension evidence; extend to i32 or reject.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "ARM32 caller/callee register boundary",
+      "architectural_assumptions": [
+        "Source-specific adjacent-call proof and known sign/zero extension attributes"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ARM-REGISTER-EDGE",
+      "implementation_locations": [],
+      "invariant": "Recovered call edges preserve the exact original register value and do not invent unspecified bits.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Adjacent calls preserve the defined full ARM result word",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original small aggregate or hidden indirect call result",
+      "E": [
+        {
+          "locator": "indirect-result edges/ResultHomes",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "P": [
+        "Machine evidence proves an original four-byte stack home and provider store"
+      ],
+      "Q": [
+        "Caller and callee agree on the original result storage address, extent and observable returned word."
+      ],
+      "T": "Validate the original void provider and first pointer parameter, pass a four-byte guest result home, then load the result from checked storage.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original small aggregate or hidden indirect call result",
+      "architectural_assumptions": [
+        "Machine evidence proves an original four-byte stack home and provider store"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ARM-INDIRECT-RESULT",
+      "implementation_locations": [],
+      "invariant": "Caller and callee agree on the original result storage address, extent and observable returned word.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Original hidden result homes remain explicit call storage",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "LLVM SSA basic blocks",
+      "E": [
+        {
+          "locator": "ReversePostOrderTraversal",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "P": [
+        "Verified original module; PHI nodes are created before translating edges"
+      ],
+      "Q": [
+        "Elaboration preserves the original CFG and SSA dependency relations independent of textual block order."
+      ],
+      "T": "Lower reachable blocks in reverse postorder, preserve unreachable blocks and resolve PHI/backedges separately without changing CFG.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_compiler.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "74b821952b650b49ebdf662db1f41b1b29179c7636936b26300ce87c25fccd59"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "LLVM SSA basic blocks",
+      "architectural_assumptions": [
+        "Verified original module; PHI nodes are created before translating edges"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-SSA-ELABORATION",
+      "implementation_locations": [],
+      "invariant": "Elaboration preserves the original CFG and SSA dependency relations independent of textual block order.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Lower definitions before non-PHI uses regardless of block text order",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Incomplete external global declaration addresses",
+      "E": [
+        {
+          "locator": "unsized global declarations",
+          "path": "compiler/guest32/lower.cpp",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "2f84a6cce1bae204b14c865c8a1a8614bf40f2b62558f7f486fe6ea10f70074d"
+        }
+      ],
+      "P": [
+        "Guest external mode and owning image placement are proven"
+      ],
+      "Q": [
+        "Address identity may be preserved without inventing object extent; typed access still requires a concrete layout and ownership."
+      ],
+      "T": "Admit only a placed guest external declaration with an authoritative coordinate; reject unsized definitions, nondefault address spaces and TLS.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Incomplete external global declaration addresses",
+      "architectural_assumptions": [
+        "Guest external mode and owning image placement are proven"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ADDRESS-WITHOUT-LAYOUT",
+      "implementation_locations": [],
+      "invariant": "Address identity may be preserved without inventing object extent; typed access still requires a concrete layout and ownership.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Taking an incomplete external address needs no guessed allocation",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Recovered original assembly sections and interior aliases",
+      "E": [
+        {
+          "locator": "recover_sections/verify_recovery",
+          "path": "compiler/guest32/original_layout.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "90c0751b7914c51c70824eccb6a7f863f5f098253ad92f4bb2ce98e77e526a13"
+        },
+        {
+          "locator": "historical source recovery",
+          "path": "compiler/guest32/image.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "049d1c37dc85c82fdd82a01ca770183b2c7bb624480165466d73d1e52f0a578a"
+        }
+      ],
+      "P": [
+        "Original anchored historical snapshot and current untouched source are available"
+      ],
+      "Q": [
+        "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations."
+      ],
+      "T": "Verify unique original owner, archived source hash, agreeing anchor labels, identical retained bytes and relocation targets/widths; reject straddling/overlapping spans.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Recovered original assembly sections and interior aliases",
+      "architectural_assumptions": [
+        "Original anchored historical snapshot and current untouched source are available"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-ORIGINAL-PLACEMENT",
+      "implementation_locations": [],
+      "invariant": "Original storage coordinates preserve authoritative image ownership, field identities and relocation relations.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Retained section placement requires anchored bytes and relocations",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Assembly integer expressions",
+      "E": [
+        {
+          "locator": "integer multiplication operator",
+          "path": "cmake/native_data_ir.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "de7ecafac94503966f96688b64e6688d193564e6228d0a62499694a7c688ea04"
+        }
+      ],
+      "P": [
+        "Expression contains only admitted integer constants/operators"
+      ],
+      "Q": [
+        "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code."
+      ],
+      "T": "Admit integer multiplication through the bounded AST evaluator.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_native_data_ir.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "3894fc3bbf6a8e7b846fb5828de57a3bc64f52c286457f95c4e7c13ced77ae2f"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Assembly integer expressions",
+      "architectural_assumptions": [
+        "Expression contains only admitted integer constants/operators"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CONSTANT-EXPRESSION",
+      "implementation_locations": [],
+      "invariant": "Accepted source constant expressions produce the exact original integer extent without evaluating arbitrary code.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Assembly reservation products retain exact extents",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native source generator API and CLI",
+      "E": [
+        {
+          "locator": "adapt versus CLI-only adaptation",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        }
+      ],
+      "P": [
+        "Same original source and selected adaptation"
+      ],
+      "Q": [
+        "All supported generator entry points apply the same source-validated transformation exactly once."
+      ],
+      "T": "Move adapt_dwc_nas_native_allocation into shared adapt() and remove duplicate CLI invocation.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_native_sources.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "1ee49eea5c16ca790217e38b0ba88647fb658ef12e1d1922ac54ec91ede42e8f"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native source generator API and CLI",
+      "architectural_assumptions": [
+        "Same original source and selected adaptation"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-GENERATOR-CONSISTENCY",
+      "implementation_locations": [],
+      "invariant": "All supported generator entry points apply the same source-validated transformation exactly once.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "All native adaptation entry points apply the NAS storage contract",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Original alarm prefix/suffix split",
+      "E": [
+        {
+          "locator": "guest32_frontend alarm sources",
+          "path": "cmake/native_sources.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "e5f5bce1b54d97212d016c5fd5945f89d0353d826ab6fcd0cbbdeb9524adf8a0"
+        },
+        {
+          "locator": "alarm frontend VFS inputs",
+          "path": "compiler/guest32/closure.py",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "1f0598220963d0a50fa5df379dc805b42bd43a4dfc3eb375b896b3aa0911f16e"
+        }
+      ],
+      "P": [
+        "Original partition profile and EXPECTED boundary exactly match source"
+      ],
+      "Q": [
+        "The translated source membership preserves original definition ownership and shared storage without duplicate bodies."
+      ],
+      "T": "Validate original partition profile/source/module hashes; keep each unchanged body in its sole owner and use extern shared state in suffix.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_guest32_execution170.py",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "60d7175d72eab8916ab54a3440645e7bd3d7893f71ffbd17c53415950c338bc6"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Original alarm prefix/suffix split",
+      "architectural_assumptions": [
+        "Original partition profile and EXPECTED boundary exactly match source"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-SOURCE-OWNERSHIP",
+      "implementation_locations": [],
+      "invariant": "The translated source membership preserves original definition ownership and shared storage without duplicate bodies.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Alarm source partitioning preserves one function/global owner",
+      "verification_status": "source_review_only"
+    },
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Logical overlay data activation",
+      "E": [
+        {
+          "locator": "HG_LoadOverlayImage overlap predicate",
+          "path": "hardware_drivers/os/overlay_native.c",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "worktree",
+          "sha256": "798c9ee56a28993e170afc8be982c2e809d4e02a14cd4f8b745817bafb47f832"
+        }
+      ],
+      "P": [
+        "Image ranges are validated; inactive overlays may reuse the same extent"
+      ],
+      "Q": [
+        "At most one active logical image owns any overlapping guest RAM extent."
+      ],
+      "T": "Reject activation if an active peer owns an overlapping span before copying initial bytes.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [
+          {
+            "path": "tests/test_overlay_native.c",
+            "provenance_category": "regression-evidence",
+            "repository": ".",
+            "revision": "worktree",
+            "sha256": "f22b3c3027b56cf88c25d8d5180f796ef16ccaf5beeb6627e8a4c1cccadacf4c"
+          }
+        ],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Logical overlay data activation",
+      "architectural_assumptions": [
+        "Image ranges are validated; inactive overlays may reuse the same extent"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-OVERLAY-MEMORY-EXCLUSION",
+      "implementation_locations": [],
+      "invariant": "At most one active logical image owns any overlapping guest RAM extent.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "correctness_fix",
+      "title": "Logical images cannot concurrently own overlapping RAM",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": [
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-SPACE-PRODUCT",
+        "COR-WT-DUPLICATE-DATA-LABEL"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-fb53bb2c8e8240a0f2bcedd7",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RESIDENT-OWNERSHIP",
+        "COR-WT-RESIDENT-EXPORTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-6a9df598ec7517befa44c267",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RESIDENT-OWNERSHIP",
+        "COR-WT-RESIDENT-EXPORTS",
+        "COR-WT-DWC-STATE",
+        "COR-WT-DWC-CONTROL-STORAGE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-c6a4e4d9c12b4b9841befd85",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-PRIVATE-DECLARATIONS",
+        "COR-WT-NETSTART-CLEAR",
+        "COR-WT-NAS-ENTRY-UNIFICATION",
+        "COR-WT-ALARM-PARTITION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-bfaf5c6d1b5f39300c963c3d",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RULE-FACTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-a2f97624eec542bc16c4533b",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-CPP-ABI"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-cbb9773284e1a46ab8471e81",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-ALARM-PARTITION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-ffb0b75aac87b1f49365b57f",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-CPP-ABI",
+        "COR-WT-PRIVATE-DECLARATIONS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-449e0cd7968bcb4d594eaea7",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-INLINE-IDENTITY",
+        "COR-WT-CODE-DOMAIN",
+        "COR-WT-CALLBACK-RESIDENCY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-7e3e1fa7f78f7c0779972d36",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-CPP-ABI",
+        "COR-WT-INLINE-IDENTITY",
+        "COR-WT-DEFINITION-CONFLICT",
+        "COR-WT-REGISTER-PROVENANCE",
+        "COR-WT-RETAINED-SECTIONS",
+        "COR-WT-OVERLAY-CONSTANTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-70cf34336b6c2e659daae7ad",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-INLINE-IDENTITY",
+        "COR-WT-NARROW-ARM-RESULT",
+        "COR-WT-GLOBAL-ARM-RESULT",
+        "COR-WT-INDIRECT-RESULT-ABI",
+        "COR-WT-RESULT-HOME-LIFETIME",
+        "COR-WT-SSA-ORDER",
+        "COR-WT-INCOMPLETE-ADDRESS",
+        "COR-WT-RULE-FACTS",
+        "COR-WT-CALLBACK-RESIDENCY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-072a9f0016e0e091536532e0",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RETAINED-SECTIONS",
+        "COR-WT-OVERLAY-CONSTANTS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-c5740e691b8725be20149495",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-REGISTER-PROVENANCE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-3018fd406c6b991aec20b0e2",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-CALLBACK-RESIDENCY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-43b93e0066e1d9584ffeab72",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-CALLBACK-RESIDENCY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-77e657ee940d8e38762f62bc",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RESIDENT-METADATA",
+        "COR-WT-OVERLAY-EXCLUSION",
+        "COR-WT-RESIDENT-RESET"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-3592062e6864aa5e7c8b91b7",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-RESIDENT-METADATA"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-54d0cb666701ba51d4255358",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "correctness_fix",
+      "correction_ids": [
+        "COR-WT-DWC-STATE"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "WT-5a9b6e1fe04cd869e5383b45",
+      "reason": "Complete current diff/source inspected; independently meaningful obligations linked. Historical introduction and execution evidence remain separate work."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-abf73187cfad4ee2daadfc43",
+      "reason": "Adds conditional semantic-slot tooling include only when guest32-lower exists."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-51d0f241a2567396a6e3a670",
+      "reason": "Declare diagnostic byproducts; link real callback guard runtime; add callback, projection, result/admission fixtures; pass real root-symbol demands and declare original alarm partition dependencies."
+    },
+    {
+      "classification": "build_system_or_tooling_correction",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "WT-efb6f710d018beb2c175f9d0",
+      "reason": "Forward explicit original root demands to closure driver; no root inferred by spelling or new subsystem."
+    }
+  ]
+}

@@ -1,0 +1,632 @@
+{
+  "change_reviews": [
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-GUARDS",
+        "COR-REPRO-BUILD-PROVIDERS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-16dcd819ffc5084f1b564255",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-1aa6f770847b148698784d66",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-OVERLAY-IDS",
+        "COR-REPRO-BUILD-PROVIDERS",
+        "COR-REPRO-BUILD-OVERLAY-SEPARATION"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-51a0561a99cc49bc1767422a",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2ba5eb02036c73d523ccf631",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d9de4c1ae2d65a59f31f8ba1",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-10d687ccd9a449c208db58e7",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-GUARDS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-3aae40a7e106ba4974d9d908",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-e6e9f1752de1e98f05627427",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-DEPS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-004d56f86dafad0bda17dc5c",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-DEPS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-eeaa3641835673eb79c07a51",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-3f366a1aa71347aede6e7719",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-d32efe3befdabe816266c0f8",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "build_or_asset_correctness",
+      "correction_ids": [
+        "COR-REPRO-BUILD-PATHS",
+        "COR-REPRO-BUILD-DEPS",
+        "COR-REPRO-BUILD-ZUKAN-INDEX"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-429a53ef75aeb4883067fb78",
+      "reason": "Entire diff examined. Path/dependency and provider/image/index corrections extracted separately. Script/zone archive commands consolidate into the previously reviewed common helper with original metadata. Added tests assert source/runtime subsets only. SDK cleanup/renderer completeness not inferred."
+    },
+    {
+      "classification": "superseded_adapter_removal",
+      "correction_ids": [
+        "COR-REPRO-ITERATOR"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-2fbbc7071b6a2654cfe8122a",
+      "reason": "Entire deletion examined against earlier complete read; obsolete parallel configure-time path removed while unified per-input adapter remains authoritative."
+    },
+    {
+      "classification": "superseded_adapter_removal",
+      "correction_ids": [
+        "COR-INITIAL-PARTY-CODE-IDENTITY"
+      ],
+      "disposition": "fully_reviewed",
+      "id": "CH-27e46b5e183686c833f705cb",
+      "reason": "Entire deletion examined against earlier complete read; obsolete parallel configure-time path removed while unified per-input adapter remains authoritative."
+    },
+    {
+      "classification": "documentation_only",
+      "correction_ids": [],
+      "disposition": "fully_reviewed",
+      "id": "CH-fcbf30c6d047ea16d293c42a",
+      "reason": "Single added original Make provenance comment examined; no executable behavior change."
+    }
+  ],
+  "corrections": [
+    {
+      "architectural_assumption": "CMake generator expressions and include flags retain original selected sources and algorithms",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native project build dependencies",
+          "path": "CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/assets.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_encounters.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_graphics.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_item_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_messages.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_otherpoke.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_ppark.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_resdat.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_scripts.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_zone_event.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native project build dependencies",
+          "path": "cmake/heartgold_zukan_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-PATHS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use PROJECT source/binary roots, companion CMAKE_CURRENT_LIST_DIR paths, joined include flags and target executable references.",
+      "incorrect_host_behavior": "CMAKE_BINARY_DIR/current source roots and unquoted SHELL include flags can select parent project locations or split space-containing paths.",
+      "invariant": "Every input/tool/output names the selected project and preserves literal supported paths.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BUILD-DEPENDENCY"
+      ],
+      "original_failure": "CMAKE_BINARY_DIR/current source roots and unquoted SHELL include flags can select parent project locations or split space-containing paths.",
+      "postconditions": [
+        "Every input/tool/output names the selected project and preserves literal supported paths."
+      ],
+      "preconditions": [
+        "CMake generator expressions and include flags retain original selected sources and algorithms"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native project build dependencies",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Project-relative generation supports nested and arbitrary build paths"
+    },
+    {
+      "architectural_assumption": "Original tool derives guard from argv; relative arguments match declared outputs",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Fixed-point and message header generation",
+          "path": "CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Fixed-point and message header generation",
+          "path": "cmake/heartgold_messages.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-GUARDS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Run generators in project binary directory with original relative output/header arguments, retaining actual absolute output declarations.",
+      "incorrect_host_behavior": "Original generators derive C include guards from output argv; arbitrary absolute paths change guards or make invalid identifiers.",
+      "invariant": "Generated header identity is stable across build root locations.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-TOOL-SYNTAX"
+      ],
+      "original_failure": "Original generators derive C include guards from output argv; arbitrary absolute paths change guards or make invalid identifiers.",
+      "postconditions": [
+        "Generated header identity is stable across build root locations."
+      ],
+      "preconditions": [
+        "Original tool derives guard from argv; relative arguments match declared outputs"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Fixed-point and message header generation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Generated C include guards use stable relative arguments"
+    },
+    {
+      "architectural_assumption": "Compiler Make-quoting matches CMake depfile consumer",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Pal Park/resdat/Pokedex depfile targets",
+          "path": "cmake/heartgold_ppark.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Pal Park/resdat/Pokedex depfile targets",
+          "path": "cmake/heartgold_resdat.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Pal Park/resdat/Pokedex depfile targets",
+          "path": "cmake/heartgold_zukan_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-DEPS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Use -MQ for original ARM object extraction depfiles.",
+      "incorrect_host_behavior": "Raw -MT target names mishandle special characters.",
+      "invariant": "Dependency tracking addresses the intended output under supported special paths.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-BUILD-DEPENDENCY"
+      ],
+      "original_failure": "Raw -MT target names mishandle special characters.",
+      "postconditions": [
+        "Dependency tracking addresses the intended output under supported special paths."
+      ],
+      "preconditions": [
+        "Compiler Make-quoting matches CMake depfile consumer"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Pal Park/resdat/Pokedex depfile targets",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Asset depfile targets quote literal paths"
+    },
+    {
+      "architectural_assumption": "ID preservation does not implement loading, residency, or execution",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native overlay ID header",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-OVERLAY-IDS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Derive all129unique ordered IDs from main.lsf; enforce numbered identities plus boot IDs36 and60; emit canonical FS_OVERLAY_ID mapping.",
+      "incorrect_host_behavior": "SDK_PORT overlay reference macro can collapse distinct original image IDs to zero.",
+      "invariant": "Every original overlay reference retains its distinct original logical image identity.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-CODE-IDENTITY"
+      ],
+      "original_failure": "SDK_PORT overlay reference macro can collapse distinct original image IDs to zero.",
+      "postconditions": [
+        "Every original overlay reference retains its distinct original logical image identity."
+      ],
+      "preconditions": [
+        "ID preservation does not implement loading, residency, or execution"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native overlay ID header",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original overlay IDs never collapse to zero"
+    },
+    {
+      "architectural_assumption": "All underlying ABI/layout corrections separately required; linker success not established",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native compatibility and sound-storage integration",
+          "path": "CMakeLists.txt",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        },
+        {
+          "locator": "Native compatibility and sound-storage integration",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-PROVIDERS",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Select actual dgt component, source-derived original MSL/Hash1/RC4 sources and typed sound storage; declare source/header/main manifest dependencies and attach real original libraries.",
+      "incorrect_host_behavior": "Missing original MSL/hash/RC4 bodies or incorrect BSS ownership leave unresolved native providers or wrong storage.",
+      "invariant": "Selected native code and storage have source-proven providers and ownership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "Missing original MSL/hash/RC4 bodies or incorrect BSS ownership leave unresolved native providers or wrong storage.",
+      "postconditions": [
+        "Selected native code and storage have source-proven providers and ownership."
+      ],
+      "preconditions": [
+        "All underlying ABI/layout corrections separately required; linker success not established"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native compatibility and sound-storage integration",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Original compatibility bodies and sound owners are linked once"
+    },
+    {
+      "architectural_assumption": "Separate static archive compilation is not native overlay loading",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "Native overlay source preparation",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-OVERLAY-SEPARATION",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Prepare declared overlay-native outputs but replace main sources only when already selected; compile original intro_title in its own archive with original main compile environment.",
+      "incorrect_host_behavior": "Adding every discovered adapted source to main would change overlay/global ownership.",
+      "invariant": "Discovery/compilation does not silently merge original image membership.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-SOURCE-OWNERSHIP"
+      ],
+      "original_failure": "Adding every discovered adapted source to main would change overlay/global ownership.",
+      "postconditions": [
+        "Discovery/compilation does not silently merge original image membership."
+      ],
+      "preconditions": [
+        "Separate static archive compilation is not native overlay loading"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "Native overlay source preparation",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Overlay preparation preserves separate image membership"
+    },
+    {
+      "architectural_assumption": "Original template/Make source guards; neutral transformer separately reviewed",
+      "classification": "build_or_asset_correctness",
+      "commit_provenance": [
+        {
+          "commit": "e542486eb652850f2902e181b129d277fc242d74",
+          "provenance_category": "porting-history",
+          "repository": "."
+        }
+      ],
+      "current_implementation": [],
+      "dependencies": [],
+      "evidence": [
+        {
+          "locator": "zukan_enc_gold archive and neutral index",
+          "path": "cmake/heartgold_zukan_data.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "failure_recovery": "Recovered from changed code and its old/new behavior; original crash/run evidence not established unless separately cited.",
+      "id": "COR-REPRO-BUILD-ZUKAN-INDEX",
+      "implementation_status": "historical_patch_reviewed_current_status_requires_followup",
+      "implemented_correction": "Generate original gold encounter JSON/template via ARM object and O2NARC with original zero padding; declare original neutral-name index transformation and dependencies.",
+      "incorrect_host_behavior": "Missing zukan encounter archive/index or variant-specific identifier names break original consumers.",
+      "invariant": "Original consumer member identities and archive payload format remain stable.",
+      "known_counterexamples": [],
+      "law_ids": [
+        "LAW-STATIC-DATA"
+      ],
+      "original_failure": "Missing zukan encounter archive/index or variant-specific identifier names break original consumers.",
+      "postconditions": [
+        "Original consumer member identities and archive payload format remain stable."
+      ],
+      "preconditions": [
+        "Original template/Make source guards; neutral transformer separately reviewed"
+      ],
+      "record_kind": "historical_correction",
+      "source_construct": "zukan_enc_gold archive and neutral index",
+      "test_results": "Test source referenced where identified; no tests rerun for this review batch.",
+      "tests": [],
+      "title": "Pokedex encounter recipe retains variant-neutral index spelling"
+    }
+  ],
+  "id": "review-batch-013",
+  "laws": [
+    {
+      "C": {
+        "dependencies": [],
+        "incompatibilities": [],
+        "interactions": [],
+        "ordering": []
+      },
+      "D": "Native overlay ID header",
+      "E": [
+        {
+          "locator": "Native overlay ID header",
+          "path": "cmake/heartgold.cmake",
+          "provenance_category": "porting-history",
+          "repository": ".",
+          "revision": "e542486eb652850f2902e181b129d277fc242d74"
+        }
+      ],
+      "P": [
+        "ID preservation does not implement loading, residency, or execution"
+      ],
+      "Q": [
+        "Every original overlay reference retains its distinct original logical image identity."
+      ],
+      "T": "Derive all129unique ordered IDs from main.lsf; enforce numbered identities plus boot IDs36 and60; emit canonical FS_OVERLAY_ID mapping.",
+      "V": {
+        "execution_status": "not_run_in_this_audit",
+        "existing_checks": [],
+        "missing_obligations": [
+          "Compare complete original service/algorithm behavior and inspect recorded test results."
+        ]
+      },
+      "applicability": "Native overlay ID header",
+      "architectural_assumptions": [
+        "ID preservation does not implement loading, residency, or execution"
+      ],
+      "confidence": "candidate",
+      "evidence_status": "source_and_diff_supported",
+      "historical_correction_ids": [],
+      "id": "LAW-CODE-IDENTITY",
+      "implementation_locations": [],
+      "invariant": "Every original overlay reference retains its distinct original logical image identity.",
+      "limitations": [],
+      "outstanding_verification": [
+        "General equivalence and composition are not proved."
+      ],
+      "semantic_category": "build_or_asset_correctness",
+      "title": "Original overlay IDs never collapse to zero",
+      "verification_status": "source_review_only"
+    }
+  ],
+  "unresolved": [],
+  "worktree_reviews": []
+}
