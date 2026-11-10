@@ -1,0 +1,1099 @@
+{
+  "source": "lib/NitroSDK/asm/mb_data.s",
+  "source_sha256": "102aa29146d15a42153ebf84974bb81b3fcdb110d2ed003efe8421d4fd33f865",
+  "link_manifest": "build/final-closure/multiboot-fixed-storage/link-manifest.json",
+  "symbols": {
+    "gMbGlobalState": {
+      "original_ds_bytes": 12,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+          "sha256": "711fb40a2a9785ba03e50b79bf0770a295ce4eba9bc575935ea0412569675ded",
+          "references": [
+            {
+              "line": 10,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_cache.c",
+          "sha256": "56fd23edcd0a48fc91d03f848dd0a2c93ec127773191b75631a9ba98d7849dfb",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_comm_params.c",
+          "sha256": "b726ce48bbf94f5552d0556c673141b40a403518cb9cf4eea553a31c41ee5f9d",
+          "references": [
+            {
+              "line": 63,
+              "text": "} gMbGlobalState;"
+            },
+            {
+              "line": 108,
+              "text": "U16(&gMbGlobalState, 0x26) = x;"
+            },
+            {
+              "line": 118,
+              "text": "Parent *p = gMbGlobalState.parent;"
+            },
+            {
+              "line": 128,
+              "text": "gMbGlobalState.parent->flag = 1;"
+            },
+            {
+              "line": 137,
+              "text": "gMbGlobalState.parent->flag = 1;"
+            },
+            {
+              "line": 149,
+              "text": "return U32((void *)gMbGlobalState.parent, 8);"
+            },
+            {
+              "line": 153,
+              "text": "return U16((void *)gMbGlobalState.parent, 12);"
+            },
+            {
+              "line": 157,
+              "text": "u8 *p = (void *)gMbGlobalState.parent;"
+            },
+            {
+              "line": 166,
+              "text": "return U8((void *)gMbGlobalState.parent, 0x50d) == 1;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_disconnect.c",
+          "sha256": "e034e7c75496ceb4073948b30241c3cd60ae847a60ace15eb85ccae7c65394ba",
+          "references": [
+            {
+              "line": 37,
+              "text": "extern MbCtx gMbGlobalState;"
+            },
+            {
+              "line": 42,
+              "text": "#define P (gMbGlobalState.parent)"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_download_info.c",
+          "sha256": "bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577",
+          "references": [
+            {
+              "line": 114,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_init.c",
+          "sha256": "b0811a2b3f1a6662424e045fbda6b86c2a2a7936fbef802554313f23fc428551",
+          "references": [
+            {
+              "line": 20,
+              "text": "extern MbGlobal gMbGlobalState;"
+            },
+            {
+              "line": 40,
+              "text": "if (gMbGlobalState.parent != NULL && H(gMbGlobalState.parent, 0x1316) != 0) {"
+            },
+            {
+              "line": 54,
+              "text": "gMbGlobalState.dma = dma;"
+            },
+            {
+              "line": 55,
+              "text": "gMbGlobalState.work = w;"
+            },
+            {
+              "line": 56,
+              "text": "gMbGlobalState.parent = p;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_comm.c",
+          "sha256": "5689da945965c883d975c8aeda6e398a0110735bd296808413a57e67413e002c",
+          "references": [
+            {
+              "line": 10,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_start_end.c",
+          "sha256": "efa156af8838b7f02f22501b870d6f378e7ee785b3ea0a09edc6b6081386086f",
+          "references": [
+            {
+              "line": 11,
+              "text": "// gMbGlobalState is the MB global state: 0x00 u16 DMA channel, 0x04 WM work buffer, 0x08 common work"
+            },
+            {
+              "line": 18,
+              "text": "extern u8 gMbGlobalState[];"
+            },
+            {
+              "line": 21,
+              "text": "#define sMbGlobalWords ((volatile u32 *)gMbGlobalState)"
+            },
+            {
+              "line": 186,
+              "text": "U32((void *)U32(gMbGlobalState, 12), 0x1320) = 1;"
+            },
+            {
+              "line": 191,
+              "text": "int result = WM_Reset(((MbResetGlobal *)gMbGlobalState)->work->callback);"
+            },
+            {
+              "line": 206,
+              "text": "if (!((MbEndGlobal *)gMbGlobalState)->work->active) {"
+            },
+            {
+              "line": 210,
+              "text": "if (((MbEndGlobal *)gMbGlobalState)->work->ending) {"
+            },
+            {
+              "line": 213,
+              "text": "((MbEndGlobal *)gMbGlobalState)->work->scanning = 0;"
+            },
+            {
+              "line": 214,
+              "text": "((MbEndGlobal *)gMbGlobalState)->work->ending = 1;"
+            },
+            {
+              "line": 228,
+              "text": "if (!U32((void *)U32(gMbGlobalState, 12), 0x1320)) {"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_util.c",
+          "sha256": "fe816ed143b3bfd4ba7184f7394816e3c2f9bbf4cf528f4d6ef5841f7bdcc3c8",
+          "references": [
+            {
+              "line": 11,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+          "sha256": "6ee2c6f0d887b4af907c67bf26f85cb496ddaf8ebc06beb9f2e514bbe5f8eff2",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 gMbGlobalState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_callbacks.c",
+          "sha256": "18f311ef3251832976d933b5487249178cda5ed2080619b78b5a9c88ac4e8476",
+          "references": [
+            {
+              "line": 10,
+              "text": "// gMbGlobalState: the MB global state. The common work at 0x08 is the parent's communication control"
+            },
+            {
+              "line": 142,
+              "text": "extern MbGlobal gMbGlobalState;"
+            },
+            {
+              "line": 170,
+              "text": "u8 *p = gMbGlobalState.work.bytes;"
+            },
+            {
+              "line": 175,
+              "text": "u8 *p = gMbGlobalState.work.bytes;"
+            },
+            {
+              "line": 203,
+              "text": "if (isParentFree() && *(u16 *)(gMbGlobalState.work.bytes + 0x52a) != 0) {"
+            },
+            {
+              "line": 218,
+              "text": "*(u8 *)(gMbGlobalState.work.bytes + 0x50d) = 0;"
+            },
+            {
+              "line": 219,
+              "text": "*(u16 *)((u8 *)gMbGlobalState.parent.parentWork + 0x1316) = 0;"
+            },
+            {
+              "line": 220,
+              "text": "cb = *(void **)(gMbGlobalState.work.bytes + 0x51c);"
+            },
+            {
+              "line": 227,
+              "text": "MbParentControl *c = *(MbParentControl *volatile *)&gMbGlobalState.work.parentControl;"
+            },
+            {
+              "line": 235,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 242,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 245,
+              "text": "MBi_CheckWmErrcode(7, WM_SetParentParameter(MBi_ParentCallback, gMbGlobalState.work.parentControl));"
+            },
+            {
+              "line": 248,
+              "text": "gMbGlobalState.work.parentControl->callback(21, event);"
+            },
+            {
+              "line": 252,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 0) {"
+            },
+            {
+              "line": 254,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 261,
+              "text": "gMbGlobalState.work.parentControl->ending = 0;"
+            },
+            {
+              "line": 262,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 269,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 274,
+              "text": "gMbGlobalState.work.parentControl->children = 0;"
+            },
+            {
+              "line": 275,
+              "text": "gMbGlobalState.work.parentControl->active = 0;"
+            },
+            {
+              "line": 278,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 1) {"
+            },
+            {
+              "line": 281,
+              "text": "gMbGlobalState.work.parentControl->children |= 1 << event->fields.aid;"
+            },
+            {
+              "line": 282,
+              "text": "gMbGlobalState.work.parentControl->callback(0, event);"
+            },
+            {
+              "line": 283,
+              "text": "if (gMbGlobalState.work.parentControl->active == 0 && gMbGlobalState.parent.parentWork->starting == 0) {"
+            },
+            {
+              "line": 285,
+              "text": "gMbGlobalState.parent.parentWork->starting = 1;"
+            },
+            {
+              "line": 286,
+              "text": "option = gMbGlobalState.work.parentControl->option == 0;"
+            },
+            {
+              "line": 291,
+              "text": "gMbGlobalState.work.parentControl->callback(25, 0);"
+            },
+            {
+              "line": 295,
+              "text": "gMbGlobalState.work.parentControl->children &= ~(1 << event->fields.aid);"
+            },
+            {
+              "line": 296,
+              "text": "gMbGlobalState.work.parentControl->callback(1, event);"
+            },
+            {
+              "line": 299,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 1) {"
+            },
+            {
+              "line": 302,
+              "text": "gMbGlobalState.work.parentControl->callback(28, event);"
+            },
+            {
+              "line": 307,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 311,
+              "text": "gMbGlobalState.parent.parentWork->starting = 0;"
+            },
+            {
+              "line": 314,
+              "text": "gMbGlobalState.work.parentControl->active = 1;"
+            },
+            {
+              "line": 315,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 0) {"
+            },
+            {
+              "line": 316,
+              "text": "gMbGlobalState.work.parentControl->callback(25, 0);"
+            },
+            {
+              "line": 320,
+              "text": "gMbGlobalState.work.parentControl->callback(3, event->data.data);"
+            },
+            {
+              "line": 323,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 327,
+              "text": "if (gMbGlobalState.parent.parentWork->delay) {"
+            },
+            {
+              "line": 330,
+              "text": "if (gMbGlobalState.parent.parentWork->children[i]) {"
+            },
+            {
+              "line": 341,
+              "text": "gMbGlobalState.work.parentControl->sending = 0;"
+            },
+            {
+              "line": 343,
+              "text": "gMbGlobalState.work.parentControl->callback(2, event);"
+            },
+            {
+              "line": 344,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 0) {"
+            },
+            {
+              "line": 345,
+              "text": "gMbGlobalState.work.parentControl->callback(25, 0);"
+            },
+            {
+              "line": 350,
+              "text": "gMbGlobalState.work.parentControl->callback(42, event);"
+            },
+            {
+              "line": 353,
+              "text": "gMbGlobalState.work.parentControl->callback(19, event);"
+            },
+            {
+              "line": 354,
+              "text": "if (gMbGlobalState.work.parentControl->ending == 0) {"
+            },
+            {
+              "line": 355,
+              "text": "gMbGlobalState.work.parentControl->callback(25, 0);"
+            },
+            {
+              "line": 359,
+              "text": "if (gMbGlobalState.parent.parentWork->alternate == 0) {"
+            },
+            {
+              "line": 361,
+              "text": "gMbGlobalState.work.parentControl->ending = 0;"
+            },
+            {
+              "line": 362,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 365,
+              "text": "gMbGlobalState.work.parentControl->children = 0;"
+            },
+            {
+              "line": 366,
+              "text": "gMbGlobalState.work.parentControl->active = 0;"
+            },
+            {
+              "line": 373,
+              "text": "gMbGlobalState.work.parentControl->ending = 0;"
+            },
+            {
+              "line": 374,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 381,
+              "text": "gMbGlobalState.work.parentControl->ending = 0;"
+            },
+            {
+              "line": 382,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 391,
+              "text": "gMbGlobalState.work.parentControl->children &= ~event->fields.disconnectedBitmap;"
+            },
+            {
+              "line": 396,
+              "text": "gMbGlobalState.work.parentControl->callback(29, event);"
+            },
+            {
+              "line": 399,
+              "text": "gMbGlobalState.work.parentControl->callback(31, event);"
+            },
+            {
+              "line": 402,
+              "text": "gMbGlobalState.work.parentControl->callback(32, event);"
+            },
+            {
+              "line": 405,
+              "text": "gMbGlobalState.work.parentControl->callback(33, event);"
+            },
+            {
+              "line": 417,
+              "text": "gMbGlobalState.work.parentControl->callback(256, event);"
+            },
+            {
+              "line": 433,
+              "text": "((void (*)(int, void *))(*(u32 *)(gMbGlobalState.work.bytes + 0x51c)))(9, p);"
+            },
+            {
+              "line": 499,
+              "text": "MI_DmaCopy16(gMbGlobalState.dma, c->scanImage, c->records[i].scanImage, 0xc0);"
+            },
+            {
+              "line": 508,
+              "text": "MI_DmaCopy16(gMbGlobalState.dma, c->scanImage, c->records[i].scanImage, 0xc0);"
+            },
+            {
+              "line": 517,
+              "text": "MbChild *c = gMbGlobalState.work.child;"
+            },
+            {
+              "line": 529,
+              "text": "gMbGlobalState.scanBuffer = c->scanImage;"
+            },
+            {
+              "line": 530,
+              "text": "if (!gMbGlobalState.scanChannel) {"
+            },
+            {
+              "line": 531,
+              "text": "gMbGlobalState.scanChannel = 1;"
+            },
+            {
+              "line": 533,
+              "text": "if (!gMbGlobalState.scanTime) {"
+            },
+            {
+              "line": 534,
+              "text": "gMbGlobalState.scanTime = 200;"
+            },
+            {
+              "line": 536,
+              "text": "gMbGlobalState.scanMacFilter[0] = 255;"
+            },
+            {
+              "line": 537,
+              "text": "gMbGlobalState.scanMacFilter[1] = 255;"
+            },
+            {
+              "line": 538,
+              "text": "gMbGlobalState.scanMacFilter[2] = 255;"
+            },
+            {
+              "line": 539,
+              "text": "gMbGlobalState.scanMacFilter[3] = 255;"
+            },
+            {
+              "line": 540,
+              "text": "gMbGlobalState.scanMacFilter[4] = 255;"
+            },
+            {
+              "line": 541,
+              "text": "gMbGlobalState.scanMacFilter[5] = 255;"
+            },
+            {
+              "line": 627,
+              "text": "if (!gMbGlobalState.work.child->ending) {"
+            },
+            {
+              "line": 638,
+              "text": "gMbGlobalState.work.child->active = 0;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_error.c",
+          "sha256": "20f388de9036cfdebf82b2ff7db1aac7af57aa6f4a7a02b92c96e6866429f2b4",
+          "references": [
+            {
+              "line": 10,
+              "text": "extern u8 gMbGlobalState[];"
+            },
+            {
+              "line": 72,
+              "text": "cb = (void *)U32((void *)U32(gMbGlobalState, 8), 0x51c);"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    },
+    "gMbBeaconState": {
+      "original_ds_bytes": 64,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_fixed.c",
+          "sha256": "4c1431dae5707fe1c0df601e6ac963ff15f0074d48f7f95015f4bf38e45aba3e",
+          "references": [
+            {
+              "line": 39,
+              "text": "extern BeaconState gMbBeaconState;"
+            },
+            {
+              "line": 44,
+              "text": "#define S gMbBeaconState"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_volat.c",
+          "sha256": "abdc3dff08658d5968e1253bf18f3af0e3dad47ce9cf680c32f9b6a903029eab",
+          "references": [
+            {
+              "line": 55,
+              "text": "extern BeaconState gMbBeaconState;"
+            },
+            {
+              "line": 61,
+              "text": "#define S gMbBeaconState"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+          "sha256": "711fb40a2a9785ba03e50b79bf0770a295ce4eba9bc575935ea0412569675ded",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 gMbBeaconState[];"
+            },
+            {
+              "line": 65,
+              "text": "U16((void *)U32(gMbBeaconState, 0x1c), 0x4b0) = 1;"
+            },
+            {
+              "line": 66,
+              "text": "U8(gMbBeaconState, 0x26) = U8((void *)U32(gMbBeaconState, 0x1c), 0x4b4);"
+            },
+            {
+              "line": 67,
+              "text": "U8(gMbBeaconState, 0x24) = 5;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_cache.c",
+          "sha256": "56fd23edcd0a48fc91d03f848dd0a2c93ec127773191b75631a9ba98d7849dfb",
+          "references": [
+            {
+              "line": 8,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_comm_params.c",
+          "sha256": "b726ce48bbf94f5552d0556c673141b40a403518cb9cf4eea553a31c41ee5f9d",
+          "references": [
+            {
+              "line": 8,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_download_info.c",
+          "sha256": "bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577",
+          "references": [
+            {
+              "line": 185,
+              "text": "extern Beacon gMbBeaconState;"
+            },
+            {
+              "line": 606,
+              "text": "Node *q = gMbBeaconState.first;"
+            },
+            {
+              "line": 608,
+              "text": "gMbBeaconState.first = p;"
+            },
+            {
+              "line": 619,
+              "text": "gMbBeaconState.first = NULL;"
+            },
+            {
+              "line": 620,
+              "text": "gMbBeaconState.node = NULL;"
+            },
+            {
+              "line": 621,
+              "text": "gMbBeaconState.state = 1;"
+            },
+            {
+              "line": 622,
+              "text": "gMbBeaconState.unk_14 = 0;"
+            },
+            {
+              "line": 627,
+              "text": "gMbBeaconState.unk_25 = 0;"
+            },
+            {
+              "line": 628,
+              "text": "gMbBeaconState.parameter = 0;"
+            },
+            {
+              "line": 629,
+              "text": "gMbBeaconState.chunk = 0;"
+            },
+            {
+              "line": 630,
+              "text": "gMbBeaconState.count = 0;"
+            },
+            {
+              "line": 631,
+              "text": "gMbBeaconState.serial = 0;"
+            },
+            {
+              "line": 636,
+              "text": "switch (gMbBeaconState.state) {"
+            },
+            {
+              "line": 662,
+              "text": "if (!gMbBeaconState.first) {"
+            },
+            {
+              "line": 670,
+              "text": "if (gMbBeaconState.node && gMbBeaconState.node->next) {"
+            },
+            {
+              "line": 671,
+              "text": "next = gMbBeaconState.node->next;"
+            },
+            {
+              "line": 673,
+              "text": "next = *(Node *volatile *)&gMbBeaconState.first;"
+            },
+            {
+              "line": 675,
+              "text": "gMbBeaconState.node = next;"
+            },
+            {
+              "line": 678,
+              "text": "gMbBeaconState.parameter = gMbBeaconState.node->mode;"
+            },
+            {
+              "line": 679,
+              "text": "gMbBeaconState.state = 2;"
+            },
+            {
+              "line": 685,
+              "text": "if (gMbBeaconState.state != 2) {"
+            },
+            {
+              "line": 688,
+              "text": "p = gMbBeaconState.node;"
+            },
+            {
+              "line": 690,
+              "text": "gMbBeaconState.count = 9;"
+            },
+            {
+              "line": 691,
+              "text": "gMbBeaconState.cursor = (char *)p;"
+            },
+            {
+              "line": 693,
+              "text": "gMbBeaconState.count = 4;"
+            },
+            {
+              "line": 694,
+              "text": "gMbBeaconState.cursor = (char *)p + 0x220;"
+            },
+            {
+              "line": 696,
+              "text": "gMbBeaconState.state = 3;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_comm.c",
+          "sha256": "5689da945965c883d975c8aeda6e398a0110735bd296808413a57e67413e002c",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_util.c",
+          "sha256": "fe816ed143b3bfd4ba7184f7394816e3c2f9bbf4cf528f4d6ef5841f7bdcc3c8",
+          "references": [
+            {
+              "line": 10,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+          "sha256": "6ee2c6f0d887b4af907c67bf26f85cb496ddaf8ebc06beb9f2e514bbe5f8eff2",
+          "references": [
+            {
+              "line": 8,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_error.c",
+          "sha256": "20f388de9036cfdebf82b2ff7db1aac7af57aa6f4a7a02b92c96e6866429f2b4",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 gMbBeaconState[];"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    },
+    "gMbTaskWork": {
+      "original_ds_bytes": 4,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+          "sha256": "711fb40a2a9785ba03e50b79bf0770a295ce4eba9bc575935ea0412569675ded",
+          "references": [
+            {
+              "line": 12,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_cache.c",
+          "sha256": "56fd23edcd0a48fc91d03f848dd0a2c93ec127773191b75631a9ba98d7849dfb",
+          "references": [
+            {
+              "line": 11,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_download_info.c",
+          "sha256": "bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577",
+          "references": [
+            {
+              "line": 116,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_comm.c",
+          "sha256": "5689da945965c883d975c8aeda6e398a0110735bd296808413a57e67413e002c",
+          "references": [
+            {
+              "line": 12,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_util.c",
+          "sha256": "fe816ed143b3bfd4ba7184f7394816e3c2f9bbf4cf528f4d6ef5841f7bdcc3c8",
+          "references": [
+            {
+              "line": 13,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+          "sha256": "6ee2c6f0d887b4af907c67bf26f85cb496ddaf8ebc06beb9f2e514bbe5f8eff2",
+          "references": [
+            {
+              "line": 66,
+              "text": "extern OSThread *volatile gMbTaskWork;"
+            },
+            {
+              "line": 103,
+              "text": "return gMbTaskWork != NULL;"
+            },
+            {
+              "line": 115,
+              "text": "OSThread *thread = gMbTaskWork;"
+            },
+            {
+              "line": 144,
+              "text": "gMbTaskWork = 0;"
+            },
+            {
+              "line": 155,
+              "text": "gMbTaskWork = 0;"
+            },
+            {
+              "line": 182,
+              "text": "MBi_SetTask((Task *)((u8 *)gMbTaskWork + 0xc4), NULL, cb, 0);"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_task_thread.c",
+          "sha256": "6bb2f330a068e269ee9d56dc538618149f5e94e5351784aa9416e3270f45181c",
+          "references": [
+            {
+              "line": 39,
+              "text": "extern TaskThreadWork *gMbTaskWork;"
+            },
+            {
+              "line": 106,
+              "text": "if (gMbTaskWork == NULL) {"
+            },
+            {
+              "line": 108,
+              "text": "gMbTaskWork = w;"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_error.c",
+          "sha256": "20f388de9036cfdebf82b2ff7db1aac7af57aa6f4a7a02b92c96e6866429f2b4",
+          "references": [
+            {
+              "line": 12,
+              "text": "extern u8 gMbTaskWork[];"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    },
+    "gMbChildScanParam": {
+      "original_ds_bytes": 32,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_callbacks.c",
+          "sha256": "18f311ef3251832976d933b5487249178cda5ed2080619b78b5a9c88ac4e8476",
+          "references": [
+            {
+              "line": 143,
+              "text": "extern u8 gMbChildScanParam[]; // MbScanParam of the child's scan"
+            },
+            {
+              "line": 444,
+              "text": "if (c->changing && !changeScanChannel((MbScanParam *)gMbChildScanParam)) \\"
+            },
+            {
+              "line": 446,
+              "text": "CHECK(10, WM_StartScan(MBi_ChildCallback, gMbChildScanParam));           \\"
+            },
+            {
+              "line": 544,
+              "text": "CHECK(10, WM_StartScan(MBi_ChildCallback, gMbChildScanParam));"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    },
+    "ov13_02247484": {
+      "original_ds_bytes": 28,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_download_info.c",
+          "sha256": "bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577",
+          "references": [
+            {
+              "line": 50,
+              "text": "extern u8 ov13_02247484;"
+            },
+            {
+              "line": 294,
+              "text": "number = ov13_02247484;"
+            },
+            {
+              "line": 304,
+              "text": "ov13_02247484 = number;"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    },
+    "ov13_0224CF84": {
+      "original_ds_bytes": 20,
+      "consumers": [
+        {
+          "file": "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+          "sha256": "711fb40a2a9785ba03e50b79bf0770a295ce4eba9bc575935ea0412569675ded",
+          "references": [
+            {
+              "line": 11,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_cache.c",
+          "sha256": "56fd23edcd0a48fc91d03f848dd0a2c93ec127773191b75631a9ba98d7849dfb",
+          "references": [
+            {
+              "line": 10,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_comm_params.c",
+          "sha256": "b726ce48bbf94f5552d0556c673141b40a403518cb9cf4eea553a31c41ee5f9d",
+          "references": [
+            {
+              "line": 9,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_download_info.c",
+          "sha256": "bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577",
+          "references": [
+            {
+              "line": 115,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_comm.c",
+          "sha256": "5689da945965c883d975c8aeda6e398a0110735bd296808413a57e67413e002c",
+          "references": [
+            {
+              "line": 11,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_parent_util.c",
+          "sha256": "fe816ed143b3bfd4ba7184f7394816e3c2f9bbf4cf528f4d6ef5841f7bdcc3c8",
+          "references": [
+            {
+              "line": 12,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+          "sha256": "6ee2c6f0d887b4af907c67bf26f85cb496ddaf8ebc06beb9f2e514bbe5f8eff2",
+          "references": [
+            {
+              "line": 87,
+              "text": "extern Global ov13_0224CF84;"
+            },
+            {
+              "line": 188,
+              "text": "ov13_0224CF84.piece = size - 2;"
+            },
+            {
+              "line": 189,
+              "text": "ov13_0224CF84.count = 30 / (size - 2);"
+            },
+            {
+              "line": 190,
+              "text": "ov13_0224CF84.dataSize = 30;"
+            },
+            {
+              "line": 194,
+              "text": "ov13_0224CF84.buffer = p;"
+            },
+            {
+              "line": 199,
+              "text": "u8 *p = ov13_0224CF84.buffer;"
+            },
+            {
+              "line": 206,
+              "text": "U32(ov13_0224CF84.buffer, 0x1e0 + (x << 2)) = 0;"
+            },
+            {
+              "line": 239,
+              "text": "return ov13_0224CF84.buffer + (child - 1) * 32;"
+            },
+            {
+              "line": 244,
+              "text": "if (piece > ov13_0224CF84.count) {"
+            },
+            {
+              "line": 247,
+              "text": "MI_CpuCopy8(source + 2, (u8 *)dest + 3, ov13_0224CF84.piece);"
+            },
+            {
+              "line": 260,
+              "text": "MI_CpuCopy8(next, (u8 *)dest + 4, ov13_0224CF84.piece);"
+            },
+            {
+              "line": 261,
+              "text": "next += ov13_0224CF84.piece;"
+            },
+            {
+              "line": 271,
+              "text": "if (!ov13_0224CF84.buffer) {"
+            },
+            {
+              "line": 275,
+              "text": "if (index > ov13_0224CF84.count) {"
+            },
+            {
+              "line": 279,
+              "text": "MI_CpuCopy8((u8 *)p + 3, ov13_0224CF84.buffer + slot * 32 + index * ov13_0224CF84.piece, ov13_0224CF84.piece);"
+            },
+            {
+              "line": 281,
+              "text": "u32 *bits = (u32 *)(ov13_0224CF84.buffer + 0x1e0);"
+            },
+            {
+              "line": 287,
+              "text": "return ov13_0224CF84.buffer + slot * 32;"
+            },
+            {
+              "line": 292,
+              "text": "if (ov13_0224CF84.count > 0) {"
+            },
+            {
+              "line": 293,
+              "text": "u32 bits = *(u32 *)(ov13_0224CF84.buffer + 0x1e0 + (child - 1) * 4);"
+            },
+            {
+              "line": 299,
+              "text": "} while (i < ov13_0224CF84.count);"
+            }
+          ]
+        },
+        {
+          "file": "lib/NitroSDK/src/mb/mb_wm_error.c",
+          "sha256": "20f388de9036cfdebf82b2ff7db1aac7af57aa6f4a7a02b92c96e6866429f2b4",
+          "references": [
+            {
+              "line": 11,
+              "text": "extern u8 ov13_0224CF84[];"
+            }
+          ]
+        }
+      ],
+      "existing_definitions": []
+    }
+  }
+}

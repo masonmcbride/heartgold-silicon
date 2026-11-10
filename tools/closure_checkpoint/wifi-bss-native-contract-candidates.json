@@ -1,0 +1,1578 @@
+{
+  "source_checkpoint": "1f137fa",
+  "total": 38,
+  "records": [
+    {
+      "symbol": "gWifiSetupBanner",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_local_wireless.h",
+          "line": 75,
+          "context": " extern WifiSetupBannerState gWifiSetupBanner; extern WifiSetupUsbScan *gWifiSetupUsbScan;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2225,
+          "context": " gWifiSetupBanner.banner = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupBanner), 4); res = gWifiSetupBannerLetterTemplates[kind];"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2229,
+          "context": "for (i = 0; i < WIFI_SETUP_BANNER_NUM_LETTERS; i++) { gWifiSetupBanner.banner->letters[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_SUB, *res++, TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupBanner.banner->letters[i], -1, 0);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2230,
+          "context": "gWifiSetupBanner.banner->letters[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_SUB, *res++, TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupBanner.banner->letters[i], -1, 0); WifiSetupOamBlock_SetPosition(gWifiSetupBanner.banner->letters[i], -1, -0x2a,"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2231,
+          "context": "WifiSetupOamBlock_SetPriority(gWifiSetupBanner.banner->letters[i], -1, 0); WifiSetupOamBlock_SetPosition(gWifiSetupBanner.banner->letters[i], -1, -0x2a, gWifiSetupBannerLetterPositions[i].y); WifiSetupOamBlock_SetModeAndPalette(gWifiSetupBanner.banner->letters"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2232,
+          "context": "WifiSetupOamBlock_SetPosition(gWifiSetupBanner.banner->letters[i], -1, -0x2a, gWifiSetupBannerLetterPositions[i].y); WifiSetupOamBlock_SetModeAndPalette(gWifiSetupBanner.banner->letters[i], -1, 0, *anim++); }"
+        }
+      ]
+    },
+    {
+      "symbol": "ov13_0224F5B0",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 28,
+          "context": " extern void *ov13_0224F5B0[]; "
+        },
+        {
+          "path": "build/native/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 31,
+          "context": " extern void *ov13_0224F5B0[]; "
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2460,
+          "context": "} WifiSetupHeap_FreeAndClear(ov13_0224F5B0); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2504,
+          "context": "} WifiSetupHeap_FreeAndClear(&ov13_0224F5B0[1]); return FALSE;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2531,
+          "context": "} WifiSetupHeap_FreeAndClear(&ov13_0224F5B0[1]); return TRUE;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2901,
+          "context": "WifiSetupTask_DestroyLater(WIFI_SETUP_TASK_QUEUE_VBLANK, task); WifiSetupHeap_FreeAndClear(&ov13_0224F5B0[2]); }"
+        },
+        {
+          "path": "build/native/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2463,
+          "context": "} WifiSetupHeap_FreeAndClear(ov13_0224F5B0); }"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupDialog",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_local_wireless.h",
+          "line": 77,
+          "context": "extern WifiSetupUsbScan *gWifiSetupUsbScan; extern WifiSetupDialog *gWifiSetupDialog; "
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2692,
+          "context": "text = WifiSetupText_GetStringWithDigit(gWifiSetupTextBank, message, digitPos, digit); gWifiSetupDialog = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupDialog), 4); gWifiSetupDialog->kind = kind;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2693,
+          "context": "gWifiSetupDialog = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupDialog), 4); gWifiSetupDialog->kind = kind; gWifiSetupDialog->selected = WIFI_SETUP_SELECTED_NOT_SHOWN;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2694,
+          "context": "gWifiSetupDialog->kind = kind; gWifiSetupDialog->selected = WIFI_SETUP_SELECTED_NOT_SHOWN; gWifiSetupDialog->fade = fade;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2695,
+          "context": "gWifiSetupDialog->selected = WIFI_SETUP_SELECTED_NOT_SHOWN; gWifiSetupDialog->fade = fade; G2_SetBlendBrightness(GX_BLEND_PLANEMASK_BG0 | GX_BLEND_PLANEMASK_BG1 | GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3 | GX_BLEND_PLANEMASK_OBJ, 0);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_local_wireless.c",
+          "line": 2697,
+          "context": "G2_SetBlendBrightness(GX_BLEND_PLANEMASK_BG0 | GX_BLEND_PLANEMASK_BG1 | GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3 | GX_BLEND_PLANEMASK_OBJ, 0); gWifiSetupDialog->frame = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, gWifiSetupDialogFrameTemplat"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupMbParent",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 237,
+          "context": "extern WifiSetupShare *gWifiSetupShare; extern WifiSetupMbParent *gWifiSetupMbParent; "
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 85,
+          "context": "u16 mask = 1 << aid; if (!(gWifiSetupMbParent->head.connectedMask & mask)) { OS_RestoreInterrupts(old);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 89,
+          "context": "} MI_CpuCopy8(gWifiSetupMbParent, &state, sizeof(state)); OS_RestoreInterrupts(old);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 110,
+          "context": "static WifiSetupMbParentChild *WifiSetupMbParent_GetChild(int aid) { if (!(gWifiSetupMbParent->head.connectedMask & (1 << aid))) { return NULL;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 113,
+          "context": "} return &gWifiSetupMbParent->children[aid - 1]; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 123,
+          "context": "for (i = 1; i < 2; i++) { if (gWifiSetupMbParent->head.connectedMask & (1 << i)) { if (IsSameMacAddr(macAddr, gWifiSetupMbParent->children[i - 1].macAddr)) {"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupWh",
+      "original_size": 8,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 235,
+          "context": " extern WifiSetupWh gWifiSetupWh; extern WifiSetupShare *gWifiSetupShare;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 11,
+          "context": " // gWifiSetupWh.work->state (names from the log table) #define WIFI_SETUP_WH_STATE_STOP           0"
+        },
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 28,
+          "context": " // connect modes (WifiSetupWh_StartConnection, gWifiSetupWh.work->connectMode) #define WIFI_SETUP_WH_MODE_MP_PARENT 0"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 133,
+          "context": "void WifiSetupWh_Init(WifiSetupWhWork *work) { gWifiSetupWh.work = work; gWifiSetupWh.work->state = WIFI_SETUP_WH_STATE_STOP;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 134,
+          "context": "gWifiSetupWh.work = work; gWifiSetupWh.work->state = WIFI_SETUP_WH_STATE_STOP; gWifiSetupWh.work->unk_13A8 = 0;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 135,
+          "context": "gWifiSetupWh.work->state = WIFI_SETUP_WH_STATE_STOP; gWifiSetupWh.work->unk_13A8 = 0; gWifiSetupWh.work->getWepKey = NULL;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupShare",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 236,
+          "context": "extern WifiSetupWh gWifiSetupWh; extern WifiSetupShare *gWifiSetupShare; extern WifiSetupMbParent *gWifiSetupMbParent;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 49,
+          "context": " // requests handled in WIFI_SETUP_SHARE_STATE_IDLE (gWifiSetupShare->request) #define WIFI_SETUP_SHARE_REQUEST_NONE  0"
+        },
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_share.h",
+          "line": 54,
+          "context": " // session states (gWifiSetupShare->state, WifiSetupShare_Update) #define WIFI_SETUP_SHARE_STATE_NONE                0"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 10,
+          "context": " #define MODULE_BSS_ADDR(addr) (&gWifiSetupShare + ((addr) - 0x0224F5C8) / 4) "
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 822,
+          "context": "void WifiSetupShare_Init(WifiSetupShare *share, const WifiSetupSessionParams *params) { gWifiSetupShare = share; WifiSetupMbParent_Init(&gWifiSetupShare->mbParent);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_share.c",
+          "line": 823,
+          "context": "gWifiSetupShare = share; WifiSetupMbParent_Init(&gWifiSetupShare->mbParent); gWifiSetupShare->tgid = 0;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupArchive",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 276,
+          "context": " extern WifiSetupArchiveState *gWifiSetupArchive; extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 286,
+          "context": " extern WifiSetupArchiveState *gWifiSetupArchive; extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 81,
+          "context": "FS_ChangeDir(gWifiSetupRomPrefix); FS_UnloadArchiveTables(&gWifiSetupArchive->arc); FS_UnloadArchive(&gWifiSetupArchive->arc);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 82,
+          "context": "FS_UnloadArchiveTables(&gWifiSetupArchive->arc); FS_UnloadArchive(&gWifiSetupArchive->arc); FS_ReleaseArchiveName(&gWifiSetupArchive->arc);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 83,
+          "context": "FS_UnloadArchive(&gWifiSetupArchive->arc); FS_ReleaseArchiveName(&gWifiSetupArchive->arc); OS_ReleaseLockID(gWifiSetupArchive->lockId);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 84,
+          "context": "FS_ReleaseArchiveName(&gWifiSetupArchive->arc); OS_ReleaseLockID(gWifiSetupArchive->lockId); gWifiSetupArchive->lockId = 0;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 85,
+          "context": "OS_ReleaseLockID(gWifiSetupArchive->lockId); gWifiSetupArchive->lockId = 0; WifiSetupHeap_FreeAndClear(&gWifiSetupArchive->tables);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupOamBlockManager",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 277,
+          "context": "extern WifiSetupArchiveState *gWifiSetupArchive; extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager; extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[];"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 287,
+          "context": "extern WifiSetupArchiveState *gWifiSetupArchive; extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager; extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 173,
+          "context": "int i; gWifiSetupOamBlockManager = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupOamBlockManager) * 2, 4); for (i = 0; i < 2; i++) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 175,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupOamBlockManager[i].pool = WifiSetupPool_NewWithItems(NELEMS(gWifiSetupOamBlockManager[i].blocks), gWifiSetupOamBlockManager[i].blocks, sizeof(WifiSetupOamBlock)); gWifiSetupOamBlockManager[i].list = WifiSetupList_New();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 176,
+          "context": "gWifiSetupOamBlockManager[i].pool = WifiSetupPool_NewWithItems(NELEMS(gWifiSetupOamBlockManager[i].blocks), gWifiSetupOamBlockManager[i].blocks, sizeof(WifiSetupOamBlock)); gWifiSetupOamBlockManager[i].list = WifiSetupList_New(); gWifiSetupOamBlockManager[i].f"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 177,
+          "context": "gWifiSetupOamBlockManager[i].list = WifiSetupList_New(); gWifiSetupOamBlockManager[i].first.oam = WifiSetupOam_Get(i, 0x40); gWifiSetupOamBlockManager[i].last.oam = WifiSetupOam_Get(i, 0x7F) + 1;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 178,
+          "context": "gWifiSetupOamBlockManager[i].first.oam = WifiSetupOam_Get(i, 0x40); gWifiSetupOamBlockManager[i].last.oam = WifiSetupOam_Get(i, 0x7F) + 1; WifiSetupList_Prepend(gWifiSetupOamBlockManager[i].list, &gWifiSetupOamBlockManager[i].first.node);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupOamTemplateFiles",
+      "original_size": 8,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 278,
+          "context": "extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager; extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[]; extern WifiSetupFade *gWifiSetupFades;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 288,
+          "context": "extern WifiSetupOamBlockManager *gWifiSetupOamBlockManager; extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[]; extern WifiSetupFade *gWifiSetupFades;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 349,
+          "context": "u32 size; gWifiSetupOamTemplateFiles[screen] = WifiSetupFile_Load(path, &size, 4); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 353,
+          "context": "void WifiSetupOamTemplate_Free(enum WifiSetupScreen screen) { WifiSetupFile_Free(gWifiSetupOamTemplateFiles[screen]); gWifiSetupOamTemplateFiles[screen] = NULL;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 354,
+          "context": "WifiSetupFile_Free(gWifiSetupOamTemplateFiles[screen]); gWifiSetupOamTemplateFiles[screen] = NULL; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 358,
+          "context": "void WifiSetupOamTemplate_Copy(enum WifiSetupScreen screen, int index, GXOamAttr *dst) { WifiSetupOamTemplateHeader *headers = gWifiSetupOamTemplateFiles[screen]; u8 *src = (u8 *)headers + headers[index].offset;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 379,
+          "context": "WifiSetupOamBlock *WifiSetupOamTemplate_AllocBlock(enum WifiSetupScreen screen, int index, BOOL fromFront) { WifiSetupOamBlock *block = WifiSetupOamBlock_Alloc(screen, gWifiSetupOamTemplateFiles[screen][index].count, fromFront); WifiSetupOamTemplate_Copy(scree"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupFades",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 279,
+          "context": "extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[]; extern WifiSetupFade *gWifiSetupFades; extern WifiSetupTextState *gWifiSetupText;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 289,
+          "context": "extern WifiSetupOamTemplateHeader *gWifiSetupOamTemplateFiles[]; extern WifiSetupFade *gWifiSetupFades; extern WifiSetupTextState *gWifiSetupText;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 430,
+          "context": "void WifiSetupFade_Init(void) { gWifiSetupFades = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupFade) * 2, 4); G2_SetBlendBrightness(0x3F, 0x10);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 436,
+          "context": "void WifiSetupFade_Free(void) { WifiSetupHeap_FreeAndClear(&gWifiSetupFades); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 442,
+          "context": "if (screen == WIFI_SETUP_SCREEN_SUB) { fade = &gWifiSetupFades[0]; } else {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 444,
+          "context": "} else { fade = &gWifiSetupFades[1]; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 453,
+          "context": "if (screen == WIFI_SETUP_SCREEN_SUB) { fade = &gWifiSetupFades[0]; } else {"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupText",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 280,
+          "context": "extern WifiSetupFade *gWifiSetupFades; extern WifiSetupTextState *gWifiSetupText; extern NNSFndHeapHandle gWifiSetupHeap;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 290,
+          "context": "extern WifiSetupFade *gWifiSetupFades; extern WifiSetupTextState *gWifiSetupText; extern NNSFndHeapHandle gWifiSetupHeap;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 530,
+          "context": "int i; gWifiSetupText = text = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupTextState), 4); gWifiSetupText->objCanvasPool = WifiSetupPool_NewWithItems(NELEMS(text->objCanvases), text->objCanvases, sizeof(WifiSetupCanvas));"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 531,
+          "context": "gWifiSetupText = text = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupTextState), 4); gWifiSetupText->objCanvasPool = WifiSetupPool_NewWithItems(NELEMS(text->objCanvases), text->objCanvases, sizeof(WifiSetupCanvas)); if (WifiSetupApp_GetLanguage() == 6) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 534,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupText->fontData[i] = WifiSetupFile_Load(gWifiSetupFontPathsKorean[i], NULL, 4); NNS_G2dFontInitUTF16(&gWifiSetupText->fonts[i], gWifiSetupText->fontData[i]);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 535,
+          "context": "gWifiSetupText->fontData[i] = WifiSetupFile_Load(gWifiSetupFontPathsKorean[i], NULL, 4); NNS_G2dFontInitUTF16(&gWifiSetupText->fonts[i], gWifiSetupText->fontData[i]); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 539,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupText->fontData[i] = WifiSetupFile_Load(gWifiSetupFontPaths[i], NULL, 4); NNS_G2dFontInitUTF16(&gWifiSetupText->fonts[i], gWifiSetupText->fontData[i]);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupHeap",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 281,
+          "context": "extern WifiSetupTextState *gWifiSetupText; extern NNSFndHeapHandle gWifiSetupHeap; extern WifiSetupInput gWifiSetupInput;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 291,
+          "context": "extern WifiSetupTextState *gWifiSetupText; extern NNSFndHeapHandle gWifiSetupHeap; extern WifiSetupInput gWifiSetupInput;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 828,
+          "context": "MI_CpuFill8(mem, 0, 0x40000); gWifiSetupHeap = NNS_FndCreateExpHeapEx(mem, 0x40000, 0); if (gWifiSetupHeap == NULL) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 829,
+          "context": "gWifiSetupHeap = NNS_FndCreateExpHeapEx(mem, 0x40000, 0); if (gWifiSetupHeap == NULL) { OS_Terminate();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 835,
+          "context": "void WifiSetupHeap_Destroy(void) { NNS_FndDestroyExpHeap(gWifiSetupHeap); gWifiSetupHeap = NULL;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 836,
+          "context": "NNS_FndDestroyExpHeap(gWifiSetupHeap); gWifiSetupHeap = NULL; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 843,
+          "context": "irq = OS_DisableIrqMask(OS_IE_V_BLANK); mem = NNS_FndAllocFromExpHeapEx(gWifiSetupHeap, size, align); if (mem == NULL) {"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupInput",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 282,
+          "context": "extern NNSFndHeapHandle gWifiSetupHeap; extern WifiSetupInput gWifiSetupInput; extern u8 gWifiSetupInputHoldFrames[];"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 292,
+          "context": "extern NNSFndHeapHandle gWifiSetupHeap; extern WifiSetupInput gWifiSetupInput; extern u8 gWifiSetupInputHoldFrames[];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 879,
+          "context": "TPCalibrateParam calibrate; gWifiSetupInput.state = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupInputState), 4); if (!TP_GetUserInfo(&calibrate)) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 884,
+          "context": "TP_SetCalibrateParam(&calibrate); TP_RequestAutoSamplingStartAsync(0, 4, gWifiSetupInput.state->samples, NELEMS(gWifiSetupInput.state->samples)); TP_WaitBusy(2);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 897,
+          "context": "} while (TP_CheckBusy(4)); WifiSetupHeap_FreeAndClear(&gWifiSetupInput.state); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 909,
+          "context": "u8 *holdFrames; WifiSetupInputState *state = gWifiSetupInput.state; u16 pad = PAD_Read();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 911,
+          "context": "u16 pad = PAD_Read(); gWifiSetupInput.state->trig = (state->cont ^ pad) & pad; gWifiSetupInput.state->release = state->cont & (state->cont ^ pad);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupInputHoldFrames",
+      "original_size": 16,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 283,
+          "context": "extern WifiSetupInput gWifiSetupInput; extern u8 gWifiSetupInputHoldFrames[]; extern WifiSetupIrqSave gWifiSetupIrqSave;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 293,
+          "context": "extern WifiSetupInput gWifiSetupInput; extern u8 gWifiSetupInputHoldFrames[]; extern WifiSetupIrqSave gWifiSetupIrqSave;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 915,
+          "context": "gWifiSetupInput.state->repeat = gWifiSetupInput.state->trig; holdFrames = gWifiSetupInputHoldFrames; for (i = 0; i < 14; i++) {"
+        },
+        {
+          "path": "build/native/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 918,
+          "context": "gWifiSetupInput.state->repeat = gWifiSetupInput.state->trig; holdFrames = gWifiSetupInputHoldFrames; for (i = 0; i < 14; i++) {"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupIrqSave",
+      "original_size": 8,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 284,
+          "context": "extern u8 gWifiSetupInputHoldFrames[]; extern WifiSetupIrqSave gWifiSetupIrqSave; extern WifiSetupOamBuffer *gWifiSetupOamBuffer;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 294,
+          "context": "extern u8 gWifiSetupInputHoldFrames[]; extern WifiSetupIrqSave gWifiSetupIrqSave; extern WifiSetupOamBuffer *gWifiSetupOamBuffer;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1128,
+          "context": "void WifiSetup_InstallVBlankIntr(void) { gWifiSetupIrqSave.mask = reg_OS_IE; OS_SetIrqMask(OS_IE_SPFIFO_RECV | OS_IE_TIMER1 | OS_IE_TIMER0);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1131,
+          "context": "OS_EnableIrqMask(OS_IE_V_BLANK); gWifiSetupIrqSave.vblankFunc = OS_GetIrqFunction(OS_IE_V_BLANK); OS_SetIrqFunction(OS_IE_V_BLANK, WifiSetup_VBlankIntr);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1140,
+          "context": "OS_DisableIrq(); OS_SetIrqMask(gWifiSetupIrqSave.mask); OS_SetIrqFunction(OS_IE_V_BLANK, gWifiSetupIrqSave.vblankFunc);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1141,
+          "context": "OS_SetIrqMask(gWifiSetupIrqSave.mask); OS_SetIrqFunction(OS_IE_V_BLANK, gWifiSetupIrqSave.vblankFunc); }"
+        },
+        {
+          "path": "build/native/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1131,
+          "context": "void WifiSetup_InstallVBlankIntr(void) { gWifiSetupIrqSave.mask = reg_OS_IE; OS_SetIrqMask(OS_IE_SPFIFO_RECV | OS_IE_TIMER1 | OS_IE_TIMER0);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupOamBuffer",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 285,
+          "context": "extern WifiSetupIrqSave gWifiSetupIrqSave; extern WifiSetupOamBuffer *gWifiSetupOamBuffer; extern WifiSetupCharVramManager *gWifiSetupCharVram;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 295,
+          "context": "extern WifiSetupIrqSave gWifiSetupIrqSave; extern WifiSetupOamBuffer *gWifiSetupOamBuffer; extern WifiSetupCharVramManager *gWifiSetupCharVram;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1192,
+          "context": "int i; gWifiSetupOamBuffer = buffer = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupOamBuffer), 4); MI_CpuFillFast(buffer, 0x200, sizeof(buffer->oam));"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1195,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupOamBuffer->pools[i] = WifiSetupPool_NewWithItems(0x40, gWifiSetupOamBuffer->oam[i], sizeof(GXOamAttr)); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1197,
+          "context": "} gWifiSetupOamBuffer->task = WifiSetupTask_Create(WIFI_SETUP_TASK_QUEUE_VBLANK, WifiSetupOam_TransferTask, NULL, 0xC8); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1201,
+          "context": "static void WifiSetupOam_TransferTask(WifiSetupTask *task, void *arg) { DC_FlushRange(gWifiSetupOamBuffer, sizeof(gWifiSetupOamBuffer->oam)); GX_LoadOAM(gWifiSetupOamBuffer->oam[0], 0, sizeof(gWifiSetupOamBuffer->oam[0]));"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1202,
+          "context": "DC_FlushRange(gWifiSetupOamBuffer, sizeof(gWifiSetupOamBuffer->oam)); GX_LoadOAM(gWifiSetupOamBuffer->oam[0], 0, sizeof(gWifiSetupOamBuffer->oam[0])); GXS_LoadOAM(gWifiSetupOamBuffer->oam[1], 0, sizeof(gWifiSetupOamBuffer->oam[1]));"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupCharVram",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 286,
+          "context": "extern WifiSetupOamBuffer *gWifiSetupOamBuffer; extern WifiSetupCharVramManager *gWifiSetupCharVram; extern WifiSetupVramBanks gWifiSetupSavedVramBanks;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 296,
+          "context": "extern WifiSetupOamBuffer *gWifiSetupOamBuffer; extern WifiSetupCharVramManager *gWifiSetupCharVram; extern WifiSetupVramBanks gWifiSetupSavedVramBanks;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1231,
+          "context": "int i; gWifiSetupCharVram = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupCharVramManager) * 2, 4); for (i = 0; i < 2; i++) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1233,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupCharVram[i].pool = WifiSetupPool_NewWithItems(NELEMS(gWifiSetupCharVram[i].blocks), gWifiSetupCharVram[i].blocks, sizeof(WifiSetupCharBlock)); gWifiSetupCharVram[i].list = WifiSetupList_New();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1234,
+          "context": "gWifiSetupCharVram[i].pool = WifiSetupPool_NewWithItems(NELEMS(gWifiSetupCharVram[i].blocks), gWifiSetupCharVram[i].blocks, sizeof(WifiSetupCharBlock)); gWifiSetupCharVram[i].list = WifiSetupList_New(); gWifiSetupCharVram[i].first.start = 0x300;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1235,
+          "context": "gWifiSetupCharVram[i].list = WifiSetupList_New(); gWifiSetupCharVram[i].first.start = 0x300; gWifiSetupCharVram[i].last.start = 0x400;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1236,
+          "context": "gWifiSetupCharVram[i].first.start = 0x300; gWifiSetupCharVram[i].last.start = 0x400; WifiSetupList_Prepend(gWifiSetupCharVram[i].list, &gWifiSetupCharVram[i].first.node);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupSavedVramBanks",
+      "original_size": 52,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 287,
+          "context": "extern WifiSetupCharVramManager *gWifiSetupCharVram; extern WifiSetupVramBanks gWifiSetupSavedVramBanks; extern WifiSetupTaskQueue *gWifiSetupTaskQueues;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 297,
+          "context": "extern WifiSetupCharVramManager *gWifiSetupCharVram; extern WifiSetupVramBanks gWifiSetupSavedVramBanks; extern WifiSetupTaskQueue *gWifiSetupTaskQueues;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1309,
+          "context": "void WifiSetup_SaveVramBanks(void) { gWifiSetupSavedVramBanks.bg = GX_DisableBankForBG(); gWifiSetupSavedVramBanks.obj = GX_DisableBankForOBJ();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1310,
+          "context": "gWifiSetupSavedVramBanks.bg = GX_DisableBankForBG(); gWifiSetupSavedVramBanks.obj = GX_DisableBankForOBJ(); gWifiSetupSavedVramBanks.bgExtPltt = GX_DisableBankForBGExtPltt();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1311,
+          "context": "gWifiSetupSavedVramBanks.obj = GX_DisableBankForOBJ(); gWifiSetupSavedVramBanks.bgExtPltt = GX_DisableBankForBGExtPltt(); gWifiSetupSavedVramBanks.objExtPltt = GX_DisableBankForOBJExtPltt();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1312,
+          "context": "gWifiSetupSavedVramBanks.bgExtPltt = GX_DisableBankForBGExtPltt(); gWifiSetupSavedVramBanks.objExtPltt = GX_DisableBankForOBJExtPltt(); gWifiSetupSavedVramBanks.tex = GX_DisableBankForTex();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1313,
+          "context": "gWifiSetupSavedVramBanks.objExtPltt = GX_DisableBankForOBJExtPltt(); gWifiSetupSavedVramBanks.tex = GX_DisableBankForTex(); gWifiSetupSavedVramBanks.texPltt = GX_DisableBankForTexPltt();"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTaskQueues",
+      "original_size": 28,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_system_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui.h",
+          "line": 288,
+          "context": "extern WifiSetupVramBanks gWifiSetupSavedVramBanks; extern WifiSetupTaskQueue *gWifiSetupTaskQueues; extern WifiSetupBrightnessTable gWifiSetupFadeTables[3]; // end, flags and start values per fade kind"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_ui.h",
+          "line": 298,
+          "context": "extern WifiSetupVramBanks gWifiSetupSavedVramBanks; extern WifiSetupTaskQueue *gWifiSetupTaskQueues; extern WifiSetupBrightnessTable gWifiSetupFadeTables[3]; // end, flags and start values per fade kind"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1389,
+          "context": "u8 *capacity; gWifiSetupTaskQueues = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupTaskQueue) * 2, 4); capacity = gWifiSetupTaskQueueCapacities;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1392,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupTaskQueues[i].capacity = *capacity; gWifiSetupTaskQueues[i].taskBuf = WifiSetupHeap_AllocZeroed(*capacity * sizeof(WifiSetupTask), 4);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1393,
+          "context": "gWifiSetupTaskQueues[i].capacity = *capacity; gWifiSetupTaskQueues[i].taskBuf = WifiSetupHeap_AllocZeroed(*capacity * sizeof(WifiSetupTask), 4); gWifiSetupTaskQueues[i].taskPool = WifiSetupPool_NewWithItems(*capacity, gWifiSetupTaskQueues[i].taskBuf, sizeof(Wi"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1394,
+          "context": "gWifiSetupTaskQueues[i].taskBuf = WifiSetupHeap_AllocZeroed(*capacity * sizeof(WifiSetupTask), 4); gWifiSetupTaskQueues[i].taskPool = WifiSetupPool_NewWithItems(*capacity, gWifiSetupTaskQueues[i].taskBuf, sizeof(WifiSetupTask)); gWifiSetupTaskQueues[i].destroy"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_system.c",
+          "line": 1395,
+          "context": "gWifiSetupTaskQueues[i].taskPool = WifiSetupPool_NewWithItems(*capacity, gWifiSetupTaskQueues[i].taskBuf, sizeof(WifiSetupTask)); gWifiSetupTaskQueues[i].destroyQueue = WifiSetupPool_New(*capacity++); gWifiSetupTaskQueues[i].list = WifiSetupList_New();"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTextBank",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_app.h",
+          "line": 114,
+          "context": "extern WifiSetupSession *gWifiSetupSession; extern WifiSetupTextBank *gWifiSetupTextBank; extern const u8 gWifiSetupAossClientName[12];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 333,
+          "context": "params = gWifiSetupTransferSessionParams; params.title = WifiSetupText_GetString(gWifiSetupTextBank, 0); params.description = WifiSetupText_GetString(gWifiSetupTextBank, 1);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 334,
+          "context": "params.title = WifiSetupText_GetString(gWifiSetupTextBank, 0); params.description = WifiSetupText_GetString(gWifiSetupTextBank, 1); params.languageCode = WifiSetupApp_GetLanguageCode();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 341,
+          "context": "WifiSetupCursor_Free(); WifiSetupText_UnloadBank(gWifiSetupTextBank); WifiSetupText_FreeBanks();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 354,
+          "context": "if (WifiSetupApp_GetLanguage() == 1 && WifiSetupApp_HasOption(2)) { gWifiSetupTextBank = WifiSetupText_LoadBank(sStr_MsgUsaBmgL); } else {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 356,
+          "context": "} else { gWifiSetupTextBank = WifiSetupText_LoadBank(gWifiSetupMessageBankPaths[WifiSetupApp_GetLanguage()]); }"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTopMenu",
+      "original_size": 8,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 124,
+          "context": "extern WifiSetupClientStatus *gWifiSetupClientStatus; extern WifiSetupTopMenu gWifiSetupTopMenu; extern u8 gWifiSetupEraseConfirmed;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 415,
+          "context": "WifiSetupBanner_LoadScreen(4); i = gWifiSetupTopMenu.selected * 4; WifiSetupCursor_ShowCorners(gWifiSetupTopMenuCursorLeft[i], gWifiSetupTopMenuCursorRight[i], gWifiSetupTopMenuCursorTop[i], gWifiSetupTopMenuCursorBottom[i]);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 426,
+          "context": "WifiSetup_LoadGraphics(sStr_CharJb2MenuNscL, GX_LoadBG2Scr); gWifiSetupTopMenu.graphics = WifiSetupFile_Load(WifiSetup_LocalizePath(name.text), NULL, 4); G2S_SetBG0Priority(3);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 473,
+          "context": "WifiSetupButtonBar_SelectIfNone(1); gWifiSetupTopMenu.selected = i; idx = gWifiSetupTopMenu.selected * 4;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 474,
+          "context": "gWifiSetupTopMenu.selected = i; idx = gWifiSetupTopMenu.selected * 4; WifiSetupCursor_ShowCorners(gWifiSetupTopMenuCursorLeft[idx], gWifiSetupTopMenuCursorRight[idx], gWifiSetupTopMenuCursorTop[idx], gWifiSetupTopMenuCursorBottom[idx]);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 545,
+          "context": "WifiSetupMessage_Hide(); WifiSetupFile_Free(gWifiSetupTopMenu.graphics); WifiSetupDisplay_HidePlanes(WIFI_SETUP_SCREEN_SUB, GX_PLANEMASK_BG0);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupEraseConfirmed",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 125,
+          "context": "extern WifiSetupTopMenu gWifiSetupTopMenu; extern u8 gWifiSetupEraseConfirmed; extern WifiSetupMenu3 gWifiSetupOptions;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 577,
+          "context": "static void WifiSetupEraseConfirm_Init(void) { gWifiSetupEraseConfirmed = FALSE; WifiSetupEraseConfirm_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 665,
+          "context": "WifiSetupButtonBar_Close(); if (!gWifiSetupEraseConfirmed) { WifiSetupFade_Start(WIFI_SETUP_FADE_OUT_TO_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 676,
+          "context": "} if (!gWifiSetupEraseConfirmed) { if (WifiSetupFade_IsActive(WIFI_SETUP_SCREEN_SUB)) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 685,
+          "context": "WifiSetupText_FreeBgCanvas(WIFI_SETUP_SCREEN_MAIN); if (!gWifiSetupEraseConfirmed) { WifiSetupMessage_Hide();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 690,
+          "context": "WifiSetupDisplay_HidePlanes(WIFI_SETUP_SCREEN_MAIN, GX_PLANEMASK_BG0 | GX_PLANEMASK_BG2 | GX_PLANEMASK_OBJ); if (!gWifiSetupEraseConfirmed) { WifiSetupApp_SetTransition(WIFI_SETUP_BANNER_KEEP, WIFI_SETUP_BUTTON_BAR_CREATE);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupOptions",
+      "original_size": 12,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 126,
+          "context": "extern u8 gWifiSetupEraseConfirmed; extern WifiSetupMenu3 gWifiSetupOptions; extern u8 gWifiSetupTransferResult;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 939,
+          "context": "int idx; gWifiSetupOptions.confirmed = FALSE; WifiSetupOptions_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 944,
+          "context": "WifiSetupMessage_Show(0x39, -1, 0); gWifiSetupOptions.oam = WifiSetupOamTemplate_AllocOam(WIFI_SETUP_SCREEN_MAIN, 0x5b); gWifiSetupOptions.oam->attr01 = (gWifiSetupOptions.oam->attr01 & 0xFE00FF00) | 0x84 | 0xE00000;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 945,
+          "context": "gWifiSetupOptions.oam = WifiSetupOamTemplate_AllocOam(WIFI_SETUP_SCREEN_MAIN, 0x5b); gWifiSetupOptions.oam->attr01 = (gWifiSetupOptions.oam->attr01 & 0xFE00FF00) | 0x84 | 0xE00000; gWifiSetupOptions.oam->attr2 = (gWifiSetupOptions.oam->attr2 & ~0xc00) | 0xc00;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 946,
+          "context": "gWifiSetupOptions.oam->attr01 = (gWifiSetupOptions.oam->attr01 & 0xFE00FF00) | 0x84 | 0xE00000; gWifiSetupOptions.oam->attr2 = (gWifiSetupOptions.oam->attr2 & ~0xc00) | 0xc00; idx = gWifiSetupOptions.selected * 4;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 947,
+          "context": "gWifiSetupOptions.oam->attr2 = (gWifiSetupOptions.oam->attr2 & ~0xc00) | 0xc00; idx = gWifiSetupOptions.selected * 4; WifiSetupCursor_ShowCorners(gWifiSetupOptionsCursorLeft[idx], gWifiSetupOptionsCursorRight[idx], gWifiSetupOptionsCursorTop[idx], gWifiSetupOp"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferResult",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 127,
+          "context": "extern WifiSetupMenu3 gWifiSetupOptions; extern u8 gWifiSetupTransferResult; extern u8 gWifiSetupTransferIntroProceed;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 113,
+          "context": " // gWifiSetupTransferResult #define WIFI_SETUP_TRANSFER_RESULT_FAILED    0"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1205,
+          "context": "WifiSetupApp_SetTransition(WIFI_SETUP_BANNER_KEEP, WIFI_SETUP_BUTTON_BAR_CREATE); if (gWifiSetupTransferResult == WIFI_SETUP_TRANSFER_RESULT_FAILED) { WifiSetupApp_SetStateFunc(WifiSetupTransferFailed_Init);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1207,
+          "context": "WifiSetupApp_SetStateFunc(WifiSetupTransferFailed_Init); } else if (gWifiSetupTransferResult == WIFI_SETUP_TRANSFER_RESULT_CANCELLED) { WifiSetupApp_SetStateFunc(WifiSetupTransferCancelled_Init);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1217,
+          "context": "WifiSetupConnections_Reset(); gWifiSetupTransferResult = WIFI_SETUP_TRANSFER_RESULT_DONE; WifiSetupSound_Stop();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1221,
+          "context": "} else if (event == WIFI_SETUP_TRANSFER_EVENT_STOPPED) { gWifiSetupTransferResult = WIFI_SETUP_TRANSFER_RESULT_CANCELLED; WifiSetupSound_Stop();"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferIntroProceed",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 128,
+          "context": "extern u8 gWifiSetupTransferResult; extern u8 gWifiSetupTransferIntroProceed; extern u8 gWifiSetupTransferCancelledTimer;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1410,
+          "context": "static void WifiSetupTransferIntro_Init(void) { gWifiSetupTransferIntroProceed = FALSE; WifiSetupTransferIntro_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1476,
+          "context": "WifiSetupSound_Play(6); gWifiSetupTransferIntroProceed = TRUE; break;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1495,
+          "context": "WifiSetupButtonBar_Close(); if (!gWifiSetupTransferIntroProceed) { WifiSetupFade_Start(WIFI_SETUP_FADE_OUT_TO_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1506,
+          "context": "} if (!gWifiSetupTransferIntroProceed) { if (WifiSetupFade_IsActive(WIFI_SETUP_SCREEN_SUB)) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1515,
+          "context": "WifiSetupText_FreeBgCanvas(WIFI_SETUP_SCREEN_MAIN); if (!gWifiSetupTransferIntroProceed) { WifiSetupMessage_Hide();"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferCancelledTimer",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 129,
+          "context": "extern u8 gWifiSetupTransferIntroProceed; extern u8 gWifiSetupTransferCancelledTimer; extern u8 gWifiSetupTransferFailed[];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1530,
+          "context": "static void WifiSetupTransferCancelled_Init(void) { gWifiSetupTransferCancelledTimer = 0; WifiSetupTransferCancelled_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1590,
+          "context": "static void WifiSetupTransferCancelled_UpdateTimer(void) { if (++gWifiSetupTransferCancelledTimer < 0x78) { return;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferFailed",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 130,
+          "context": "extern u8 gWifiSetupTransferCancelledTimer; extern u8 gWifiSetupTransferFailed[]; extern u8 gWifiSetupTransferConfirm[];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1599,
+          "context": "WifiSetup_PrintMessage(0x20); gWifiSetupTransferFailed[0] = WifiSetupMessage_Show(0x3c, -1, 0); WifiSetupApp_SetStateFunc(WifiSetupTransferFailed_FadeIn);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1615,
+          "context": "WifiSetupDisplay_ShowPlanes(WIFI_SETUP_SCREEN_MAIN, GX_PLANEMASK_BG0 | GX_PLANEMASK_BG2 | GX_PLANEMASK_OBJ); if (gWifiSetupTransferFailed[0] != 0) { WifiSetupFade_Start(WIFI_SETUP_FADE_IN_FROM_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1668,
+          "context": "} gWifiSetupTransferFailed[1] = 1; WifiSetupSound_Play(6);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1671,
+          "context": "} else { gWifiSetupTransferFailed[1] = 0; WifiSetupSound_Play(7);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1688,
+          "context": "WifiSetupButtonBar_Close(); if (gWifiSetupTransferFailed[1] == 0) { WifiSetupFade_Start(WIFI_SETUP_FADE_OUT_TO_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferConfirm",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 131,
+          "context": "extern u8 gWifiSetupTransferFailed[]; extern u8 gWifiSetupTransferConfirm[]; extern u8 gWifiSetupTransferWaitResult;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1724,
+          "context": "WifiSetupCanvas *win = WifiSetupText_InitBgCanvas(WIFI_SETUP_SCREEN_MAIN, 0); gWifiSetupTransferConfirm[1] = 0; gWifiSetupTransferConfirm[0] = 0;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1725,
+          "context": "gWifiSetupTransferConfirm[1] = 0; gWifiSetupTransferConfirm[0] = 0; WifiSetupTransferConfirm_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1770,
+          "context": "case 0: gWifiSetupTransferConfirm[1] = 0; WifiSetupSound_Play(7);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1774,
+          "context": "case 1: gWifiSetupTransferConfirm[1] = 1; WifiSetupSound_Play(0xe);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1795,
+          "context": "} if (gWifiSetupTransferConfirm[1] == 0) { WifiSetupFade_Start(WIFI_SETUP_FADE_OUT_TO_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTransferWaitResult",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 132,
+          "context": "extern u8 gWifiSetupTransferConfirm[]; extern u8 gWifiSetupTransferWaitResult; extern WifiSetupWaitScreen gWifiSetupAoss;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_screens.h",
+          "line": 118,
+          "context": " // gWifiSetupTransferWaitResult #define WIFI_SETUP_TRANSFER_WAIT_BACK          0"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1850,
+          "context": "WifiSetupTransfer_Start(WifiSetupTransferWait_OnTransferEvent); gWifiSetupTransferWaitResult = WIFI_SETUP_TRANSFER_WAIT_BACK; WifiSetupTransferWait_LoadGraphics();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1917,
+          "context": "static void WifiSetupTransferWait_Exit(void) { if (gWifiSetupTransferWaitResult == WIFI_SETUP_TRANSFER_WAIT_BACK) { WifiSetupTransfer_Cancel();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1929,
+          "context": "} if (gWifiSetupTransferWaitResult == WIFI_SETUP_TRANSFER_WAIT_BACK) { if (!WifiSetupTransfer_IsFinished()) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_screens.c",
+          "line": 1935,
+          "context": "WifiSetupButtonBar_Close(); if (gWifiSetupTransferWaitResult == WIFI_SETUP_TRANSFER_WAIT_BACK) { WifiSetupFade_Start(WIFI_SETUP_FADE_OUT_TO_WHITE, WIFI_SETUP_SCREEN_SUB, GX_BLEND_PLANEMASK_BG0, 8);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupConnectionList",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_screens_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_connection_screens.h",
+          "line": 87,
+          "context": "extern WifiSetupApScanScreen gWifiSetupApScanScreen; extern WifiSetupConnectionList gWifiSetupConnectionList; extern void *ov13_0224F570;"
+        },
+        {
+          "path": "build/native/include/wifi_setup/wifi_setup_connection_screens.h",
+          "line": 89,
+          "context": "extern WifiSetupApScanScreen gWifiSetupApScanScreen; extern WifiSetupConnectionList gWifiSetupConnectionList; extern void *ov13_0224F570;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_connection_screens.h",
+          "line": 22,
+          "context": " // gWifiSetupConnectionList.selected: 0-2 the connection slots, 3 the Wi-Fi USB connector, // 4-6 the erase buttons of slots 0-2"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_auto_setup.c",
+          "line": 1222,
+          "context": "WifiSetupConnectionListWork *work = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupConnectionListWork), 4); gWifiSetupConnectionList.work = work; work->exit = WIFI_SETUP_CONNECTION_LIST_STAY;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_auto_setup.c",
+          "line": 1239,
+          "context": "WifiSetup_LoadGraphics(gWifiSetupConnectionListJb2ApNscPath, GX_LoadBG2Scr); gWifiSetupConnectionList.work->graphics = WifiSetupFile_Load(WifiSetup_LocalizePath(path.text), NULL, 4); WifiSetupDisplay_ShowPlanes(WIFI_SETUP_SCREEN_SUB, GX_PLANEMASK_OBJ);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_connection_menu.c",
+          "line": 113,
+          "context": "} else { gWifiSetupConnectionList.work->eraseButtons[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, 0x11, TRUE); j = i + 3;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_connection_menu.c",
+          "line": 115,
+          "context": "j = i + 3; WifiSetupOamBlock_SetPosition(gWifiSetupConnectionList.work->eraseButtons[i], -1, gWifiSetupConnectionListIconPositions[j].x, gWifiSetupConnectionListIconPositions[j].y); WifiSetupOamBlock_SetPriority(gWifiSetupConnectionList.work->eraseButtons[i], "
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupButtonBar",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_parts_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui_parts.h",
+          "line": 41,
+          "context": " extern WifiSetupButtonBar *gWifiSetupButtonBar; extern u8 gWifiSetupMessageShown;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 49,
+          "context": "int count = gWifiSetupButtonBarButtonCounts[type], i; gWifiSetupButtonBar = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupButtonBar), 4); gWifiSetupButtonBar->selected = WIFI_SETUP_SELECTED_NOT_SHOWN;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 50,
+          "context": "gWifiSetupButtonBar = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupButtonBar), 4); gWifiSetupButtonBar->selected = WIFI_SETUP_SELECTED_NOT_SHOWN; gWifiSetupButtonBar->type = type;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 51,
+          "context": "gWifiSetupButtonBar->selected = WIFI_SETUP_SELECTED_NOT_SHOWN; gWifiSetupButtonBar->type = type; for (i = 0; i < count; i++) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 53,
+          "context": "for (i = 0; i < count; i++) { gWifiSetupButtonBar->buttons[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, gWifiSetupButtonBarTemplates[type][i], TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupButtonBar->buttons[i], -1, 1);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 54,
+          "context": "gWifiSetupButtonBar->buttons[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, gWifiSetupButtonBarTemplates[type][i], TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupButtonBar->buttons[i], -1, 1); }"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupMessageShown",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_parts_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui_parts.h",
+          "line": 42,
+          "context": "extern WifiSetupButtonBar *gWifiSetupButtonBar; extern u8 gWifiSetupMessageShown; extern char gWifiSetupLocalizedPath[];"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 182,
+          "context": "WifiSetupOamBlock_Free(gWifiSetupButtonBar->bar); WifiSetupHeap_FreeAndClear(&gWifiSetupMessageShown - 4); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 210,
+          "context": "void WifiSetupMessage_Reset(void) { gWifiSetupMessageShown = 0; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 219,
+          "context": "u32 flags; if (gWifiSetupMessageShown) { return FALSE;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 229,
+          "context": "WifiSetupText_MarkDirty(canvas); gWifiSetupMessageShown = 1; return TRUE;"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 234,
+          "context": "BOOL WifiSetupMessage_Hide(void) { if (!gWifiSetupMessageShown) { return FALSE;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupLocalizedPath",
+      "original_size": 64,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_parts_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui_parts.h",
+          "line": 43,
+          "context": "extern u8 gWifiSetupMessageShown; extern char gWifiSetupLocalizedPath[]; extern WifiSetupOamBlock **gWifiSetupCursorBlocks;"
+        }
+      ],
+      "definitions": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 248,
+          "context": "if (((u8 *)path)[5] == 'x') { return gWifiSetupLocalizedPath; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 252,
+          "context": "if (((u8 *)path)[5] == 'y' && language != 0) { return gWifiSetupLocalizedPath; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 255,
+          "context": "gWifiSetupLocalizedPath[5] = gWifiSetupLanguageLetters[language]; return gWifiSetupLocalizedPath; }"
+        }
+      ],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 246,
+          "context": "int language; strncpy(gWifiSetupLocalizedPath, path, 63); if (((u8 *)path)[5] == 'x') {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 254,
+          "context": "} gWifiSetupLocalizedPath[5] = gWifiSetupLanguageLetters[language]; return gWifiSetupLocalizedPath;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupCursorBlocks",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_parts_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui_parts.h",
+          "line": 44,
+          "context": "extern char gWifiSetupLocalizedPath[]; extern WifiSetupOamBlock **gWifiSetupCursorBlocks; extern void *gWifiSetupBackgroundScreen;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 317,
+          "context": "void WifiSetupCursor_Init(void) { gWifiSetupCursorBlocks = WifiSetupHeap_AllocZeroed(16, 4); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 322,
+          "context": "WifiSetupCursor_Hide(); WifiSetupHeap_FreeAndClear(&gWifiSetupCursorBlocks); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 332,
+          "context": "for (i = 0; i < 2; i++) { gWifiSetupCursorBlocks[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, *templ++, TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupCursorBlocks[i], -1, 1);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 333,
+          "context": "gWifiSetupCursorBlocks[i] = WifiSetupOamTemplate_AllocBlock(WIFI_SETUP_SCREEN_MAIN, *templ++, TRUE); WifiSetupOamBlock_SetPriority(gWifiSetupCursorBlocks[i], -1, 1); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 335,
+          "context": "} WifiSetupOamBlock_SetPosition(gWifiSetupCursorBlocks[0], -1, x1, y); WifiSetupOamBlock_SetPosition(gWifiSetupCursorBlocks[1], -1, x2, y);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupBackgroundScreen",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_ui_parts_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_ui_parts.h",
+          "line": 45,
+          "context": "extern WifiSetupOamBlock **gWifiSetupCursorBlocks; extern void *gWifiSetupBackgroundScreen; extern WifiSetupPoint gWifiSetupButtonBarButtonSize;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 364,
+          "context": "void WifiSetupBackground_Init(void) { gWifiSetupBackgroundScreen = WifiSetupHeap_AllocZeroed(192, 4); WifiSetup_LoadGraphics(sStr_CharJbBgHlNcgL, GX_LoadBG1Char);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 377,
+          "context": "void WifiSetupBackground_Free(void) { WifiSetupHeap_FreeAndClear(&gWifiSetupBackgroundScreen); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 384,
+          "context": "data = WifiSetupFile_Load(WifiSetup_LocalizePath(gWifiSetupBackgroundScreenPaths[index]), NULL, 4); MIi_CpuCopyFast(data, gWifiSetupBackgroundScreen, 192); WifiSetupFile_Free(data);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 398,
+          "context": "static void WifiSetupBackground_TransferTask(WifiSetupTask *task, void *arg) { DC_FlushRange(gWifiSetupBackgroundScreen, 192); GX_LoadBG1Scr(gWifiSetupBackgroundScreen, 0, 192);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_ui_parts.c",
+          "line": 399,
+          "context": "DC_FlushRange(gWifiSetupBackgroundScreen, 192); GX_LoadBG1Scr(gWifiSetupBackgroundScreen, 0, 192); WifiSetupTask_DestroyLater(WIFI_SETUP_TASK_QUEUE_VBLANK, task);"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupApp",
+      "original_size": 32,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_app_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_app.h",
+          "line": 111,
+          "context": "extern struct WifiSetupRequest *ov13_0224F4C8; extern WifiSetupApp gWifiSetupApp; extern WifiSetupTextBanks *gWifiSetupTextBanks;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 82,
+          "context": "int WifiSetupApp_Run(void *heap, s32 language, s32 flags) { gWifiSetupApp.heap = heap; if (!WifiSetupApp_SetParams(language, flags)) {"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 86,
+          "context": "} gWifiSetupApp.exit = FALSE; WifiSetupApp_InitSystem();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 93,
+          "context": "WifiSetupInput_Update(); gWifiSetupApp.stateFunc(); WifiSetupTask_RunQueue(WIFI_SETUP_TASK_QUEUE_MAIN);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 98,
+          "context": "OS_WaitVBlankIntr(); } while (!gWifiSetupApp.exit); WifiSetupApp_Shutdown();"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 104,
+          "context": "static BOOL WifiSetupApp_SetParams(int language, u32 flags) { gWifiSetupApp.language = language; gWifiSetupApp.flags.raw = flags;"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupTextBanks",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_app_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_app.h",
+          "line": 112,
+          "context": "extern WifiSetupApp gWifiSetupApp; extern WifiSetupTextBanks *gWifiSetupTextBanks; extern WifiSetupSession *gWifiSetupSession;"
+        }
+      ],
+      "definitions": [],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 287,
+          "context": "void WifiSetupText_InitBanks(void) { gWifiSetupTextBanks = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupTextBanks), 4); gWifiSetupTextBanks->pool = WifiSetupPool_NewWithItems(8, gWifiSetupTextBanks, sizeof(WifiSetupTextBank));"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 288,
+          "context": "gWifiSetupTextBanks = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupTextBanks), 4); gWifiSetupTextBanks->pool = WifiSetupPool_NewWithItems(8, gWifiSetupTextBanks, sizeof(WifiSetupTextBank)); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 292,
+          "context": "void WifiSetupText_FreeBanks(void) { WifiSetupHeap_FreeAndClear(&gWifiSetupTextBanks); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 297,
+          "context": "u32 size; WifiSetupTextBank *bank = WifiSetupPool_Pop(gWifiSetupTextBanks->pool); WifiSetupMessageFile *file = WifiSetupFile_Load(path, &size, 4);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_app.c",
+          "line": 309,
+          "context": "WifiSetupFile_Free(bank->file); WifiSetupPool_Push(gWifiSetupTextBanks->pool, bank); }"
+        }
+      ]
+    },
+    {
+      "symbol": "gWifiSetupConnections",
+      "original_size": 4,
+      "original_owner": "lib/NitroDWC/asm/wifi_setup_access_points_bss.s",
+      "declarations": [
+        {
+          "path": "upstream/pokeheartgold/include/wifi_setup/wifi_setup_access_points.h",
+          "line": 57,
+          "context": "extern WifiSetupApScan *gWifiSetupApScan; extern WifiSetupConnections *gWifiSetupConnections; extern WifiSetupSound *gWifiSetupSound;"
+        }
+      ],
+      "definitions": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 385,
+          "context": "WifiSetupConnections *WifiSetupConnections_Get(void) { return gWifiSetupConnections; }"
+        }
+      ],
+      "uses": [
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 155,
+          "context": "WifiSetupConnections *connections = WifiSetupHeap_AllocZeroed(sizeof(WifiSetupConnections), 0x20); gWifiSetupConnections = connections; MATHi_CRC16InitTableRev(&connections->crcTable, 0xA001);"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 157,
+          "context": "MATHi_CRC16InitTableRev(&connections->crcTable, 0xA001); DWCi_BACKUPlRead(gWifiSetupConnections); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 161,
+          "context": "void WifiSetupConnections_Free(void) { WifiSetupHeap_FreeAndClear(&gWifiSetupConnections); }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 165,
+          "context": "WifiSetupConnection *WifiSetupConnections_GetEdit(void) { return &gWifiSetupConnections->edit; }"
+        },
+        {
+          "path": "upstream/pokeheartgold/src/wifi_setup/wifi_setup_access_points.c",
+          "line": 169,
+          "context": "void WifiSetupConnections_SetAutoAddress(BOOL on) { gWifiSetupConnections->edit.autoAddress = on; }"
+        }
+      ]
+    }
+  ]
+}

@@ -1005,7 +1005,7 @@ def adapt(relative, text, root):
     try:
         result = _adapt(relative, text, root)
     except ValueError as error:
-        if not (record or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS) or str(error) != 'No native adaptation is registered for ' + relative:
+        if not (record or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS or relative == 'include/wifi_setup/wifi_setup_share.h') or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
     if bounded:
@@ -1054,6 +1054,10 @@ _Static_assert(sizeof(PokewalkerIrBlocks) == 1736, "serialized IR blocks");
     if relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS:
         result = dwc_native_callback_abi(relative, result)
     result = dwc_native_qr_constructor_abi(relative, result)
+    if relative == 'include/wifi_setup/wifi_setup_share.h':
+        if hashlib.sha256(text.encode()).hexdigest() != '1d1eb09be0f61b118948ec85b46114c519a203c9703a41addcf386871ec328b6':
+            raise ValueError('Original Wi-Fi session header changed')
+        result = replace(result, '    int iconCharPath;\n    int iconPalettePath;', '    const char *iconCharPath;\n    const char *iconPalettePath;')
     result = dwc_native_qr_caller_abi(relative, result)
     return result
 
