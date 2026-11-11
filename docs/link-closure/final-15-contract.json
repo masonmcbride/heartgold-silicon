@@ -1,0 +1,45 @@
+{
+  "baseline_manifest": "/Users/mason/w/cs/fun/heartgold-silicon/build/final-closure/typed-gba-wifi-state-admission/link-manifest.json",
+  "baseline_log": "/Users/mason/w/cs/fun/heartgold-silicon/build/final-closure/typed-gba-wifi-state-admission/production-link.log",
+  "expected_unresolved": 15,
+  "groups": {
+    "initialized_data": [
+      "_gLockCapsuleCardTextBoxes",
+      "_sWifiSetupLinkSocConfig",
+      "_gWifiSetupAddressEntryFuncs"
+    ],
+    "mutable_state": [
+      "_gMainMenuUtilCryptoHeapId",
+      "_gMainMenuUtilVBlankWork",
+      "_gMigrateFromAgbIcons",
+      "_gMbBeaconState",
+      "_gMbGlobalState",
+      "_gMbTaskWork",
+      "_ov13_0224CF84"
+    ],
+    "runtime_metadata": [
+      "_model$4434",
+      "_model$4439"
+    ],
+    "executable_interfaces": [
+      "_CRYPTO_RC4FastEncrypt",
+      "_SVC_GetCRC16",
+      "_SIM_GetConfigPtr"
+    ]
+  },
+  "admission_invariants": [
+    "Preserve original execution semantics",
+    "Use compiler-measured native layouts",
+    "Preserve original relocation targets",
+    "Never truncate host pointers into guest words",
+    "No fake function implementations or placeholder globals",
+    "No unexpected unresolved or duplicate symbols",
+    "Preserve pinned guest32 code identities",
+    "Verify relevant runtime behavior under sanitizers"
+  ],
+  "runtime_blockers_outside_link_frontier": [
+    "gMainMenuUtilWork backing allocation",
+    "main-menu crypto work alignment and lifetime",
+    "multiboot guest/native pointer representation"
+  ]
+}

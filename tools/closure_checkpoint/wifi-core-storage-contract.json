@@ -1,0 +1,130 @@
+{
+  "source": "asm/wifi_setup_data.s",
+  "sha256": "ab1649cdfd06a39528632cd7302879d8233773cf80acd523190daf69faf9ab63",
+  "headers": {
+    "include/wifi_setup/wifi_setup.h": "fb9e777f08447acfe92b4359be70f951a30ec492e8aadc3a4698023bc1e31f53",
+    "include/wifi_setup/wifi_setup_internal.h": "c378b911ce97ff5ddeaeb8fd020d2f08a97393036e7959d37fe3d10e13df9c9e"
+  },
+  "safe_zero_records": [
+    {
+      "symbol": "gWifiSetupFreeHook",
+      "section": ".bss",
+      "original_size": 4,
+      "original_bytes_hex": "00000000",
+      "relocations": [],
+      "declaration": "extern WifiSetupFreeFunc gWifiSetupFreeHook;",
+      "classification": "typed-native-zero",
+      "native_definition": "WifiSetupFreeFunc gWifiSetupFreeHook = {0};"
+    },
+    {
+      "symbol": "gWifiSetupMessageQueue",
+      "section": ".bss",
+      "original_size": 32,
+      "original_bytes_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern OSMessageQueue gWifiSetupMessageQueue;",
+      "classification": "typed-native-zero",
+      "native_definition": "OSMessageQueue gWifiSetupMessageQueue = {0};"
+    },
+    {
+      "symbol": "gWifiSetupMessages",
+      "section": ".bss",
+      "original_size": 16,
+      "original_bytes_hex": "00000000000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern OSMessage gWifiSetupMessages[4];",
+      "classification": "typed-native-zero",
+      "native_definition": "OSMessage gWifiSetupMessages[4] = {0};"
+    },
+    {
+      "symbol": "gWifiSetupResult",
+      "section": ".bss",
+      "original_size": 20,
+      "original_bytes_hex": "0000000000000000000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern WifiSetupResult gWifiSetupResult;",
+      "classification": "typed-native-zero",
+      "native_definition": "WifiSetupResult gWifiSetupResult = {0};"
+    },
+    {
+      "symbol": "gWifiSetupRuntime",
+      "section": ".bss",
+      "original_size": 12,
+      "original_bytes_hex": "000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern WifiSetupRuntime gWifiSetupRuntime;",
+      "classification": "typed-native-zero",
+      "native_definition": "WifiSetupRuntime gWifiSetupRuntime = {0};"
+    },
+    {
+      "symbol": "gWifiSetupState",
+      "section": ".bss",
+      "original_size": 4,
+      "original_bytes_hex": "00000000",
+      "relocations": [],
+      "declaration": "extern WifiSetupState gWifiSetupState;",
+      "classification": "typed-native-zero",
+      "native_definition": "WifiSetupState gWifiSetupState = {0};"
+    },
+    {
+      "symbol": "gWifiSetupThread",
+      "section": ".bss",
+      "original_size": 192,
+      "original_bytes_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern OSThread gWifiSetupThread;",
+      "classification": "typed-native-zero",
+      "native_definition": "OSThread gWifiSetupThread = {0};"
+    },
+    {
+      "symbol": "gWifiSetupWork",
+      "section": ".bss",
+      "original_size": 80,
+      "original_bytes_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "relocations": [],
+      "declaration": "extern WifiSetupWork gWifiSetupWork;",
+      "classification": "typed-native-zero",
+      "native_definition": "WifiSetupWork gWifiSetupWork = {0};"
+    }
+  ],
+  "initializer_review_records": [
+    {
+      "symbol": "gWifiSetupConfig",
+      "section": ".data",
+      "original_size": 20,
+      "original_bytes_hex": "000000000100000000080000ffffffff40000000",
+      "relocations": [
+        {
+          "offset": 0,
+          "target": "gWifiSetupRecordBuffer + 8",
+          "width": 4
+        }
+      ],
+      "declaration": "extern WifiSetupConfig gWifiSetupConfig;",
+      "classification": "requires-initializer-abi-review"
+    },
+    {
+      "symbol": "gWifiSetupSocket",
+      "section": ".data",
+      "original_size": 8,
+      "original_bytes_hex": "ffffffffffffffff",
+      "relocations": [],
+      "declaration": "extern WifiSetupSocketState gWifiSetupSocket;",
+      "classification": "requires-initializer-abi-review"
+    }
+  ],
+  "requires_consumer_rebuild": true,
+  "native_config_translation": {
+    "symbol": "gWifiSetupConfig",
+    "source_sha256": "ab1649cdfd06a39528632cd7302879d8233773cf80acd523190daf69faf9ab63",
+    "original_bytes": "000000000100000000080000ffffffff40000000",
+    "relocation": "gWifiSetupRecordBuffer + 8",
+    "native_source": "cmake/native_wifi_core_config.c",
+    "fields": {
+      "debug": 1,
+      "threadStackSize": 2048,
+      "deadline": -1,
+      "count": 64
+    }
+  }
+}

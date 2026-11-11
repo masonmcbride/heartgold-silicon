@@ -1,0 +1,266 @@
+{
+  "baseline_link": "build/final-closure/multiboot-fixed-storage/production-link.log",
+  "baseline_unresolved": 62,
+  "communications_targets": 19,
+  "remaining_noncommunications": 43,
+  "records": [
+    {
+      "symbol": "_gMbBeaconState",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_beacon_fixed.c",
+        "lib/NitroSDK/src/mb/mb_beacon_volat.c",
+        "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+        "lib/NitroSDK/src/mb/mb_cache.c",
+        "lib/NitroSDK/src/mb/mb_comm_params.c",
+        "lib/NitroSDK/src/mb/mb_download_info.c",
+        "lib/NitroSDK/src/mb/mb_parent_comm.c",
+        "lib/NitroSDK/src/mb/mb_parent_util.c",
+        "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+        "lib/NitroSDK/src/mb/mb_wm_error.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMbChildScanParam",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_wm_callbacks.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMbGlobalState",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+        "lib/NitroSDK/src/mb/mb_cache.c",
+        "lib/NitroSDK/src/mb/mb_comm_params.c",
+        "lib/NitroSDK/src/mb/mb_disconnect.c",
+        "lib/NitroSDK/src/mb/mb_download_info.c",
+        "lib/NitroSDK/src/mb/mb_init.c",
+        "lib/NitroSDK/src/mb/mb_parent_comm.c",
+        "lib/NitroSDK/src/mb/mb_parent_start_end.c",
+        "lib/NitroSDK/src/mb/mb_parent_util.c",
+        "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+        "lib/NitroSDK/src/mb/mb_wm_callbacks.c",
+        "lib/NitroSDK/src/mb/mb_wm_error.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMbTaskWork",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+        "lib/NitroSDK/src/mb/mb_cache.c",
+        "lib/NitroSDK/src/mb/mb_download_info.c",
+        "lib/NitroSDK/src/mb/mb_parent_comm.c",
+        "lib/NitroSDK/src/mb/mb_parent_util.c",
+        "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+        "lib/NitroSDK/src/mb/mb_task_thread.c",
+        "lib/NitroSDK/src/mb/mb_wm_error.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_ov13_02247484",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_download_info.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_ov13_0224CF84",
+      "category": "multiboot-storage",
+      "original_source_references": [
+        "lib/NitroSDK/asm/mb_data.s",
+        "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+        "lib/NitroSDK/src/mb/mb_cache.c",
+        "lib/NitroSDK/src/mb/mb_comm_params.c",
+        "lib/NitroSDK/src/mb/mb_download_info.c",
+        "lib/NitroSDK/src/mb/mb_parent_comm.c",
+        "lib/NitroSDK/src/mb/mb_parent_util.c",
+        "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+        "lib/NitroSDK/src/mb/mb_wm_error.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_WifiSetupConnectionList_CreateIcons",
+      "category": "wifi-connection-menu",
+      "original_source_references": [
+        "include/wifi_setup/wifi_setup_connection_screens.h",
+        "src/wifi_setup/wifi_setup_auto_setup.c",
+        "src/wifi_setup/wifi_setup_connection_menu.c"
+      ],
+      "compiled_menu_providers": [
+        "build/abi-barrier/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/closure-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/dsprot-nsbta-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32-bridge/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/layout-cleanup/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects-final/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/linker-integration/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/machine-refactor/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/objects-complete/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/repair-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-lifecycle/native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-final-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/overlay-linkage-review/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/refactor-native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/remove-compat/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/shared-provider-objects/src/wifi_setup/wifi_setup_connection_menu.c.o"
+      ]
+    },
+    {
+      "symbol": "_WifiSetupConnectionList_FadeIn",
+      "category": "wifi-connection-menu",
+      "original_source_references": [
+        "include/wifi_setup/wifi_setup_connection_screens.h",
+        "src/wifi_setup/wifi_setup_auto_setup.c",
+        "src/wifi_setup/wifi_setup_connection_menu.c"
+      ],
+      "compiled_menu_providers": [
+        "build/abi-barrier/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/closure-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/dsprot-nsbta-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32-bridge/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/layout-cleanup/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects-final/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/linker-integration/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/machine-refactor/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/objects-complete/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/repair-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-lifecycle/native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-final-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/overlay-linkage-review/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/refactor-native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/remove-compat/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/shared-provider-objects/src/wifi_setup/wifi_setup_connection_menu.c.o"
+      ]
+    },
+    {
+      "symbol": "_WifiSetupConnectionList_ShowCursor",
+      "category": "wifi-connection-menu",
+      "original_source_references": [
+        "include/wifi_setup/wifi_setup_connection_screens.h",
+        "src/wifi_setup/wifi_setup_auto_setup.c",
+        "src/wifi_setup/wifi_setup_connection_menu.c"
+      ],
+      "compiled_menu_providers": [
+        "build/abi-barrier/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/closure-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/dsprot-nsbta-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/guest32-bridge/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/layout-cleanup/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/link-batch-objects-final/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/linker-integration/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/machine-refactor/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/objects-complete/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-805/repair-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/native-lifecycle/native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-final-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/offline-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/overlay-linkage-review/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/refactor-native-objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/remove-compat/objects/src/wifi_setup/wifi_setup_connection_menu.c.o",
+        "build/shared-provider-objects/src/wifi_setup/wifi_setup_connection_menu.c.o"
+      ]
+    },
+    {
+      "symbol": "_gFmt_NotMyParentGgid",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_beacon.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gFmt_StrLf",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_beacon.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gFmt_StrSpaceDashGtSpace",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_beacon.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMysteryGiftBeacon",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_beacon.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMysteryGiftBeaconStateNames",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_beacon.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMysteryGiftWfcEmptyString",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_wfc.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMysteryGiftWfcFileList",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_wfc.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gMysteryGiftWfcStatus",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_wfc.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gStr_IPGE",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_wfc.c"
+      ],
+      "compiled_menu_providers": []
+    },
+    {
+      "symbol": "_gStr_K5WfPEw9T3cvqzHa",
+      "category": "mystery-gift-wfc",
+      "original_source_references": [
+        "src/application/main_menu/mystery_gift_wfc.c"
+      ],
+      "compiled_menu_providers": []
+    }
+  ]
+}

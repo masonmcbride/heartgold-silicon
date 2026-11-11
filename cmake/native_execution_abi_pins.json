@@ -1,0 +1,20 @@
+{
+  "gba_save_slot": {
+    "source_sha256": "9bfaabda6df7ebda1edcf9d57a7d69637cce6da26f2a0c8531d438572062361f",
+    "corrected_sha256": "ae2287faca3c4f78cb7e2251afe715563968736c14b636f9b26d89d18de6b381",
+    "old": "(u32 *)(&gMigrateFromAgbIcons + 1)",
+    "new": "&gPmAgbSave.slot"
+  },
+  "vblank_producer": {
+    "source_sha256": "e240528c771ca8d6ea7bef6ac103cdec056ad53b61791b9026ebddbc6cbce014",
+    "corrected_sha256": "a7f20656b656e0fdf34c265d34b7a9f23e26b7304ac7ee25f0863efe237d4b77",
+    "old": "gMainMenuUtilVBlankWork[9] = (u32)MainMenuUtil_LoadCardSubScreenPalette;",
+    "new": "sMainMenuUtilWork->vblankCallback = MainMenuUtil_LoadCardSubScreenPalette;\n    gMainMenuUtilVBlankWork[9] = 1;"
+  },
+  "vblank_consumer": {
+    "source_sha256": "88327c3915fde001995f66633bf206684705f04ad3d16a19b80fa2aabf552578",
+    "corrected_sha256": "a15ff3f32a9ff3fa2f72ae5ac4f8c9dc893d84c18242e9df60fda3ddaef2755e",
+    "old": "if (gMainMenuUtilVBlankWork[9]) {\n        work->vblankCallback(work);\n        work->vblankCallback = NULL;",
+    "new": "if (gMainMenuUtilVBlankWork[9]) {\n        gMainMenuUtilVBlankWork[9] = 0;\n        void (*callback)(MainMenuUtilWork *) = work->vblankCallback;\n        work->vblankCallback = NULL;\n        if (callback != NULL) {\n            callback(work);\n        }"
+  }
+}
