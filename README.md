@@ -1,30 +1,37 @@
-# HeartGold Silicon
+# HeartGold-Silicon
 
-Native Apple Silicon integration of the original Pokémon HeartGold engine, preserving the pinned original C/ARM source and applying explicit native compatibility adaptations.
+Native Apple Silicon execution of the original Pokémon HeartGold engine,
+retaining original C/ARM algorithms and explicit native compatibility layers
+for guest32, Nintendo DS hardware, and graphics.
 
-**Development checkpoint, not a playable release.** Full-game linking and runtime integration remain incomplete.
+**Development checkpoint — not playable.** A historical native dynamic-closure
+executable has progressed into the original intro, including Scene 3.
+The original VBlank IRQ callback was restored in that runtime; the next
+observed blocker is an asynchronous CARD transfer with a null destination.
+This checkpoint has **not** yet been reproduced by a clean CMake build.
 
-## Requirements
+## Source and build
 
-- Apple Silicon Mac and Apple Clang
-- Git, CMake 3.30+, Python 3.9+
-- LLVM binary utilities, PNG and ZLIB libraries
+- Original engine: pinned upstream `pokeheartgold` revision.
+- Native SDK: pinned `masonmcbride/libntr` fork revision.
+- Host adaptations: `hardware_drivers/`, `native-adaptations/`, `compiler/`.
+- Build rules and original image graph: `CMakeLists.txt`, `cmake/`.
 
-Install missing prerequisites using Xcode and Homebrew. Do not reinstall tools already present.
+Requirements include an Apple Silicon Mac, native Apple Clang, CMake 3.30+,
+Git, Python 3.9+, LLVM tools, PNG and ZLIB. See [building](docs/BUILD.md).
 
-## Clone and configure
+```sh
+cmake -S . -B build
+cmake --build build --target heartgold -j8
+ctest --test-dir build --output-on-failure
+```
 
-    git clone https://github.com/masonmcbride/heartgold-silicon.git
-    cd heartgold-silicon
-    cmake -S . -B build
+**Important:** the default CMake `heartgold` path and the historical working
+runtime executable are not yet equivalent. Native overlays can be explicitly
+enabled with `-DHEARTGOLD_NATIVE_OVERLAYS=ON`, but this path still depends on
+six legacy archives. It is not a source-only cold build. See the
+[build graph and migration contract](docs/BUILD_GRAPH.md) before deleting any
+existing binary inputs.
 
-CMake fetches pinned original HeartGold and libntr revisions into the ignored upstream directory. HeartGold must remain clean at its pin. Existing authorized libntr fork edits are preserved; unpublished review changes are not part of a clean published checkout.
-
-## Verify
-
-    cmake --build build --target test_coordinated -j8
-    ctest --test-dir build --output-on-failure
-
-The current local review checkpoint compiles all 805/805 original C/C++ overlay units and validates 87 native image dylibs. CTest passes 42/46 entries; three Metal-device failures and one genuine DWC image-link failure remain. The original heap remains unsupported, and the complete game does not yet link.
-
-See [build commands](docs/BUILD.md), the [current architecture](docs/ARCHITECTURE.md), and the [repository tree, cleanup results and linker blockers](docs/SMALLEST_MACHINE.md). Historical phase drivers and conversion prototypes live in [museum/](museum/README.md); production does not depend on them.
+The project does not claim complete original gameplay, a fully functional
+Metal backend, or correct native CARD/thread synchronization.

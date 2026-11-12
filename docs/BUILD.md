@@ -1,10 +1,10 @@
 # Building HeartGold-Silicon
 
-The current local review configuration, full image counts and validation results
-are documented in [NATIVE_BUILD_REFACTOR.md](NATIVE_BUILD_REFACTOR.md) and
-[SMALLEST_MACHINE.md](SMALLEST_MACHINE.md). The review checkout contains unpublished
-libntr changes. Historical checkpoint numbers below do not describe that checkout.
-Obsolete phase drivers are archived in `museum/`; no build target uses them.
+See [BUILD_GRAPH.md](BUILD_GRAPH.md) for the current native link graph and
+its reproducibility boundary. Original-source compilation and local runtime
+checkpoints have progressed beyond the historical status in some older reports;
+those reports are not present-tense build instructions. Obsolete linker phase
+experiments are retained by Git history rather than stored in `museum/`.
 
 Use native Apple Clang on Apple Silicon, CMake 3.30 or later, and Git. Game assets
 also require Python 3.9+, PNG, ZLIB, `llvm-objcopy`, and `llvm-readelf`. Expose LLVM
@@ -18,13 +18,14 @@ cmake --build build -j8
 ctest --test-dir build --output-on-failure
 ```
 
-Game compilation is enabled by default and remains incomplete. The native review
-pipeline now discovers all supported original overlays and reports the entire
-image graph; missing image implementations still fail the build. Do not substitute
-an older executable-only unresolved count for current whole-game coverage.
-See [the native build refactor report](NATIVE_BUILD_REFACTOR.md) for exact commands,
-measured scopes and ABI blockers. `NitroMain()` has not executed. To build original
-resource archives independently:
+Game compilation is enabled by default. Native original overlay integration
+is explicitly selectable with `-DHEARTGOLD_NATIVE_OVERLAYS=ON` (and remains
+implicitly enabled by the legacy local libntr review path). It presently
+requires six non-source-owned WM/WVR/DWC archives; see [BUILD_GRAPH.md](BUILD_GRAPH.md).
+The historical working dynamic-closure executable has progressed into Scene 3
+of the original intro, but this does **not** establish that the default CMake
+`heartgold` target links or executes equivalently. To build original resource
+archives independently:
 
 ```sh
 cmake --build build --target assets -j8
@@ -66,10 +67,10 @@ chosen binary directory. A different source location or absolute `-B` directory
 requires no script edits. Keep binary directories for incremental builds; ordinary
 configuration never deletes them.
 
-The libntr working tree currently includes generic declaration and source-ownership
-corrections beyond its published pin. They are preserved locally, without patch
-files. They must be published and pinned before a clean upstream checkout can
-reproduce those exact SDK changes; configuration does not fabricate them.
+The root `LIBNTR_COMMIT` value is the single authoritative fork revision. The
+three-commit publication workflow records all reviewed SDK modifications in the
+fork and rewrites this pin to the actual resulting SHA. Always verify the root
+pin is available on the fork remote before publishing the root commit.
 
 ## Link diagnostics and remaining work
 
@@ -120,8 +121,15 @@ state and command semantics; further rendering work remains separate from build
 cleanup. Do not link the SDL/OpenGL simulator or add placeholder graphics symbols.
 
 
-## Published reproducibility checkpoint
+## Native runtime checkpoint and source-only gate
 
-The native ARM64 libntr corrections are published at commit `4cfdd66fdca9a1f8f8e6688799f927c7fe3c3700` and pinned in the root CMakeLists.txt. HeartGold must be clean at its pin; authorized local libntr changes are preserved and are not supplied by a clean checkout. Native Hash1 is generated from the original pinned HeartGold source and assembly tables; no copied Hash1 implementation is committed to libntr.
+The original engine has entered the intro through a historical dynamic-closure
+executable. Verified native VBlank IRQ execution exposed a subsequent null-
+destination asynchronous CARD transfer. This is a runtime checkpoint, not
+complete gameplay, and not yet a clean CMake cold-build success.
 
-The last local regression run passed 20 enabled CTests. Full-game linking and original-engine gameplay execution remain incomplete.
+Source-only reproduction requires declaring the original owners and generation
+rules for the six isolated WM/WVR/DWC archives **and** all other historically
+linked manifest inputs. A fresh build must reproduce the tested executable
+and pass the same overlay closure and intro runtime checks. Do not delete
+historical binary inputs before that verification succeeds.

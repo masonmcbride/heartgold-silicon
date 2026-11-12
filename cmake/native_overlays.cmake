@@ -726,22 +726,6 @@ if(TARGET heartgold_overlay_45)
     )
 endif()
 
-# HG_WM39_ORIGINAL_NATIVE_PACKAGE
-target_link_libraries(heartgold PRIVATE
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_core_native_original.a"
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_native_candidates.a"
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wvr_original.a"
-)
-
-# HG_WM_CANONICAL_STORAGE
-# Keep the existing native gWmWork owner.
-target_link_options(hg_wm_arm9 PRIVATE "LINKER:-exported_symbol,_gWmWork")
-target_link_libraries(heartgold PRIVATE
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_original_work_storage.a"
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/wm-39-package/libheartgold_wm_original_scalar_storage.a"
-)
-
-# HG_DWC_THREE_TYPED_STORAGE
-target_link_libraries(heartgold PRIVATE
-    "/Users/mason/w/cs/fun/heartgold-silicon/build/dwc-9-storage/libheartgold_dwc_original_typed_storage.a"
-)
+# Isolated legacy inputs: this is an explicit migration boundary, not a
+# reproducible source-owned build. See docs/BUILD_GRAPH.md.
+include("${CMAKE_CURRENT_LIST_DIR}/native_legacy_archives.cmake")

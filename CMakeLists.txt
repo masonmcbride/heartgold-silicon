@@ -5,7 +5,7 @@ project(heartgold_silicon LANGUAGES C CXX)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d94f9137ced9db12d9ce827a8127c97b779bbeb)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT f4f9905803df9dc8aeffada2cf4a81842b70b256)
+set(LIBNTR_COMMIT 0be2c2b46e93cc26b0f34fcf3c48c2c7844c94de)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"
@@ -304,6 +304,10 @@ add_test(NAME backward_decompression COMMAND test_uncompress $<TARGET_FILE:uncom
 set_tests_properties(backward_decompression PROPERTIES TIMEOUT 20 ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0")
 
 
+# The overlay graph is opt-in until all legacy archives are source-owned.
+# A pinned libntr checkout and an overlay-enabled build are separate concepts.
+option(HEARTGOLD_NATIVE_OVERLAYS "Build the original native overlay integration" OFF)
+
 # --- 9. Original HeartGold (default), with its native build adaptations --------
 option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
 if(HEARTGOLD_BUILD_GAME)
@@ -313,7 +317,9 @@ if(HEARTGOLD_BUILD_GAME)
     if(HEARTGOLD_GUEST32_LLVM_DIR)
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
     endif()
-    if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+    # Original-image integration is now an explicit build feature rather than
+    # an accidental side effect of selecting a local libntr review checkout.
+    if(HEARTGOLD_NATIVE_OVERLAYS OR HEARTGOLD_LIBNTR_REVIEW_SOURCE)
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
         if(TARGET guest32-lower)
             include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
