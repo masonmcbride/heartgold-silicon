@@ -327,6 +327,9 @@ if(HEARTGOLD_BUILD_GAME)
     endif()
 endif()
 
+# Optional source-built wireless archive comparison; never linked into heartgold.
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/wireless_shadow.cmake")
+
 # Standalone emission observation only; never linked into heartgold.
 option(HEARTGOLD_BUILD_G3_PROBE "Build the original NitroSystem emission probe" OFF)
 if(HEARTGOLD_BUILD_G3_PROBE)
