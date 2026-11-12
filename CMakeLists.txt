@@ -175,6 +175,7 @@ target_compile_definitions(nitro_config INTERFACE
     SDK_CW_FORCE_EXPORT_SUPPORT SDK_TS SDK_4M SDK_FINALROM NNS_FINALROM _NITRO)
 target_compile_options(nitro_config INTERFACE -fno-common)
 target_include_directories(nitro_config INTERFACE "${ntr_source}/include" "${PROJECT_BINARY_DIR}/include")
+target_include_directories(nitro_config INTERFACE "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware")
 
 # Native Metal raster target: an actual offscreen GPU pipeline, not a simulator
 # G3SIM symbol shim. DS command/state translation is integrated separately.
@@ -236,7 +237,8 @@ ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/native/sim_frame.cpp"
     # Preserve the command processor ABI and original strip assembly.
     "${ntr_source}/libraries/sim/src/sim_g3_CommandProcessor.cpp"
-    "${ntr_source}/libraries/sim7/src/pxi.c")
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware/pxi.c"
+    hardware_drivers/firmware/nvram.c)
 target_compile_features(ntr_sim_state PRIVATE cxx_std_17)
 target_include_directories(ntr_sim_state PRIVATE "${ntr_source}/libraries/sim7/include")
 target_link_libraries(ntr_sim_state PUBLIC hg_g3_metal)
@@ -245,6 +247,11 @@ target_link_options(nitro_sdk INTERFACE -Wl,-dead_strip)
 
 # --- 8. SDK correctness tests ------------------------------------------------
 enable_testing()
+add_executable(test_native_nvram_compact tests/test_native_nvram_compact.c hardware_drivers/firmware/nvram.c)
+target_compile_definitions(test_native_nvram_compact PRIVATE HG_NVRAM_UNIT_TEST)
+target_include_directories(test_native_nvram_compact PRIVATE "${PROJECT_SOURCE_DIR}/tests" "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware")
+target_compile_options(test_native_nvram_compact PRIVATE -UNDEBUG)
+add_test(NAME native_nvram_compact COMMAND test_native_nvram_compact)
 
 add_executable(test_native_cartridge_storage tests/test_native_cartridge_storage.c)
 target_link_libraries(test_native_cartridge_storage PRIVATE native_host)

@@ -193,7 +193,7 @@ target_sources(hg_dwc_main PRIVATE
 
 target_sources(heartgold_main PRIVATE
     "${game_source}/lib/NitroDWC/src/dwc_auth_wifi_id.c"
-    "${game_source}/lib/NitroDWC/src/dwc_nvram.c")
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware/dwc_nvram.c")
 # END ORIGINAL THREE-C PROVIDER BATCH
 
 target_compile_definitions(hg_dwc_main PRIVATE
