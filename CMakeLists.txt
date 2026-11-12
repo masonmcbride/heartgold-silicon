@@ -139,7 +139,7 @@ add_custom_command(OUTPUT "${fx_header}"
 add_custom_target(fx_constants DEPENDS "${fx_header}")
 
 # --- 6. Native host services --------------------------------------------------
-add_library(native_host STATIC hardware_drivers/os/os.c hardware_drivers/wireless/mb_native.c)
+add_library(native_host STATIC hardware_drivers/cartridge.c hardware_drivers/os/os.c hardware_drivers/wireless/mb_native.c)
 target_include_directories(native_host PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless")
 target_include_directories(native_host PUBLIC "${ntr_source}/include")
 target_link_libraries(native_host PUBLIC "${COREFOUNDATION}")
@@ -148,6 +148,23 @@ if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
     target_compile_definitions(native_host PRIVATE
         HG_GENERATED_RESOURCE_ROOT="${PROJECT_BINARY_DIR}/generated/files"
         HG_ORIGINAL_RESOURCE_ROOT="${game_source}/files")
+
+    # Generate numeric NitroFS archive aliases from the original build manifest.
+    set(hg_resource_map "${PROJECT_BINARY_DIR}/generated/include/hg_resource_map.h")
+    add_custom_command(
+        OUTPUT "${hg_resource_map}"
+        COMMAND "${Python3_EXECUTABLE}"
+            "${PROJECT_SOURCE_DIR}/tools/generate_resource_map.py"
+            --filesystem "${game_source}/filesystem.mk"
+            --output "${hg_resource_map}"
+        DEPENDS
+            "${game_source}/filesystem.mk"
+            "${PROJECT_SOURCE_DIR}/tools/generate_resource_map.py"
+        VERBATIM)
+    add_custom_target(hg_resource_map DEPENDS "${hg_resource_map}")
+    add_dependencies(native_host hg_resource_map)
+    target_include_directories(native_host PRIVATE
+        "${PROJECT_BINARY_DIR}/generated/include")
 endif()
 
 add_library(nitro_config INTERFACE)
@@ -228,6 +245,11 @@ target_link_options(nitro_sdk INTERFACE -Wl,-dead_strip)
 
 # --- 8. SDK correctness tests ------------------------------------------------
 enable_testing()
+
+add_executable(test_native_cartridge_storage tests/test_native_cartridge_storage.c)
+target_link_libraries(test_native_cartridge_storage PRIVATE native_host)
+add_test(NAME native_cartridge_storage
+    COMMAND test_native_cartridge_storage "${PROJECT_BINARY_DIR}")
 add_executable(test_metal_raster tests/test_metal_raster.c)
 target_link_libraries(test_metal_raster PRIVATE hg_metal_raster)
 set_target_properties(test_metal_raster PROPERTIES LINKER_LANGUAGE OBJCXX)
@@ -319,7 +341,8 @@ set_tests_properties(native_g3_commands_metal PROPERTIES TIMEOUT 30)
 
 
 # HEARTGOLD_NATIVE_MIC_PROVIDER_V1
-if(TARGET ntr_spi AND APPLE)
+option(HEARTGOLD_NATIVE_MIC "Use the experimental Core Audio MIC provider" OFF)
+if(TARGET ntr_spi AND APPLE AND HEARTGOLD_NATIVE_MIC)
     get_target_property(_hg_spi_sources ntr_spi SOURCES)
     if(NOT _hg_spi_sources)
         message(FATAL_ERROR "ntr_spi has no source list")

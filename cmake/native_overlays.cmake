@@ -592,11 +592,20 @@ target_link_libraries(heartgold PRIVATE
     hg_ovy0_wifi_subset)
 
 target_link_options(heartgold PRIVATE "LINKER:-export_dynamic" "LINKER:-exported_symbols_list,${overlay_exports}")
+set_property(TARGET heartgold APPEND PROPERTY LINK_DEPENDS
+    "${CMAKE_CURRENT_LIST_DIR}/native_dynamic_closure.py")
+add_custom_command(TARGET heartgold POST_BUILD
+    COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_dynamic_closure.py"
+        "$<TARGET_FILE:heartgold>" --report "${overlay_link_dir}/dynamic-closure.json"
+    BYPRODUCTS "${overlay_link_dir}/dynamic-closure.json"
+    VERBATIM)
 target_sources(heartgold PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers/os/game_overlays.c")
 target_compile_definitions(heartgold PRIVATE HG_NATIVE_OVERLAYS)
 target_include_directories(heartgold PRIVATE "${overlay_link_dir}")
 add_test(NAME native_overlay_manifest COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
     -s "${PROJECT_SOURCE_DIR}/tests" -p "test_native_overlay_manifest.py")
+add_test(NAME native_dynamic_closure COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_dynamic_closure.py")
 
 add_custom_target(heartgold_native_images DEPENDS ${hg_native_image_targets} heartgold_overlay_bindings)
 include("${CMAKE_CURRENT_LIST_DIR}/dwc_native_data.cmake")

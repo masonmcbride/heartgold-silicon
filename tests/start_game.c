@@ -1,4 +1,6 @@
 /* Native process entry; all game initialization remains in original code. */
+#include <nitro.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <ntr_host.h>
 
@@ -10,11 +12,22 @@ extern int SIM_procPxi7to9Thread(void *);
 #include <stdio.h>
 extern int HG_PrepareGameOverlays(void);
 #endif
-int main(void)
+int main(int argc, char **argv)
 {
 #ifdef HG_NATIVE_OVERLAYS
     if (!HG_PrepareGameOverlays()) { perror("native overlay registration"); return 1; }
 #endif
+    const char *cartridge = argc > 1 ? argv[1] : getenv("HEARTGOLD_CARTRIDGE");
+    if (!cartridge) {
+        fputs("Pass cartridge image path or set HEARTGOLD_CARTRIDGE\n", stderr);
+        return 3;
+    }
+    if (!HG_CartridgeInitialize(cartridge, (void *)HW_ROM_HEADER_BUF)) {
+        perror("native cartridge startup (pass image path or HEARTGOLD_CARTRIDGE)");
+        return 3;
+    }
+    *(vu32 *)HW_RED_RESERVED = HG_CartridgeIdentity();
+    *(vu32 *)HW_BOOT_CHECK_INFO_BUF = HG_CartridgeIdentity();
     /* Original simulator transport, before original engine execution. */
     SIM_pxiInit();
 
@@ -25,9 +38,12 @@ int main(void)
 
     if (!arm7 || !arm9) {
         fprintf(stderr, "Native PXI worker startup failed\n");
+        HG_CartridgeShutdown();
         return 2;
     }
 
     NitroMain();
+    CARD_WaitRomAsync();
+    HG_CartridgeShutdown();
     return 0;
 }

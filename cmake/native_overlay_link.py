@@ -75,10 +75,12 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
                                     if p.resolve() in resident_owners))
     resident_exports = set(resident_roots)
     for consumer in resident_consumers:
-        resident_exports.update(symbols(consumer, True, nm=nm) & resident_available)
-    if resident_exports - resident_available:
+        # Partial resident overlays also call main/SDK providers. Restricting
+        # this to resident-owned archives omitted genuine SDK exports (MIC).
+        resident_exports.update(symbols(consumer, True, nm=nm) & main)
+    if set(resident_roots) - resident_available:
         raise ValueError('Resident root has no emitted definition: ' +
-                         str(sorted(resident_exports - resident_available)))
+                         str(sorted(set(resident_roots) - resident_available)))
     for p in main_paths:
         if p.resolve() in resident_owners:
             competing = set().union(*(v for q, v in main_definitions.items() if q != p)) & main_definitions[p]
@@ -125,7 +127,9 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
         write_if_changed(out/f'image_{ident}.rsp',
                          ''.join(json.dumps(str(interfaces[d])) + '\n' for d in dependencies))
     if imports_path: write_if_changed(imports_path, '# Explicit interfaces are in image_<id>.rsp\n')
-    if exports_path: write_if_changed(exports_path, '\n'.join(sorted((imports & main) | resident_exports | {'_main'}))+'\n')
+    if exports_path:
+        exported = sorted((imports & main) | resident_exports | {'_main'})
+        write_if_changed(exports_path, '\n'.join(exported)+'\n')
     if contracts_path: write_if_changed(contracts_path, json.dumps(providers,sort_keys=True,indent=2)+'\n')
     write_if_changed(out/'provider-registry.json', json.dumps(
         registry(list(dict.fromkeys(['main', *resident_owners.values(), *map(owner, sorted(definitions))])), records, requests),

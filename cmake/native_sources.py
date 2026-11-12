@@ -196,7 +196,11 @@ def dwc_native_callback_abi(relative, text):
         text = text.replace('(NasAllocFunc)DWC_Alloc', 'DWC_Alloc')
         text = text.replace('(NasFreeFunc)DWC_Free', 'DWC_Free')
     # HG_GAMESPY_B0_TYPED_STATE
-    from cmake.gamespy_b0_native import adapt as _adapt_gamespy_b0
+    _gamespy_spec = importlib.util.spec_from_file_location(
+        'gamespy_b0_native', Path(__file__).with_name('gamespy_b0_native.py'))
+    _gamespy_module = importlib.util.module_from_spec(_gamespy_spec)
+    _gamespy_spec.loader.exec_module(_gamespy_module)
+    _adapt_gamespy_b0 = _gamespy_module.adapt
     text = _adapt_gamespy_b0(relative, text)
     if relative == 'lib/NitroDWC/src/ap_connect_control.c':
         text = '#include <dwc/auth_internal.h>\n' + text
@@ -1179,6 +1183,157 @@ def adapt_original(relative, text, root):
         text = text.replace(before, after, 1)
 
         return "#include <stdint.h>\\n" + text
+    if relative == "lib/NitroSystem/src/fnd_frameheap.c":
+        # Preserve Nintendo's original FrameHeap algorithms.
+        # Adapt only host pointer width, bounds and native alignment.
+
+        text = replace(
+            text,
+            "return ((u32 *)frameHead)[-1];",
+            """FrameHeap *heap = (FrameHeap *)(
+        (u8 *)frameHead - offsetof(FrameHeap, frame));
+    return (u8)heap->head.attribute;""",
+        )
+
+        text = replace(
+            text,
+            """    u32 mask = alignment - 1;
+    u8 *next = (u8 *)((mask + (u32)old) & ~mask);
+    u8 *end = (u8 *)(size + (u32)next);
+    if (end > frameHead->tail) {
+        return NULL;
+    }
+    u32 actual = end - old;""",
+            """    if (!alignment || (alignment & (alignment - 1))) {
+        return NULL;
+    }
+    uintptr_t cursor = (uintptr_t)old;
+    uintptr_t limit = (uintptr_t)frameHead->tail;
+    uintptr_t mask = (uintptr_t)alignment - 1;
+    if (cursor > limit || cursor > UINTPTR_MAX - mask) {
+        return NULL;
+    }
+    uintptr_t aligned = (cursor + mask) & ~mask;
+    if (aligned > limit || size > limit - aligned ||
+        aligned - cursor > UINT32_MAX - size) {
+        return NULL;
+    }
+    u8 *next = (u8 *)aligned;
+    u8 *end = (u8 *)(aligned + size);
+    u32 actual = (u32)(aligned + size - cursor);""",
+        )
+
+        text = replace(
+            text,
+            """    u32 mask = alignment - 1;
+    u8 *next = (u8 *)(((u32)(old - size)) & ~mask);
+    if (next < frameHead->head) {
+        return NULL;
+    }
+    u32 actual = old - next;""",
+            """    if (!alignment || (alignment & (alignment - 1))) {
+        return NULL;
+    }
+    uintptr_t cursor = (uintptr_t)old;
+    uintptr_t floor = (uintptr_t)frameHead->head;
+    uintptr_t mask = (uintptr_t)alignment - 1;
+    if (cursor < floor || size > cursor - floor) {
+        return NULL;
+    }
+    uintptr_t aligned = (cursor - size) & ~mask;
+    if (aligned < floor || cursor - aligned > UINT32_MAX) {
+        return NULL;
+    }
+    u8 *next = (u8 *)aligned;
+    u32 actual = (u32)(cursor - aligned);""",
+        )
+
+        text = replace(
+            text,
+            """    u8 *end = (u8 *)((size + (u32)startAddress) & ~3);
+    u8 *begin = (u8 *)(((u32)startAddress + 3) & ~3);
+    if (begin > end || (u32)(end - begin) < sizeof(FrameHeap)) {
+        return NULL;
+    }
+    return &InitFrameHeap((FrameHeap *)begin, end, optFlag)->head;""",
+            """    uintptr_t address = (uintptr_t)startAddress;
+    uintptr_t alignment = _Alignof(FrameHeap);
+    uintptr_t mask = alignment - 1;
+    if (address > UINTPTR_MAX - size ||
+        address > UINTPTR_MAX - mask) {
+        return NULL;
+    }
+    uintptr_t end = (address + size) & ~(uintptr_t)3;
+    uintptr_t begin = (address + mask) & ~mask;
+    if (begin > end || end - begin < sizeof(FrameHeap)) {
+        return NULL;
+    }
+    return &InitFrameHeap((FrameHeap *)begin, (void *)end, optFlag)->head;""",
+        )
+
+        text = replace(
+            text,
+            """    if (size == 0) {
+        size = 1;
+    }
+    size = (size + 3) & ~3;
+    if (alignment >= 0) {""",
+            """    if (alignment == 0 || alignment == INT_MIN) {
+        return NULL;
+    }
+    if (size == 0) {
+        size = 1;
+    }
+    if (size > UINT32_MAX - 3) {
+        return NULL;
+    }
+    size = (size + 3) & ~3;
+    if (alignment >= 0) {""",
+        )
+
+        text = replace(
+            text,
+            """    alignment = abs(alignment);
+    p = (void *)(((alignment - 1) + (u32)frameHeap->frame.head) & ~(alignment - 1));
+    if ((u32)p > (u32)frameHeap->frame.tail) {
+        return 0;
+    }
+    return (u32)frameHeap->frame.tail - (u32)p;""",
+            """    if (alignment == 0 || alignment == INT_MIN) {
+        return 0;
+    }
+    alignment = abs(alignment);
+    uintptr_t a = (uintptr_t)alignment;
+    if (a & (a - 1)) {
+        return 0;
+    }
+    uintptr_t cursor = (uintptr_t)frameHeap->frame.head;
+    uintptr_t limit = (uintptr_t)frameHeap->frame.tail;
+    uintptr_t mask = a - 1;
+    if (cursor > limit || cursor > UINTPTR_MAX - mask) {
+        return 0;
+    }
+    uintptr_t aligned = (cursor + mask) & ~mask;
+    if (aligned > limit) {
+        return 0;
+    }
+    p = (void *)aligned;
+    uintptr_t available = limit - (uintptr_t)p;
+    return available > UINT32_MAX ? UINT32_MAX : (u32)available;""",
+        )
+
+        text = replace(
+            text,
+            "AllocFromHead__FrameHeap(&frameHeap->frame, sizeof(FrameHeapState), 4)",
+            "AllocFromHead__FrameHeap(&frameHeap->frame, sizeof(FrameHeapState), _Alignof(FrameHeapState))",
+        )
+
+        return (
+            "#include <stdint.h>\n"
+            "#include <stddef.h>\n"
+            "#include <limits.h>\n"
+            + text
+        )
     if relative == "lib/NitroSystem/src/fnd_heapcommon.c":
         # Original assembly provides these BSS globals, but its 32-bit
         # storage sizes cannot represent the native pointer-bearing list.

@@ -1,4 +1,5 @@
 #include "ntr_host.h"
+#include "hg_resource_map.h"
 
 #include <ctype.h>
 #include <errno.h>
@@ -53,5 +54,19 @@ FILE *HG_OpenResource(const char *path)
     FILE *file = open_in(HG_GENERATED_RESOURCE_ROOT, path);
     if (!file && (errno == ENOENT || errno == ENOTDIR))
         file = open_in(HG_ORIGINAL_RESOURCE_ROOT, path);
-    return file;
+    if (file || (errno != ENOENT && errno != ENOTDIR))
+        return file;
+
+    for (size_t i = 0; i < HG_RESOURCE_MAPPING_COUNT; ++i) {
+        if (strcmp(path, hg_resource_mappings[i].numeric) != 0)
+            continue;
+
+        const char *mapped = hg_resource_mappings[i].source;
+        file = open_in(HG_GENERATED_RESOURCE_ROOT, mapped);
+        if (!file && (errno == ENOENT || errno == ENOTDIR))
+            file = open_in(HG_ORIGINAL_RESOURCE_ROOT, mapped);
+        return file;
+    }
+    errno = ENOENT;
+    return NULL;
 }

@@ -49,10 +49,12 @@ class ResidentContractsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR', root/'build')) as temporary:
             work = Path(temporary)
             resident = work/'resident.a'
+            sdk = work/'sdk.a'
             consumer = work/'libheartgold_overlay_44.a'
             for name, source, archive in (
                 ('resident', 'int dwc(void){return 7;} int callback(void){return 8;}', resident),
                 ('consumer', 'extern int dwc(void); int call(void){return dwc();}', consumer),
+                ('sdk', 'int mic(void){return 9;}', sdk),
             ):
                 path = work/(name+'.c')
                 obj = path.with_suffix('.o')
@@ -60,12 +62,12 @@ class ResidentContractsTests(unittest.TestCase):
                 subprocess.run(['clang', '-arch', 'arm64', '-c', str(path), '-o', str(obj)], check=True)
                 subprocess.run(['ar', 'rcs', str(archive), str(obj)], check=True)
             partial = work/'partial.c'
-            partial.write_text('extern int callback(void); int partial(void){return callback();}')
+            partial.write_text('extern int callback(void), mic(void); int partial(void){return callback()+mic();}')
             partial_object = partial.with_suffix('.o')
             subprocess.run(['clang', '-arch', 'arm64', '-c', str(partial), '-o', str(partial_object)], check=True)
             out = work/'contracts'
             exports = out/'exports.txt'
-            generate_contracts([resident], [consumer], out, exports_path=exports,
+            generate_contracts([resident, sdk], [consumer], out, exports_path=exports,
                                resident_owners={resident: 'OVY_0'}, resident_consumers=[partial_object])
             report = json.loads((out/'provider-registry.json').read_text())
             row = next(r for r in report['definitions'] if r['native_exported_identity'] == '_dwc')
@@ -75,6 +77,18 @@ class ResidentContractsTests(unittest.TestCase):
             self.assertEqual(edge['status'], 'emitted-provider')
             self.assertIn('interfaces/main.tbd', (out/'image_44.rsp').read_text())
             self.assertIn('_callback', exports.read_text().splitlines())
+            self.assertIn('_mic', exports.read_text().splitlines())
+            # Verify ld64 extracts and retains the SDK export even when main
+            # has no static reference to the entry used by a dynamic image.
+            entry = work/'main.c'
+            entry.write_text('int main(void){return 0;}')
+            executable = work/'program'
+            subprocess.run(['clang', '-arch', 'arm64', str(entry), str(resident), str(sdk),
+                            '-Wl,-dead_strip',
+                            '-Wl,-exported_symbols_list,'+str(exports),
+                            '-o', str(executable)], check=True)
+            actual = subprocess.check_output(['xcrun', 'dyld_info', '-exports', str(executable)], text=True)
+            self.assertIn('_mic', actual)
             duplicate = work/'duplicate.a'
             duplicate.write_bytes(resident.read_bytes())
             with self.assertRaisesRegex(ValueError, 'Competing resident providers'):

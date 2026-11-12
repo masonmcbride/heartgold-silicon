@@ -29,6 +29,7 @@ set(native_sources
     src/party_menu_list_items.c src/party_menu.c src/code_entry.c
     src/spin_trade_link.c src/save_fashion.c src/screen_fade_effects.c
     lib/NitroSystem/src/fnd_expheap.c
+    lib/NitroSystem/src/fnd_frameheap.c
     lib/NitroSystem/src/fnd_heapcommon.c
     lib/NitroSystem/src/gfd_vram_transfer_manager.c lib/NitroSystem/src/g3d_kernel.c
     lib/NitroSystem/src/g2d_char_canvas_util.c lib/NitroSystem/src/g2d_char_canvas.c
