@@ -2,6 +2,7 @@
 #include "overlay_native.h"
 #include <dlfcn.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -24,13 +25,40 @@ int HG_PrepareGameOverlays(void);
 static int check_binding(int importer, uintptr_t offset, const char *name, int provider, uintptr_t addend)
 {
     Dl_info source, expected, actual;
+    uintptr_t slot = 0;
     void *resolved = dlsym(RTLD_DEFAULT, name);
     if (!resolved || !dladdr(image_anchor(importer), &source)) goto fail;
     /* Read dyld's actual GOT/data slot, not merely its import permission or
      * dlsym's global lookup. Dylibs use the default zero preferred TEXT base. */
-    uintptr_t slot;
     memcpy(&slot, (const char *)source.dli_fbase + offset, sizeof(slot));
-    if (slot != (uintptr_t)resolved + addend) goto fail;
+    /* HG_SYSTEM_DYLD_BINDING_VARIANT_V1
+     * dyld may bind an external system function to an optimized
+     * entry point different from the address returned by dlsym.
+     * Preserve exact pointer equality for every game-owned provider.
+     */
+    if (slot != (uintptr_t)resolved + addend) {
+        if (provider != -2 || addend != 0 || slot == 0)
+            goto fail;
+
+        Dl_info bound_info, lookup_info;
+        if (!dladdr((void *)slot, &bound_info) ||
+            !dladdr(resolved, &lookup_info) ||
+            !bound_info.dli_fbase ||
+            bound_info.dli_fbase != lookup_info.dli_fbase)
+            goto fail;
+
+        /* Both pointers must be supplied by the same loaded
+         * system image. Do not generalize this to game providers.
+         */
+        static unsigned reported_system_variants;
+        if (reported_system_variants++ < 8) {
+            fprintf(stderr,
+                "HG_SYSTEM_BIND_VARIANT image=%d symbol=%s "
+                "lookup=%p bound=%p library=%s\\n",
+                importer, name, resolved, (void *)slot,
+                bound_info.dli_fname ? bound_info.dli_fname : "?");
+        }
+    }
     if (provider == -3 || provider == -4 || provider == -5 || provider == -6) {
         const char *expected_name =
             provider == -3 ? "libheartgold_dwc_status.dylib" :
@@ -53,6 +81,18 @@ static int check_binding(int importer, uintptr_t offset, const char *name, int p
     }
     return 1;
 fail:
+    /* HG_BINDING_FAILURE_DIAGNOSTIC */
+    fprintf(stderr,
+        "HG_BINDING_FAILURE image=%d symbol=%s "
+        "provider=%d offset=0x%lx addend=0x%lx "
+        "resolved=%p slot=0x%lx expected=0x%lx\\n",
+        importer, name, provider,
+        (unsigned long)offset,
+        (unsigned long)addend,
+        resolved,
+        (unsigned long)slot,
+        (unsigned long)((uintptr_t)resolved + addend));
+    fflush(stderr);
     errno = ENOEXEC;
     return 0;
 }

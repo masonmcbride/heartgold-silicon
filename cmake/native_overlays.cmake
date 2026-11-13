@@ -207,7 +207,33 @@ add_dependencies(hg_dwc_main heartgold_overlay_native_sources heartgold_native_h
 # Resident machine code retains its original OVY_0 provider identity. This
 # archive has the native ABI already used by the existing Wi-Fi consumer;
 # guest32-account/provider.a remains a separate representation.
+
+# HG_SOURCE_OWNED_DWC_DOWNLOAD_DATA
+# Recover original DWC download strings and native-width pointer storage.
+set(hg_dwc_download_dir "${PROJECT_BINARY_DIR}/native-overlays")
+set(hg_dwc_download_outputs
+    "${hg_dwc_download_dir}/dwc_download_strings.S"
+    "${hg_dwc_download_dir}/dwc_nd_pointers.S")
+add_custom_command(
+    OUTPUT ${hg_dwc_download_outputs}
+    COMMAND "${Python3_EXECUTABLE}" -B
+        "${CMAKE_CURRENT_LIST_DIR}/native_dwc_download_data.py"
+        --game "${game_source}"
+        --out "${hg_dwc_download_dir}"
+    DEPENDS
+        "${game_source}/lib/NitroDWC/asm/dwc_lib_data.s"
+        "${game_source}/lib/NitroDWC/asm/dwc_lib_rodata.s"
+        "${game_source}/lib/NitroDWC/src/net_common.c"
+        "${CMAKE_CURRENT_LIST_DIR}/native_dwc_download_data.py"
+        "${CMAKE_CURRENT_LIST_DIR}/native_dwc_remaining_bss.py"
+        "${CMAKE_CURRENT_LIST_DIR}/native_data_ir.py"
+    VERBATIM)
+target_sources(hg_dwc_main PRIVATE ${hg_dwc_download_outputs})
+
 target_link_libraries(heartgold PRIVATE hg_dwc_main)
+target_sources(hg_dwc_main PRIVATE
+    "${native_root}/lib/NitroDWC/src/net_common.c")
+
 
 set(hg_ovy0_wifi_source "${native_root}/src/wifi_connection.c")
 add_library(hg_ovy0_wifi_code OBJECT
@@ -223,8 +249,21 @@ target_link_libraries(hg_ovy0_wifi_code PRIVATE nitro_config)
 set_target_properties(hg_ovy0_wifi_code PROPERTIES POSITION_INDEPENDENT_CODE ON)
 add_dependencies(hg_ovy0_wifi_code heartgold_overlay_native_sources heartgold_native_headers fx_constants)
 
+
+# HG_CANONICAL_MAIN_PROVIDER_CLOSURE_V1
+set(HEARTGOLD_WIRELESS_SHADOW ON)
+include("${CMAKE_CURRENT_LIST_DIR}/wireless_shadow.cmake")
+
 get_target_property(overlay_sdk_targets nitro_sdk INTERFACE_LINK_LIBRARIES)
 set(overlay_main_targets heartgold_main heartgold_runtime heartgold_sound_storage native_host hg_dwc_main ${overlay_sdk_targets})
+list(APPEND overlay_main_targets
+    heartgold_wm_core_native_original
+    heartgold_wm_native_candidates
+    heartgold_wvr_original
+    heartgold_wm_original_work_storage
+    heartgold_wm_original_scalar_storage
+    heartgold_dwc_original_typed_storage)
+
 if(TARGET heartgold_guest32_account)
     list(APPEND overlay_main_targets heartgold_guest32_account heartgold_guest32_crc heartgold_guest32_std heartgold_guest32_runtime heartgold_guest32_mi)
 endif()
@@ -257,7 +296,6 @@ set(hg_interface_outputs "${overlay_link_dir}/interfaces/main.tbd")
 # Compile the common consumer independently so the existing resident-provider
 # graph can derive its actual imports without a shared-library dependency cycle.
 add_library(hg_dwc_status_code OBJECT
-    "${native_root}/lib/NitroDWC/src/net_common.c"
     "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless/dwc_common_state.c")
 target_compile_definitions(hg_dwc_status_code PRIVATE
     "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")
@@ -380,54 +418,14 @@ target_compile_options(hg_dwc_status PRIVATE
     "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
 target_link_libraries(hg_dwc_status PRIVATE
     nitro_config "${overlay_link_dir}/interfaces/main.tbd")
+# Common mutable DWC state remains in its resident shared owner.
+# Original net_common.c functions belong to hg_dwc_main.
 target_link_options(hg_dwc_status PRIVATE
     "LINKER:-dead_strip"
     "LINKER:-exported_symbol,_gDwcNetError"
     "LINKER:-exported_symbol,_gDwcNetAllocator"
-    "LINKER:-exported_symbol,_gDwcNetConnection"
-    "LINKER:-exported_symbol,_DWC_UpdateConnection"
-    "LINKER:-exported_symbol,_DWC_ClearError"
-    "LINKER:-exported_symbol,_DWC_GetLinkLevel"
-    "LINKER:-exported_symbol,_DWCi_SetError"
-    "LINKER:-exported_symbol,_DWCi_IsError"
-    "LINKER:-exported_symbol,_DWC_GetLastErrorEx"
-    "LINKER:-exported_symbol,_DWC_GetLastError"
-    "LINKER:-exported_symbol,_DWC_SetMemFunc"
-    "LINKER:-exported_symbol,_DWC_AllocEx"
-    "LINKER:-exported_symbol,_DWC_Realloc"
-    "LINKER:-exported_symbol,_DWC_ReallocEx"
-    "LINKER:-exported_symbol,_DWCi_GetAllocHeader"
-    "LINKER:-exported_symbol,_DWCi_InitAllocHeader"
-    "LINKER:-exported_symbol,_DWCi_GetAllocSize"
-    "LINKER:-exported_symbol,_DWCi_GsMalloc"
-    "LINKER:-exported_symbol,_DWCi_GsRealloc"
-    "LINKER:-exported_symbol,_DWCi_GsFree"
-    "LINKER:-exported_symbol,_DWC_Alloc"
-    "LINKER:-exported_symbol,_DWC_CheckInet"
-    "LINKER:-exported_symbol,_DWC_CleanupInet"
-    "LINKER:-exported_symbol,_DWC_ConnectInetAsync"
-    "LINKER:-exported_symbol,_DWC_Free"
-    "LINKER:-exported_symbol,_DWC_GetApInfo"
-    "LINKER:-exported_symbol,_DWC_GetDateTime"
-    "LINKER:-exported_symbol,_DWC_GetInetStatus"
-    "LINKER:-exported_symbol,_DWC_InitInetEx"
-    "LINKER:-exported_symbol,_DWC_NASLoginAsync"
-    "LINKER:-exported_symbol,_DWC_NASLoginProcess"
-    "LINKER:-exported_symbol,_DWC_ProcessInet"
-    "LINKER:-exported_symbol,_DWC_SVLGetTokenAsync"
-    "LINKER:-exported_symbol,_DWC_SVLProcess"
-    "LINKER:-exported_symbol,_DWC_SetAuthServer")
-# BEGIN PERMANENT hg_dwc_status COMMUNICATIONS EXPORTS
-# Original compiled providers; preserve existing state ownership.
-target_link_options(hg_dwc_status PRIVATE
-    "LINKER:-exported_symbol,_DWC_AddCommonKeyValueString"
-    "LINKER:-exported_symbol,_DWC_GetCommonValueString"
-    "LINKER:-exported_symbol,_DWC_SetCommonKeyValueString"
-    "LINKER:-exported_symbol,_DWCi_Base64Decode"
-    "LINKER:-exported_symbol,_DWCi_Base64Encode"
-    "LINKER:-exported_symbol,_DWCi_GetRandom"
-)
-# END PERMANENT hg_dwc_status COMMUNICATIONS EXPORTS
+    "LINKER:-exported_symbol,_gDwcNetConnection")
+
 set_target_properties(hg_dwc_status PROPERTIES
     OUTPUT_NAME "heartgold_dwc_status"
     LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
@@ -532,6 +530,12 @@ foreach(id IN LISTS hg_selected_overlay_ids)
         target_link_libraries(heartgold_image_${id} PRIVATE
             hg_ovy0_wifi_subset)
     endif()
+    if(id EQUAL 74)
+        target_link_libraries(heartgold_image_${id} PRIVATE
+            hg_dwc_status
+            hg_ovy0_wifi_subset
+            hg_wm_arm9)
+    endif()
     if(id IN_LIST hg_dwc_status_consumer_ids)
         target_link_libraries(heartgold_image_${id} PRIVATE hg_dwc_status)
     endif()
@@ -592,6 +596,14 @@ target_link_libraries(heartgold PRIVATE
     hg_wm_arm9
     hg_ovy0_wifi_subset)
 
+# HG_NATIVE_LEGACY_DYLD_FIXUPS
+# Original DS data contains packed pointers that cannot be encoded
+# by dyld chained fixups. Preserve the original data layout and use
+# legacy dyld relocation encoding for the native executable.
+if(APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
+    target_link_options(heartgold PRIVATE "LINKER:-no_fixup_chains")
+endif()
+
 target_link_options(heartgold PRIVATE "LINKER:-export_dynamic" "LINKER:-exported_symbols_list,${overlay_exports}")
 set_property(TARGET heartgold APPEND PROPERTY LINK_DEPENDS
     "${CMAKE_CURRENT_LIST_DIR}/native_dynamic_closure.py")
@@ -601,6 +613,19 @@ add_custom_command(TARGET heartgold POST_BUILD
     BYPRODUCTS "${overlay_link_dir}/dynamic-closure.json"
     VERBATIM)
 target_sources(heartgold PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers/os/game_overlays.c")
+
+# HG_NATIVE_WFC_ENTRY_DISPATCH
+# Preserve original OVY_13 function ownership: the main image dispatches
+# through dyld instead of requiring an unavailable permanent main definition.
+set_property(SOURCE "${game_source}/src/network_overlay_loader.c"
+    APPEND PROPERTY COMPILE_DEFINITIONS
+    "RunWifiSetupApp=HG_DispatchWifiSetupApp")
+set_property(SOURCE "${game_source}/src/wifi_club/wifi_club.c"
+    APPEND PROPERTY COMPILE_DEFINITIONS
+    "RunWifiSetupApp=HG_DispatchWifiSetupApp")
+target_sources(heartgold PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os/wifi_setup_dispatch.c")
+
 target_compile_definitions(heartgold PRIVATE HG_NATIVE_OVERLAYS)
 target_include_directories(heartgold PRIVATE "${overlay_link_dir}")
 add_test(NAME native_overlay_manifest COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
