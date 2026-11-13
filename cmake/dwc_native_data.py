@@ -18,6 +18,7 @@ CALLBACKS = ('BucketSetValue','BucketAdd','BucketSub','BucketMult','BucketDiv','
              'BucketIntOp','BucketDoubleOp','BucketStringOp','TeamBucketIntOp','TeamBucketDoubleOp',
              'TeamBucketStringOp','PlayerBucketIntOp','PlayerBucketDoubleOp','PlayerBucketStringOp')
 MEASURE = {
+    'SocketState': ('Ov00SocketState', ('lastError','hName','hAliases','hAddrType','hLength','hAddrList','addr','addrList')),
     'Ca': ('CpsRootCa', ('name','modulusLength','modulus','exponentLength','exponent')),
     'Key': ('KeyTable', ('keys',)),
     'Persist': ('PersistSocket', ('socket','port','key')),
@@ -50,6 +51,8 @@ def abi_source(game):
     key = re.search(r'typedef struct KeyTable \{.*?\} KeyTable;',
                     (game/'lib/NitroDWC/src/ap_connect.c').read_text(), re.S)[0]
     s = '#include <stddef.h>\n#include <stdint.h>\n#include <cps/cps_ssl_internal.h>\n#include <dwc/persist_internal.h>\n#include <dwc/dwc_main_internal.h>\n#include <dwc/auth_internal.h>\n#include <nitrowifi/socl_internal.h>\n'+key+'\n'
+    from native_sources import native_socket_state
+    s += native_socket_state((game/'lib/NitroDWC/src/gs_platform.c').read_text())[1]+'\n'
     s += 'typedef struct NativePersistBlock { PersistSocket socket;\n'
     s += ''.join('__typeof__(&'+name+') callback'+str(i)+';\n' for i,name in enumerate(CALLBACKS))
     s += '} NativePersistBlock;\nconst uint32_t HG_DwcNativeLayout[] = {\n'
@@ -263,9 +266,16 @@ def make(game, abi):
     for name,size in [('gCpsDhcpRecvBuffer',0x994),('gCpsTcpipStack',0x800),('gWcmRssiCount',4),('gWcmRssi',32)]:
         zero(name,size,{name:0},wifi_bss,size)
     gamespy='lib/NitroDWC/asm/dwc_gamespy_bss.s'
-    zero('ov00_0221B1D8',24+abi['BucketGlobals']['size'],
-         {'ov00_0221B1D8':0,'ov00_0221B1F0':24,
-          'ov00_0221B1F8':24+abi['BucketGlobals']['fields']['doubleValue']},gamespy,40)
+    socket=abi['SocketState']['fields']
+    # Original +0 is the null alias pointer; +4 is lastError; +8 starts
+    # hostent; +24 is IPv4 scratch; +44 is the two-pointer address list.
+    # The next 16 original bytes precede the bucket scratch aggregate.
+    bucket=socket['addrList']+2*8+16
+    zero('ov00_0221B1AC',bucket+abi['BucketGlobals']['size'],
+         {'ov00_0221B1AC':0,'ov00_0221B1B4':socket['hName'],
+          'ov00_0221B1C4':socket['addr'],'ov00_0221B1D8':socket['addrList'],
+          'ov00_0221B1F0':bucket,
+          'ov00_0221B1F8':bucket+abi['BucketGlobals']['fields']['doubleValue']},gamespy,84)
     zero('gPersistWork',abi['PersistWork']['size'],
          {'gPersistWork':0,'ov00_0221B230':abi['PersistWork']['fields']['values']},gamespy,560)
     for name,size in [('GSIACHostname',64),('__GSIACGamename',64),('gDwcGameName',256),
@@ -359,7 +369,7 @@ def frontier_storage_blocks(result):
     names = manifest["symbols"]
     expected = manifest["expected_count"]
 
-    if expected != 628 or len(names) != expected or len(set(names)) != expected:
+    if expected != 632 or len(names) != expected or len(set(names)) != expected:
         raise ValueError("Invalid frontier manifest cardinality")
 
     wanted = set(names)

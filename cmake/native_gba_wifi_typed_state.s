@@ -1,9 +1,6 @@
-/* Original typed state with compiler-measured ARM64 storage. */
+/* Resident Wi-Fi state with compiler-measured ARM64 storage.
+ * gPmAgbSave is supplied by its original OVY_74 BSS member. */
 .section __DATA,__bss
-.p2align 3
-.globl _gPmAgbSave
-_gPmAgbSave:
-.space 280
 .p2align 3
 .globl _gSocSoclConfig
 _gSocSoclConfig:

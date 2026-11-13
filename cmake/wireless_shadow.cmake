@@ -1,3 +1,4 @@
+include_guard(GLOBAL)
 # Source-built provider comparison. Not linked into the canonical executable.
 option(HEARTGOLD_WIRELESS_SHADOW
     "Build WM/WVR/DWC replacement archives for ABI comparison" OFF)

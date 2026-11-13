@@ -1,4 +1,58 @@
 {
+  "lib/NitroDWC/asm/wifi_setup_access_points_bss.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/wifi_setup_access_points_bss.s": "3eeb69a83bfd3cf0803567cb06d5fec3842548bc504d247dfa0c9e9cc486f7c5",
+      "include/wifi_setup/wifi_setup_access_points.h": "641e6c3f27d9a46d71bc3061394b6544f804aae2d2152e2744a3ef06eabb1886"
+    },
+    "layouts": {
+      "gWifiSetupConnections": {
+        "source_size": 4,
+        "pointers": [
+          0
+        ],
+        "alignment": 8
+      }
+    },
+    "expected_blocks": 1,
+    "expected_relocations": 0,
+    "reviewed": true
+  },
+  "lib/NitroDWC/asm/wifi_setup_keyboard_rodata.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/wifi_setup_keyboard_rodata.s": "1588ae1d5826004b4b9763d0e6b250b5fd34b90430c4232252fff52419c869ea"
+    },
+    "layouts": {},
+    "expected_blocks": 18,
+    "expected_relocations": 0,
+    "reviewed": true
+  },
+  "lib/NitroDWC/asm/wifi_setup_keypad_rodata.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/wifi_setup_keypad_rodata.s": "15e55ba494a4e5cc7682216a5920f95140e8163b4af596495220e3096d96bd6d"
+    },
+    "layouts": {},
+    "expected_blocks": 36,
+    "expected_relocations": 0,
+    "reviewed": true
+  },
+  "lib/NitroDWC/asm/wifi_setup_screens_rodata.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/wifi_setup_screens_rodata.s": "9ea402d1525d17330fef3594d8d19175ded1b13b6748eb060d9a7e22e2aa24c5"
+    },
+    "layouts": {},
+    "expected_blocks": 72,
+    "expected_relocations": 0,
+    "reviewed": true
+  },
+  "lib/NitroDWC/asm/wifi_setup_share_data.o": {
+    "inputs": {
+      "lib/NitroDWC/asm/wifi_setup_share_data.s": "8ddd49180493c00600b83ee35c10084a2b77f6b50b5f05878576f5cc9473a412"
+    },
+    "layouts": {},
+    "expected_blocks": 23,
+    "expected_relocations": 0,
+    "reviewed": true
+  },
   "asm/vs_recorder_data.o": {
     "inputs": {
       "asm/vs_recorder_data.s": "2023231c73ec21743fa6a5dc64aac0a8a552831c14a4341449160032110a1c21",
@@ -5853,43 +5907,7 @@
       "lib/NitroDWC/src/gs_platform.c": "380ce8098851c077edb9f0d16b802f24b3a62188eb138d953bb89d86574fc124"
     },
     "layouts": {},
-    "blocker": "gPersistWork has a 0x30 original extent and pointer-bearing PersistWork consumers; nnNegotiatorList and other GameSpy runtime globals also require reviewed native structure extents. Original extents cannot be declared native-safe without consumer ABI validation.",
-    "abi_views": [
-      {
-        "object": "ov00_0221B1AC",
-        "consumer": "gs_platform.c Ov00SocketState.unk0",
-        "fields": [
-          {
-            "guest": [
-              0,
-              4
-            ],
-            "native": [
-              0,
-              4
-            ],
-            "kind": "integer"
-          }
-        ]
-      },
-      {
-        "object": "ov00_0221B1AC",
-        "consumer": "gs_platform.c hAliases[0] via (ov00_0221B1B4 - 8)",
-        "fields": [
-          {
-            "guest": [
-              0,
-              4
-            ],
-            "native": [
-              0,
-              8
-            ],
-            "kind": "pointer"
-          }
-        ]
-      }
-    ]
+    "blocker": "The original GameSpy BSS requires the measured typed regions in dwc_native_data.py and the existing OVY_0 typed globals. Do not admit a second raw-layout provider. The socket aggregate and its interior aliases are validated by test_dwc_socket_storage.py."
   },
   "lib/NitroDWC/asm/dwc_lib_rodata.o": {
     "inputs": {
@@ -11046,5 +11064,398 @@
     },
     "expected_blocks": 64,
     "expected_relocations": 119
+  },
+  "asm/vs_recorder_screen_data.o": {
+    "inputs": {
+      "asm/vs_recorder_screen_data.s": "58b945ac80efe173aae97df430df58e313a50820abe283dab46123ec8d58d9fb",
+      "files/msgdata/msg/msg_0013.gmm": "199002df5ec1ffa5f5721dd23cd9658b78eb24e57d609c85c69e54cbc2572f54",
+      "asm/include/vs_recorder_screen_data.inc": "80fc992e0e1c6313dd6b93aabff476a083028391fd294021a96d53aecad66dd9",
+      "include/application/vs_recorder/vs_recorder_internal.h": "a88ca5b4cff96547e448e320154bd665940560999b71200032fb24e0e5e30701",
+      "src/vs_recorder_menu_app.c": "5c4fcdfceb1c95b403c58e2d05a237e036a6e68967129e63ce441ee3ce3e2d8e"
+    },
+    "layouts": {
+      "sVsRecorderQuitMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode3QuitMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode2QuitMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode4QuitMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode2Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderSendVideoMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode3Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode3MenuNoFrontier": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode4Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderViewVideosMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode5Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderSearchMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode1SubMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode1Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderDeleteOtherVideoMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderDeleteVideosMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderOtherVideosMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderBattleVideosMenu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode0MenuNoFrontier": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode0Menu": {
+        "source_size": 180,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode6Menu": {
+        "source_size": 112,
+        "pointers": [
+          32,
+          68,
+          104
+        ],
+        "alignment": 8
+      },
+      "sVsRecorderMode6MenuTail": {
+        "source_size": 68,
+        "pointers": [
+          28,
+          64
+        ],
+        "alignment": 4,
+        "label_alignment": 4
+      },
+      "sVsRecorderRootMenu": {
+        "source_size": 252,
+        "pointers": [
+          32,
+          68,
+          104,
+          140,
+          176,
+          212,
+          248
+        ],
+        "alignment": 8
+      }
+    },
+    "message_sources": [
+      "files/msgdata/msg/msg_0013.gmm"
+    ],
+    "expected_blocks": 23,
+    "expected_relocations": 22,
+    "reviewed": true
+  },
+  "asm/main_menu_bss.o": {
+    "inputs": {
+      "asm/main_menu_bss.s": "a559616337ccfe51647387a9720a96fb28527c8b83c34bbab58f2dfe2166d0ee",
+      "asm/main_menu_data.s": "a9757fb33f143bf124d94fbf21a2256f1d83b6cd1ebfeb4d30c73a59f13e4308",
+      "src/application/main_menu/main_menu_shared.c": "70d1518a3f4a216a46f583d59b088a766894a0eea5bb69851595e7250ea7eda2",
+      "src/application/main_menu/main_menu_util.c": "29f269b406bb52ed5c3952d8c17c07e73dc57e431fbb1fc5c529365ee918fc83",
+      "src/application/main_menu/agb_cartridge.c": "d9b0c9e9334a2d748d4049d976d550fb9901cc4cad1184ed4b159cd325dc2b2b",
+      "include/application/main_menu/main_menu_util.h": "84ba1ce0bca3fbe95e2265762fed01b5f22d5c5735dad39157d178b5cbd65d44",
+      "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
+      "include/sprite_resource_header.h": "eb98a8918eda59120082cb11a8da235a0022c138444a6b7b9e75e2850efa7956",
+      "src/application/main_menu/mystery_gift_beacon.c": "20abb77559f99e9c063cad49428ebb2c79d66c26617825624494c7d8438453db",
+      "src/application/main_menu/mystery_gift_wfc.c": "d64b30360f76bf4cbf0281b059e654c431213d823a3f33b7b1f8aa33506e384e",
+      "include/config.h": "773f3b3ffaabd2750f040be690dc91c605d1ce58a6686bc85d41e6e1335ad419",
+      "main.lsf": "fb91a386cb18560c63434b14dc435d92a800481ad848d6a0d011a815286e6753"
+    },
+    "expected_blocks": 5,
+    "expected_relocations": 0,
+    "reviewed": true,
+    "layouts": {
+      "gMigrateFromAgbIcons": {
+        "source_size": 4,
+        "native_size": 8,
+        "alignment": 8
+      },
+      "gPmAgbSave": {
+        "source_size": 16,
+        "pointers": [
+          8
+        ],
+        "alignment": 8
+      },
+      "gPmAgbSaveCounter": {
+        "source_size": 8,
+        "alignment": 1
+      },
+      "gPmAgbRomHeader": {
+        "source_size": 252,
+        "native_size": 256,
+        "alignment": 1
+      },
+      "gMainMenuUtilCryptoHeapId": {
+        "source_size": 4,
+        "native_size": 4044,
+        "alignment": 1,
+        "label_alignment": 4
+      }
+    },
+    "coalesced_aliases": {
+      "gMainMenuUtilCryptoHeapId": {
+        "gMainMenuUtilWork": 4,
+        "gMainMenuUtilSprites": 68,
+        "gMainMenuUtilRenderer": 76,
+        "gMainMenuUtilGiftSpriteWork": 796,
+        "gMainMenuUtilVBlankWork": 4000
+      }
+    },
+    "coalesced_members": [
+      "src/application/main_menu/main_menu_shared.o",
+      "asm/main_menu_data.o"
+    ]
+  },
+  "asm/main_menu_data.o": {
+    "inputs": {
+      "asm/main_menu_bss.s": "a559616337ccfe51647387a9720a96fb28527c8b83c34bbab58f2dfe2166d0ee",
+      "asm/main_menu_data.s": "a9757fb33f143bf124d94fbf21a2256f1d83b6cd1ebfeb4d30c73a59f13e4308",
+      "src/application/main_menu/main_menu_shared.c": "70d1518a3f4a216a46f583d59b088a766894a0eea5bb69851595e7250ea7eda2",
+      "src/application/main_menu/main_menu_util.c": "29f269b406bb52ed5c3952d8c17c07e73dc57e431fbb1fc5c529365ee918fc83",
+      "src/application/main_menu/agb_cartridge.c": "d9b0c9e9334a2d748d4049d976d550fb9901cc4cad1184ed4b159cd325dc2b2b",
+      "include/application/main_menu/main_menu_util.h": "84ba1ce0bca3fbe95e2265762fed01b5f22d5c5735dad39157d178b5cbd65d44",
+      "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
+      "include/sprite_resource_header.h": "eb98a8918eda59120082cb11a8da235a0022c138444a6b7b9e75e2850efa7956",
+      "src/application/main_menu/mystery_gift_beacon.c": "20abb77559f99e9c063cad49428ebb2c79d66c26617825624494c7d8438453db",
+      "src/application/main_menu/mystery_gift_wfc.c": "d64b30360f76bf4cbf0281b059e654c431213d823a3f33b7b1f8aa33506e384e",
+      "include/config.h": "773f3b3ffaabd2750f040be690dc91c605d1ce58a6686bc85d41e6e1335ad419",
+      "main.lsf": "fb91a386cb18560c63434b14dc435d92a800481ad848d6a0d011a815286e6753"
+    },
+    "expected_blocks": 35,
+    "expected_relocations": 10,
+    "reviewed": true,
+    "cpp_headers": [
+      "config.h"
+    ],
+    "layouts": {
+      "gPmAgbCartridgeSpec": {
+        "source_size": 8,
+        "pointers": [
+          0
+        ],
+        "padding": {
+          "8": 4
+        },
+        "alignment": 8
+      },
+      "gMysteryGiftBeaconStateNames": {
+        "source_size": 40,
+        "pointers": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "alignment": 8
+      },
+      "gMysteryGiftBeacon": {
+        "source_size": 8,
+        "pointers": [
+          0,
+          4
+        ],
+        "alignment": 8
+      }
+    },
+    "coalesced_elsewhere": {
+      "gMainMenuUtilSprites": "asm/main_menu_bss.o",
+      "gMainMenuUtilRenderer": "asm/main_menu_bss.o",
+      "gMainMenuUtilGiftSpriteWork": "asm/main_menu_bss.o",
+      "gMainMenuUtilVBlankWork": "asm/main_menu_bss.o"
+    }
   }
 }

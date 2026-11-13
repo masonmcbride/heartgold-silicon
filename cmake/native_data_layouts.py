@@ -106,9 +106,51 @@ def recipe(game, original, digest=None):
         text = _normalize_minigame_assembly(
             original, source, source.read_text() if text is None else text
         )
-    records = parse(source,text,contract.get('constants'))
+    constants=dict(contract.get('constants',{}))
+    if contract.get('message_sources'):
+        import xml.etree.ElementTree as ET
+        for relative in contract['message_sources']:
+            if relative not in contract['inputs']:raise ValueError('unfingerprinted message source')
+            for row in ET.parse(game/relative).getroot().findall('row'):
+                name,value=row.attrib['id'],int(row.attrib['index'])
+                if name in constants:raise ValueError('duplicate message identifier: '+name)
+                constants[name]=value
+    records = parse(source,text,constants)
     if 'expected_blocks' in contract and len(records) != contract['expected_blocks']:
         raise ValueError('Original block count changed: '+original)
     if 'expected_relocations' in contract and len(raw_layout(records)[2]) != contract['expected_relocations']:
         raise ValueError('Original relocation count changed: '+original)
-    return native_blocks(source,layouts,text,contract.get('constants'))
+    blocks=native_blocks(source,layouts,text,constants)
+    # Reviewed cross-member BSS coalescing retains one image-owned allocation.
+    # Only zero storage can acquire interior symbol views; no initialized bytes
+    # or relocations may be redistributed by this operation.
+    omitted=set(contract.get('coalesced_elsewhere',[]))
+    if not omitted <= {b['symbol'] for b in blocks}:raise ValueError('Unknown coalesced storage label')
+    if omitted or contract.get('coalesced_aliases'):
+        from native_image_graph import ownership,parse_manifest
+        owners=ownership(parse_manifest(game/'main.lsf'))
+        for label,provider in contract.get('coalesced_elsewhere',{}).items():
+            targets=contracts()[provider].get('coalesced_aliases',{})
+            if sum(label in views for views in targets.values())!=1 or owners[provider]!=owners[original]:
+                raise ValueError('Coalesced storage has no unique same-image provider: '+label)
+        for member in contract.get('coalesced_members',[]):
+            if owners[member]!=owners[original]:raise ValueError('Cross-image BSS coalescing')
+    result=[]
+    for block in blocks:
+        if block['symbol'] in omitted:continue
+        aliases=contract.get('coalesced_aliases',{}).get(block['symbol'])
+        if not aliases:
+            result.append(block);continue
+        if block['section']!='__bss' or block['pointers'] or any(block['bytes']):
+            raise ValueError('Coalescing requires zero BSS storage')
+        size=sum(len(v) for k,v in block['native_items'])
+        previous=0
+        for name,offset in sorted(aliases.items(),key=lambda v:v[1]):
+            if not previous<offset<size:raise ValueError('Invalid coalesced alias coordinate')
+            part=dict(block,symbol=block['symbol'] if previous==0 else prior,
+                      native_items=[('bytes',bytes(offset-previous))],bytes=bytes(offset-previous))
+            if previous:part.update(alignment=1,public=True);part.pop('explicit_alignment',None)
+            result.append(part);previous=offset;prior=name
+        result.append(dict(symbol=prior,section='__bss',alignment=1,public=True,
+                           native_items=[('bytes',bytes(size-previous))],bytes=bytes(size-previous),pointers=[]))
+    return result

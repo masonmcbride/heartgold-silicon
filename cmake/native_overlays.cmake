@@ -565,6 +565,7 @@ foreach(id IN LISTS hg_selected_overlay_ids)
     if(id EQUAL 12)
         target_link_libraries(heartgold_image_12 PRIVATE hg_wm_arm9)
     endif()
+
     add_custom_command(TARGET heartgold_image_${id} POST_BUILD
         COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_preflight.py"
             --otool "${HG_NATIVE_OTOOL}" $<TARGET_FILE:heartgold_image_${id}>
@@ -729,3 +730,27 @@ endif()
 # Isolated legacy inputs: this is an explicit migration boundary, not a
 # reproducible source-owned build. See docs/BUILD_GRAPH.md.
 include("${CMAKE_CURRENT_LIST_DIR}/native_legacy_archives.cmake")
+
+# HG_PRODUCTION_NATIVE_RUNTIME_OWNERSHIP
+# Runtime providers are native host services, not original DS image members.
+# Select exactly one implementation owner independently of review settings.
+if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+    # native_host already compiles overlay_native.c in this configuration.
+    target_link_libraries(heartgold PRIVATE native_host)
+else()
+    target_sources(heartgold PRIVATE
+        "${PROJECT_SOURCE_DIR}/hardware_drivers/os/overlay_native.c")
+endif()
+
+if(TARGET heartgold_guest32_runtime)
+    # The LLVM-enabled build already has a source-owned guest32 runtime.
+    target_link_libraries(heartgold PRIVATE heartgold_guest32_runtime)
+else()
+    # The ordinary native build needs the same host services without LLVM.
+    target_sources(heartgold PRIVATE
+        "${PROJECT_SOURCE_DIR}/hardware_drivers/guest32.c")
+endif()
+
+target_include_directories(heartgold PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os")

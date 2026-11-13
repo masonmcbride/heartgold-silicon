@@ -59,7 +59,7 @@ class CoordinatedSources(unittest.TestCase):
         self.assertNotIn('u32 strtoul(', first)
         self.assertNotIn('void qsort(', first)
         self.assertIn('NTR_Digit[128]', first)
-        self.assertIn('NTR_Upper[128]', first)
+        self.assertIn('__upper_mapC[128]', first)
         for relative, expected in batch.RUNTIME_INPUTS.items():
             self.assertEqual(hashlib.sha256((GAME / relative).read_bytes()).hexdigest(), expected)
 

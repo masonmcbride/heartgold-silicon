@@ -664,6 +664,10 @@ OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("lib/libV
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(DWC_NATIVE_EXTENTS)))
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ('src/application/main_menu/mystery_gift_wfc.c',)))
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + DWC_ABI_SOURCES))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + (
+    'src/application/main_menu/main_menu_shared.c',
+    'src/application/main_menu/agb_cartridge.c',
+)))
 
 
 # BEGIN REVIEWED OVY_0 COMMUNICATIONS SOURCE REGISTRATION
@@ -1062,11 +1066,65 @@ _Static_assert(sizeof(PokewalkerIrBlocks) == 1736, "serialized IR blocks");
         if hashlib.sha256(text.encode()).hexdigest() != '1d1eb09be0f61b118948ec85b46114c519a203c9703a41addcf386871ec328b6':
             raise ValueError('Original Wi-Fi session header changed')
         result = replace(result, '    int iconCharPath;\n    int iconPalettePath;', '    const char *iconCharPath;\n    const char *iconPalettePath;')
+    if relative in ('lib/NitroDWC/src/gs_platform.c','lib/NitroDWC/src/gp_api.c'):
+        original, declaration = native_socket_state(text)
+        result = replace(result, original, declaration)
+        if relative.endswith('/gs_platform.c'):
+            result = replace(result, '(char **)(ov00_0221B1B4 - 8)', 'ov00_0221B1AC.aliases')
+    if relative == 'lib/NitroDWC/src/persist_data.c':
+        result = replace(result, '(int *)(ov00_0221B1D8 + 24)', '&ov00_0221B1F0.intValue')
     result = dwc_native_qr_caller_abi(relative, result)
     return result
 
 
+def native_socket_state(text):
+    """The zero word at guest +0 is the null-terminated host alias list.
+
+    No original operation accesses unk0 as an integer. lastError at guest +4
+    is a separate scalar and must not become the upper half of that pointer.
+    Both original declarations and the measured storage ABI use this view.
+    """
+    match = re.search(r'typedef struct Ov00SocketState \{.*?\} Ov00SocketState;', text, re.S)
+    if not match or 'ov00_0221B1AC.unk0' in text:
+        raise ValueError('Original socket-state view changed')
+    original = match[0]
+    if hashlib.sha256(original.encode()).hexdigest() != '237b7e4969e5759324418b002cfaa6ec782071ff861e60044f3b55bbaaf8f9fa':
+        raise ValueError('Original socket-state declaration changed')
+    return original, replace(original, '    int unk0;', '    char *aliases[1];')
+
+
 def adapt_original(relative, text, root):
+    if relative == 'src/system_card.c':
+        if hashlib.sha256(text.encode()).hexdigest() != 'cc107d94d9d33f6c55a92492ea971af13d8a0da2d4cef65deac7f2b7b2e4c3d7':
+            raise ValueError('Original system-card source changed')
+        # Recover the Scene 3 checkpoint's address lowering through the existing
+        # libntr RAM owners. No allocation, copied SDK state or guest imports.
+        text=replace(text,'#include <nitro/hw/ARM9/mmap.h>','#include <nitro/memorymap.h>')
+        text=replace(text,'((void *)0x027FF000)','((void *)(HW_MAIN_MEM + 0x007FF000))')
+        text=replace(text,'((void *)0x027FFA80)','((void *)(HW_MAIN_MEM + 0x007FFA80))')
+        text=replace(text,'((u32 *)0x027FF00C)','((u32 *)(HW_MAIN_MEM + 0x007FF00C))')
+        return replace(text,'*(u32 *)0x027FFC2C','*(u32 *)HW_ROM_BASE_OFFSET_BUF')
+    if relative == 'src/application/main_menu/main_menu_shared.c':
+        text=replace(text,'u32 gMainMenuUtilWork[13];','extern MainMenuUtilWork gMainMenuUtilWork;')
+        text=replace(text,'#define sMainMenuUtilWork ((MainMenuUtilWork *)gMainMenuUtilWork)',
+                     '#define sMainMenuUtilWork (&gMainMenuUtilWork)')
+        text=replace(text,'gMainMenuUtilVBlankWork[9] = (u32)MainMenuUtil_LoadCardSubScreenPalette;',
+                     'sMainMenuUtilWork->vblankCallback = MainMenuUtil_LoadCardSubScreenPalette;')
+        text=replace(text,'(MainMenuUtilWork *)(&gMainMenuUtilCryptoHeapId + 1)','&gMainMenuUtilWork',count=2)
+        return text+'''
+_Static_assert(sizeof(MainMenuUtilWork)==4040 && _Alignof(MainMenuUtilWork)==8,"OVY_74 native work storage");
+_Static_assert(__builtin_offsetof(MainMenuUtilWork,sprites)==64,"OVY_74 sprite alias");
+_Static_assert(__builtin_offsetof(MainMenuUtilWork,sprites.renderer)==72,"OVY_74 renderer alias");
+_Static_assert(__builtin_offsetof(MainMenuUtilWork,giftSprite)==800,"OVY_74 gift pointer");
+_Static_assert(__builtin_offsetof(MainMenuUtilWork,vblankCallback)==4032,"OVY_74 callback alias");
+'''
+    if relative == 'lib/src/nitrocrypto_rc4_fast.c':
+        return rc4_guest32(text, native=True)
+    if relative == 'src/vs_recorder_menu_app.c':
+        # The original interior-label expression addresses root[0].child.
+        # Express that same field through its native record, whose stride is 40.
+        return replace(text, '*(const VsRecorderMenuEntry **)(sVsRecorderMode6MenuTail + 0x64)',
+                       'sVsRecorderRootMenu[0].child')
     # BEGIN NATIVE MATCH KEY ABI
     if relative == 'lib/NitroDWC/src/match_browse.c':
         old_clear = 'MIi_CpuClear32(0, (u32 *)gDwcMatchKeys, 1848);'
@@ -2041,7 +2099,7 @@ def write_if_changed(path, data):
     path.write_text(data)
 
 
-def rc4_guest32(text):
+def rc4_guest32(text, native=False):
     """Finite instruction elaboration of the original unrolled RC4 routine.
 
     Registers, flags, shifted indexing and store/load order stay explicit. This
@@ -2051,8 +2109,10 @@ def rc4_guest32(text):
         raise ValueError('Original RC4 ARM source changed')
     match=re.search(r'asm void CRYPTO_RC4FastEncrypt\([^\n]*\) \{\n(.*?)\n\}',text,re.S)
     if not match:raise ValueError('Original RC4 function missing')
+    registers = ('u8 *r0=context,*r3=out; const u8 *r1=in; u32 r2=length,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,lr=0;'
+                 if native else 'u32 r0=(u32)context,r1=(u32)in,r2=length,r3=(u32)out,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,lr=0;')
     body=['void CRYPTO_RC4FastEncrypt(void *context,const void *in,u32 length,void *out) {',
-          'u32 r0=(u32)context,r1=(u32)in,r2=length,r3=(u32)out,r4=0,r5=0,r6=0,r7=0,r8=0,r9=0,lr=0;',
+          registers,
           'u32 x,y,z; int negative=0,zero=0,overflow=0;']
     def value(v):
         v=v.strip()
@@ -2081,8 +2141,16 @@ def rc4_guest32(text):
             m=re.fullmatch(r'(r\d+), \[(r\d+)(?:, (.*?))?\](?:, #(\d+))?',args)
             if not m:raise ValueError('RC4 memory instruction: '+line)
             reg,base,offset,post=m.groups();address=base+('+'+shifted(offset.split(', ')) if offset else '')
+            if native and offset and re.fullmatch(r'#-\d+',offset):
+                address=base+offset[1:]
             pointer='((u8 *)('+address+'))' if op.endswith('b') else '((u32 *)('+address+'))'
             statement=reg+'=*'+pointer+';' if op.startswith('ldr') else '*'+pointer+'='+reg+';'
+            if native and not op.endswith('b'):
+                # The native caller declares its stack context as u8[0x408].
+                # memcpy preserves word access without a stronger C alignment
+                # or effective-type requirement than the original byte storage.
+                statement=('memcpy(&'+reg+','+address+',4);' if op=='ldr'
+                           else 'memcpy('+address+',&'+reg+',4);')
             if post:statement+=base+'+='+post+'u;'
         else:
             parts=args.split(', ')
@@ -2096,7 +2164,7 @@ def rc4_guest32(text):
             else:raise ValueError('Unsupported original RC4 instruction: '+line)
         body.append(statement+' /* '+line+' */')
     body.append('}')
-    return text[:match.start()]+'\n'.join(body)+text[match.end():]
+    return ('#include <string.h>\n' if native else '')+text[:match.start()]+'\n'.join(body)+text[match.end():]
 
 def guest32_frontend(relative, text, root):
     """Source-validated frontend spelling/declaration corrections, still ARM32.

@@ -25,6 +25,8 @@ function(native_generate kind input output)
 endfunction()
 
 set(native_sources
+    src/system_card.c
+    src/vs_recorder_menu_app.c
     src/wireless_manager.c src/comm_wireless.c src/comm_state.c
     src/party_menu_list_items.c src/party_menu.c src/code_entry.c
     src/spin_trade_link.c src/save_fashion.c src/screen_fade_effects.c
@@ -162,15 +164,50 @@ add_custom_command(OUTPUT "${native_hash1}"
         "${game_source}/lib/NitroSDK/src/dgt_hash.c"
         "${game_source}/lib/asm/nitro_sdk_data.s"
     VERBATIM)
+native_generate(native "${game_source}/lib/src/nitrocrypto_rc4_fast.c"
+    "${native_root}/lib/src/nitrocrypto_rc4_fast.c")
 add_library(heartgold_runtime STATIC ${msl_runtime}
     "${native_hash1}"
     "${game_source}/lib/NitroWiFi/src/stubsmd5.c"
-    "${native_root}/lib/src/nitrocrypto_rc4.c"
+    "${native_root}/lib/src/nitrocrypto_rc4_fast.c"
     "${game_source}/lib/src/nitrocrypto_rc4_init.c"
     "${game_source}/lib/MSL_C/src/msl_string_extras.c")
 target_include_directories(heartgold_runtime PRIVATE "${game_source}/include/library")
+add_executable(test_rc4_native "${PROJECT_SOURCE_DIR}/tests/test_rc4_native.c"
+    "${native_root}/lib/src/nitrocrypto_rc4_fast.c"
+    "${game_source}/lib/src/nitrocrypto_rc4_init.c")
+target_include_directories(test_rc4_native PRIVATE "${game_source}/include/library")
+target_link_libraries(test_rc4_native PRIVATE nitro_config)
+target_compile_options(test_rc4_native PRIVATE -UNDEBUG -fsanitize=address,undefined -fno-sanitize-recover=all)
+target_link_options(test_rc4_native PRIVATE -fsanitize=address,undefined)
+add_test(NAME rc4_native COMMAND test_rc4_native)
+add_test(NAME vs_recorder_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_vs_recorder_data.py")
+set_tests_properties(vs_recorder_data PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME dwc_socket_storage COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_dwc_socket_storage.py")
+set_tests_properties(dwc_socket_storage PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME main_menu_storage COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_main_menu_storage.py")
+set_tests_properties(main_menu_storage PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME system_card_native COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_system_card_native.py")
+set_tests_properties(system_card_native PROPERTIES
+    ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
 target_compile_options(heartgold_runtime PRIVATE "-iquote${game_source}/include")
 target_link_libraries(heartgold_runtime PUBLIC nitro_config PRIVATE ntr_dgt)
+target_sources(heartgold_runtime PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers/os/svc_crc16.c")
+target_link_libraries(heartgold_runtime PRIVATE ntr_math)
+add_executable(test_svc_crc16 "${PROJECT_SOURCE_DIR}/tests/test_svc_crc16.c"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os/svc_crc16.c"
+    "${ntr_source}/libraries/math/src/crc.c")
+target_link_libraries(test_svc_crc16 PRIVATE nitro_config)
+target_compile_options(test_svc_crc16 PRIVATE -UNDEBUG -fsanitize=address,undefined -fno-sanitize-recover=all)
+target_link_options(test_svc_crc16 PRIVATE -fsanitize=address,undefined)
+add_test(NAME svc_crc16 COMMAND test_svc_crc16)
 # Original resident MSL assertion and middleware version providers.
 target_sources(heartgold_runtime PRIVATE
     "${game_source}/lib/MSL_C/src/msl_assert.c"
@@ -247,6 +284,10 @@ add_test(NAME coordinated_sources COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_coordinated_sources.py")
 
 add_library(heartgold_main STATIC ${game_sources})
+# Resident Wi-Fi storage; original cartridge state is owned by OVY_74.
+target_sources(heartgold_main PRIVATE
+    "${PROJECT_SOURCE_DIR}/cmake/native_gba_wifi_typed_state.s")
+
 include("${CMAKE_CURRENT_LIST_DIR}/wifi_constants.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/wifi_bss_safe.cmake")
 # Native implementation of the original main-owned VCT packet allocator.
@@ -380,6 +421,7 @@ target_compile_definitions(heartgold_main PRIVATE HEARTGOLD ENGLISH
     HG_GAME_REVISION="${HEARTGOLD_COMMIT}" HG_USE_ORIGINAL_WM
     OS_IE_VBLANK=OS_IE_V_BLANK OS_IE_HBLANK=OS_IE_H_BLANK)
 target_include_directories(heartgold_main PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers"
     "${PROJECT_SOURCE_DIR}/hardware_drivers/os"
     "${native_root}/include" "${native_root}/lib/include" "${native_root}/src"
     "${game_source}/src" "${game_source}/include" "${game_source}/include/library"

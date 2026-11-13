@@ -20,5 +20,7 @@
   "lib/libCPS/src/cps_tcp.c": "173fb300940e2fa14edad921fb942421c4507ab11913fcc55b7c996166a30f10",
   "lib/include/cps/cps_sock_internal.h": "1a30f483cfb356a1554798730eef5a1162b465b90fdeccf8a9e196367f1e8d78",
   "lib/include/dwc/dwc_main_internal.h": "62d56d3284117d67371300ae4d1b6ec57d72e2dcabf6a6a586cf73ed329bf58e",
-  "lib/include/dwc/auth_internal.h": "0d632f161059b2558b9902a59e60b06daf0bc8164d9acdde94fe3be88f09e1f1"
+  "lib/include/dwc/auth_internal.h": "0d632f161059b2558b9902a59e60b06daf0bc8164d9acdde94fe3be88f09e1f1",
+  "lib/NitroDWC/src/gs_platform.c": "380ce8098851c077edb9f0d16b802f24b3a62188eb138d953bb89d86574fc124",
+  "lib/NitroDWC/src/gp_api.c": "84c5e0aeeef2a8da102108515b3d356f8383ee49feb9cf5165a3c92072e0ca69"
 }

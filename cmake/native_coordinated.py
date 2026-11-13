@@ -1881,7 +1881,7 @@ def runtime_source(relative, original):
     else:
         raise ValueError("Unknown MSL input: " + relative)
     for old, new in (("__strtoul", "NTR_ParseCore"), ("__StringRead", "NTR_StringRead"),
-                     ("__msl_digit", "NTR_Digit"), ("__upper_mapC", "NTR_Upper")):
+                     ("__msl_digit", "NTR_Digit")):
         code = code.replace(old, new)
     if relative.endswith("MSL_Common_ctype.s"):
         # One source-derived table, two ABI names at the same address.
@@ -10511,3 +10511,10 @@ SOURCES['lib/NitroDWC/src/auth_http.c'] = {'sha256': '3538ce8a29467af7c13ddea654
 # The marker is exactly one original u32. Keep the genuine allocator and free;
 # only its guest address identity follows the existing native allocation.
 SOURCES['src/system.c'] = {'sha256': '55dda8ee474dc20d89cc92335915d0619f0cca0d94d0c2d8ac2c25a941a988b4', 'prefix': '#include "guest32.h"\n', 'edits': [('    *gSystem.asyncSaveMarker = 0x2F93A1BC;', '    g32_bind_async_save_marker(gSystem.asyncSaveMarker);\n    *gSystem.asyncSaveMarker = 0x2F93A1BC;'), ('    Heap_Free(gSystem.asyncSaveMarker);', '    g32_unbind_async_save_marker(gSystem.asyncSaveMarker);\n    Heap_Free(gSystem.asyncSaveMarker);')]}
+
+# Raw ARM32 field views of the coalesced OVY_74 work allocation.
+SOURCES['src/application/main_menu/main_menu_util.c']['edits'].extend([('gMainMenuUtilGiftSpriteWork[4]', 'gMainMenuUtilWork.subScreenY'), ('gMainMenuUtilGiftSpriteWork[2]', 'gMainMenuUtilWork.giftSprite'), ('gMainMenuUtilVBlankWork[9]', 'gMainMenuUtilWork.vblankCallback')])
+SOURCES['src/application/main_menu/agb_cartridge.c']['edits'].append(('(u32 *)(&gMigrateFromAgbIcons + 1)', '&gPmAgbSave.slot'))
+SOURCES['src/application/main_menu/main_menu_util.c']['edits'].extend([('extern MainMenuUtilSprites gMainMenuUtilSprites;', '#define gMainMenuUtilSprites (gMainMenuUtilWork.sprites)'), ('extern G2dRenderer gMainMenuUtilRenderer;', '#define gMainMenuUtilRenderer (gMainMenuUtilWork.sprites.renderer)'), ('memset(&gMainMenuUtilCryptoHeapId + 1, 0, sizeof(MainMenuUtilWork));', 'memset(&gMainMenuUtilWork, 0, sizeof(MainMenuUtilWork));'), ('(MainMenuUtilWork *)(&gMainMenuUtilCryptoHeapId + 1)', '&gMainMenuUtilWork')])
+SOURCES['src/application/main_menu/agb_cartridge.c']['edits'].extend([('extern u32 gPmAgbSaveCounter;', '#define gPmAgbSaveCounter (gPmAgbSave.counter)'), ('extern PmAgbRomHeader gPmAgbRomHeader;', '#define gPmAgbRomHeader (gPmAgbSave.header)')])
+SOURCES['src/application/main_menu/agb_cartridge.c']['edits'].append(('extern PmAgbSave gPmAgbSave;', 'extern PmAgbSave gPmAgbSave;\n_Static_assert(sizeof(PmAgbSave)==280 && __builtin_offsetof(PmAgbSave,counter)==20 && __builtin_offsetof(PmAgbSave,header)==28, "native save storage and aliases");'))

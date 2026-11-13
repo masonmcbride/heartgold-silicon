@@ -20,6 +20,7 @@ add_custom_command(OUTPUT "${hg_dwc_data_dir}/abi.c"
     COMMAND "${Python3_EXECUTABLE}" -B "${hg_dwc_data_driver}"
         --game "${game_source}" --out "${hg_dwc_data_dir}"
     DEPENDS "${hg_dwc_data_driver}" "${hg_dwc_data_contract}" ${hg_dwc_data_inputs}
+        "${CMAKE_CURRENT_LIST_DIR}/native_sources.py"
     VERBATIM)
 add_library(heartgold_dwc_data_abi OBJECT "${hg_dwc_data_dir}/abi.c")
 target_compile_definitions(heartgold_dwc_data_abi PRIVATE "$<TARGET_PROPERTY:heartgold_main,COMPILE_DEFINITIONS>")

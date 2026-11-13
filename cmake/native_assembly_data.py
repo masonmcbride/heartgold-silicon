@@ -67,6 +67,10 @@ REVIEWED_INPUTS = {obj:c['inputs'] for obj,c in contracts().items() if c.get('re
 
 def recipe_script_dependencies(original):
     shared = [str(Path(__file__).with_name(p)) for p in ('native_data_ir.py','native_data_layouts.py','native_data_layouts.json','native_abi.py')]
+    from native_data_layouts import contracts
+    contract=contracts().get(original,{})
+    if contract.get('coalesced_aliases') or contract.get('coalesced_elsewhere'):
+        shared.append(str(Path(__file__).with_name('native_image_graph.py')))
     return shared
 
 

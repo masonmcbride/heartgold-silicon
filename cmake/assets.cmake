@@ -128,6 +128,37 @@ set(heartgold_asset_targets
 add_custom_target(heartgold_overlay_index_assets
     DEPENDS heartgold_zukan_enc_assets ${heartgold_overlay_index_targets})
 add_custom_target(assets DEPENDS ${heartgold_asset_targets})
+
+# Recover the proven native CARD image from original resource names and the
+# declared asset outputs. No checkpoint manifest or compiled input participates.
+set(hg_cartridge_script "${PROJECT_SOURCE_DIR}/cmake/source_cartridge.py")
+set(hg_cartridge "${PROJECT_BINARY_DIR}/cartridge/heartgold-source-cartridge.nds")
+set(hg_cartridge_manifest "${PROJECT_BINARY_DIR}/cartridge/cartridge-manifest.json")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${hg_cartridge_script}" "${game_source}/filesystem.mk")
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_cartridge_script}"
+    --game "${game_source}" --generated "${PROJECT_BINARY_DIR}/generated/files"
+    --output "${hg_cartridge}" --manifest "${hg_cartridge_manifest}" --plan
+    OUTPUT_VARIABLE hg_cartridge_plan COMMAND_ERROR_IS_FATAL ANY)
+string(JSON hg_cartridge_count LENGTH "${hg_cartridge_plan}")
+math(EXPR hg_cartridge_last "${hg_cartridge_count} - 1")
+set(hg_cartridge_inputs)
+foreach(i RANGE ${hg_cartridge_last})
+    string(JSON input GET "${hg_cartridge_plan}" ${i} source)
+    list(APPEND hg_cartridge_inputs "${input}")
+endforeach()
+add_custom_command(OUTPUT "${hg_cartridge}" "${hg_cartridge_manifest}"
+    COMMAND "${Python3_EXECUTABLE}" -B "${hg_cartridge_script}"
+        --game "${game_source}" --generated "${PROJECT_BINARY_DIR}/generated/files"
+        --output "${hg_cartridge}" --manifest "${hg_cartridge_manifest}"
+    DEPENDS "${hg_cartridge_script}" "${game_source}/filesystem.mk" ${hg_cartridge_inputs}
+    VERBATIM)
+add_custom_target(heartgold_cartridge DEPENDS "${hg_cartridge}" "${hg_cartridge_manifest}")
+foreach(name source_cartridge recover_scene3)
+    add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" -B
+        "${PROJECT_SOURCE_DIR}/tests/test_${name}.py")
+    set_tests_properties(${name} PROPERTIES ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+endforeach()
 add_test(NAME elf_reader COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_elf_reader.py"
     --tool $<TARGET_FILE:hg_o2narc> --work "${PROJECT_BINARY_DIR}")

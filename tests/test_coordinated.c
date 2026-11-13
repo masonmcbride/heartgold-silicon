@@ -32,6 +32,9 @@ _Static_assert(offsetof(CTRDGTaskInfo, result) == 2*sizeof(CTRDG_TASK_FUNC), "ta
 _Static_assert(sizeof(OSThreadQueue) == 2*sizeof(OSThread *), "selected infinity queue ABI");
 static u32 task_callback(CTRDGTaskInfo *info) { return info->result + info->data[0]; }
 int main(void) {
+    extern const u8 __upper_mapC[128];
+    for (unsigned c=0;c<128;c++)
+        assert(__upper_mapC[c] == (c>='a' && c<='z' ? c-'a'+'A' : c));
     TestNativeCursor();
     struct Parse {const char *s;int base;u32 value;int end;int error;} cases[] = {
         {"42",10,42,2,0},{"  -1!",0,UINT32_MAX,4,0},{"077x",0,63,3,0},

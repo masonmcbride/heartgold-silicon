@@ -380,14 +380,34 @@ endif()
 if(EXISTS "${guest32_recovery_floor}")
     list(APPEND guest32_recovery_arguments --selection-floor "${guest32_recovery_floor}")
 endif()
-add_custom_target(heartgold_guest32_provider_closure
+# Track the source inputs that can affect original game provider closure.
+# CONFIGURE_DEPENDS discovers added and removed source files too.
+file(GLOB_RECURSE guest32_closure_source_inputs
+    CONFIGURE_DEPENDS
+    "${game_source}/*.c"
+    "${game_source}/*.h"
+    "${game_source}/*.s"
+    "${game_source}/*.S"
+    "${game_source}/*.cpp")
+
+file(GLOB_RECURSE guest32_closure_tool_inputs
+    CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/compiler/guest32/*.py")
+
+set(guest32_closure_floor_inputs)
+if(EXISTS "${guest32_recovery_floor}")
+    list(APPEND guest32_closure_floor_inputs
+        "${guest32_recovery_floor}")
+endif()
+
+add_custom_command(OUTPUT "${guest32_provider_dir}/complete.stamp"
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/finish.py"
         --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_provider_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
         --image-root "${guest32_shared_dir}" --compiler "${CMAKE_C_COMPILER}"
         --root-symbol NitroMain --root-symbol CodeEntryArgs_New --root-symbol ListMenuInit
         ${guest32_recovery_arguments}
-    BYPRODUCTS ${guest32_provider_outputs} "${guest32_provider_dir}/complete.stamp"
+    BYPRODUCTS ${guest32_provider_outputs}
         "${guest32_provider_dir}/discovery.json" "${guest32_provider_dir}/closure.json"
         "${guest32_provider_dir}/thread-entry.json" "${guest32_provider_dir}/bindings.json"
         "${guest32_provider_dir}/providers.json" "${guest32_provider_dir}/runtime-providers.json"
@@ -397,13 +417,19 @@ add_custom_target(heartgold_guest32_provider_closure
         "${guest32_provider_dir}/frontend/lib/NitroSDK/src/os/os_alarm_after_handler.c"
         "${guest32_provider_dir}/links/OVY_0-global.dylib"
         "${guest32_provider_dir}/links/OVY_38-global.dylib"
-    DEPENDS guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
+    DEPENDS ${guest32_closure_source_inputs}
+        ${guest32_closure_tool_inputs}
+        ${guest32_closure_floor_inputs}
+        guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
         heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_std_build
         heartgold_guest32_runtime heartgold_guest32_mi_manifest heartgold_guest32_scalar_bridges
         heartgold_guest32_libc_memory heartgold_overlay_link_contract
         "${game_source}/tools/alarm-partition/profile.json"
         "${game_source}/tools/alarm-partition/partition.py"
     VERBATIM)
+
+add_custom_target(heartgold_guest32_provider_closure
+    DEPENDS "${guest32_provider_dir}/complete.stamp")
 add_test(NAME guest32_recovery_publication COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_recovery.py" --build "${PROJECT_BINARY_DIR}")
 add_test(NAME guest32_absolute_overlay_ids COMMAND "${Python3_EXECUTABLE}" -B

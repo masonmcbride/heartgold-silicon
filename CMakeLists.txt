@@ -78,6 +78,12 @@ function(dependency name url revision)
     # The libntr development fork may contain authorized local changes.
     # Its HEAD must still match the pin; never discard or publish those edits.
     if(name STREQUAL "pokeheartgold")
+        # Reviewed native-source adaptations at the pinned upstream revision.
+        # Unexpected changes must still fail fingerprint verification.
+        if(NOT DEFINED HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256)
+            set(HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256
+                "b0b4f39f4bfa39b241211d559efdf600430ad50fd3a0bcebd0e4776688ea1a29")
+        endif()
         execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${source}" status --porcelain --untracked-files=all
             OUTPUT_VARIABLE dirty COMMAND_ERROR_IS_FATAL ANY)
         if(dirty)
@@ -239,6 +245,15 @@ ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/sim_g3_CommandProcessor.cpp"
     "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware/pxi.c"
     hardware_drivers/firmware/nvram.c)
+# Original ARM7 sound sequencer, reused by the native PXI service.
+# Preserve SSEQ execution rather than substituting sound-command stubs.
+target_sources(ntr_sim_state PRIVATE
+    "${ntr_source}/libraries/sim7/src/snd/snd_seq.c")
+
+target_sources(ntr_sim_state PRIVATE
+    "${ntr_source}/libraries/sim7/src/snd/snd_exchannel.c")
+target_sources(ntr_sim_state PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/audio/sim_sound_state.cpp")
 target_compile_features(ntr_sim_state PRIVATE cxx_std_17)
 target_include_directories(ntr_sim_state PRIVATE "${ntr_source}/libraries/sim7/include")
 target_link_libraries(ntr_sim_state PUBLIC hg_g3_metal)
@@ -306,7 +321,7 @@ set_tests_properties(backward_decompression PROPERTIES TIMEOUT 20 ENVIRONMENT "A
 
 # The overlay graph is opt-in until all legacy archives are source-owned.
 # A pinned libntr checkout and an overlay-enabled build are separate concepts.
-option(HEARTGOLD_NATIVE_OVERLAYS "Build the original native overlay integration" OFF)
+option(HEARTGOLD_NATIVE_OVERLAYS "Build the original native overlay integration" ON)
 
 # --- 9. Original HeartGold (default), with its native build adaptations --------
 option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
@@ -319,8 +334,9 @@ if(HEARTGOLD_BUILD_GAME)
     endif()
     # Original-image integration is now an explicit build feature rather than
     # an accidental side effect of selecting a local libntr review checkout.
-    if(HEARTGOLD_NATIVE_OVERLAYS OR HEARTGOLD_LIBNTR_REVIEW_SOURCE)
+    if(HEARTGOLD_NATIVE_OVERLAYS)
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
+        include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_nnsys_tables.cmake")
         if(TARGET guest32-lower)
             include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
         endif()

@@ -48,6 +48,51 @@ def integer(value, names=None):
         raise ValueError('invalid expression: '+value) from error
 
 
+def expand_local_data_macros(text):
+    """Expand only source-local, positional, data-directive macros.
+
+    No includes, conditionals, recursion, token concatenation or instructions
+    are interpreted here. Unsupported assembler languages remain blockers.
+    """
+    macros, output, current = {}, [], None
+    for raw in text.splitlines():
+        line=raw.split('//',1)[0].strip()
+        match=re.fullmatch(r'\.macro\s+(\w+)(?:\s+(.+))?',line)
+        if match:
+            if current: raise ValueError('nested local macro definition')
+            name,args=match.groups()
+            params=[p.strip() for p in args.split(',')] if args else []
+            if name in macros or len(params)!=len(set(params)) or any(not re.fullmatch(r'\w+',p) for p in params):
+                raise ValueError('unsupported local macro declaration')
+            current=(name,params,[])
+            output.append('');continue
+        if line=='.endm':
+            if not current: raise ValueError('unmatched .endm')
+            macros[current[0]]=current[1:];current=None
+            output.append('');continue
+        if current:
+            if line and not re.match(r'^\.(?:word|long|byte|short|hword|space|zero|skip|balign|p2align)\b',line):
+                raise ValueError('unsupported local macro body: '+line)
+            current[2].append(line);output.append('');continue
+        # Assembler sources can use tabs between opcode and operands.
+        parts=line.split(None,1)
+        name=parts[0] if parts else '';args=parts[1] if len(parts)>1 else ''
+        if name not in macros:
+            output.append(raw);continue
+        params,body=macros[name]
+        values=[v.strip() for v in args.split(',')] if args else []
+        if len(values)!=len(params):raise ValueError('local macro argument count: '+name)
+        mapping=dict(zip(params,values))
+        def substitute(match):
+            if match[1] not in mapping:raise ValueError('unknown local macro parameter')
+            return mapping[match[1]]
+        expanded=[re.sub(r'\\(\w+)',substitute,entry) for entry in body]
+        if any('\\' in entry for entry in expanded):raise ValueError('unsupported local macro substitution')
+        output.append('\n'.join(expanded))
+    if current:raise ValueError('unterminated local macro')
+    return '\n'.join(output)
+
+
 def parse(source, text=None, constants=None):
     """Includes are declaration-only; reject macros, instructions and unknown ops."""
     source = Path(source)
@@ -55,7 +100,9 @@ def parse(source, text=None, constants=None):
     pending_alignment = {}
     widths = {'byte':1, 'short':2, 'hword':2, '2byte':2, 'word':4,
               'long':4, '4byte':4, 'quad':8, '8byte':8}
-    for number, raw in enumerate((source.read_text() if text is None else text).splitlines(), 1):
+    text=source.read_text() if text is None else text
+    if re.search(r'^\s*\.macro\b',text,re.M):text=expand_local_data_macros(text)
+    for number, raw in enumerate(text.splitlines(), 1):
         quoted, escaped, stop = False, False, len(raw)
         for i,char in enumerate(raw):
             if escaped: escaped=False; continue
@@ -68,6 +115,20 @@ def parse(source, text=None, constants=None):
             continue
         context = f'{source}:{number}: {blocks[-1].symbol if blocks else "<no label>"}: {line}'
         try:
+            # ELF symbol classification is metadata, not a data record.
+            # Preserve it as a recognized declaration; the Mach-O data
+            # backend determines symbol export and section ownership.
+            if line.startswith(".type "):
+                match = re.fullmatch(
+                    r"\.type\s+([A-Za-z_.$][\w.$]*),\s*"
+                    r"[@%](function|object|notype|tls_object)",
+                    line
+                )
+                if not match:
+                    raise ValueError(
+                        "Unsupported ELF symbol-type declaration: " + line
+                    )
+                continue
             if line.startswith(('.include ', '#include ')):
                 continue
             if line == '.text':

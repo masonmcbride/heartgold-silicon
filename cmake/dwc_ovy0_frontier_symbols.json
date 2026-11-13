@@ -1,6 +1,6 @@
 {
   "owner": "OVY_0",
-  "expected_count": 628,
+  "expected_count": 632,
   "symbols": [
     "DWCi_AC_ChannelOptionTable",
     "DWCi_AC_FreeSpotSsid",
@@ -73,8 +73,12 @@
     "local_ip_list",
     "nnRecvBuffer",
     "num_local_ips",
+    "ov00_0221B1AC",
+    "ov00_0221B1B4",
+    "ov00_0221B1C4",
     "ov00_0221B1D8",
     "ov00_0221B1F0",
+    "ov00_0221B1F8",
     "qr2_hostname",
     "qr2_query_buffer",
     "qrNatNegMagic",
