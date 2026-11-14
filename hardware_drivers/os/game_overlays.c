@@ -59,12 +59,21 @@ static int check_binding(int importer, uintptr_t offset, const char *name, int p
                 bound_info.dli_fname ? bound_info.dli_fname : "?");
         }
     }
-    if (provider == -3 || provider == -4 || provider == -5 || provider == -6) {
+    if (provider == -6) {
+        /* libc++ reexports exception/typeinfo symbols from libc++abi. Verify
+         * the exact export through its declared two-level library handle;
+         * dladdr names the implementing image, not the reexporting library.
+         * The actual dyld slot still must equal resolved + addend above. */
+        void *library = dlopen("/usr/lib/libc++.1.dylib", RTLD_LAZY | RTLD_LOCAL);
+        if (!library) goto fail;
+        void *exported = dlsym(library, name);
+        dlclose(library);
+        if (exported != resolved) goto fail;
+    } else if (provider == -3 || provider == -4 || provider == -5) {
         const char *expected_name =
             provider == -3 ? "libheartgold_dwc_status.dylib" :
             provider == -4 ? "libheartgold_wm_arm9.dylib" :
-            provider == -5 ? "libheartgold_ovy0_wifi_subset.dylib" :
-                             "libc++.1.dylib";
+                             "libheartgold_ovy0_wifi_subset.dylib";
 
         if (!dladdr(resolved, &actual) || !actual.dli_fname)
             goto fail;

@@ -232,7 +232,7 @@ foreach(a RANGE ${hg_archive_last})
                 COMMAND $<TARGET_FILE:hg_jsonproc> "${input}" "${template}" "${asm}"
                 COMMAND "${CMAKE_C_COMPILER}" --target=armv5te-none-eabi -x assembler-with-cpp
                     -c "${asm}" -o "${obj}"
-                COMMAND "${HG_ASSET_OBJCOPY}" "--dump-section=.rodata=${output}" "${obj}"
+                COMMAND "${HG_ASSET_OBJCOPY}" -O binary --only-section=.rodata "${obj}" "${output}"
                 DEPENDS hg_jsonproc "${input}" "${template}" ${recipe_deps} VERBATIM)
         else()
             message(FATAL_ERROR "Unsupported original resource kind: ${kind}")

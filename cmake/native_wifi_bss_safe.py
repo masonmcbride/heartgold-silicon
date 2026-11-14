@@ -26,7 +26,7 @@ GROUPS = {
     "gCpsMacAddress": (42, {}),
 }
 
-def generate(game, output, report):
+def generate(game, output, report, validate_source=False):
     path = game / SOURCE
     if hashlib.sha256(path.read_bytes()).hexdigest() != PIN:
         raise ValueError("Original Wi-Fi BSS source drift")
@@ -206,7 +206,12 @@ def generate(game, output, report):
     ])
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text("\n".join(asm)+"\n")
+    content = "\n".join(asm)+"\n"
+    if validate_source:
+        if output.read_text() != content:
+            raise ValueError("Generated Wi-Fi BSS source differs from pinned recipe")
+    else:
+        output.write_text(content)
     report.write_text(json.dumps({
         "source": SOURCE,
         "source_sha256": PIN,
@@ -285,7 +290,7 @@ def main():
     ap.add_argument("--report", type=Path, required=True)
     ap.add_argument("--validate", type=Path)
     a = ap.parse_args()
-    generate(a.game, a.output, a.report)
+    generate(a.game, a.output, a.report, validate_source=bool(a.validate))
     if a.validate:
         exports = validate(a.validate)
         print("VERIFIED:",len(exports),"strong BSS definitions")

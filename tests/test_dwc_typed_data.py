@@ -44,7 +44,9 @@ def main():
         names={b['symbol'] for b in blocks[owner] if b['public']}
         assert not exports & names,'Duplicate strong storage definitions'
         exports |= names
-    assert validations['OVY_0']['pointer_count']==85
+    # The source-owned region includes the 31 relocations added to the old 85-entry inventory.
+    # Both historical linked builds' OVY_0 providers also emit these 116 pointers.
+    assert validations['OVY_0']['pointer_count']==116
     assert validations['main']['pointer_count']==6
     # Optional comparison with the supplied prior proof inventory. It is test
     # evidence only; production generation never reads build artifacts.
@@ -139,13 +141,23 @@ def main():
             c+='{const unsigned char expected[]={'+','.join(map(str,text))+f'}}; assert(strcmp((const char*){access},(const char*)expected)==0); assert((uintptr_t){access}>UINT32_MAX);}}\n'
     c+='OS_Init(); CpsSocket socket={0}; CpsSsl ssl={0}; socket.ssl=&ssl; OS_GetCurrentThread()->specific[0]=&socket; CPS_SetRootCa(gDwcRootCaList,12); assert(ssl.rootCas==gDwcRootCaList && ssl.rootCaCount==12); return 0;}\n'
     (out/'certificates.c').write_text(c)
-    flags=(a.build/'CMakeFiles/heartgold_dwc_data_abi.dir/flags.make').read_text()
-    args=[]
-    for name in ('C_DEFINES','C_INCLUDES','C_FLAGS'):
-        args+=shlex.split(re.search('^'+name+r' = (.*)$',flags,re.M)[1])
+    entries=json.loads((a.build/'compile_commands.json').read_text())
+    entry=next(e for e in entries if e['file'].endswith('/dwc-native/abi.c'))
+    command=entry.get('arguments') or shlex.split(entry['command'])
+    args=[];skip=False
+    for value in command[1:]:
+        if skip:skip=False;continue
+        if value in ('-o','-MF','-MT','-MQ'):skip=True;continue
+        if value not in ('-c','-MD','-MMD',entry['file']):args.append(value)
     run([a.compiler,*args,'-c',out/'certificates.c','-o',out/'certificates-c.o'])
-    sdk=shlex.split((a.build/'CMakeFiles/test_wm_guest32_services.dir/link.txt').read_text())
-    sdk=[x for x in sdk if not x.endswith('.c.o') and x!='libheartgold_wm_guest32_services.a']
+    link=a.build/'CMakeFiles/test_coordinated.dir/link.txt'
+    if link.is_file():sdk=shlex.split(link.read_text())
+    else:
+        link_commands=run(['ninja','-C',a.build,'-t','commands','test_coordinated'])
+        sdk=next(shlex.split(line) for line in link_commands.splitlines() if ' -o test_coordinated ' in line)
+        if sdk[:2]==[':', '&&']:sdk=sdk[2:]
+        if '&&' in sdk:sdk=sdk[:sdk.index('&&')]
+    sdk=[x for x in sdk if not x.endswith(('.c.o','.cpp.o')) and x!='libheartgold_wm_guest32_services.a']
     ix=sdk.index('-o');sdk[ix+1]=str(out/'certificates')
     sdk += [str(out/'certificates-c.o'),str(out/'certificates.o'),'libheartgold_main.a']
     run(sdk,a.build);run([out/'certificates'])

@@ -51,7 +51,7 @@ foreach(json IN LISTS hg_resdat_jsons)
 
     add_custom_command(OUTPUT "${bin}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_resdat_members}"
-        COMMAND "${HG_ASSET_OBJCOPY}" "--dump-section=.rodata.data=${bin}" "${obj}"
+        COMMAND "${HG_ASSET_OBJCOPY}" -O binary --only-section=.rodata.data "${obj}" "${bin}"
         DEPENDS "${obj}"
         VERBATIM)
     list(APPEND hg_resdat_bins "${bin}")

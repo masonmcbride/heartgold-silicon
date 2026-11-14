@@ -115,7 +115,7 @@ add_custom_command(OUTPUT "${sound_output}"
     DEPENDS "${game_source}/files/${sound_relative}" "${sound_manifest}"
     VERBATIM)
 add_custom_target(heartgold_sound_archive_assets DEPENDS "${sound_output}")
-set(heartgold_asset_targets
+list(APPEND heartgold_asset_targets
     heartgold_sound_archive_assets
     heartgold_mapmatrix_assets heartgold_msg_assets heartgold_otherpoke_assets
     heartgold_sbox_assets heartgold_camera_assets heartgold_preview_assets

@@ -1,0 +1,238 @@
+{
+  "include/field_very_tall_grass.h": {
+    "pristine_sha256": "3ab195a2071e7fcdf0a1f947ba41395eafb6498b4f704fe65b4a566350ef90dd",
+    "adapted_sha256": "c3eeca5a37f4d680af6bed5602af5bab5ed8d04548f4411597bbfcb91c935f57",
+    "edits": [
+      {
+        "old": "#ifndef POKEHEARTGOLD_FIELD_VERY_TALL_GRASS_H\n#define POKEHEARTGOLD_FIELD_VERY_TALL_GRASS_H\n\n#include \"field/field_effect_manager.h\"\n\n// Very tall grass around map objects.\n",
+        "new": "#ifndef POKEHEARTGOLD_FIELD_VERY_TALL_GRASS_H\n#define POKEHEARTGOLD_FIELD_VERY_TALL_GRASS_H\n\n#include \"billboard_internal.h\"\n#include \"field/field_effect_manager.h\"\n\n// Very tall grass around map objects.\n"
+      }
+    ]
+  },
+  "lib/libVCT/src/vct_audio_send.c": {
+    "pristine_sha256": "925b1058ca37e30a683064296d33b7b6c8e78c565e3bd6e163a39c0631806122",
+    "adapted_sha256": "a4cfa3c93dd3189ccbc75dc9c8fa14ec28849139f999ee7900ab16c91e09ad9d",
+    "edits": [
+      {
+        "old": "// only as many sends per frame as sTransceiverBalance allows.\n\n// View of the audio TU's pooled .bss (vct_audio.c) from 0x021D6040: its statics are not visible here.\ntypedef struct AudioPool {\n    u16 sequence;\n    u16 unk_02;\n    u32 unk_04;\n    u32 unk_08;\n    u32 packetSize; // 0x0C\n    AdpcmState adpcmState;\n    u32 unk_14;\n    u32 unk_18; // 0x18: set: send the new packet from the next frame on\n    u32 unk_1C;\n    u32 unk_20; // 0x20: zero: not streaming\n    u8 unk_24[0xF00 - 0x24];\n    // sSendInfo (0x640) after its buffer; non-volatile view (needed for the match)\n    u32 sendRead;     // 0xF00\n    u32 sendWrite;    // 0xF04\n    void *sendPacket; // 0xF08\n    u32 sendMask;     // 0xF0C\n    u32 sendSlot;     // 0xF10\n    u32 sendBalance;  // 0xF14\n} AudioPool;\n\n// vct_audio.c defines _021D6040 as the first variable of the pool (u16 sequence)\nextern AudioPool _021D6040;\n\n#pragma force_active on\n\n",
+        "new": "// only as many sends per frame as sTransceiverBalance allows.\n\n// View of the audio TU's pooled .bss (vct_audio.c) from 0x021D6040: its statics are not visible here.\n/* Audio state is owned by vct_audio.c; use its original globals. */\n\n// vct_audio.c defines _021D6040 as the first variable of the pool (u16 sequence)\nextern u32 vct_guest32_packet_size(void);\n\n#pragma force_active on\n\n"
+      },
+      {
+        "old": "int vct_flush_send_buffer(void) {\n    int i, limit;\n\n    if (!_021D6040.unk_20) {\n        return 1;\n    }\n    if (!_021D6040.sendPacket) {\n        void *packet = vct_prepare_send_buffer();\n\n        _021D6040.sendPacket = packet;\n        if (packet && _021D6040.unk_18) {\n            return 0;\n        }\n        return 1;\n    }\n    limit = 1;\n    if (__vct.mode == 2) {\n        u32 slot = _021D6040.sendSlot;\n\n        _021D6040.sendSlot = slot + 1;\n        limit = sTransceiverBalance[_021D6040.sendBalance][slot];\n    }\n    for (i = 0; i < limit; i++) {\n        u32 mask = _021D6040.sendMask;\n        u32 leading = Clz(mask);\n\n        if (leading == 32) {\n            break;\n        }\n        _021D6040.sendMask = mask & ~(0x80000000u >> leading);\n        DWC_SendUnreliable((u8)(31 - leading), _021D6040.sendPacket, _021D6040.packetSize);\n        if (!_021D6040.sendMask) {\n            _021D6040.sendRead++;\n            _021D6040.sendPacket = NULL;\n            _021D6040.sendMask = 0;\n            break;\n        }\n    }\n",
+        "new": "int vct_flush_send_buffer(void) {\n    int i, limit;\n\n    if (!(*(const u32 *)(const void *)(sSendInfo.buffer + 8))) {\n        return 1;\n    }\n    if (!sSendInfo.packet) {\n        void *packet = vct_prepare_send_buffer();\n\n        sSendInfo.packet = packet;\n        if (packet && (*(const u32 *)(const void *)(sSendInfo.buffer + 0))) {\n            return 0;\n        }\n        return 1;\n    }\n    limit = 1;\n    if (__vct.mode == 2) {\n        u32 slot = sSendInfo.balanceIndex;\n\n        sSendInfo.balanceIndex = slot + 1;\n        limit = sTransceiverBalance[sSendInfo.balance][slot];\n    }\n    for (i = 0; i < limit; i++) {\n        u32 mask = sSendInfo.mask;\n        u32 leading = Clz(mask);\n\n        if (leading == 32) {\n            break;\n        }\n        sSendInfo.mask = mask & ~(0x80000000u >> leading);\n        DWC_SendUnreliable((u8)(31 - leading), sSendInfo.packet, vct_guest32_packet_size());\n        if (!sSendInfo.mask) {\n            sSendInfo.read++;\n            sSendInfo.packet = NULL;\n            sSendInfo.mask = 0;\n            break;\n        }\n    }\n"
+      }
+    ]
+  },
+  "src/colosseum.c": {
+    "pristine_sha256": "e460d48c7fbce73e41ff9f5f30eea79183a31b5da145f7e0f39326a3945965b4",
+    "adapted_sha256": "96fd4ae6aa22dd2c4d77616f6e079d973fdd2363854d54d5af1da96e65b8502c",
+    "edits": [
+      {
+        "old": "void CommPlayerManager_ResumeField(void);\nint CommPlayerManager_GetPlayerX(int netId);\nint CommPlayerManager_GetPlayerZ(int netId);\nint CommPlayerManager_GetPlayerFrontX(void);\nint CommPlayerManager_GetPlayerFrontZ(int netId);\nu8 *CommClubLink_GetCard(int netId, int a1, int a2);\n\n",
+        "new": "void CommPlayerManager_ResumeField(void);\nint CommPlayerManager_GetPlayerX(int netId);\nint CommPlayerManager_GetPlayerZ(int netId);\nint CommPlayerManager_GetPlayerFrontX(int netId);\nint CommPlayerManager_GetPlayerFrontZ(int netId);\nu8 *CommClubLink_GetCard(int netId, int a1, int a2);\n\n"
+      },
+      {
+        "old": "void Colosseum_ShowOpponentTrainerCard(FieldSystem *fieldSystem) {\n    int i;\n    u32 localNetId = Comm_GetLocalNetId();\n    int frontX = CommPlayerManager_GetPlayerFrontX();\n    int frontZ = CommPlayerManager_GetPlayerFrontZ(localNetId);\n\n    for (i = 0; i < Comm_CountConnected(); i++) {\n",
+        "new": "void Colosseum_ShowOpponentTrainerCard(FieldSystem *fieldSystem) {\n    int i;\n    u32 localNetId = Comm_GetLocalNetId();\n    int frontX = CommPlayerManager_GetPlayerFrontX(localNetId);\n    int frontZ = CommPlayerManager_GetPlayerFrontZ(localNetId);\n\n    for (i = 0; i < Comm_CountConnected(); i++) {\n"
+      }
+    ]
+  },
+  "src/communication_club_link.c": {
+    "pristine_sha256": "0adcbcc0fc9f915ae6f8eec18e2d6444645dad167b70e92e786115513dd0e869",
+    "adapted_sha256": "5f5cda8d04b60e54ab7865816af8a4b3227c34c46f6739381154c13aa54a540d",
+    "edits": [
+      {
+        "old": "}\n\nvoid CommClubLink_WaitParentConnected(void) {\n    Comm_GetLocalNetId();\n    if (((BOOL(*)(void))Comm_IsNetIdConnected)()) {\n        CommClub_OnParentConnected();\n        CommPlayerInfo_SendLocal();\n        CommClubLink_SetState(CommClubLink_IdleParentConnected, 0);\n",
+        "new": "}\n\nvoid CommClubLink_WaitParentConnected(void) {\n    if (Comm_IsNetIdConnected(Comm_GetLocalNetId())) {\n        CommClub_OnParentConnected();\n        CommPlayerInfo_SendLocal();\n        CommClubLink_SetState(CommClubLink_IdleParentConnected, 0);\n"
+      }
+    ]
+  },
+  "src/field/weather_manager.c": {
+    "pristine_sha256": "fb0648234cb0ae9f99340c543168771ec25670639978edcbae3bf13020e49ad5",
+    "adapted_sha256": "e3c88c91e60e30b637d67968e19dfa6f762eaa0af6ebd2a519bed48e32c768c4",
+    "edits": [
+      {
+        "old": "    }\n}\n\nstatic const sSnowFallSpeeds[] = { 2, 2, 2, 2 };\nstatic const sSnowSlowdownIntervals[] = { 16, 32, 16, 10 };\n\nstatic void Snow_AddFlakes(WeatherWork *work, int count) {\n    int table0[4];\n    table0 = sSnowSlowdownIntervals;\n    int table1[4];\n    table1 = sSnowFallSpeeds;\n    WeatherParticleTaskData *taskData = work->taskData;\n\n",
+        "new": "    }\n}\n\nstatic const int sSnowFallSpeeds[] = { 2, 2, 2, 2 };\nstatic const int sSnowSlowdownIntervals[] = { 16, 32, 16, 10 };\n\nstatic void Snow_AddFlakes(WeatherWork *work, int count) {\n    const int *table0;\n    table0 = sSnowSlowdownIntervals;\n    const int *table1;\n    table1 = sSnowFallSpeeds;\n    WeatherParticleTaskData *taskData = work->taskData;\n\n"
+      }
+    ]
+  },
+  "src/union_room.c": {
+    "pristine_sha256": "0ae3194d23e84222bfd8305fa4b0ed7618d24b7e5509f294e0e5ec4c9258e059",
+    "adapted_sha256": "06f3a16ad8357b8c2e96d4037d15d454dbd00e981c0b8754cdfabe7b0b10a1cf",
+    "edits": [
+      {
+        "old": "void CommState_StartAlternateSearch(void);",
+        "new": "void CommState_StartAlternateSearch(SaveData *saveData);"
+      },
+      {
+        "old": "CommState_StartAlternateSearch();",
+        "new": "CommState_StartAlternateSearch(saveData);"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/g2d_load.c": {
+    "pristine_sha256": "b407d09b3d091d24d1d98f0ae831cc49e1a3d204c49f820b67db394d11ac9a15",
+    "adapted_sha256": "9dcbc25f48b56627de7a6d9e175658b1d07720ceb06e0f0360a549fa372d27cc",
+    "edits": [
+      {
+        "old": "        return NULL;\n    }\n    if (pCellBank->cellBankAttr & 1) {\n        return (const NNSG2dCellData *)((u8 *)pCellBank->pCellDataArrayHead + idx * 16);\n    }\n    return (const NNSG2dCellData *)((u8 *)pCellBank->pCellDataArrayHead + idx * 8);\n}\n",
+        "new": "        return NULL;\n    }\n    if (pCellBank->cellBankAttr & 1) {\n#ifdef SDK_64BIT\n        return (const NNSG2dCellData *)\n            ((const u8 *)pCellBank->pCellDataArrayHead + idx * 24);\n#else\n        return (const NNSG2dCellData *)\n            ((const u8 *)pCellBank->pCellDataArrayHead + idx * 16);\n#endif\n    }\n    return (const NNSG2dCellData *)((u8 *)pCellBank->pCellDataArrayHead + idx * 8);\n}\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/g2d_oam.c": {
+    "pristine_sha256": "23a6d1cf8b44458bdce5f8eb7a223c4e64474fa2f35f10e5818daddb0c2e1a34",
+    "adapted_sha256": "5001e2762110960ec0cabe0717d9c899b377ba639682bc32860722d4c5a2ca7f",
+    "edits": [
+      {
+        "old": "    u8 *oam;\n    if (pMan->useFastTransfer) {\n        u32 szByte = IsRangeValid(&pMan->oam) ? (u16)(pMan->oam.last - pMan->oam.first + 1) * 8 : 0;\n        u32 addr = pMan->type;\n        addr = (u32)&gOamBuffers[addr].oamBuffer[pMan->oam.first];\n        oam = (u8 *)addr;\n        DC_InvalidateRange(oam, szByte);\n        if (GXi_DmaId != (u32)-1) { // -1: no DMA channel\n            MI_DmaFill32(GXi_DmaId, oam, 0xc0, szByte);\n",
+        "new": "    u8 *oam;\n    if (pMan->useFastTransfer) {\n        u32 szByte = IsRangeValid(&pMan->oam) ? (u16)(pMan->oam.last - pMan->oam.first + 1) * 8 : 0;\n#ifdef SDK_64BIT\n        /*\n         * Preserve the full ARM64 host pointer.\n         * pMan->type is a buffer index, not an address.\n         */\n        oam = (u8 *)&gOamBuffers[pMan->type].oamBuffer[pMan->oam.first];\n#else\n        u32 addr = pMan->type;\n        addr = (u32)&gOamBuffers[addr].oamBuffer[pMan->oam.first];\n        oam = (u8 *)addr;\n#endif\n        DC_InvalidateRange(oam, szByte);\n        if (GXi_DmaId != (u32)-1) { // -1: no DMA channel\n            MI_DmaFill32(GXi_DmaId, oam, 0xc0, szByte);\n"
+      },
+      {
+        "old": "    } else {\n        u16 n;\n        u16 i = 0;\n        u32 addr = pMan->type;\n        addr = (u32)&gOamBuffers[addr].oamBuffer[pMan->oam.first];\n        oam = (u8 *)addr;\n        n = pMan->oam.last - pMan->oam.first + 1;\n        for (; i < n; i++, oam += 8) {\n            ((GXOamAttr *)oam)->attr0 = 0xc0;\n",
+        "new": "    } else {\n        u16 n;\n        u16 i = 0;\n#ifdef SDK_64BIT\n        /*\n         * Preserve the full ARM64 host pointer.\n         * pMan->type is a buffer index, not an address.\n         */\n        oam = (u8 *)&gOamBuffers[pMan->type].oamBuffer[pMan->oam.first];\n#else\n        u32 addr = pMan->type;\n        addr = (u32)&gOamBuffers[addr].oamBuffer[pMan->oam.first];\n        oam = (u8 *)addr;\n#endif\n        n = pMan->oam.last - pMan->oam.first + 1;\n        for (; i < n; i++, oam += 8) {\n            ((GXOamAttr *)oam)->attr0 = 0xc0;\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/g3d_model.c": {
+    "pristine_sha256": "20fe4a0b6e204a48001d1d9ad7b41ccff7856bdc9ce9016a4c0c5c9a344feb3e",
+    "adapted_sha256": "a4b5eb70fa04ad4714ff3862b652874184cdb4b390b92440159a1d887d4329e8",
+    "edits": [
+      {
+        "old": "// the pieces' material accessors (several variants; each is needed for the match where it is used)\nstatic inline G3dResMat *GetMatBlock(NNSG3dResMdl *pResMdl) {\n    if (pResMdl && pResMdl->ofsMat) {\n        return (G3dResMat *)((u32)pResMdl + pResMdl->ofsMat);\n    }\n    return NULL;\n}\n",
+        "new": "// the pieces' material accessors (several variants; each is needed for the match where it is used)\nstatic inline G3dResMat *GetMatBlock(NNSG3dResMdl *pResMdl) {\n    if (pResMdl && pResMdl->ofsMat) {\n        return (G3dResMat *)((u8 *)pResMdl + pResMdl->ofsMat);\n    }\n    return NULL;\n}\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man.c": {
+    "pristine_sha256": "f8c8dcc8f206f148c046ff9661d9720d377e0abaf2f41d6c6048f033ed413cb2",
+    "adapted_sha256": "711650062051d78c214c14ea3bd0958fcf3fc0025315185a4e7a38ed1b620883",
+    "edits": [
+      {
+        "old": "extern LnkPlttVramManager gLnkPlttVramManager;\n\nu32 NNS_GfdGetLnkPlttVramManagerWorkSize(u32 numMemBlk) {\n    return numMemBlk << 4;\n}\n\nvoid NNS_GfdInitLnkPlttVramManager(u32 szByte, void *pManagementWork, u32 szByteManagementWork, BOOL useAsDefault) {\n",
+        "new": "extern LnkPlttVramManager gLnkPlttVramManager;\n\nu32 NNS_GfdGetLnkPlttVramManagerWorkSize(u32 numMemBlk) {\n    return numMemBlk * sizeof(LnkVramBlock);\n}\n\nvoid NNS_GfdInitLnkPlttVramManager(u32 szByte, void *pManagementWork, u32 szByteManagementWork, BOOL useAsDefault) {\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man_reset.c": {
+    "pristine_sha256": "59c0f0801619e4189889d886c6923c3770bbc4db002e074c6d1d135bab5e480e",
+    "adapted_sha256": "85e0dc76b541378274f51420e801e42f165dc3d87d261a4ad6f8be2fc2d01de6",
+    "edits": [
+      {
+        "old": "LnkPlttVramManager gLnkPlttVramManager;\n\nvoid NNS_GfdResetLnkPlttVramState(void) {\n    gLnkPlttVramManager.blockPool = NNSi_GfdInitLnkVramBlockPool(gLnkPlttVramManager.pWork, gLnkPlttVramManager.szWork / 16);\n    NNSi_GfdInitLnkVramMan(&gLnkPlttVramManager.freeList);\n    NNSi_GfdAddNewFreeBlock(&gLnkPlttVramManager.freeList, &gLnkPlttVramManager.blockPool, 0, gLnkPlttVramManager.szByte);\n    NNSi_GfdMergeAllFreeBlocks(&gLnkPlttVramManager.freeList, &gLnkPlttVramManager.blockPool);\n",
+        "new": "LnkPlttVramManager gLnkPlttVramManager;\n\nvoid NNS_GfdResetLnkPlttVramState(void) {\n    gLnkPlttVramManager.blockPool = NNSi_GfdInitLnkVramBlockPool(gLnkPlttVramManager.pWork, gLnkPlttVramManager.szWork / sizeof(LnkVramBlock));\n    NNSi_GfdInitLnkVramMan(&gLnkPlttVramManager.freeList);\n    NNSi_GfdAddNewFreeBlock(&gLnkPlttVramManager.freeList, &gLnkPlttVramManager.blockPool, 0, gLnkPlttVramManager.szByte);\n    NNSi_GfdMergeAllFreeBlocks(&gLnkPlttVramManager.freeList, &gLnkPlttVramManager.blockPool);\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/gfd_linked_list_tex_vram_man.c": {
+    "pristine_sha256": "d66977292fe2203d72576f6ad568975b723a1b061dc7a5ffe6baaf630a2de860",
+    "adapted_sha256": "9c0990890f5fddeb9a118907d048d3f15e5b3049f3b36dcfd975d998866637af",
+    "edits": [
+      {
+        "old": "\n// The manager state is defined (as three objects) next to NNS_GfdResetLnkTexVramState; the init and\n// alloc code addresses all of it through its first object.\nextern LnkTexVramManager gLnkTexVramFreeList;\nextern LnkVramBlock *gLnkTexVramFreeList4x4; // free list for 4x4-compressed texel data\nextern LnkTexVramManagerWork gLnkTexVramWork;\n\nu32 NNS_GfdGetLnkTexVramManagerWorkSize(u32 numMemBlk) {\n    return numMemBlk << 4;\n}\n\nvoid NNS_GfdInitLnkTexVramManager(u32 szByte, u32 szByteFor4x4, void *pManagementWork, u32 szByteManagementWork, BOOL useAsDefault) {\n    gLnkTexVramFreeList.work.szByte = szByte;\n    gLnkTexVramFreeList.work.szByteFor4x4 = szByteFor4x4;\n    gLnkTexVramFreeList.work.pWork = pManagementWork;\n    gLnkTexVramFreeList.work.szWork = szByteManagementWork;\n    NNS_GfdResetLnkTexVramState();\n    if (useAsDefault) {\n        NNS_GfdDefaultFuncAllocTexVram = NNS_GfdAllocLnkTexVram;\n",
+        "new": "\n// The manager state is defined (as three objects) next to NNS_GfdResetLnkTexVramState; the init and\n// alloc code addresses all of it through its first object.\nextern LnkVramBlock *gLnkTexVramFreeList;\nextern LnkVramBlock *gLnkTexVramFreeList4x4; // free list for 4x4-compressed texel data\nextern LnkTexVramManagerWork gLnkTexVramWork;\n\nu32 NNS_GfdGetLnkTexVramManagerWorkSize(u32 numMemBlk) {\n    return numMemBlk * sizeof(LnkVramBlock);\n}\n\nvoid NNS_GfdInitLnkTexVramManager(u32 szByte, u32 szByteFor4x4, void *pManagementWork, u32 szByteManagementWork, BOOL useAsDefault) {\n    gLnkTexVramWork.szByte = szByte;\n    gLnkTexVramWork.szByteFor4x4 = szByteFor4x4;\n    gLnkTexVramWork.pWork = pManagementWork;\n    gLnkTexVramWork.szWork = szByteManagementWork;\n    NNS_GfdResetLnkTexVramState();\n    if (useAsDefault) {\n        NNS_GfdDefaultFuncAllocTexVram = NNS_GfdAllocLnkTexVram;\n"
+      },
+      {
+        "old": "        return NNS_GFD_ALLOC_ERROR_TEXKEY;\n    }\n    if (is4x4comp != 0) {\n        ret = NNSi_GfdAllocLnkVram(&gLnkTexVramFreeList.freeListFor4x4, &gLnkTexVramFreeList.work.blockPool, &addr, size);\n    } else {\n        ret = NNSi_GfdAllocLnkVram(&gLnkTexVramFreeList.freeList, &gLnkTexVramFreeList.work.blockPool, &addr, size);\n    }\n    if (ret == 0) {\n        return NNS_GFD_ALLOC_ERROR_TEXKEY;\n",
+        "new": "        return NNS_GFD_ALLOC_ERROR_TEXKEY;\n    }\n    if (is4x4comp != 0) {\n        ret = NNSi_GfdAllocLnkVram(&gLnkTexVramFreeList4x4, &gLnkTexVramWork.blockPool, &addr, size);\n    } else {\n        ret = NNSi_GfdAllocLnkVram(&gLnkTexVramFreeList, &gLnkTexVramWork.blockPool, &addr, size);\n    }\n    if (ret == 0) {\n        return NNS_GFD_ALLOC_ERROR_TEXKEY;\n"
+      },
+      {
+        "old": "        if (is4x4comp) {\n            ok = NNSi_GfdFreeLnkVram(&gLnkTexVramFreeList4x4, &gLnkTexVramWork.blockPool, addr, size);\n        } else {\n            ok = NNSi_GfdFreeLnkVram(&gLnkTexVramFreeList.freeList, &gLnkTexVramWork.blockPool, addr, size);\n        }\n        if (ok) {\n            return 0;\n",
+        "new": "        if (is4x4comp) {\n            ok = NNSi_GfdFreeLnkVram(&gLnkTexVramFreeList4x4, &gLnkTexVramWork.blockPool, addr, size);\n        } else {\n            ok = NNSi_GfdFreeLnkVram(&gLnkTexVramFreeList, &gLnkTexVramWork.blockPool, addr, size);\n        }\n        if (ok) {\n            return 0;\n"
+      }
+    ]
+  },
+  "lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.c": {
+    "pristine_sha256": "1e56e4d01987abbb7f6bfe9841142e985b81ed3ac45342b03fe7c6c3529c0359",
+    "adapted_sha256": "d2d443fb7f01df1f2e80b24204317eecd49066e542277fb37639138a14a98f65",
+    "edits": [
+      {
+        "old": "    LnkTexVramSlot *t;\n    u32 j;\n    LnkTexVramSlot *s;\n    u32 rest4x4 = ((LnkTexVramManager *)&gLnkTexVramFreeList)->work.szByteFor4x4;\n    restNrm = ((LnkTexVramManager *)&gLnkTexVramFreeList)->work.szByte - (rest4x4 + rest4x4 / 2);\n    u32 pltt = rest4x4 / 2;\n    u32 i;\n    u32 n;\n",
+        "new": "    LnkTexVramSlot *t;\n    u32 j;\n    LnkTexVramSlot *s;\n    u32 rest4x4 = gLnkTexVramWork.szByteFor4x4;\n    restNrm = gLnkTexVramWork.szByte - (rest4x4 + rest4x4 / 2);\n    u32 pltt = rest4x4 / 2;\n    u32 i;\n    u32 n;\n"
+      },
+      {
+        "old": "    }\n    NNSi_GfdInitLnkVramMan(&gLnkTexVramFreeList);\n    NNSi_GfdInitLnkVramMan(&gLnkTexVramFreeList4x4);\n    gLnkTexVramWork.blockPool = NNSi_GfdInitLnkVramBlockPool(gLnkTexVramWork.pWork, gLnkTexVramWork.szWork / 16);\n    if (tbl.slot[0].sz4x4 != 0) {\n        NNSi_GfdAddNewFreeBlock(&gLnkTexVramFreeList4x4, &gLnkTexVramWork.blockPool, 0, tbl.slot[0].sz4x4);\n    }\n",
+        "new": "    }\n    NNSi_GfdInitLnkVramMan(&gLnkTexVramFreeList);\n    NNSi_GfdInitLnkVramMan(&gLnkTexVramFreeList4x4);\n    gLnkTexVramWork.blockPool = NNSi_GfdInitLnkVramBlockPool(gLnkTexVramWork.pWork, gLnkTexVramWork.szWork / sizeof(LnkVramBlock));\n    if (tbl.slot[0].sz4x4 != 0) {\n        NNSi_GfdAddNewFreeBlock(&gLnkTexVramFreeList4x4, &gLnkTexVramWork.blockPool, 0, tbl.slot[0].sz4x4);\n    }\n"
+      }
+    ]
+  },
+  "lib/libVCT/src/vct_audio.c": {
+    "pristine_sha256": "218f336119fe79569f1f805cd0ee1a9c0b3a8b44e3cde4c72650bdc603cc24bc",
+    "adapted_sha256": "a5beccc66f40a03435142910c1a70695c3d83330d13a4ac794e58efc113f7913",
+    "edits": [
+      {
+        "old": "static u32 sAudioReset;\nstatic u32 sAudioEcho;\nstatic u32 sAudioPacketSize;\nstatic u32 sAudioMask;\nAdpcmState sAdpcmState;\nstatic u32 sAudioFlag;\n",
+        "new": "static u32 sAudioReset;\nstatic u32 sAudioEcho;\nstatic u32 sAudioPacketSize;\nu32 vct_guest32_packet_size(void) { return sAudioPacketSize; }\nstatic u32 sAudioMask;\nAdpcmState sAdpcmState;\nstatic u32 sAudioFlag;\n"
+      }
+    ]
+  },
+  "src/gf_3d_vramman.c": {
+    "pristine_sha256": "83ceb736dd47d737ac055d6cc63977324d83d7985b2c8edd188d6f140cf39100",
+    "adapted_sha256": "4471dfb8673bdf26313bac02c426485f7840ad0000add401311b2a45f07db582",
+    "edits": [
+      {
+        "old": "\n    ret = Heap_Alloc(heapID, sizeof(GF3DVramMan));\n    ret->heapID = heapID;\n\n    NNS_G3dInit();\n    G3X_InitMtxStack();\n",
+        "new": "\n    ret = Heap_Alloc(heapID, sizeof(GF3DVramMan));\n    ret->heapID = heapID;\n    ret->texWork = NULL;\n    ret->plttWork = NULL;\n\n    NNS_G3dInit();\n    G3X_InitMtxStack();\n"
+      }
+    ]
+  },
+  "src/gf_gfx_loader.c": {
+    "pristine_sha256": "221f321a6c86a3f2e3e8a30f9305597c5942e6b51b48d30748c0a6877a70ec07",
+    "adapted_sha256": "b75cdffc11c61abdd2ae7e3d0679b5d2a5e8081354413e33a184e19b84f79dff",
+    "edits": [
+      {
+        "old": "#include \"gf_gfx_loader.h\"\n\n#include \"global.h\"\n",
+        "new": "#ifdef SDK_64BIT\n#include <nnsys/g2d_internal.h>\n#endif\n#include <string.h>\n#include \"gf_gfx_loader.h\"\n\n#include \"global.h\"\n"
+      },
+      {
+        "old": "    NNSG2dCharacterData *pCharData;\n\n    if (data != NULL) {\n        if (NNS_G2dGetUnpackedBGCharacterData(data, &pCharData)) {\n            if (szByte == 0) {\n                szByte = pCharData->szByte;\n            }\n            BG_LoadCharTilesData(bgConfig, (u8)layer, pCharData->pRawData, szByte, tileStart);\n        }\n        Heap_Free(data);\n    }\n    return szByte;\n",
+        "new": "    NNSG2dCharacterData *pCharData;\n\n    if (data != NULL) {\n#ifdef SDK_64BIT\n        /*\n         * Native NCGR adaptation.\n         *\n         * The serialized CHAR payload has a 24-byte DS header.\n         * Its pixel-data pointer is a 32-bit relative offset at +20.\n         * Native NNSG2dCharacterData uses a wider pointer at +24.\n         *\n         * This caller copies the pixels synchronously and then frees\n         * the resource, so no persistent native view is necessary.\n         */\n        u8 *block = NNS_G2dFindBinaryBlock(data, (u32)'CHAR');\n        BOOL valid = FALSE;\n\n        if (block != NULL) {\n            u32 blockSize;\n            u32 rawSize;\n            u32 rawOffset;\n\n            memcpy(&blockSize, block + 4, sizeof(blockSize));\n\n            if (blockSize >= 8 + 24) {\n                const u8 *payload = block + 8;\n                u32 payloadSize = blockSize - 8;\n\n                memcpy(&rawSize, payload + 16, sizeof(rawSize));\n                memcpy(&rawOffset, payload + 20, sizeof(rawOffset));\n\n                u32 copySize = szByte ? szByte : rawSize;\n\n                if (rawOffset >= 24 &&\n                    rawOffset <= payloadSize &&\n                    rawSize <= payloadSize - rawOffset &&\n                    copySize <= rawSize) {\n\n                    BG_LoadCharTilesData(\n                        bgConfig,\n                        (u8)layer,\n                        payload + rawOffset,\n                        copySize,\n                        tileStart\n                    );\n\n                    szByte = copySize;\n                    valid = TRUE;\n                }\n            }\n        }\n\n        if (!valid) {\n            GF_ASSERT(FALSE);\n            szByte = 0;\n        }\n#else\n        if (NNS_G2dGetUnpackedBGCharacterData(data, &pCharData)) {\n            if (szByte == 0) {\n                szByte = pCharData->szByte;\n            }\n            BG_LoadCharTilesData(bgConfig, (u8)layer, pCharData->pRawData, szByte, tileStart);\n        }\n#endif\n        Heap_Free(data);\n    }\n    return szByte;\n"
+      },
+      {
+        "old": "    }\n}\n\nstatic void GfGfxLoader_GXLoadPalWithSrcOffsetInternal(void *data, enum GFPalLoadLocation location, u32 srcOffset, enum GFPalSlotOffset palSlotOffset, u32 szByte) {\n    static void (*const sGXLoadPlttFuncs[])(const void *pSrc, u32 offset, u32 szByte) = {\n        GX_LoadBGPltt,\n        GX_LoadOBJPltt,\n",
+        "new": "    }\n}\n\n\n#ifdef SDK_64BIT\n/*\n * HG native NCLR palette adapter.\n *\n * Original DS PLTT payload:\n *   +0  u32 format\n *   +4  u32 extended-palette flag\n *   +8  u32 raw-data size\n *   +12 u32 raw-data relative offset\n *\n * Keep the original resource allocation and bytes intact.\n */\nstatic BOOL HG_DecodeNativePaletteForCopy(\n    void *resource,\n    u32 sourceOffset,\n    u32 requestedSize,\n    NNSG2dPaletteData *native)\n{\n    u8 *block;\n    const u8 *payload;\n    u32 blockSize;\n    u32 rawSize;\n    u32 rawOffset;\n    u32 payloadSize;\n\n    if (resource == NULL || native == NULL)\n        return FALSE;\n\n    block = NNS_G2dFindBinaryBlock(resource, (u32)'PLTT');\n    if (block == NULL)\n        return FALSE;\n\n    memcpy(&blockSize, block + 4, sizeof(blockSize));\n    if (blockSize < 24)\n        return FALSE;\n\n    payload = block + 8;\n    payloadSize = blockSize - 8;\n\n    memcpy(&rawSize, payload + 8, sizeof(rawSize));\n    memcpy(&rawOffset, payload + 12, sizeof(rawOffset));\n\n    if (rawOffset < 16 || rawOffset > payloadSize)\n        return FALSE;\n\n    if (rawSize > payloadSize - rawOffset)\n        return FALSE;\n\n    if (sourceOffset > rawSize)\n        return FALSE;\n\n    if (requestedSize != 0 &&\n        requestedSize > rawSize - sourceOffset)\n        return FALSE;\n\n    memset(native, 0, sizeof(*native));\n    native->szByte = rawSize;\n    native->pRawData = (void *)(payload + rawOffset);\n\n    return TRUE;\n}\n#endif\n\nstatic void GfGfxLoader_GXLoadPalWithSrcOffsetInternal(void *data, enum GFPalLoadLocation location, u32 srcOffset, enum GFPalSlotOffset palSlotOffset, u32 szByte) {\n#ifdef SDK_64BIT\n    NNSG2dPaletteData hgNativePalette;\n#endif\n\n    static void (*const sGXLoadPlttFuncs[])(const void *pSrc, u32 offset, u32 szByte) = {\n        GX_LoadBGPltt,\n        GX_LoadOBJPltt,\n"
+      },
+      {
+        "old": "    }; // todo: make these funcs use the pal slot offset\n    NNSG2dPaletteData *pPlttData;\n    if (data != NULL) {\n        if (NNS_G2dGetUnpackedPaletteData(data, &pPlttData)) {\n            pPlttData->pRawData = (void *)((u32)pPlttData->pRawData + srcOffset);\n            if (szByte == 0) {\n                szByte = pPlttData->szByte - srcOffset;\n            }\n",
+        "new": "    }; // todo: make these funcs use the pal slot offset\n    NNSG2dPaletteData *pPlttData;\n    if (data != NULL) {\n        #ifdef SDK_64BIT\n        pPlttData = &hgNativePalette;\n        if (HG_DecodeNativePaletteForCopy(data, srcOffset, szByte, &hgNativePalette))\n#else\n        if (NNS_G2dGetUnpackedPaletteData(data, &pPlttData))\n#endif\n{\n            pPlttData->pRawData = (void *)((u8 *)pPlttData->pRawData + srcOffset);\n            if (szByte == 0) {\n                szByte = pPlttData->szByte - srcOffset;\n            }\n"
+      }
+    ]
+  },
+  "src/sprite.c": {
+    "pristine_sha256": "0f370d6f780abe5cc039e22cba22f0c7dc873b61ad028e7565078b2230912be3",
+    "adapted_sha256": "4278b2d39084a0da957fd4fe52e3366ef5efa001db7acfbbb33fd41e177ea8f8",
+    "edits": [
+      {
+        "old": "\n#include \"math_util.h\"\n#include \"system.h\"\n\nstatic void SpriteList_Init(SpriteList *spriteList);\nstatic void Sprite_Init(Sprite *sprite);\n",
+        "new": "\n#include \"math_util.h\"\n#include \"system.h\"\n\n#ifdef SDK_64BIT\n#include <stdlib.h>\n#include <stddef.h>\n#include <nnsys/g2d_internal.h>\n#include \"../../../native-adaptations/g2d/nanr_decode.c\"\n\n_Static_assert(offsetof(HG_NANR_View, bank) == 0,\n               \"native NANR view must begin with bank\");\n_Static_assert(sizeof(HG_NANR_Bank) == sizeof(NNSG2dAnimBankData),\n               \"native NANR bank ABI mismatch\");\n#endif\n\n\nstatic void SpriteList_Init(SpriteList *spriteList);\nstatic void Sprite_Init(Sprite *sprite);\n"
+      },
+      {
+        "old": "    ret->dummy.next = &ret->dummy;\n    ret->renderer = param->rendererInstance;\n    ret->animBuff = Sys_AllocAndReadFile(param->heapID, \"data/clact_default.NANR\");\n    NNS_G2dGetUnpackedAnimBank(ret->animBuff, &ret->animBank);\n    ret->flag = TRUE;\n    return ret;\n}\n",
+        "new": "    ret->dummy.next = &ret->dummy;\n    ret->renderer = param->rendererInstance;\n    ret->animBuff = Sys_AllocAndReadFile(param->heapID, \"data/clact_default.NANR\");\n#ifdef SDK_64BIT\n    {\n        u8 *block = NNS_G2dFindBinaryBlock(ret->animBuff,\n                                           NNS_G2D_BLKSIG_ANIMBANK);\n        HG_NANR_View *view = calloc(1, sizeof(*view));\n        HG_NANR_Status status = HG_NANR_INVALID;\n        if (block != NULL && view != NULL) {\n            u32 blockSize = rd32(block + 4);\n            if (blockSize >= 8) {\n                status = hg_nanr_decode(block + 8,\n                                        blockSize - 8, view);\n            }\n        }\n        if (status != HG_NANR_OK) {\n            free(view);\n            GF_ASSERT(FALSE);\n            return NULL;\n        }\n        ret->animBank = (NNSG2dAnimBankData *)&view->bank;\n    }\n#else\n    NNS_G2dGetUnpackedAnimBank(ret->animBuff, &ret->animBank);\n#endif\n    ret->flag = TRUE;\n    return ret;\n}\n"
+      },
+      {
+        "old": "    }\n\n    SpriteList_DeleteAllSprites(spriteList);\n    Heap_Free(spriteList->animBuff);\n    Heap_Free(spriteList->stack);\n    Heap_Free(spriteList->sprites);\n",
+        "new": "    }\n\n    SpriteList_DeleteAllSprites(spriteList);\n#ifdef SDK_64BIT\n    {\n        HG_NANR_View *view = (HG_NANR_View *)spriteList->animBank;\n        if (view != NULL) {\n            hg_nanr_release(view);\n            free(view);\n        }\n    }\n#endif\n    Heap_Free(spriteList->animBuff);\n    Heap_Free(spriteList->stack);\n    Heap_Free(spriteList->sprites);\n"
+      }
+    ]
+  },
+  "src/sprite_resource.c": {
+    "pristine_sha256": "b987dd046b626281946b3a8be9e91c71d28fca33c4a24c97951c6f82c01d545b",
+    "adapted_sha256": "e6c46edeca8d0238cf635883ce6eab3a27e2607003623f957ea175fa8359faab",
+    "edits": [
+      {
+        "old": "#include \"sprite_resource.h\"\n\n#include \"global.h\"\n",
+        "new": "#include <stddef.h>\n#ifdef SDK_64BIT\n#include <nnsys/g2d_internal.h>\n#endif\n#include <string.h>\n#include \"sprite_resource.h\"\n\n#include \"global.h\"\n"
+      },
+      {
+        "old": "    }\n}\n\nstatic struct CharResExtraData *GetResourceExtraCharData(void *resource, int vram, enum HeapID heapID) {\n    struct CharResExtraData *ret = Heap_Alloc(heapID, sizeof(struct CharResExtraData));\n    NNS_G2dGetUnpackedCharacterData(resource, &ret->charData);\n    ret->vram = (NNS_G2D_VRAM_TYPE)vram;\n    return ret;\n}\n\nstatic struct PlttResExtraData *GetResourceExtraPlttData(void *resource, int vram, int pltt_num, enum HeapID heapID) {\n    struct PlttResExtraData *ret = Heap_Alloc(heapID, sizeof(struct PlttResExtraData));\n    NNS_G2dGetUnpackedPaletteData(resource, &ret->plttData);\n    ret->vram = (NNS_G2D_VRAM_TYPE)vram;\n    ret->pltt_num = pltt_num;\n    return ret;\n}\n\nstatic struct CellResExtraData *GetResourceExtraCellData(void *resource, enum HeapID heapID) {\n    struct CellResExtraData *ret = Heap_Alloc(heapID, sizeof(struct CellResExtraData));\n    NNS_G2dGetUnpackedCellBank(resource, &ret->cellDataBank);\n    return ret;\n}\n\nstatic struct AnimResExtraData *GetResourceExtraAnimData(void *resource, enum HeapID heapID) {\n    struct AnimResExtraData *ret = Heap_Alloc(heapID, sizeof(struct AnimResExtraData));\n    NNS_G2dGetUnpackedAnimBank(resource, &ret->animBankData);\n    return ret;\n}\n\nstatic struct MulticellResExtraData *GetResourceExtraMulticellData(void *resource, enum HeapID heapID) {\n",
+        "new": "    }\n}\n\n\n#ifdef SDK_64BIT\n/*\n * Native NCGR representation.\n *\n * The original binary CHAR payload remains 24 bytes:\n *\n * +0  u16 H\n * +2  u16 W\n * +4  u32 pixelFmt\n * +8  u32 mapingType\n * +12 u32 characterFmt\n * +16 u32 szByte\n * +20 u32 pRawData relative offset\n *\n * The native structure has an 8-byte data pointer.\n * Its lifetime follows CharResExtraData automatically.\n */\ntypedef struct HGNativeCharResExtra {\n    struct CharResExtraData base;\n    NNSG2dCharacterData native;\n} HGNativeCharResExtra;\n\n_Static_assert(\n    offsetof(HGNativeCharResExtra, base) == 0,\n    \"character resource metadata prefix\"\n);\n_Static_assert(\n    sizeof(NNSG2dCharacterData) == 32,\n    \"native NCGR structure layout\"\n);\n_Static_assert(\n    offsetof(NNSG2dCharacterData, pRawData) == 24,\n    \"native NCGR pointer offset\"\n);\n\nstatic BOOL HGDecodeNativeCharacter(\n    void *resource,\n    NNSG2dCharacterData *native)\n{\n    u8 *block;\n    const u8 *p;\n    u32 blockSize;\n    u32 payloadSize;\n    u32 pixelFmt;\n    u32 mapping;\n    u32 characterFmt;\n    u32 dataSize;\n    u32 dataOffset;\n    u16 h, w;\n\n    if (!resource || !native)\n        return FALSE;\n\n    block = NNS_G2dFindBinaryBlock(resource, (u32)'CHAR');\n    if (!block)\n        return FALSE;\n\n    memcpy(&blockSize, block + 4, 4);\n    if (blockSize < 32)\n        return FALSE;\n\n    p = block + 8;\n    payloadSize = blockSize - 8;\n\n    memcpy(&h, p, 2);\n    memcpy(&w, p + 2, 2);\n    memcpy(&pixelFmt, p + 4, 4);\n    memcpy(&mapping, p + 8, 4);\n    memcpy(&characterFmt, p + 12, 4);\n    memcpy(&dataSize, p + 16, 4);\n    memcpy(&dataOffset, p + 20, 4);\n\n    if (dataOffset < 24 || dataOffset > payloadSize)\n        return FALSE;\n\n    if (dataSize > payloadSize - dataOffset)\n        return FALSE;\n\n    memset(native, 0, sizeof(*native));\n\n    native->H = h;\n    native->W = w;\n    native->pixelFmt = (GXTexFmt)pixelFmt;\n    native->mapingType = (GXOBJVRamModeChar)mapping;\n    native->characterFmt = characterFmt;\n    native->szByte = dataSize;\n    native->pRawData = (void *)(p + dataOffset);\n\n    return TRUE;\n}\n#endif\n\nstatic struct CharResExtraData *GetResourceExtraCharData(\n    void *resource, int vram, enum HeapID heapID)\n{\n#ifdef SDK_64BIT\n    HGNativeCharResExtra *ret;\n\n    ret = Heap_Alloc(heapID, sizeof(*ret));\n    if (!ret)\n        return NULL;\n\n    memset(ret, 0, sizeof(*ret));\n\n    if (!HGDecodeNativeCharacter(resource, &ret->native)) {\n        Heap_Free(ret);\n        GF_ASSERT(FALSE);\n        return NULL;\n    }\n\n    ret->base.charData = &ret->native;\n    ret->base.vram = (NNS_G2D_VRAM_TYPE)vram;\n\n    return &ret->base;\n#else\n    struct CharResExtraData *ret =\n        Heap_Alloc(heapID, sizeof(struct CharResExtraData));\n\n    NNS_G2dGetUnpackedCharacterData(resource, &ret->charData);\n    ret->vram = (NNS_G2D_VRAM_TYPE)vram;\n    return ret;\n#endif\n}\n\n\n\n#ifdef SDK_64BIT\n/*\n * Native NCLR sprite-palette resource adapter.\n *\n * Original Nintendo DS PLTT payload:\n * +0  u32 fmt\n * +4  u32 extended palette flag\n * +8  u32 raw data size\n * +12 u32 raw data offset\n *\n * The native palette structure lives inside its existing\n * resource-extra allocation. The original resource manager\n * owns the raw data and outlives the extra-data structure.\n */\ntypedef struct HGNativePlttResExtra {\n    struct PlttResExtraData base;\n    NNSG2dPaletteData native;\n} HGNativePlttResExtra;\n\n_Static_assert(\n    offsetof(HGNativePlttResExtra, base) == 0,\n    \"native palette extra-data prefix\"\n);\n\nstatic u32 HGPlttRead32(const u8 *p) {\n    return (u32)p[0]\n        | ((u32)p[1] << 8)\n        | ((u32)p[2] << 16)\n        | ((u32)p[3] << 24);\n}\n\nstatic BOOL HGDecodeNativePalette(\n    void *resource,\n    NNSG2dPaletteData *native)\n{\n    u8 *block;\n    const u8 *p;\n    u32 blockSize;\n    u32 payloadSize;\n    u32 fmt;\n    u32 extended;\n    u32 rawSize;\n    u32 rawOffset;\n\n    if (!resource || !native)\n        return FALSE;\n\n    block = NNS_G2dFindBinaryBlock(\n        resource, (u32)'PLTT'\n    );\n\n    if (!block)\n        return FALSE;\n\n    blockSize = HGPlttRead32(block + 4);\n\n    if (blockSize < 24)\n        return FALSE;\n\n    p = block + 8;\n    payloadSize = blockSize - 8;\n\n    fmt = HGPlttRead32(p);\n    extended = HGPlttRead32(p + 4);\n    rawSize = HGPlttRead32(p + 8);\n    rawOffset = HGPlttRead32(p + 12);\n\n    if (rawOffset < 16 || rawOffset > payloadSize)\n        return FALSE;\n\n    if (rawSize > payloadSize - rawOffset)\n        return FALSE;\n\n    memset(native, 0, sizeof(*native));\n\n    native->fmt = (GXTexFmt)fmt;\n    native->bExtendedPlt = (BOOL)extended;\n    native->szByte = rawSize;\n    native->pRawData = (void *)(p + rawOffset);\n\n    return TRUE;\n}\n#endif\n\nstatic struct PlttResExtraData *GetResourceExtraPlttData(\n    void *resource, int vram, int pltt_num, enum HeapID heapID)\n{\n#ifdef SDK_64BIT\n    HGNativePlttResExtra *ret;\n\n    ret = Heap_Alloc(heapID, sizeof(*ret));\n    if (!ret)\n        return NULL;\n\n    memset(ret, 0, sizeof(*ret));\n\n    if (!HGDecodeNativePalette(resource, &ret->native)) {\n        Heap_Free(ret);\n        GF_ASSERT(FALSE);\n        return NULL;\n    }\n\n    ret->base.plttData = &ret->native;\n    ret->base.vram = (NNS_G2D_VRAM_TYPE)vram;\n    ret->base.pltt_num = pltt_num;\n\n    return &ret->base;\n#else\n    struct PlttResExtraData *ret =\n        Heap_Alloc(heapID, sizeof(struct PlttResExtraData));\n\n    NNS_G2dGetUnpackedPaletteData(resource, &ret->plttData);\n    ret->vram = (NNS_G2D_VRAM_TYPE)vram;\n    ret->pltt_num = pltt_num;\n    return ret;\n#endif\n}\n\n\n#ifdef SDK_64BIT\n/*\n * Native NCER adapter for the original DS cell-bank layout.\n *\n * Wire bank: 24 bytes.\n * Wire cell with bounding rectangle: 16 bytes.\n * Native bank: 48 bytes.\n * Native cell with bounding rectangle: 24 bytes.\n *\n * Keep OAM attributes in the original resource allocation.\n * The owning SpriteResource destroys this native view first.\n */\ntypedef struct HGNativeCellWithBR {\n    NNSG2dCellData cell;\n    u8 bounds[8];\n} HGNativeCellWithBR;\n\n_Static_assert(sizeof(NNSG2dCellDataBank) == 48,\n               \"native cell-bank ABI\");\n_Static_assert(sizeof(NNSG2dCellData) == 16,\n               \"native cell ABI\");\n_Static_assert(sizeof(HGNativeCellWithBR) == 24,\n               \"native bounding-cell stride\");\n\nstatic u16 HGCellRead16(const u8 *p) {\n    return (u16)p[0] | ((u16)p[1] << 8);\n}\n\nstatic u32 HGCellRead32(const u8 *p) {\n    return (u32)p[0] | ((u32)p[1] << 8)\n        | ((u32)p[2] << 16) | ((u32)p[3] << 24);\n}\n\nstatic NNSG2dCellDataBank *HGDecodeCellBank(\n    void *resource, enum HeapID heapID)\n{\n    u8 *block;\n    const u8 *p;\n    u32 blockSize, size, cellsOffset, mapping;\n    u32 count, attributes, oamOffset, recordBytes;\n    u32 i;\n    NNSG2dCellDataBank *bank;\n    HGNativeCellWithBR *cells;\n\n    if (!resource)\n        return NULL;\n\n    block = NNS_G2dFindBinaryBlock(resource, (u32)'CEBK');\n    if (!block)\n        return NULL;\n\n    blockSize = HGCellRead32(block + 4);\n    if (blockSize < 32)\n        return NULL;\n\n    p = block + 8;\n    size = blockSize - 8;\n\n    count = HGCellRead16(p);\n    attributes = HGCellRead16(p + 2);\n    cellsOffset = HGCellRead32(p + 4);\n    mapping = HGCellRead32(p + 8);\n\n    /*\n     * Do not silently discard VRAM transfer, string-bank,\n     * extended attributes, or unknown bank attributes.\n     * Those require their own verified native conversions.\n     */\n    if (HGCellRead32(p + 12) ||\n        HGCellRead32(p + 16) ||\n        HGCellRead32(p + 20) ||\n        attributes != 1 ||\n        count == 0 ||\n        count > 65535)\n        return NULL;\n\n    if (cellsOffset < 24 ||\n        cellsOffset > size ||\n        count > (size - cellsOffset) / 16)\n        return NULL;\n\n    recordBytes = count * 16;\n    oamOffset = cellsOffset + recordBytes;\n\n    bank = Heap_Alloc(heapID,\n        sizeof(*bank) + count * sizeof(*cells));\n    if (!bank)\n        return NULL;\n\n    memset(bank, 0,\n        sizeof(*bank) + count * sizeof(*cells));\n\n    cells = (HGNativeCellWithBR *)(bank + 1);\n\n    for (i = 0; i < count; ++i) {\n        const u8 *wire = p + cellsOffset + i * 16;\n        u32 numOam = HGCellRead16(wire);\n        u32 relative = HGCellRead32(wire + 4);\n\n        if (relative > size - oamOffset ||\n            numOam > (size - oamOffset - relative) / 6) {\n            Heap_Free(bank);\n            return NULL;\n        }\n\n        cells[i].cell.numOAMAttrs = (u16)numOam;\n        cells[i].cell.cellAttr = HGCellRead16(wire + 2);\n        cells[i].cell.pOamAttrArray =\n            (NNSG2dCellOAMAttrData *)\n            (p + oamOffset + relative);\n\n        memcpy(cells[i].bounds, wire + 8, 8);\n    }\n\n    bank->numCells = (u16)count;\n    bank->cellBankAttr = (u16)attributes;\n    bank->pCellDataArrayHead = (NNSG2dCellData *)cells;\n    bank->mappingMode = (NNSG2dCharacterDataMapingType)mapping;\n\n    return bank;\n}\n#endif\n\nstatic struct CellResExtraData *GetResourceExtraCellData(void *resource, enum HeapID heapID) {\n    struct CellResExtraData *ret = Heap_Alloc(heapID, sizeof(struct CellResExtraData));\n#ifdef SDK_64BIT\n    ret->cellDataBank = HGDecodeCellBank(resource, heapID);\n    if (!ret->cellDataBank) {\n        Heap_Free(ret);\n        GF_ASSERT(FALSE);\n        return NULL;\n    }\n#else\n    NNS_G2dGetUnpackedCellBank(resource, &ret->cellDataBank);\n#endif\n    return ret;\n}\n\n#ifdef SDK_64BIT\n#include \"../../../native-adaptations/g2d/nanr_decode.h\"\n\n/*\n * Preserve Nintendo's original resource ownership:\n *\n *   raw resource allocation -> original resource manager\n *   AnimResExtraData        -> original resource manager\n *   decoded native records  -> this extra-data allocation\n *\n * The original resource bytes remain alive until the resource\n * manager destroys its associated extra-data.\n */\ntypedef struct HGNativeAnimResExtra {\n    struct AnimResExtraData base;\n    HG_NANR_View view;\n} HGNativeAnimResExtra;\n\n_Static_assert(offsetof(HGNativeAnimResExtra, base) == 0,\n               \"native animation extra-data prefix\");\n_Static_assert(sizeof(HG_NANR_Bank) == sizeof(NNSG2dAnimBankData),\n               \"native animation-bank layout\");\n_Static_assert(sizeof(HG_NANR_Sequence) == sizeof(NNSG2dAnimSequenceData),\n               \"native animation-sequence layout\");\n_Static_assert(sizeof(HG_NANR_Frame) == sizeof(NNSG2dAnimFrameData),\n               \"native animation-frame layout\");\n#endif\n\nstatic struct AnimResExtraData *GetResourceExtraAnimData(void *resource, enum HeapID heapID) {\n#ifdef SDK_64BIT\n    HGNativeAnimResExtra *native;\n    u8 *block;\n    u32 blockSize;\n    HG_NANR_Status status;\n\n    if (resource == NULL)\n        return NULL;\n\n    block = NNS_G2dFindBinaryBlock(\n        resource, NNS_G2D_BLKSIG_ANIMBANK\n    );\n\n    if (block == NULL)\n        return NULL;\n\n    memcpy(&blockSize, block + 4, sizeof(blockSize));\n\n    if (blockSize < 32)\n        return NULL;\n\n    native = Heap_Alloc(heapID, sizeof(*native));\n    if (native == NULL)\n        return NULL;\n\n    memset(native, 0, sizeof(*native));\n\n    status = hg_nanr_decode(\n        block + 8,\n        (size_t)blockSize - 8,\n        &native->view\n    );\n\n    if (status != HG_NANR_OK) {\n        Heap_Free(native);\n        GF_ASSERT(FALSE);\n        return NULL;\n    }\n\n    native->base.animBankData =\n        (NNSG2dAnimBankData *)&native->view.bank;\n\n    return &native->base;\n#else\n    struct AnimResExtraData *ret = Heap_Alloc(heapID, sizeof(struct AnimResExtraData));\n    NNS_G2dGetUnpackedAnimBank(resource, &ret->animBankData);\n    return ret;\n#endif\n}\n\nstatic struct MulticellResExtraData *GetResourceExtraMulticellData(void *resource, enum HeapID heapID) {\n"
+      },
+      {
+        "old": "\nstatic void destroyResObjExtra(SpriteResource *obj) {\n    if (obj->extra != NULL) {\n        Heap_Free(obj->extra);\n    }\n    obj->extra = NULL;\n",
+        "new": "\nstatic void destroyResObjExtra(SpriteResource *obj) {\n    if (obj->extra != NULL) {\n#ifdef SDK_64BIT\n        if (obj->type == GF_GFX_RES_TYPE_CELL) {\n            struct CellResExtraData *cell =\n                (struct CellResExtraData *)obj->extra;\n            if (cell->cellDataBank)\n                Heap_Free(cell->cellDataBank);\n        } else if (obj->type == GF_GFX_RES_TYPE_ANIM) {\n            HGNativeAnimResExtra *anim =\n                (HGNativeAnimResExtra *)obj->extra;\n            hg_nanr_release(&anim->view);\n        }\n#endif\n        Heap_Free(obj->extra);\n    }\n    obj->extra = NULL;\n"
+      }
+    ]
+  }
+}

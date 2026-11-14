@@ -1,5 +1,30 @@
 # Building HeartGold-Silicon
 
+On macOS ARM64, with Homebrew and Git installed:
+
+```sh
+./build.sh
+./build.sh --build-dir build/native --verbose
+```
+
+The entrypoint verifies Apple Clang and its SDK, installs missing CMake/Ninja
+and asset utilities, and uses Astral uv with CPython 3.12.12. The standalone uv
+installer does not change shell profiles. Python, caches and logs stay in the
+selected binary directory (default `build/native`). Generators use only the
+Python standard library; no pip dependencies are needed. CMake owns the exact
+repository pins and refuses dirty managed checkouts. Existing user changes
+are preserved; use an isolated source checkout if your upstream tree is dirty.
+
+The build audits sources, compiles all default targets, checks ARM64 and
+121-image strong-symbol closure, then runs CTest. Ninja progress counts finished
+edges; redirected output contains milestones without terminal escapes. Complete
+diagnostics and timings are in `<binary>/logs/`. Failures retain their exit
+status and build state. Set `HEARTGOLD_CARTRIDGE` (and, when required,
+`HEARTGOLD_FIRMWARE`) to attempt a bounded runtime diagnostic. A diagnostic exit
+alone does not prove Scene 3 or playable gameplay. The known native pointer-width
+runtime problem remains unresolved. `heartgold_cartridge` is a separate source
+resource target; missing asset recipes are errors, not fabricated ROM contents.
+
 See [BUILD_GRAPH.md](BUILD_GRAPH.md) for the current native link graph and
 its reproducibility boundary. Original-source compilation and local runtime
 checkpoints have progressed beyond the historical status in some older reports;

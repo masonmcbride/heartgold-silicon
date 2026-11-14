@@ -149,6 +149,11 @@ class GraphTests(unittest.TestCase):
             configure(ROOT/'upstream/pokeheartgold',out)
             self.assertEqual(before,{p.name:(p.read_bytes(),p.stat().st_mtime_ns) for p in out.iterdir()})
             generated=(out/'main-data.cmake').read_text()
+            # Main adaptations must remain in the authoritative original inventory.
+            from native_sources import MAIN_NATIVE_SOURCES
+            sources=(out/'sources.cmake').read_text().split(')\n',1)[0]
+            for relative in MAIN_NATIVE_SOURCES:
+                self.assertIn('"'+str((ROOT/'upstream/pokeheartgold'/relative).resolve())+'"',sources)
             self.assertIn('native_data_ir.py',generated)
             self.assertIn('native_data_layouts.json',generated)
             self.assertIn('add_custom_command(OUTPUT',generated)

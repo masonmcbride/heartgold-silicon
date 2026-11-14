@@ -1,11 +1,13 @@
-# Original HeartGold script-bytecode archive.
+# Original field and battle script bytecode, using one assembler pipeline.
+foreach(hg_script_archive fielddata/script/scr_seq battledata/script/move_script battledata/script/subscript)
+get_filename_component(hg_script_name "${hg_script_archive}" NAME)
 
 set(hg_script_source
-    "${game_source}/files/fielddata/script/scr_seq")
+    "${game_source}/files/${hg_script_archive}")
 set(hg_script_stage
-    "${PROJECT_BINARY_DIR}/generated/scr_seq_archive")
+    "${PROJECT_BINARY_DIR}/generated/${hg_script_name}_archive")
 set(hg_script_work
-    "${PROJECT_BINARY_DIR}/generated/scr_seq_work")
+    "${PROJECT_BINARY_DIR}/generated/${hg_script_name}_work")
 
 file(GLOB hg_script_sources CONFIGURE_DEPENDS
     "${hg_script_source}/*.s")
@@ -17,7 +19,7 @@ set(expected_script_id 0)
 foreach(source IN LISTS hg_script_sources)
     get_filename_component(stem "${source}" NAME_WE)
 
-    if(NOT stem MATCHES "^scr_seq_([0-9][0-9][0-9][0-9])(_[A-Za-z0-9_]+)?$")
+    if(NOT stem MATCHES "^${hg_script_name}_([0-9][0-9][0-9][0-9])(_[A-Za-z0-9_]+)?$")
         message(FATAL_ERROR "Unexpected script source: ${stem}")
     endif()
 
@@ -69,10 +71,13 @@ foreach(source IN LISTS hg_script_sources)
     list(APPEND hg_script_bins "${bin}")
 endforeach()
 
-hg_narc(heartgold_script_assets "fielddata/script/scr_seq"
+hg_narc(heartgold_${hg_script_name}_assets "${hg_script_archive}"
     "${hg_script_stage}" ${hg_script_bins})
 
-add_dependencies(heartgold_script_assets heartgold_msg_assets)
+add_dependencies(heartgold_${hg_script_name}_assets heartgold_msg_assets)
 
 message(STATUS
     "HeartGold: ${hg_script_count} original scripts configured")
+
+endforeach()
+add_custom_target(heartgold_script_assets DEPENDS heartgold_scr_seq_assets heartgold_move_script_assets heartgold_subscript_assets)

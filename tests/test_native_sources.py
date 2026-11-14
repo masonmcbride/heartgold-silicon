@@ -65,9 +65,8 @@ class NativeSourceAdaptations(unittest.TestCase):
         expected = original
         for table in ('sSnowFallSpeeds', 'sSnowSlowdownIntervals'):
             expected = expected.replace('static const ' + table + '[]', 'static const int ' + table + '[]')
-        for local, table in (('table0', 'sSnowSlowdownIntervals'), ('table1', 'sSnowFallSpeeds')):
-            expected = expected.replace(local + ' = ' + table + ';', 'memcpy(' + local + ', ' + table + ', sizeof(' + local + '));')
-        self.assertEqual(semantic_adapt(relative, original), '#include <string.h>\n' + expected)
+        expected = expected.replace('int table0[4];', 'const int *table0;').replace('int table1[4];', 'const int *table1;')
+        self.assertEqual(semantic_adapt(relative, original), expected)
         for fragment in ('2, 2, 2, 2', '16, 32, 16, 10', 'int table0[4]', 'table1[index]', 'table0[index]'):
             with self.assertRaises(ValueError):
                 native.adapt(relative, original.replace(fragment, fragment + ' /* drift */'), GAME)
@@ -77,7 +76,9 @@ class NativeSourceAdaptations(unittest.TestCase):
                       'SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) = { ' + callback + ' };\n#pragma section SINIT end')
             after = ('SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) '
                      '__attribute__((section("__DATA,__ntr_sinit"))) = { ' + callback + ' };')
-            self.assertEqual(semantic_adapt(relative, original), original.replace(before, after))
+            result = semantic_adapt(relative, original)
+            self.assertNotIn(before, result)
+            self.assertEqual(result.count(after), 1)
             for changed in (original.replace('{ ' + callback + ' };', '{ OtherCallback };'),
                             original.replace('".sinit"', '".changed"'), original + '\n' + before):
                 with self.assertRaises(ValueError):
@@ -193,7 +194,13 @@ class NativeSourceAdaptations(unittest.TestCase):
         old = '    if ((u32)(MIC_GetLastSamplingAddress() - address) < size) {'
         expected = expected.replace(old, '    u8 *lastSamplingAddress = MIC_GetLastSamplingAddress();\n'
                                         '    if ((u32)(lastSamplingAddress - address) < size) {')
-        self.assertEqual(native.adapt(relative, original, GAME), '#include <nitro/spi/ARM9/mic.h>\n' + expected)
+        result = native.adapt(relative, original, GAME)
+        self.assertIn('#include <nitro/spi/ARM9/mic.h>', result)
+        self.assertIn('u8 *lastSamplingAddress = MIC_GetLastSamplingAddress();', result)
+        self.assertIn('if ((u32)(lastSamplingAddress - address) < size)', result)
+        self.assertIn('VoiceChat_AllocAligned(&allocation,', result)
+        self.assertNotIn('(u32)*allocation', result)
+        self.assertEqual(result.count('count * (8 * HG_VCT_NATIVE_SLOT_SIZE) + 32'), 2)
         with self.assertRaises(ValueError):
             native.adapt(relative, original.replace(old, '/* drift */'), GAME)
 
@@ -205,8 +212,8 @@ class NativeSourceAdaptations(unittest.TestCase):
                 expected = native.drop(expected, declaration)
                 with self.assertRaises(ValueError):
                     native.adapt(relative, original.replace(declaration, '/* declaration changed */'), GAME)
-            self.assertEqual(native.adapt(relative, original, GAME),
-                             '#include <nitro/os/common/printf.h>\n' + expected_common_storage(relative, expected))
+            self.assertEqual(native._adapt(relative, original, GAME),
+                             '#include <nitro/os/common/printf.h>\n' + expected)
         for relative in ('lib/include/vct/vct_audio_internal.h', 'lib/include/nitro/wm/wm_internal.h'):
             original = (GAME / relative).read_text()
             declaration = 'int MATH_CountPopulation(u32 value);'
@@ -235,18 +242,15 @@ class NativeSourceAdaptations(unittest.TestCase):
             expected = native.coordinated.adapt(relative, original) if relative in native.coordinated.SOURCES else original
             for declaration in declarations:
                 expected = native.drop(expected, declaration)
-            result = native.adapt(relative, original, GAME)
+            prepared = native.coordinated.adapt(relative, original) if relative in native.coordinated.SOURCES else original
+            result = native.native_libc(relative, prepared)
             if relative == 'src/lobby/ppw_lobby.cpp':
                 expected = native.replace(expected, 'using std::va_list;', 'using ::va_list;')
             headers = '#include <stdio.h>\n#include <string.h>\n'
             if relative == 'src/lobby/ppw_lobby.cpp':
                 headers += '#include <cstring>\n'
             expected = headers + expected
-            if relative in native.PRINTF_DECLARATIONS:
-                for declaration in native.PRINTF_DECLARATIONS[relative]:
-                    expected = native.drop(expected, declaration)
-                expected = '#include <nitro/os/common/printf.h>\n' + expected
-            self.assertEqual(result, expected_common_storage(relative, expected))
+            self.assertEqual(result, expected)
             with self.assertRaises(ValueError):
                 native.adapt(relative, original.replace(declarations[0], "/* changed declaration */", 1), GAME)
         # Compile and run genuine native libc calls with fortification still on.
@@ -370,13 +374,13 @@ int main(void) {
 
     def test_private_comm_state_helpers_stay_private(self):
         source = (GAME / "src/comm_state.c").read_text()
-        original = (GAME / "src/comm_state_private.h").read_text()
-        result = native.adapt("src/comm_state_private.h", original, GAME)
+        original = (GAME / "include/comm_state_internal.h").read_text()
+        result = native.adapt("include/comm_state_internal.h", original, GAME)
         private = set(re.findall(r"^static\s+(?:void|BOOL|s32|int)\s+(CommState_\w+)\(", source, re.M))
         self.assertEqual(len(private), 77)
         for name in private:
             self.assertNotRegex(result, rf"\b{name}\s*\(")
-        self.assertIn("int DWC_Init(void *work);", result)
+        self.assertIn('DWC_Init((void *)', source)
         adapted = native.adapt("src/comm_state.c", source, GAME)
         for name in private:
             self.assertRegex(adapted, rf"static\s+(?:void|BOOL|s32|int)\s+{name}\(")

@@ -11,6 +11,10 @@ spec = importlib.util.spec_from_file_location('batch', ROOT / 'cmake/native_coor
 batch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(batch)
 
+import sys
+sys.path.insert(0, str(ROOT / 'cmake'))
+from native_sources import apply_pristine_compat
+
 
 def original_words(name, following):
     asm = (GAME / 'lib/asm/nitro_sdk_data.s').read_text()
@@ -25,7 +29,7 @@ def original_words(name, following):
 class CoordinatedSources(unittest.TestCase):
     def test_fail_closed_and_reproducible(self):
         for relative, record in batch.SOURCES.items():
-            original = (GAME / relative).read_text()
+            original = apply_pristine_compat(relative, (GAME / relative).read_text())
             self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), record['sha256'])
             first = batch.adapt(relative, original)
             self.assertEqual(first, batch.adapt(relative, original))

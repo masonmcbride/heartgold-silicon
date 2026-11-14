@@ -24,9 +24,28 @@ class NativeDataTests(unittest.TestCase):
                     evidence=assembly.validate_object(obj,blocks)
                     self.assertTrue(evidence['validated'])
                     # Independent object corruption must be rejected.
-                    section=next(s for s in evidence['sections'] if s['size'] and s['name']!='__bss')
-                    raw=bytearray(obj.read_bytes());raw[section['offset']]^=1;obj.write_bytes(raw)
-                    with self.assertRaisesRegex(ValueError,'numeric data'):
+                    section=next((s for s in evidence['sections'] if s['size'] and s['name']!='__bss'), None)
+                    raw=bytearray(obj.read_bytes())
+                    if section:
+                        raw[section['offset']]^=1
+                        expected_error='numeric data'
+                    else:
+                        # Pure BSS has no file-backed bytes. Corrupt its Mach-O
+                        # section type instead; zero-fill ownership must be checked.
+                        import struct
+                        cursor=32
+                        while cursor < len(raw):
+                            command,size=struct.unpack_from('<II',raw,cursor)
+                            if command==0x19:
+                                for i in range(struct.unpack_from('<I',raw,cursor+64)[0]):
+                                    at=cursor+72+i*80
+                                    if raw[at:at+16].rstrip(b'\0')==b'__bss':
+                                        struct.pack_into('<I',raw,at+64,0)
+                                break
+                            cursor+=size
+                        expected_error='storage section type'
+                    obj.write_bytes(raw)
+                    with self.assertRaisesRegex(ValueError,expected_error):
                         assembly.validate_object(obj,blocks)
 
     def test_mixed_native_records_preserve_numeric_fields(self):

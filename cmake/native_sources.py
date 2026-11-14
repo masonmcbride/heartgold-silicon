@@ -490,8 +490,8 @@ SINIT_CALLBACKS = {
 # Both signed divisors are positive constants; no divide-by-zero/overflow ABI changes.
 COMPILER_OPERATIONS = {
     'src/pokeathlon/pokeathlon_hurdle_dash_race.c': ('a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590', 's32 _s32_div_f(s32 num, s32 den);', '_s32_div_f((u8)(frames % 30) * 100, 30)', '(((u8)(frames % 30) * 100) / 30)'),
-    'src/pokeathlon/pokeathlon_disc_catch.c': ('9c0908e9995aa5ac37ca4080449397e6e5d80eeba68ac01e3c3a4ec2e6650571', 's32 _s32_div_f(s32 dividend, s32 divisor);', '_s32_div_f(38 * (progress * (path - 7)), 1000)', '((38 * (progress * (path - 7))) / 1000)'),
-    'src/pokeathlon/pokeathlon_relay_run.c': ('67b56bd002b5b409d950d7a4d43954710847425a5b067e7b923eb4c0a42400cd', 'f32 _fflt(int value);', '_fflt(VEC_Mag(&work.flick) / FX32_ONE)', '((f32)(VEC_Mag(&work.flick) / FX32_ONE))'),
+    'src/pokeathlon/pokeathlon_disc_catch.c': ('38bc8dd3ae61e1de6f293950e90fdcea4f1ff4c04b1b2399bc4e2da4e9024ef1', 's32 _s32_div_f(s32 dividend, s32 divisor);', '_s32_div_f(38 * (progress * (path - 7)), 1000)', '((38 * (progress * (path - 7))) / 1000)'),
+    'src/pokeathlon/pokeathlon_relay_run.c': ('be57363f58345c75f3c257471584fef74e0a5c8863716b22b34e1e5e2421c993', 'f32 _fflt(int value);', '_fflt(VEC_Mag(&work.flick) / FX32_ONE)', '((f32)(VEC_Mag(&work.flick) / FX32_ONE))'),
 }
 
 # Direct native representations of original ARM register operations.
@@ -503,16 +503,22 @@ ARM_INLINE_OPERATIONS = {
 # Bounded explicit soft-float calls: positive exact integers plus 0.5, then truncation.
 # Both long-multiply operands originate as s32, so their product fits s64.
 COMPILER_BOUNDED_OPERATIONS = {
-    'src/wifi_plaza/wifi_plaza_instrument.c': ('a76f3608ced824d35d9e7492edf5f19be44d8577e362ebb505f160beeae9e507', [('s64 _ll_mul(s64 a, s64 b);', '', 1), ('u32 _fflt(s32 value);', '', 1), ('u32 _fadd(u32 a, u32 b);', '', 1), ('s32 _ffix(u32 value);', '', 1), ('_ll_mul((s64)(s32)(frame > 0 ? (float)(frame << 12) + 0.5f : (float)(frame << 12) - 0.5f), (s64)delta)', '(((s64)(s32)(frame > 0 ? (float)((s32)((u32)frame << 12)) + 0.5f : (float)((s32)((u32)frame << 12)) - 0.5f)) * (s64)delta)', 3), ('    u32 y;\n    u32 x;', '    f32 y;\n    f32 x;', 2), ('_fadd(0x3F000000, _fflt(11 << 14))', '(0.5f + (f32)(11 << 14))', 4), ('_fadd(0x3F000000, _fflt(14 << 12))', '(0.5f + (f32)(14 << 12))', 4), ('_fadd(0x3F000000, _fflt(14 << 14))', '(0.5f + (f32)(14 << 14))', 4), ('_fadd(0x3F000000, _fflt(15 << 14))', '(0.5f + (f32)(15 << 14))', 2), ('_fadd(0x3F000000, _fflt(2 << 12))', '(0.5f + (f32)(2 << 12))', 4), ('_fadd(0x3F000000, _fflt(2 << 14))', '(0.5f + (f32)(2 << 14))', 4), ('_fadd(0x3F000000, _fflt(3 << 16))', '(0.5f + (f32)(3 << 16))', 2), ('_ffix(x)', '((s32)x)', 12), ('_ffix(y)', '((s32)y)', 12), ('tween->duration << 12', '(s32)((u32)tween->duration << 12)', 6)]),
+    'src/wifi_plaza/wifi_plaza_instrument.c': ('c1f69200ee45c6815bbefad19bf35249e495e59d5afb780465450628541e1a9f', [('s64 _ll_mul(s64 a, s64 b);', '', 1), ('u32 _fflt(s32 value);', '', 1), ('u32 _fadd(u32 a, u32 b);', '', 1), ('s32 _ffix(u32 value);', '', 1), ('_ll_mul((s64)(s32)(frame > 0 ? (float)(frame << 12) + 0.5f : (float)(frame << 12) - 0.5f), (s64)delta)', '(((s64)(s32)(frame > 0 ? (float)((s32)((u32)frame << 12)) + 0.5f : (float)((s32)((u32)frame << 12)) - 0.5f)) * (s64)delta)', 3), ('    u32 y;\n    u32 x;', '    f32 y;\n    f32 x;', 2), ('_fadd(0x3F000000, _fflt(11 << 14))', '(0.5f + (f32)(11 << 14))', 4), ('_fadd(0x3F000000, _fflt(14 << 12))', '(0.5f + (f32)(14 << 12))', 4), ('_fadd(0x3F000000, _fflt(14 << 14))', '(0.5f + (f32)(14 << 14))', 4), ('_fadd(0x3F000000, _fflt(15 << 14))', '(0.5f + (f32)(15 << 14))', 2), ('_fadd(0x3F000000, _fflt(2 << 12))', '(0.5f + (f32)(2 << 12))', 4), ('_fadd(0x3F000000, _fflt(2 << 14))', '(0.5f + (f32)(2 << 14))', 4), ('_fadd(0x3F000000, _fflt(3 << 16))', '(0.5f + (f32)(3 << 16))', 2), ('_ffix(x)', '((s32)x)', 12), ('_ffix(y)', '((s32)y)', 12), ('tween->duration << 12', '(s32)((u32)tween->duration << 12)', 6)]),
 }
 
 # Source-guarded lowering of original ARM compiler arithmetic helpers.
 # Preserve low-64-bit multiplication and signed integer-to-f32 conversion.
-COMPILER_BOUNDED_OPERATIONS.update({'src/application/footprint_stamp_effects.c': ('aa6a4cadb2188647e22a671363806fcd10f6b29959c0abe6ba08c1b73f852f35', [('_ll_mul((s64)scaleX * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleX * 100 / FX32_ONE) * (u64)(s64)length))', 1), ('_ll_mul((s64)scaleY * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleY * 100 / FX32_ONE) * (u64)(s64)length))', 1)]), 'src/application/plaza_game_mime_jr_top.c': ('83ec77662a263f8b8731a1ce6d2b9de13648b6e07ca5cc3bc274a9cc4c334dfc', [('_f_lltof(sinValue)', '((f32)sinValue)', 2), ('_f_lltof(cosValue)', '((f32)cosValue)', 2)])})
+COMPILER_BOUNDED_OPERATIONS.update({'src/application/footprint_stamp_effects.c': ('aa6a4cadb2188647e22a671363806fcd10f6b29959c0abe6ba08c1b73f852f35', [('_ll_mul((s64)scaleX * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleX * 100 / FX32_ONE) * (u64)(s64)length))', 1), ('_ll_mul((s64)scaleY * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleY * 100 / FX32_ONE) * (u64)(s64)length))', 1)]), 'src/application/plaza_game_mime_jr_top.c': ('43f55e7919ed4e80da2059e1d8fbbb228b39566fee8993fae72b8a4cfce506cf', [('_f_lltof(sinValue)', '((f32)sinValue)', 2), ('_f_lltof(cosValue)', '((f32)cosValue)', 2)])})
+
+MAIN_NATIVE_SOURCES = ('src/system_card.c', 'src/vs_recorder_menu_app.c', 'src/wireless_manager.c', 'src/comm_wireless.c', 'src/comm_state.c', 'src/party_menu_list_items.c', 'src/party_menu.c', 'src/code_entry.c', 'src/spin_trade_link.c', 'src/save_fashion.c', 'src/screen_fade_effects.c', 'lib/NitroSystem/src/fnd_expheap.c', 'lib/NitroSystem/src/fnd_frameheap.c', 'lib/NitroSystem/src/fnd_heapcommon.c', 'lib/NitroSystem/src/gfd_vram_transfer_manager.c', 'lib/NitroSystem/src/g3d_kernel.c', 'lib/NitroSystem/src/g2d_char_canvas_util.c', 'lib/NitroSystem/src/g2d_char_canvas.c', 'lib/NitroSystem/src/g2d_canvas_arrange.c', 'lib/NitroSystem/src/snd_arc_loader_wave.c', 'lib/NitroSystem/src/snd_arc_loader.c', 'lib/NitroSystem/src/snd_heap.c', 'lib/NitroSystem/src/snd_arc.c', 'lib/NitroSystem/src/snd_player.c', 'lib/NitroSystem/src/snd_system.c', 'lib/NitroSystem/src/snd_stream.c')
 
 COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLBACKS) + tuple(COMPILER_OPERATIONS) + tuple(ARM_INLINE_OPERATIONS) + (
     "src/application/pokedex/pokedex_main_seq.c", "src/field/weather_manager.c")
 
+
+# Compatibility edits are a validated first stage, including inputs which need
+# no later coordinated or compiler adaptation. Selection must include them.
+PRISTINE_COMPAT = json.loads(Path(__file__).with_name("native_pristine_compat.json").read_text())
 
 OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c", "lib/libVCT/src/vct_packet_buffer.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
@@ -520,7 +526,7 @@ OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p fo
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c",)))
 
-OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("lib/libVCT/src/vct_audio_send.c",)))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in PRISTINE_COMPAT if not p.endswith(".h"))))
 
 def native_libc(relative, text):
     for declaration in LIBC_DECLARATIONS[relative]:
@@ -780,7 +786,7 @@ def _adapt(relative, text, root):
         )
         return text
     if relative == 'src/global_terminal/global_terminal_socket.c':
-        if hashlib.sha256(text.encode()).hexdigest() != 'ccb95e6265138c5f0a21a6c024117b3fbbc946233ad8b23253e40ab01be36f5f':
+        if hashlib.sha256(text.encode()).hexdigest() != '44b9c84bdab9bfda06590b4cb9d91074a25691bacf779c1c84a3e10484183cf8':
             raise ValueError('Global Terminal socket ABI source drift')
         anchor = '} GlobalTerminalSocketSettings;'
         checks = r"""
@@ -821,15 +827,6 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
         if relative in LIBC_DECLARATIONS:
             text = native_libc(relative, text)
         return text
-    if relative in SINIT_CALLBACKS:
-        callback = SINIT_CALLBACKS[relative]
-        original = ('#pragma define_section SINIT ".sinit" abs32 RWX\n'
-                    '#pragma section SINIT begin\n'
-                    'SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) = { ' + callback + ' };\n'
-                    '#pragma section SINIT end')
-        native = ('SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) '
-                  '__attribute__((section("__DATA,__ntr_sinit"))) = { ' + callback + ' };')
-        return replace(text, original, native)
     if relative == "src/application/pokedex/pokedex_main_seq.c":
         if (text.count("static int PokedexApp_MainSeq_62(PokedexAppData *pokedexApp);") != 1
                 or text.count("[POKEDEXAPP_MAINSEQ_62] = PokedexApp_MainSeq_62,") != 1):
@@ -838,7 +835,7 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
                        "\nstatic int PokedexApp_MainSeq_62(PokedexAppData *pokedexApp) {")
     if relative == "src/field/weather_manager.c":
         # Current original source already has typed tables and pointer views.
-        if hashlib.sha256(text.encode()).hexdigest() == "28f978cae8177929c55cc91ab0a12b2e964da0ed29dc120da6bcf299fc1fb1b2":
+        if hashlib.sha256(text.encode()).hexdigest() == "e3c88c91e60e30b637d67968e19dfa6f762eaa0af6ebd2a519bed48e32c768c4":
             return text
         original = span(text, "static const sSnowFallSpeeds[]", "\nstatic void Snow_UpdateFlake(WeatherObject *object) {")
         # The final delimiter belongs to the following function, not the block.
@@ -997,7 +994,35 @@ _Static_assert(sizeof(OSMutex) == 0x38 && _Alignof(OSMutex) == 8, "socket mutex 
     return adapt_original(relative, text, root)
 
 
+
+def apply_pristine_compat(relative, text):
+    """Apply verified native transformations to pristine upstream input."""
+    import hashlib
+    import json
+    from pathlib import Path
+
+    record = PRISTINE_COMPAT.get(relative)
+
+    if record is None:
+        return text
+
+    if hashlib.sha256(text.encode()).hexdigest() != record["pristine_sha256"]:
+        raise ValueError("Pristine source drift: " + relative)
+
+    for edit in record["edits"]:
+        old = edit["old"]
+        if text.count(old) != 1:
+            raise ValueError("Native edit context drift: " + relative)
+        text = text.replace(old, edit["new"], 1)
+
+    if hashlib.sha256(text.encode()).hexdigest() != record["adapted_sha256"]:
+        raise ValueError("Native adaptation output drift: " + relative)
+
+    return text
+
+
 def adapt(relative, text, root):
+    text = apply_pristine_compat(relative, text)
     record = coordinated.HEADER_ROUTES.get(relative)
     if record and hashlib.sha256(text.encode()).hexdigest() != record['sha256']:
         raise ValueError('Native header routing source drift: ' + relative)
@@ -1013,9 +1038,18 @@ def adapt(relative, text, root):
     try:
         result = _adapt(relative, text, root)
     except ValueError as error:
-        if not (record or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS or relative == 'include/wifi_setup/wifi_setup_share.h') or str(error) != 'No native adaptation is registered for ' + relative:
+        if not (record or relative in PRISTINE_COMPAT or relative in SINIT_CALLBACKS or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS or relative == 'include/wifi_setup/wifi_setup_share.h') or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
+    if relative in SINIT_CALLBACKS:
+        callback = SINIT_CALLBACKS[relative]
+        original = ('#pragma define_section SINIT ".sinit" abs32 RWX\n'
+                    '#pragma section SINIT begin\n'
+                    'SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) = { ' + callback + ' };\n'
+                    '#pragma section SINIT end')
+        native = ('SDK_FORCE_EXPORT static void (*NitroStaticInit_[])(void) '
+                  '__attribute__((section("__DATA,__ntr_sinit"))) = { ' + callback + ' };')
+        result = replace(result, original, native)
     if bounded:
         for old, new, count in bounded[1]:
             result = replace(result, old, new, count=count)
@@ -1454,23 +1488,12 @@ _Static_assert(__builtin_offsetof(MainMenuUtilWork,vblankCallback)==4032,"OVY_74
                            f"HG_PartyMenu_InvokeAction(func, partyMenu, {arg});")
         return ("struct PartyMenu;\nextern void HG_PartyMenu_InvokeAction(unsigned int, struct PartyMenu *, int *);\n"
                 f'#line 1 {json.dumps(str(root / relative), ensure_ascii=False)}\n' + text)
-    if relative == "src/comm_state_private.h":
-        text = drop(text, "typedef struct {\n    u64 x;\n    u64 mul;\n    u64 add;\n} MATHRandContext32;")
-        original = (root / "src/comm_state.c").read_text()
-        private = set(re.findall(r"^static\s+(?:void|BOOL|s32|int)\s+(CommState_\w+)\(", original, re.M))
-        if len(private) != 77:
-            raise ValueError("CommState private helper definitions changed")
-        # These definitions are file-local; do not export them to satisfy bad declarations.
-        for name in sorted(private):
-            text, count = re.subn(r"^(?:void|BOOL|s32|int) " + name + r"\([^;\n]*;", "", text, flags=re.M)
-            if count != 1:
-                raise ValueError("Private CommState declaration changed: " + name)
-        text = replace(text, "int DWC_Init(int);", "int DWC_Init(void *work);")
-        return replace(text, '#include "global.h"', '#include "global.h"\n#include <nitro/math/rand.h>')
     if relative == "src/comm_state.c":
+        # Upstream moved this SDK duplicate from the former private header.
+        text = drop(text, "typedef struct {\n    u64 x;\n    u64 mul;\n    u64 add;\n} MATHRandContext32;")
         text = replace(text, "    void (*const linkedStates[3])(void);\n    ARRAY_ASSIGN(linkedStates, gCommLinkedStates);",
                        "    void (*const *linkedStates)(void) = gCommLinkedStates;")
-        text = replace(text, "DWC_Init(((u32)work + 31) & ~31)",
+        text = replace(text, "DWC_Init((void *)(((u32)work + 31) & ~31))",
                        "DWC_Init((void *)(((uintptr_t)work + 31) & ~(uintptr_t)31))")
         return "#include <stdint.h>\n" + text
     if relative == "src/wireless_manager.c":
@@ -1643,6 +1666,9 @@ _Static_assert(__builtin_offsetof(MainMenuUtilWork,vblankCallback)==4032,"OVY_74
             raise ValueError('Pinned native identity source drift: ' + relative)
         return text
     # END PINNED OVY_0 IDENTITY ADAPTATIONS
+    if relative == "include/comm_state_internal.h":
+        # Canonical upstream declaration owner; preserve its definitions.
+        return text
     raise ValueError("No native adaptation is registered for " + relative)
 
 
@@ -2210,16 +2236,6 @@ def guest32_frontend(relative, text, root):
         return text
     if relative == 'src/comm_state.c':
         return adapt(relative, text, root)
-    if relative == 'src/comm_state_private.h':
-        # Retain the original ARM32 MATHRandContext32 declaration. Its native
-        # replacement header is an LP64 port detail, not a guest dependency.
-        original=(root/'src/comm_state.c').read_text()
-        private=set(re.findall(r'^static\s+(?:void|BOOL|s32|int)\s+(CommState_\w+)\(',original,re.M))
-        if len(private)!=77:raise ValueError('CommState private helper definitions changed')
-        for name in sorted(private):
-            text,count=re.subn(r'^(?:void|BOOL|s32|int) '+name+r'\([^;\n]*;','',text,flags=re.M)
-            if count!=1:raise ValueError('Private CommState declaration changed: '+name)
-        return replace(text,'int DWC_Init(int);','int DWC_Init(void *work);')
     if relative == 'lib/include/nitro/os/thread.h':
         original = (root/'lib/NitroSDK/src/os/os_thread.c').read_text()
         if original.count('static void OSi_InsertLinkToQueue(OSThreadQueue *queue, OSThread *thread) {') != 1:
@@ -2273,17 +2289,51 @@ def adapt_dwc_nas_native_allocation(text):
     return text
 
 
+def audit(root):
+    paths = (set(OVERLAY_NATIVE_SOURCES) | set(MAIN_NATIVE_SOURCES) | set(coordinated.SOURCES)
+             | set(coordinated.HEADER_ROUTES) | set(PRISTINE_COMPAT))
+    records, failures = {}, {}
+    for relative in sorted(paths):
+        try:
+            original = (root / relative).read_text()
+            result = adapt(relative, original, root)
+            if result != adapt(relative, original, root):
+                raise ValueError('Non-deterministic adaptation')
+            records[relative] = dict(input_sha256=hashlib.sha256(original.encode()).hexdigest(),
+                                     output_sha256=hashlib.sha256(result.encode()).hexdigest())
+        except (ValueError, OSError) as error:
+            failures[relative] = str(error)
+    return dict(records=records, failures=failures)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--audit", action="store_true")
     parser.add_argument("--list-overlay-sources", action="store_true")
+    parser.add_argument("--list-main-sources", action="store_true")
     parser.add_argument("--root", type=Path)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--kind", default="native")
     args = parser.parse_args()
+    if args.list_main_sources:
+        print(";".join(MAIN_NATIVE_SOURCES))
+        return
     if args.list_overlay_sources:
         print(";".join(OVERLAY_NATIVE_SOURCES))
         return
+    if args.audit:
+        if args.root is None or args.output is None:
+            parser.error("--root and --output are required for audit")
+        if args.output.resolve().is_relative_to(args.root.resolve()):
+            parser.error("Audit output must not overwrite original upstream files")
+        report = audit(args.root.resolve())
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, indent=2) + '\n')
+        print(f"Native source audit: {len(report['records'])} passed, {len(report['failures'])} failed")
+        for relative, error in report['failures'].items():
+            print(relative + ': ' + error)
+        raise SystemExit(bool(report['failures']))
     if args.root is None or args.input is None or args.output is None:
         parser.error("--root, --input and --output are required for generation")
     root, source = args.root.resolve(), args.input.resolve()

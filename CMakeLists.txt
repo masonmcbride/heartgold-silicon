@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.30)
 project(heartgold_silicon LANGUAGES C CXX)
+# Source and ABI regression tests inspect the actual compiler invocations.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # --- 1. Pinned repositories ---------------------------------------------------
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
-set(HEARTGOLD_COMMIT 6d94f9137ced9db12d9ce827a8127c97b779bbeb)
+set(HEARTGOLD_COMMIT 6d2947303134256e90144b6aaedc5c3cf6a593d2)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
 set(LIBNTR_COMMIT 0be2c2b46e93cc26b0f34fcf3c48c2c7844c94de)
 
@@ -75,38 +77,10 @@ function(dependency name url revision)
     if(NOT actual STREQUAL revision)
         message(FATAL_ERROR "${name}: expected ${revision}, found ${actual}")
     endif()
-    # The libntr development fork may contain authorized local changes.
-    # Its HEAD must still match the pin; never discard or publish those edits.
-    if(name STREQUAL "pokeheartgold")
-        # Reviewed native-source adaptations at the pinned upstream revision.
-        # Unexpected changes must still fail fingerprint verification.
-        if(NOT DEFINED HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256)
-            set(HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256
-                "b0b4f39f4bfa39b241211d559efdf600430ad50fd3a0bcebd0e4776688ea1a29")
-        endif()
-        execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${source}" status --porcelain --untracked-files=all
-            OUTPUT_VARIABLE dirty COMMAND_ERROR_IS_FATAL ANY)
-        if(dirty)
-            string(LENGTH "${HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256}" review_hash_length)
-            if(NOT review_hash_length EQUAL 64 OR
-               NOT HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256 MATCHES "^[0-9a-fA-F]+$")
-                message(FATAL_ERROR "${name} must match its pinned commit with a clean working tree.")
-            endif()
-            execute_process(
-                COMMAND "${GIT_EXECUTABLE}" -C "${source}" ls-files --others --exclude-standard
-                OUTPUT_VARIABLE untracked COMMAND_ERROR_IS_FATAL ANY)
-            if(untracked)
-                message(FATAL_ERROR "Reviewed upstream checkout contains untracked files")
-            endif()
-            execute_process(
-                COMMAND "${GIT_EXECUTABLE}" -C "${source}" diff --binary HEAD
-                OUTPUT_VARIABLE reviewed_diff COMMAND_ERROR_IS_FATAL ANY)
-            string(SHA256 actual_review_sha "${reviewed_diff}")
-            if(NOT actual_review_sha STREQUAL HEARTGOLD_UPSTREAM_REVIEW_DIFF_SHA256)
-                message(FATAL_ERROR "Reviewed upstream source fingerprint changed")
-            endif()
-            message(WARNING "Using fingerprint-locked modified pokeheartgold checkout; not a pristine upstream build")
-        endif()
+    execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${source}" status --porcelain --untracked-files=all
+        OUTPUT_VARIABLE dirty COMMAND_ERROR_IS_FATAL ANY)
+    if(dirty)
+        message(FATAL_ERROR "${name} must match its pinned commit with a clean working tree; existing changes are preserved.")
     endif()
 
 endfunction()
@@ -115,8 +89,8 @@ dependency(pokeheartgold "${HEARTGOLD_URL}" "${HEARTGOLD_COMMIT}")
 dependency(libntr "${LIBNTR_URL}" "${LIBNTR_COMMIT}")
 
 # --- 4. Source roots ---------------------------------------------------------
-set(game_source "${PROJECT_SOURCE_DIR}/upstream/pokeheartgold")
-set(ntr_source "${PROJECT_SOURCE_DIR}/upstream/libntr")
+file(REAL_PATH "${PROJECT_SOURCE_DIR}/upstream/pokeheartgold" game_source)
+file(REAL_PATH "${PROJECT_SOURCE_DIR}/upstream/libntr" ntr_source)
 # Explicit local fork review, without changing either managed checkout or pin.
 set(HEARTGOLD_LIBNTR_REVIEW_SOURCE "" CACHE PATH "Local libntr fork checkout for uncommitted native review")
 if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
@@ -296,7 +270,7 @@ add_executable(test_host tests/test_host.c)
 target_link_libraries(test_host PRIVATE native_host)
 add_test(NAME native_host COMMAND test_host)
 set_tests_properties(native_host PROPERTIES TIMEOUT 10)
-add_executable(test_heap EXCLUDE_FROM_ALL tests/test_heap.c
+add_executable(test_heap tests/test_heap.c
     "${game_source}/lib/NitroSystem/src/fnd_expheap.c"
     "${game_source}/lib/NitroSystem/src/fnd_heapcommon.c"
     "${game_source}/lib/NitroSystem/src/fnd_list.c")
@@ -306,8 +280,7 @@ target_compile_options(test_heap PRIVATE "-idirafter${game_source}/lib/include"
 target_link_options(test_heap PRIVATE -fsanitize=address,undefined)
 add_dependencies(test_heap fx_constants)
 add_test(NAME nitrosystem_heap COMMAND test_heap)
-# Unmodified Nintendo heap metadata truncates native pointers. Keep the test,
-# but do not execute it or claim support until that upstream-only constraint is resolved.
+# The game build selects the guarded native heap adaptation for this test.
 set_tests_properties(nitrosystem_heap PROPERTIES TIMEOUT 30)
 add_executable(uncompress_reference "${game_source}/tools/asmdiff/ntruncompbw.c")
 add_executable(test_uncompress tests/test_uncompress.c hardware_drivers/os/mi.c)

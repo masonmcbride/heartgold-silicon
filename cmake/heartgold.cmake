@@ -20,25 +20,13 @@ function(native_generate kind input output)
             --root "${game_source}" --kind "${kind}"
             --input "${input}" --output "${output}"
         COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
-        DEPENDS "${native_script}" "${PROJECT_SOURCE_DIR}/cmake/native_coordinated.py" "${input}" ${ARGN}
+        DEPENDS "${native_script}" "${PROJECT_SOURCE_DIR}/cmake/native_coordinated.py"
+            "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json" "${input}" ${ARGN}
         VERBATIM)
 endfunction()
 
-set(native_sources
-    src/system_card.c
-    src/vs_recorder_menu_app.c
-    src/wireless_manager.c src/comm_wireless.c src/comm_state.c
-    src/party_menu_list_items.c src/party_menu.c src/code_entry.c
-    src/spin_trade_link.c src/save_fashion.c src/screen_fade_effects.c
-    lib/NitroSystem/src/fnd_expheap.c
-    lib/NitroSystem/src/fnd_frameheap.c
-    lib/NitroSystem/src/fnd_heapcommon.c
-    lib/NitroSystem/src/gfd_vram_transfer_manager.c lib/NitroSystem/src/g3d_kernel.c
-    lib/NitroSystem/src/g2d_char_canvas_util.c lib/NitroSystem/src/g2d_char_canvas.c
-    lib/NitroSystem/src/g2d_canvas_arrange.c lib/NitroSystem/src/snd_arc_loader_wave.c
-    lib/NitroSystem/src/snd_arc_loader.c lib/NitroSystem/src/snd_heap.c
-    lib/NitroSystem/src/snd_arc.c lib/NitroSystem/src/snd_player.c
-    lib/NitroSystem/src/snd_system.c lib/NitroSystem/src/snd_stream.c)
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${native_script}" --list-main-sources
+    OUTPUT_VARIABLE native_sources OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
 foreach(relative IN LISTS native_sources)
     set(output "${native_root}/${relative}")
     list(FIND game_sources "${game_source}/${relative}" index)
@@ -65,7 +53,7 @@ set(native_headers
     include/wifi_plaza/wifi_plaza_internal.h
     include/wifi_setup/wifi_setup_ui.h
     lib/include/dwc/http_internal.h lib/include/dwc/chat_internal.h
-    src/comm_state_private.h include/orbit_cursor.h include/field/field_fog.h
+    include/comm_state_internal.h include/orbit_cursor.h include/field/field_fog.h
     include/drawing_session_link_internal.h include/record_mixing/record_mixing_link_internal.h
     include/voice_chat.h lib/include/nitro/os/printf.h lib/include/vct/vct_audio_internal.h
     lib/include/nitro/wm/wm_internal.h lib/include/nitro/os/ownerInfo.h
@@ -85,9 +73,6 @@ foreach(relative IN LISTS native_headers)
     if(relative STREQUAL "include/application/pokewalker/pokewalker_ir_internal.h")
         list(APPEND extra "${game_source}/src/application/pokewalker/pokewalker_ir_requests.c")
     endif()
-    if(relative STREQUAL "src/comm_state_private.h")
-        list(APPEND extra "${game_source}/src/comm_state.c")
-    endif()
     set(output "${native_root}/${relative}")
     native_generate(native "${game_source}/${relative}" "${output}" ${extra})
     list(APPEND header_outputs "${output}")
@@ -95,7 +80,7 @@ endforeach()
 add_custom_target(heartgold_native_headers DEPENDS ${header_outputs})
 
 # Exercise the same approved heap-common storage/layout adaptation as the game.
-# The allocator remains original and this diagnostic stays disabled in CTest.
+# The allocator remains original; build the registered CTest executable normally.
 set_property(TARGET test_heap PROPERTY SOURCES
     "${PROJECT_SOURCE_DIR}/tests/test_heap.c"
     "${native_root}/lib/NitroSystem/src/fnd_expheap.c"
@@ -280,6 +265,12 @@ add_test(NAME multiboot_native COMMAND "${Python3_EXECUTABLE}" -B
 add_test(NAME lobby_timers_native COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_lobby_timers_native.py"
     --root "${PROJECT_SOURCE_DIR}" --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_CXX_COMPILER}")
+add_test(NAME linker_provider_data COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_linker_provider_data.py"
+    --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}")
+add_test(NAME native_source_pipeline COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/cmake/native_sources.py"
+    --audit --root "${game_source}" --output "${PROJECT_BINARY_DIR}/native-source-audit.json")
 add_test(NAME coordinated_sources COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_coordinated_sources.py")
 

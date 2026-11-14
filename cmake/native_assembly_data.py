@@ -89,7 +89,11 @@ def recipe(game, original):
 
 
 def emit(game, original):
-    return emit_reviewed(recipe(game, original))
+    result = emit_reviewed(recipe(game, original))
+    expected = contracts()[original].get('native_output_sha256')
+    if expected and hashlib.sha256(result.encode()).hexdigest() != expected:
+        raise ValueError('Native provider output changed: ' + original)
+    return result
 
 
 def inventory(game, images, existing=()):

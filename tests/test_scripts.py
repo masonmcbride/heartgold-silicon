@@ -6,6 +6,9 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import contextlib
+import io
+import sys
 
 spec = importlib.util.spec_from_file_location(
     "converter", Path(__file__).resolve().parents[1] / "cmake/assets/build_heartgold_script.py"
@@ -13,8 +16,42 @@ spec = importlib.util.spec_from_file_location(
 converter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(converter)
 
+runner_spec = importlib.util.spec_from_file_location(
+    'build_progress', Path(__file__).resolve().parents[1] / 'tools/profile_build.py')
+progress = importlib.util.module_from_spec(runner_spec)
+runner_spec.loader.exec_module(progress)
+
+
+class BuildProgress(unittest.TestCase):
+    def test_pipe_failure_keeps_stderr_status_and_full_log(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            runner = progress.Runner(directory)
+            output, errors = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+                with self.assertRaises(SystemExit) as failed:
+                    runner.run('Failure', [sys.executable, '-c',
+                        'import sys; print("diagnostic", file=sys.stderr); sys.exit(7)'])
+            self.assertEqual(failed.exception.code, 7)
+            self.assertIn('diagnostic', errors.getvalue())
+            self.assertIn('diagnostic', (runner.logs/'failure.log').read_text())
+            self.assertNotIn('\x1b', output.getvalue())
+            self.assertNotIn('\r', output.getvalue())
+
+    def test_large_combined_output_does_not_deadlock(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            runner = progress.Runner(directory)
+            with contextlib.redirect_stdout(io.StringIO()):
+                runner.run('Pipes', [sys.executable, '-c',
+                    'import sys; sys.stdout.write("x"*100000); sys.stderr.write("y"*100000)'])
+            self.assertEqual((runner.logs/'pipes.log').stat().st_size, 200000)
+
 
 class InitializerConversion(unittest.TestCase):
+    def test_battle_equ_constants_preserve_values(self):
+        self.assertEqual(converter.normalize_initializers('    .equ FALSE 0\n    .equ TRUE 1\n'),
+                         '    .equ FALSE, 0\n    .equ TRUE, 1\n')
+        self.assertEqual(converter.normalize_initializers('.equ TRUE, 1\n'), '.equ TRUE, 1\n')
+
     def test_tabs_and_lowercase_n_in_argument(self):
         self.assertEqual(
             converter.normalize_initializers("\tInitScriptEntry_OnResume entry, 0\n"),

@@ -74,8 +74,12 @@ _Static_assert(offsetof(InitParam,skipNetCheck)==offsetof(NetStartParams,unk_0A)
         # The global registry's complete native archives must not own any of
         # these state objects too. The OVY_0 exclusion remains a CMake error.
         registry = json.loads((self.build / 'native-overlays/provider-registry.json').read_text())
-        states = {'_gDwcNetError', '_gDwcNetAllocator', '_gDwcNetConnection', '_gDwcNasLoginWork'}
+        states = {'_gDwcNetError', '_gDwcNetAllocator', '_gDwcNetConnection'}
         self.assertFalse([r for r in registry['definitions'] if r['native_exported_identity'] in states])
+        nas = [r for r in registry['definitions'] if r['native_exported_identity'] == '_gDwcNasLoginWork']
+        self.assertEqual(len(nas), 1)
+        self.assertEqual(nas[0]['image_owner'], 'OVY_0')
+        self.assertEqual(Path(nas[0]['artifact']).name, 'libhg_dwc_main.a')
 
     def test_original_allocator_and_error_shared_provider(self):
         source = self.work / 'net_common.c'

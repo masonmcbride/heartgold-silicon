@@ -49,7 +49,7 @@ static void destroyed_effect(FieldEffect *effect, void *state) {
 }
 static void task_callback(SysTask *task, void *data) { (void)task; (void)data; }
 _Static_assert(_Generic(&EmoteMark_Spawn, struct FieldEffect *(*)(LocalMapObject *,int,int):1,default:0), "EmoteMark result ABI");
-_Static_assert(_Generic(&SurfMountEffect_Create, struct FieldEffect *(*)(LocalMapObject *,u32,u32,u32,u32):1,default:0), "Surf result ABI");
+_Static_assert(_Generic(&SurfMountEffect_Create, struct FieldEffect *(*)(LocalMapObject *,u32,u32,u32,BOOL):1,default:0), "Surf result ABI");
 _Static_assert(sizeof(HiddenObjectMovementState)<=16,"hidden native state fits unchanged work buffer");
 int main(void) {
     FieldEffect *effect=calloc(1,sizeof(*effect));

@@ -182,7 +182,28 @@ def parse_link_command(link: Path, build: Path) -> tuple[list[LinkInput], list[s
 
     Framework/dylib/system library resolution is intentionally out of scope.
     """
-    tokens = expand_response(shlex.split(link.read_text(errors="replace")), build)
+    if link.is_file():
+        command = link.read_text(errors="replace")
+    elif (build / 'build.ninja').is_file():
+        target = link.parent.name.removesuffix('.dir')
+        commands = subprocess.run(['ninja', '-C', str(build), '-t', 'commands', target],
+                                  capture_output=True, text=True, check=True).stdout
+        candidates = []
+        for line in commands.splitlines():
+            parts = shlex.split(line)
+            if '-o' in parts and Path(parts[parts.index('-o') + 1]).name == target:
+                candidates.append(parts)
+        if len(candidates) != 1:
+            raise ValueError('Expected one recorded Ninja link command for ' + target)
+        tokens = candidates[0]
+        if tokens[:2] == [':', '&&']:
+            tokens = tokens[2:]
+        if '&&' in tokens:
+            tokens = tokens[:tokens.index('&&')]
+        command = shlex.join(tokens)
+    else:
+        raise FileNotFoundError(link)
+    tokens = expand_response(shlex.split(command), build)
     result: list[LinkInput] = []
     missing: list[str] = []
     all_load = False

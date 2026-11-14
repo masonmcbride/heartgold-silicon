@@ -54,7 +54,9 @@ def normalize_initializers(assembly):
             raise ValueError("Unsupported initialization macro arguments: " + match.group(0))
         return match.group(1) + arguments[0].rstrip()
 
-    return pattern.sub(normalize, assembly)
+    assembly = pattern.sub(normalize, assembly)
+    # MWAS permits `.equ name value`; LLVM requires the separating comma.
+    return re.sub(r'(?m)^(\s*\.equ\s+\w+)\s+([^,\r\n]+)$', r'\1, \2', assembly)
 
 
 def depfile_escape(path):
@@ -97,6 +99,7 @@ def main():
         game / "lib/NitroSDK/include",
         libntr / "include",
         Path(a.generated_files),
+        Path(a.generated_files) / "msgdata",
     ]
 
     headers = []
@@ -203,11 +206,14 @@ def main():
     run([a.objcopy, "-O", "binary", str(obj), str(binary)])
 
     size = binary.stat().st_size
-    if not size or size != sections.get(".rodata"):
+    # Original field scripts use .rodata; original battle scripts use .data.
+    data_sections = {name: length for name, length in sections.items() if length}
+    if (len(data_sections) != 1 or not set(data_sections) <= {".rodata", ".data"}
+            or not size or size != sum(data_sections.values())):
         binary.unlink(missing_ok=True)
         raise ValueError(
             f"{source.name}: binary size {size} differs from "
-            f"original script data section {sections.get('.rodata')}"
+            f"original script data sections {data_sections}"
         )
 
     # Track original assembler includes in addition to the C header depfile.

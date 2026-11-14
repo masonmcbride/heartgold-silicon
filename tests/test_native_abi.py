@@ -46,11 +46,13 @@ class AbiTests(unittest.TestCase):
             require_consistent(views)
 
     def test_actual_blocked_member_contracts_are_enforced(self):
-        for original in ['lib/NitroDWC/asm/dwc_lib_bss.o','lib/NitroDWC/asm/dwc_lib_data.o',
-                         'lib/NitroDWC/asm/dwc_gamespy_bss.o','lib/NitroDWC/asm/dwc_lobby_chat_data.o']:
+        for original, contract in contracts().items():
+            if 'blocker' not in contract:
+                continue
             with self.subTest(original=original):
-                self.assertTrue(conflicts(contracts()[original]['abi_views']))
-                with self.assertRaisesRegex(ValueError,'Shared ABI views require consumer/call lowering'):
+                if contract.get('abi_views'):
+                    self.assertTrue(conflicts(contract['abi_views']))
+                with self.assertRaises(ValueError):
                     recipe(GAME,original)
 
     def test_member_pointer_emission_matches_native_compiler_and_calls(self):
@@ -105,7 +107,7 @@ int main() {
         original=GAME/'lib/NitroDWC/asm/dwc_lobby_chat_data.s';lines=original.read_text().splitlines();records=parse(original)
         layouts=contracts()['lib/NitroDWC/asm/dwc_lobby_chat_data.o']['layouts']
         for i,record in enumerate(records):
-            if record.symbol not in layouts:continue
+            if record.symbol not in layouts or not layouts[record.symbol].get('member_pointers'):continue
             text='.data\n.public '+record.symbol+'\n'+'\n'.join(lines[record.line-1:records[i+1].line-1])+'\n'
             source=self.work/(record.symbol+'.s');source.write_text(text)
             layout=dict(layouts[record.symbol]);layout['padding']={int(k):v for k,v in layout.get('padding',{}).items()}

@@ -31,7 +31,7 @@ add_custom_command(OUTPUT "${hg_ppark_obj}"
     VERBATIM)
 
 add_custom_command(OUTPUT "${hg_ppark_bin}"
-    COMMAND "${HG_ASSET_OBJCOPY}" "--dump-section=.rodata.gData=${hg_ppark_bin}" "${hg_ppark_obj}"
+    COMMAND "${HG_ASSET_OBJCOPY}" -O binary --only-section=.rodata.gData "${hg_ppark_obj}" "${hg_ppark_bin}"
     DEPENDS "${hg_ppark_obj}"
     VERBATIM)
 hg_narc(heartgold_ppark_assets "arc/ppark" "${hg_ppark_members}" "${hg_ppark_bin}")

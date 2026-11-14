@@ -2,7 +2,7 @@
   "lib/NitroDWC/asm/wifi_setup_access_points_bss.o": {
     "inputs": {
       "lib/NitroDWC/asm/wifi_setup_access_points_bss.s": "3eeb69a83bfd3cf0803567cb06d5fec3842548bc504d247dfa0c9e9cc486f7c5",
-      "include/wifi_setup/wifi_setup_access_points.h": "641e6c3f27d9a46d71bc3061394b6544f804aae2d2152e2744a3ef06eabb1886"
+      "include/wifi_setup/wifi_setup_access_points.h": "5312c085d6596693bd473f2e3b5e77a3ef1609c019c4ea6f745219ea70bcd807"
     },
     "layouts": {
       "gWifiSetupConnections": {
@@ -15,7 +15,8 @@
     },
     "expected_blocks": 1,
     "expected_relocations": 0,
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "781d6b0cb600f0a83c9e95eefb10801cb1f58e9541a9eadcf6d68fe03f6e4064"
   },
   "lib/NitroDWC/asm/wifi_setup_keyboard_rodata.o": {
     "inputs": {
@@ -56,7 +57,7 @@
   "asm/vs_recorder_data.o": {
     "inputs": {
       "asm/vs_recorder_data.s": "2023231c73ec21743fa6a5dc64aac0a8a552831c14a4341449160032110a1c21",
-      "include/application/vs_recorder/vs_recorder_internal.h": "a88ca5b4cff96547e448e320154bd665940560999b71200032fb24e0e5e30701",
+      "include/application/vs_recorder/vs_recorder_internal.h": "262981e7cfd270c6d9c254158b29e0c3ae1569700227e7b751f144eaff8fb470",
       "include/application/vs_recorder/vs_recorder_screens.h": "0b2971f258ae7055e30dd1e5095e082213e1d94871dd08ef32efaaba6b54d577"
     },
     "layouts": {
@@ -411,7 +412,7 @@
     "inputs": {
       "asm/global_terminal_data.s": "d22955241605118cc2ddafbd20b6dd7b7f4bfbc8f81d5b450e1174b7b21f31c4",
       "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf",
-      "src/global_terminal/global_terminal_connect.c": "624d60c10dd7e868bdd7625ced0718fa175e31aa22313342755226f835f7b9c5"
+      "src/global_terminal/global_terminal_connect.c": "a94e85857ddf70f23e65c64bf296cdcda75166fc598d1113389c2cffedf505c6"
     },
     "layouts": {
       "sGlobalTerminalConnectSubBgTemplates": {
@@ -425,8 +426,8 @@
   "asm/global_terminal_socket_data.o": {
     "inputs": {
       "asm/global_terminal_socket_data.s": "5978b98fcbeb4072fbf1e1e0eaea8f69dcaffa2d976f603859a1f2f25fb4cecb",
-      "include/global_terminal/global_terminal_net.h": "9ccb242389aae0559296ddeb2fb25047005b0f1bf40abd8965efc0f7778a7ad6",
-      "src/global_terminal/global_terminal_socket.c": "ccb95e6265138c5f0a21a6c024117b3fbbc946233ad8b23253e40ab01be36f5f"
+      "include/global_terminal/global_terminal_net.h": "326e3424b42d3ae7b1bc456f502dc3a4bb76a356d618aadd382c7ba36584dd76",
+      "src/global_terminal/global_terminal_socket.c": "44b9c84bdab9bfda06590b4cb9d91074a25691bacf779c1c84a3e10484183cf8"
     },
     "layouts": {
       "sGlobalTerminalSocketSettings": {
@@ -505,7 +506,7 @@
   "asm/touchscreen_menu_data.o": {
     "inputs": {
       "asm/touchscreen_menu_data.s": "eca395da1f416eba3281adcb226612a1fe25b82bf575a8615945811d3cf0a540",
-      "src/field/touchscreen_menu.c": "1df2195619df2ed087f9309c9b0eaf003a6c6a7eabaf4a256499ef9388323e3f",
+      "src/field/touchscreen_menu.c": "04dac33ebca1c96780f42031a261af9bf97a6dd51f2ff8cf113ca0310bb2e8de",
       "src/field/touchscreen_choice_menu.c": "d44235a6ee0f6576d1671557c18238490f55693a80f3e21e1a565f51da2bc03a"
     },
     "layouts": {
@@ -567,7 +568,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "4e6ab999fbebc7288ce85e1975f51c8a8f819ddd07b6449b9380e78a1790a8bf"
   },
   "asm/dowsing_mchn_data.o": {
     "inputs": {
@@ -592,7 +594,7 @@
   "asm/unown_report_data.o": {
     "inputs": {
       "asm/unown_report_data.s": "d0f64d24ae32973092b40325fef83c4a564ce8c54f3d213ff2a6179c9a514de9",
-      "src/application/unown_report.c": "ca1c5ae6dc19c67d094009ccb36222511ad8522e2d591c45d5fe0f69335de4b4"
+      "src/application/unown_report.c": "d9129bbd285361cbf4ea846dbf1e41d116c72031fcede902bc3e1736bdde8720"
     },
     "layouts": {
       "gUnownReportHitboxes": {
@@ -601,7 +603,8 @@
         "public": true
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "a59f68228ebcbc28637a45c5d31e0350e6a525ce642eeb1ff9558b4257c9f8f6"
   },
   "asm/hall_of_fame_showcase_data.o": {
     "inputs": {
@@ -627,7 +630,7 @@
     "inputs": {
       "asm/pokeathlon_record_data.s": "43880aefe82d1627e59b5303373ad35cef1288767ea60c682bc7d3d89eb486d0",
       "src/pokeathlon/pokeathlon_medals.c": "ef02cc3b18031c9eeb8cd325297ec072603dfe4750debdf9e0b9f0c65769f3be",
-      "src/pokeathlon/pokeathlon_event_record.c": "8583949fdb1ab0a0ae213ac85aecfd619e7d03c5c0f787fb11f4092f609568a6"
+      "src/pokeathlon/pokeathlon_event_record.c": "4b672f2a05f892f0ac0d383fa4cb3687ca740ce2e7b88879f1a45379f45da468"
     },
     "layouts": {
       "gPokeathlonMedalsGridCallbacks": {
@@ -660,7 +663,8 @@
         "label_alignment": 4
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "b2d847a5143f401a899d65127388a2d6b3b5861706d4f82c0b5e947cf5cef8d3"
   },
   "asm/dress_up_rodata.o": {
     "inputs": {
@@ -673,7 +677,7 @@
   "asm/easy_chat_app_data.o": {
     "inputs": {
       "asm/easy_chat_app_data.s": "7492fd4de1460cc2ceb5a23fd39b9a91f01a6b441bae635764cb17dcda9d2d36",
-      "src/application/easy_chat_app_view.c": "53940fe52986310bc42362ac5bc4037ab7c17a72496ce0637b4393a3bd37ccc8"
+      "src/application/easy_chat_app_view.c": "b12cf7c234c932471424fe6f6b1b34f8489478be695f1532c4db7468c3bcdb94"
     },
     "layouts": {
       "gEasyChatViewCommandFuncs": {
@@ -715,12 +719,13 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "a11d70eadd25395e0a541d03b43db2543f6258cbc04751fe275493e066a230d6"
   },
   "asm/field_effect_renderers_data.o": {
     "inputs": {
       "asm/field_effect_renderers_data.s": "e5f0b08284c5001ae1efaf9dfbff8ebe1faf4d857bebb070e11e36b6a6dabf1e",
-      "src/field/field_effect_manager.c": "08938d1dd7f9b2febafec0dfb5b0e433ebd1ec4395bb496c18249058e7772760",
+      "src/field/field_effect_manager.c": "abea5319c59e84dac238835203fc0c26a60e754d5855c2edbb4311bbf2c8b606",
       "include/field/field_effect_manager_internal.h": "9d648d9198d7fe221adae9e304a36b870ff65213864f14ff13ebacf64ffc1c03"
     },
     "layouts": {
@@ -1027,7 +1032,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "740bbcff79ea362a93d4593cca2374962c5f3779103337a9cf4b75ada5eef2b8"
   },
   "asm/encounter_effect_data.o": {
     "inputs": {
@@ -1113,9 +1119,9 @@
       "asm/overlay_01_sprite_data.s": "a49232aa697e3c3056969bfe37c71f840a4bed61f7f81d005176ab7a4bec573f",
       "include/constants/sprites.h": "f794bad6114be6671f03fc3a80ba9d743e8b7106e1f2678c4f7f3514d75b10ed",
       "include/constants/mmodel.h": "a4a623a5b248fdd1fdd713785a6b1e8658d99614b506fdb3fda143f422eb8cba",
-      "include/field/map_object_models.h": "4a3dbcfa4fc84ea2b35fdfa2c4fbbbac34820ed4945d53b83a229bd9cf071f41",
-      "src/field/map_object_models.c": "9d5aa2fd52d92e8483a841d92d0624e77a7f5d21c9490afdf57f4bc8075b1fcd",
-      "src/field/map_object_render.c": "0b317751f5c035e9ce183cac2c0701bb22a3d0e39237ea06f802b68961490d4f"
+      "include/field/map_object_models.h": "1b639f7260d22b98751df39365967cf718455c2e736a829670095260d8a24b3f",
+      "src/field/map_object_models.c": "b3d57c0cca5cf6dd85334925e4c09fd1e6dc2016667c82b03b447c3180b3874f",
+      "src/field/map_object_render.c": "1866056cd5b82c397c1a9b5b4d1a8691e680dcb4baacd5525f88d14fcd7818bd"
     },
     "layouts": {
       "gLargeFollowMonDrawCallbacks": {
@@ -1652,13 +1658,14 @@
       "constants/sprites.h",
       "constants/mmodel.h"
     ],
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "8397e44c505b50ef27c29b1e920079b3fa2faba701fee7f8be7613f68ceb69a6"
   },
   "asm/field_tall_grass_data.o": {
     "inputs": {
       "asm/field_tall_grass_data.s": "3b927d8fbd54af5ad1b94942305188634931a19d351029b78c974490d1beb78e",
-      "src/field/field_tall_grass.c": "0de6fad682d8eb2126c0e19795bcfff76df240b194be4622918192337b65e1c2",
-      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+      "src/field/field_tall_grass.c": "0ead7e6f834a80d9e40984be19755ebb65f1984d18e54fad6dfd804040f159b1",
+      "include/field/field_effect_manager.h": "e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133"
     },
     "layouts": {
       "gTallGrassEffectTemplate": {
@@ -1712,13 +1719,14 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "6b7fda822565f98058f9e07b1496765d068cde5130ae8c8d38dabbdce0e0c290"
   },
   "asm/field_very_tall_grass_data.o": {
     "inputs": {
       "asm/field_very_tall_grass_data.s": "725f2fbf675649ccba084002493f52be4bf934bc18c6b72458ba36c5a9111192",
-      "src/field/field_unused_billboard_effect.c": "e6bcc60d53ab14ff1067988760ea0312bac6142c129e6cc8e2c4ec98d64e2bc5",
-      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+      "src/field/field_unused_billboard_effect.c": "03f7770dd6a78f31b7148d9d1a955beb9f13fd10b8a120477e702a7a2a90661b",
+      "include/field/field_effect_manager.h": "e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133"
     },
     "layouts": {
       "sUnusedBillboardEffectTemplate": {
@@ -1747,13 +1755,14 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "10959eca619d5f3e6c18df6652de7bc89c214e158e4f72726c8e18e64d4571e3"
   },
   "asm/field_emote_mark_data.o": {
     "inputs": {
       "asm/field_emote_mark_data.s": "dd289e48feecd365bb98fee653824e02c1404946e8caedac871f32330ba89200",
       "src/field/field_emote_mark.c": "cc53799b1f6a0aca6bb38d0d8354539ce2c691d28e0ff6245950b91d7d133ac2",
-      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+      "include/field/field_effect_manager.h": "e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133"
     },
     "layouts": {
       "sEmoteMarkTemplate": {
@@ -1807,17 +1816,18 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "d8a7ce0ecc2b30cef603c9a56bce4443950c6999c484ebdf64005df3b4f62527"
   },
   "asm/field_move_effects_data.o": {
     "inputs": {
-      "asm/field_move_effects_data.s": "b870f81cb3228dea38ae5574fb54e56caa34eff6ecac66858d78529840fcc5a5",
-      "src/field/fly_landing_effect.c": "eda6e281a8f65a6954eec26c6beb324673db105702b24308b7a2b3cb9fc39100",
-      "include/field/fly_landing_effect.h": "fd3d4a65ecc64565ef2a510ea059dc1c729a02f7a080416b091145cdf883d162",
-      "src/field/field_move_cut_in_effects.c": "acc41895ebb33120f7aff8f524078e00f7e960a73ec32ff7e1023c4a0c546982",
-      "src/field/field_move_effects.c": "c8fef95efe851c921ee81280efab287dee31d3dd02eb0153bce738b5ae1fd576",
+      "asm/field_move_effects_data.s": "0a9ae2351a2cf9788c723ea09d2b1bcaf2b36052fe57b675405eb9915ea13c0a",
+      "src/field/fly_landing_effect.c": "5810d8383d15e4e092cb1b61009998c7e4a232560f01a786b54c0fa44aadcdfe",
+      "include/field/fly_landing_effect.h": "3db127bac3e51c117ebbb8b0699edf1a8a3de690c0e90c133dd921dc39a52775",
+      "src/field/field_move_cut_in_effects.c": "e19891418af22ec383293cfa2030914c0f70c93a7894b1cbac9b7348e0382c3c",
+      "src/field/field_move_effects.c": "c6504e15e1c409c695d779e44220d3c6feaa9fdd4d074974d1f4197dfef5d535",
       "include/field/field_3d_object_task.h": "81d1a0415f24ee9df82f55b58605c1769b5513e4ca06214fb3864f68b0fd1624",
-      "include/field/field_effect_manager.h": "622c04f64c071d0bdfa179daff4f1c1650d1b1483563a06f2725280a2e8ee0b5"
+      "include/field/field_effect_manager.h": "e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133"
     },
     "layouts": {
       "sFlyLandingIdleSteps": {
@@ -2466,7 +2476,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "1c61c7125db48464ac6d979c0d46e0aac0243113e13d53f233ab345399495de4"
   },
   "asm/battle_castle_data.o": {
     "inputs": {
@@ -2480,10 +2491,11 @@
   "asm/battle_arcade_game_board_data.o": {
     "inputs": {
       "asm/battle_arcade_game_board_data.s": "2ef422cf062e46ea4c62c60d9071fc8816de39d69a2494c482b2344a60b36ee6",
-      "src/frontier/battle_arcade_game_board.c": "967eda94dbb9e5e2c6171b93b11a1db35167aed93dd6e10ff0cee8823fc88d1b"
+      "src/frontier/battle_arcade_game_board.c": "01ca88b36d39b0bf6c60273ab5aec85cf9401116c45343256e329bdb5c6795be"
     },
     "layouts": {},
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "07bdf26a75cb32be2e4326c873da35ac1a0f8922d6492625168a1b324055c6b8"
   },
   "asm/encounter_effect_wild_data.o": {
     "inputs": {
@@ -2496,7 +2508,7 @@
   "asm/pokemon_summary_data.o": {
     "inputs": {
       "asm/pokemon_summary_data.s": "20f72bafddefacfbecdfed3cb04078acd6f778f947cb45643f59228fe6a28f4f",
-      "src/pokemon_summary.c": "d414746e96de85bb025cd5ab5df03eb8fd0c5b8e29dcc9fbc06f722214138498",
+      "src/pokemon_summary.c": "8d87396beab5f367f5d7db2cea875b53a938ebb464a9d0c380708b2ebfa72394",
       "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
     },
     "layouts": {
@@ -2522,7 +2534,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "c89538f0d6aced081d364415eaad0dbcad6b4eff46cc327b1ca0971a4ba27ddb"
   },
   "asm/apricorn_box_screens_data.o": {
     "inputs": {
@@ -2569,10 +2582,10 @@
   "asm/bag_app_data.o": {
     "inputs": {
       "asm/bag_app_data.s": "8dc4ba880a4c9f28a1ee44ad7a06eb18bf50b0236d3ca18856d37871c73dc6e3",
-      "include/application/bag/bag_app.h": "1989e9a2a6ec23ea74e14aa01a45502bac52515107d1051cc01a8a4fa7abf225",
+      "include/application/bag/bag_app.h": "732e63105713c27f2b981c7a652da49fb8cf1f52bc81f01dafab1a2642b2acbc",
       "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
       "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
-      "src/application/bag/bag_app.c": "d3e9678393868729eecc3e7a21749b8ac638c0c9472b7245486af56fae4b4ad5",
+      "src/application/bag/bag_app.c": "fc8a60eaa93f065bb63cc6c90c07d2dc684c8c6579555679504db6ee75e0363b",
       "src/application/bag/bag_app_display.c": "2c7c0dfa4afb7a42983d4fff086ab1eb601159e26d6e114158b7f108c97f03d5"
     },
     "layouts": {
@@ -2651,7 +2664,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "c2b568d7e1850b2d602c8f69250844e8c8e97682b430c294c26de5dbcf37a8f7"
   },
   "asm/safari_area_customizer_data.o": {
     "inputs": {
@@ -2789,27 +2803,29 @@
     "inputs": {
       "asm/scratch_off_cards_data.s": "7e4b622f8988c44332301547027fd78b5b7cbbabdc7af2e7349dcfc631ad6057",
       "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
-      "src/application/scratch_off_cards.c": "20cdc93b61e088e2a19a10ebd8afae4a1a965df9a447359cf7daa9785c2942d6"
+      "src/application/scratch_off_cards.c": "01cce16c46b1778c6021512001376a8e0f7fbf75e06507aebe907f5ec9df715a"
     },
     "layouts": {},
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "9a3fd541f7fef81004a3b39a041b1bb4079891546df95dd409ed942d09531dfa"
   },
   "asm/wireless_trade_select_mon_data.o": {
     "inputs": {
       "asm/wireless_trade_select_mon_data.s": "aec579c67c2a21da819115bed243b9818af3bb62c8b4e988bf4843cd3756a5ac",
       "include/touchscreen_list_menu.h": "877d7ef51287bc5d83d7b5aef42b68f703466c404d791c8fc8c79058dbcf72a2",
       "include/wireless_trade_select_mon_internal.h": "743206c80dab7b3c2180b69d3a5e0cf0f56ebda43d11c13c4a0c9086708f147f",
-      "src/wireless_trade_select_mon.c": "56347bd9e5fe43fec9d50fd258a0de6538c579f24a7e6df74d0d789e719d6126"
+      "src/wireless_trade_select_mon.c": "ce27523454f88f4f7267d180ab6be4157795e7659f39228e47dd0b26e4b0c8d7"
     },
     "layouts": {},
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "9619cc60174a98bf0d6b6650960e2cce0d544d060f22a6d4915c652cc658b993"
   },
   "asm/map_object_behavior_data.o": {
     "inputs": {
       "asm/map_object_behavior_data.s": "a992173dd0f1795a1eee0a31c30e62521ca2b6639daa3bf0822e71ea3d2a319b",
-      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
-      "include/map_object_behavior_internal.h": "8994789d666ec0bfa53e7c08d9c19108f3d30e5f22b7d534dc6c4f3adc4171cf",
-      "src/map_object_behavior.c": "caf395113517422eb592690a66e8c399e686878a8d050f07684c7a64de60c3e8"
+      "include/map_object.h": "ee8458d585eceb7e27ef4fe6ce2641f33dca7a2aa7a73428310b9971b7ad3c3b",
+      "include/map_object_behavior_internal.h": "655b23943aae3d24a8a1a090638198c0fdba4cd6cfe39298526f4273319e8fdb",
+      "src/map_object_behavior.c": "7de6b5e71bd3bd4dbf45b97f9adb129ff898de5c210c14dcc076c54f59bb4fe1"
     },
     "layouts": {
       "gMapObjectTypeBehaviorInits": {
@@ -2867,14 +2883,15 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "0f7572ad78ca3323ad1b70f4a81df775773f498e8374627be6e422164f8d9fa6"
   },
   "asm/map_object_movement_commands_data.o": {
     "inputs": {
       "asm/map_object_movement_commands_data.s": "fde32dfc259d4c45f1610d88b81de39b679de09837d5a33ca2d1855f28155f8f",
-      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
-      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
-      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+      "include/map_object.h": "ee8458d585eceb7e27ef4fe6ce2641f33dca7a2aa7a73428310b9971b7ad3c3b",
+      "include/map_object_movement_commands_internal.h": "4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d",
+      "src/map_object_movement_commands.c": "860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a"
     },
     "layouts": {
       "gJumpHeightTables": {
@@ -2899,15 +2916,16 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "5f766adbb6fbb66bc08375d7174466111c65e234da672c174537027f5d6e44fd"
   },
   "asm/map_object_movement_tables.o": {
     "inputs": {
       "asm/map_object_movement_tables.s": "a51540580d07eebbbea1c2df1bb9998e214bc50c4b7533ddca2e96cf6ae51bae",
-      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
+      "include/map_object.h": "ee8458d585eceb7e27ef4fe6ce2641f33dca7a2aa7a73428310b9971b7ad3c3b",
       "include/map_object_movement.h": "e8e2a69c3e637cd51e0f15f5339fb8547646e56b978c33455eb25ea382948941",
-      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
-      "src/map_object.c": "6a89eb180683cac262b136588bcc4f13a5700742282a2f5718bcca528aa98d37"
+      "include/map_object_movement_commands_internal.h": "4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d",
+      "src/map_object.c": "36e6bff1d35b8f8015754b5d8f81fc58cb34421b2f2507f704d470110be714fa"
     },
     "layouts": {
       "sHiddenObjectCover1MovementCallbacks": {
@@ -4364,7 +4382,8 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "d9f44365763a21600942a938ee2d6088c45794c2701beef4b07e112ef0550035"
   },
   "asm/palpad_data.o": {
     "inputs": {
@@ -4373,11 +4392,11 @@
       "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
       "include/touchscreen_list_menu.h": "877d7ef51287bc5d83d7b5aef42b68f703466c404d791c8fc8c79058dbcf72a2",
       "src/application/palpad/palpad.c": "fa9e673038a8a2364e082e3fc27e5fdb701f4dc325adfa9e741609af88f1c866",
-      "src/application/palpad/palpad_details.c": "e610ad9d4ed86670ea2553cad2d2cb4c464b14f8a02564e0fbd3afa596396bf9",
+      "src/application/palpad/palpad_details.c": "9f9d22d4e461fb7e92890a6bfaa8282b7d9469c08ddf8406b7b66024c690498b",
       "src/application/palpad/palpad_details_text.c": "13a6cb7d3e4079073bf37175453dbe199bedf8ceb0d32c24cae316c01f8f2181",
-      "src/application/palpad/palpad_friend_code.c": "e1a12b52f9838951d2242ddd28d506d07385111dc04fd276674800b5560d878a",
-      "src/application/palpad/palpad_menu.c": "b3d88e9d93e0d10593417852a3d672be9d6668767b86440593fd9793f7b6ee66",
-      "src/application/palpad/palpad_roster.c": "05a339a8cdbdb00a54cfb406be383992fe578bb27615d79708dc59c9d8eb88d7"
+      "src/application/palpad/palpad_friend_code.c": "d59a51039fa5cd48f89edeb0d83b3fde9d97617dbf0a929bd2c5b2952aa7cb3e",
+      "src/application/palpad/palpad_menu.c": "433caea60d9fc405bfb00a4cacfe06bdac1b2b827f2ec6f9be9bd6fd199cbe74",
+      "src/application/palpad/palpad_roster.c": "cef07698d8f91518f1610455a8e1b585d57394b3922bb0d3144e2a5465c023a4"
     },
     "layouts": {
       "gPalPadDeleteEffectSpriteTemplate": {
@@ -4528,14 +4547,15 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "f3f4a6621a9d79bf13e60c3c829d953d02b7d3c063d62bfe67680b511a454f0b"
   },
   "asm/map_object_movement_command_steps.o": {
     "inputs": {
       "asm/map_object_movement_command_steps.s": "bf440498bed47b826b7a12c14d901a166f4692ebcd850f847ad2315ea23a4b00",
-      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
-      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
-      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+      "include/map_object.h": "ee8458d585eceb7e27ef4fe6ce2641f33dca7a2aa7a73428310b9971b7ad3c3b",
+      "include/map_object_movement_commands_internal.h": "4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d",
+      "src/map_object_movement_commands.c": "860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a"
     },
     "layouts": {
       "gMovementCmdSteps_098": {
@@ -5467,14 +5487,15 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "f974af411a57e0897de693656b097ccf3df3529187e3a766e255631ff4d8b455"
   },
   "asm/unk_data_020FD978.o": {
     "inputs": {
       "asm/unk_data_020FD978.s": "316cb21414cf9a876c1c3753bbd70181f98d0f66c511ca251c0dbb914b7a79e1",
-      "include/map_object.h": "ef4a54670f075fdc54aa591fe11974b9f425e76eb172d7473a70fdbfcaf651d7",
-      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406",
-      "src/map_object_movement_commands.c": "265a1f42535bd8dbf34932ecf5b937e40bb5437caf626baf0ae2886b6887abe8"
+      "include/map_object.h": "ee8458d585eceb7e27ef4fe6ce2641f33dca7a2aa7a73428310b9971b7ad3c3b",
+      "include/map_object_movement_commands_internal.h": "4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d",
+      "src/map_object_movement_commands.c": "860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a"
     },
     "layouts": {
       "gMovementCmdSteps_001": {
@@ -5621,13 +5642,14 @@
         ]
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "20f8032b9c59200239fc5c8302ae77e6592e0c2f4859b89606a6c5a61d86dd7b"
   },
   "asm/trainer_ai_data.o": {
     "inputs": {
       "asm/trainer_ai_data.s": "27545ae40eb1c9285ea915bb85abce1e5dff8da1f38f1b870c82f8dee8fe4766",
-      "src/battle/trainer_ai.c": "e607ce4441d53e4ab351829057677465943379dbd5b308523caf66a8f1b204fd",
-      "src/battle/battle_controller_player.c": "f7af28b3c492876a56c8a9621c463de71e27d2f04665253bd5abd77b63a7888b"
+      "src/battle/trainer_ai.c": "12be6834a8eae4f64efe544734547b60428196f06daca6174c0452d44515d10c",
+      "src/battle/battle_controller_player.c": "03f7687a0019e150db010c4f0e5615c2a6a13ad1f544a88adf022438004f1b5e"
     },
     "layouts": {
       "ov10_02220AAC": {
@@ -5767,14 +5789,15 @@
         ],
         "alignment": 8
       }
-    }
+    },
+    "native_output_sha256": "8c138135e670ca1aa52c62af4bda990e01ccbc68dc2c9926d001b85812afe56b"
   },
   "asm/field_follow_mon_data.o": {
     "inputs": {
       "asm/field_follow_mon_data.s": "1913c68641aa70b7f2775846593ac9e9d1c18f2e6a62e0d7a25278b4e6b3edb0",
-      "src/field/field_follow_mon.c": "d7121990a23783ee23dc165db2caabe939ab59764b5b33187b04159d09982cc7",
-      "include/field/field_follow_mon.h": "566da9f6495708ec35a052fedb91990afae0bf8c1d010cfff6b8c869636032e9",
-      "include/map_object_movement_commands_internal.h": "0523d503784d3911ac84aff9576f1de1f2f92a7791aa69bed93a9535f1776406"
+      "src/field/field_follow_mon.c": "c591a28c9f7e95e81d3e7ece5e4cde5a308fbf1b6135339251e0a76c24ab5951",
+      "include/field/field_follow_mon.h": "e435e61d4022fc7ee8e91ef6af4634dcef1b17f84d27ec10d1dac60f3a5e58b0",
+      "include/map_object_movement_commands_internal.h": "4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d"
     },
     "layouts": {
       "gFollowMonHopIntoBallZOffsets": {
@@ -5809,7 +5832,8 @@
         "segment": "__TEXT",
         "public": true
       }
-    }
+    },
+    "native_output_sha256": "7295a2adf9a5c5b29283aa7fb1922fa4616578f3b8c57ee2fd6e13050f3d87b8"
   },
   "lib/NitroDWC/asm/dwc_lib_bss.o": {
     "inputs": {
@@ -6031,10 +6055,10 @@
     },
     "inputs": {
       "asm/pokeathlon_course_data.s": "c485619ddd4d7c78cfc20f12d0117c2b4eb91d2940ead9bbc5b839a291ab5ad6",
-      "include/pokeathlon/pokeathlon_course_internal.h": "1baca4325d1bc3bc25149b4addb7cd5a095cd87120420f282cc7f98b991f46a6",
-      "include/pokeathlon/pokeathlon_course_types_def.h": "c6a7b9fa6769dc12bb0c7fd2d46d3bb5101badd8bde7a02e7675c82dc3be1081",
-      "src/pokeathlon/pokeathlon_course.c": "8751ea8c8993d4a78fc8cc83839fd0e527aa21ea1e90641e9c0bfedd24def5bc",
-      "src/pokeathlon/pokeathlon_course_flow.c": "9093543b7cd1131496a86bb325e35c2e8a15c6fe9bd7b5aad8a52e60f74b1c07",
+      "include/pokeathlon/pokeathlon_course_internal.h": "418483e0bbe02517ab37ffcf12ab9df3ecc469dbf70a67db4e53e55b3a46d930",
+      "include/pokeathlon/pokeathlon_course_types_def.h": "bdab81d793512381ad220e675fda792bf3c9c60f0c2aee1ec70d9225631ddf3f",
+      "src/pokeathlon/pokeathlon_course.c": "711213257b055538bd6ae51e744d04c646cea162101a39d1f54755826aac0980",
+      "src/pokeathlon/pokeathlon_course_flow.c": "5be06f8c14b2d78589441dbe9ef897d9ae3afec34e56be215cc77c7e75878b49",
       "asm/pokeathlon_event_data.s": "da15691507250fc2ca39332efae8fa8995cc8c4d1e741185402388976b3edb3e",
       "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
     },
@@ -6390,7 +6414,8 @@
         "public": true
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "c9a1ca36478d41ce99f0df17ffa1aa98eb7a9b215c94cb3c15bc4d05f28f3858"
   },
   "asm/pokeathlon_disc_catch_cpu_rodata.o": {
     "inputs": {
@@ -6418,7 +6443,7 @@
     "inputs": {
       "asm/pokeathlon_disc_catch_rodata.s": "cc2ed29f06e86ec740fe5c679a59cf370cdc964092300a9298b47f6321252d9d",
       "include/pokeathlon/pokeathlon_disc_catch.h": "c8c7f77478f1db703c7062c3876ed94c104c87893a1fbf218a91de0ad042360d",
-      "src/pokeathlon/pokeathlon_disc_catch.c": "9c0908e9995aa5ac37ca4080449397e6e5d80eeba68ac01e3c3a4ec2e6650571",
+      "src/pokeathlon/pokeathlon_disc_catch.c": "38bc8dd3ae61e1de6f293950e90fdcea4f1ff4c04b1b2399bc4e2da4e9024ef1",
       "src/pokeathlon/pokeathlon_disc_catch_field.c": "763ea48b037ab9097d18d56e1ffd68ae17d0b7c5457ec669cde4db58de996d39"
     },
     "layouts": {
@@ -6468,25 +6493,26 @@
         "source_size": 12
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "071b5a1f52c0fc846c1da914849033661893e2d38ade2bb5135496c179e0ae98"
   },
   "asm/pokeathlon_event_data.o": {
     "inputs": {
       "asm/pokeathlon_event_data.s": "da15691507250fc2ca39332efae8fa8995cc8c4d1e741185402388976b3edb3e",
       "include/pokeathlon/pokeathlon_block_smash.h": "4547af8d32d808948e5e011dc7005afb8637a449a511bea604d5a852d8aecdf1",
-      "include/pokeathlon/pokeathlon_circle_push.h": "db5dd94de6bfd1dd44746b1bad2d8f03fb1092b6276be2a315b0dfcb9687c2b3",
-      "include/pokeathlon/pokeathlon_course_internal.h": "1baca4325d1bc3bc25149b4addb7cd5a095cd87120420f282cc7f98b991f46a6",
+      "include/pokeathlon/pokeathlon_circle_push.h": "f904cb88aa004a3f2a548dc294c989cc05d3109e30a73dfbc33221be5b320c10",
+      "include/pokeathlon/pokeathlon_course_internal.h": "418483e0bbe02517ab37ffcf12ab9df3ecc469dbf70a67db4e53e55b3a46d930",
       "include/pokeathlon/pokeathlon_event_points.h": "1020b97d8eb682cfda032989f5d84f48f9ef51b0ba3bd60099fa5b8ac2072c6b",
       "include/pokeathlon/pokeathlon_hurdle_dash_race.h": "9fa91ec6074860470041cfc3cc713786ef36dc0aeded2a1cc334146d0ab51f71",
-      "include/pokeathlon/pokeathlon_lamp_jump.h": "619d1809811b466f4b2629dcfa3fcee8898b6686ef1fa2ca726cb094b1b1ec07",
+      "include/pokeathlon/pokeathlon_lamp_jump.h": "186b760c7c8b6ccf0bc1614ed1849d5878cb57a5bcae15c758594081b4a78dff",
       "src/pokeathlon/pokeathlon_block_smash_blocks.c": "920c261e8b89c1dbe025ed5935cea98959ca4a951e013180bcbbb7ad89503fb8",
-      "src/pokeathlon/pokeathlon_circle_push.c": "b4339016667b08ff67715d07caab969527a3448f76a7e9b81f34be8cda5fcc35",
-      "src/pokeathlon/pokeathlon_course_flow.c": "9093543b7cd1131496a86bb325e35c2e8a15c6fe9bd7b5aad8a52e60f74b1c07",
-      "src/pokeathlon/pokeathlon_data.c": "097d3b85691fe8040cdbc67c9263e782bfc0ae94a07f65d6706639604d60c175",
+      "src/pokeathlon/pokeathlon_circle_push.c": "db226d1305e8b10e052415446f04669103203f12e49e1cdeb1b5589c1260a16c",
+      "src/pokeathlon/pokeathlon_course_flow.c": "5be06f8c14b2d78589441dbe9ef897d9ae3afec34e56be215cc77c7e75878b49",
+      "src/pokeathlon/pokeathlon_data.c": "b1d25acf66e0d9d7b60190fda59a14a8d7602b32a225fc86a78c3238e08e964c",
       "src/pokeathlon/pokeathlon_event_points.c": "f9f71511440f40f3f405ba7fa74776992ea104eefaabcc144e24c66f341b14ee",
       "src/pokeathlon/pokeathlon_event_rank_points.c": "0dd17d3663be1a3b61789584d234964d21cc8ce1d223e0c7283b08f14422d8b4",
       "src/pokeathlon/pokeathlon_hurdle_dash_race.c": "a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590",
-      "src/pokeathlon/pokeathlon_lamp_jump.c": "e17fde730fc73ea50f3fe39c24023a18da9097f97ba61b2064a40a405ea6a020",
+      "src/pokeathlon/pokeathlon_lamp_jump.c": "7220bc932534e2184a92f5078ab5cb0f4f6b11a712694aaf97b18c6a95ef8d75",
       "asm/pokeathlon_course_data.s": "c485619ddd4d7c78cfc20f12d0117c2b4eb91d2940ead9bbc5b839a291ab5ad6"
     },
     "layouts": {
@@ -6622,12 +6648,13 @@
         "public": true
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "72dfb1993f84df361e3166610927a622d370229e1069d4959a41e9c80b6818ec"
   },
   "asm/pokeathlon_goal_roll_cpu_rodata.o": {
     "inputs": {
       "asm/pokeathlon_goal_roll_cpu_rodata.s": "8df2d714f71b67f762504726192f1386cdc37e716dd5e6d3699e5f22ab60d1c1",
-      "include/pokeathlon/pokeathlon_goal_roll.h": "aeea7d75f5b3e06da22d8f55d9377b897fac1e914b7edb1cf5d83be6757a5326",
+      "include/pokeathlon/pokeathlon_goal_roll.h": "c8b63df8006ba437d56331122cb3f57f0b536892f5c8522f60330fc1d1075ca2",
       "src/pokeathlon/pokeathlon_goal_roll_cpu.c": "842cfe27508c3014f3d88a5bb5c9f70876f5589a0bff62a7fbc89c2474dcc584"
     },
     "layouts": {
@@ -6644,15 +6671,16 @@
         "source_size": 2
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "7d29693cb377d5d6c87348c5c84f1788f1d8b0eb68c743fd710321e9a312f083"
   },
   "asm/pokeathlon_goal_roll_rodata.o": {
     "inputs": {
       "asm/pokeathlon_goal_roll_rodata.s": "783907eb902a527636e2cc976c5de679969b7110e190194c966c64cfd3282b1f",
-      "include/pokeathlon/pokeathlon_goal_roll.h": "aeea7d75f5b3e06da22d8f55d9377b897fac1e914b7edb1cf5d83be6757a5326",
-      "src/pokeathlon/pokeathlon_goal_roll.c": "cafea42efd5ff2e920ce809c33951786bdade488d02cd43baacdb86a1b16f4b6",
+      "include/pokeathlon/pokeathlon_goal_roll.h": "c8b63df8006ba437d56331122cb3f57f0b536892f5c8522f60330fc1d1075ca2",
+      "src/pokeathlon/pokeathlon_goal_roll.c": "1c6f5cb3373f1f77ec18603f9b7dd838200b09c79a80fa5572e8faf907edd500",
       "src/pokeathlon/pokeathlon_goal_roll_display.c": "bf70fea4df20024b4c5df114edc9d1935a65d621d86267b5b3870546e9716964",
-      "src/pokeathlon/pokeathlon_goal_roll_field.c": "5a01c751bad1a4c7476e3983aee07059e6a367173fdc4f9b81fba8554a14e5a3"
+      "src/pokeathlon/pokeathlon_goal_roll_field.c": "dd8cbcc07085985ae2885af0c8adc67980d6400764ee18aec87bff4698eabea4"
     },
     "layouts": {
       "gPokeathlonGoalRollBallSpawnPoints": {
@@ -6752,14 +6780,15 @@
         "source_size": 16
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "500472c277aca9abb490b852a392602724acda46d7da47fc6b030f01d01b7867"
   },
   "asm/pokeathlon_hurdle_dash_rodata.o": {
     "inputs": {
       "asm/pokeathlon_hurdle_dash_rodata.s": "f41978aa89022e5c1f454b386e7354558cadda1ec4beacb335797f4b0431cb60",
       "include/pokeathlon/pokeathlon_hurdle_dash.h": "6721f79b8de92cdf31405fa4267ec394ef3404d794ba10c3dfc1d8c9f93eaf58",
       "include/pokeathlon/pokeathlon_hurdle_dash_race.h": "9fa91ec6074860470041cfc3cc713786ef36dc0aeded2a1cc334146d0ab51f71",
-      "src/pokeathlon/pokeathlon_hurdle_dash.c": "945465520a81174d84e135a2b057acfafb1d58533550aa7b8ca6412505d6c2bb",
+      "src/pokeathlon/pokeathlon_hurdle_dash.c": "ca2db402851a1aa31b5671a488175347d142e1be7284e1f03b31e92fee00c156",
       "src/pokeathlon/pokeathlon_hurdle_dash_race.c": "a8f58df23bea1c02735274dd2d9a2cb1ad9018a54143b82416260229df609590"
     },
     "layouts": {
@@ -6824,16 +6853,17 @@
         "source_size": 12
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "1724118496175b915fa9937d6b75601e73fd66cdb213cf8dc5394222be21d58f"
   },
   "asm/pokeathlon_pennant_capture_rodata.o": {
     "inputs": {
       "asm/pokeathlon_pennant_capture_rodata.s": "adb592822e8a383d4d2e9e1af57e25204e1608c937c4ba79dcbf973597ca301b",
-      "include/pokeathlon/pokeathlon_pennant_capture.h": "d6ae5d1bef1049caf4fd89b385dcb1cf4786706ff036a09b82e3cbf9d8a6ec13",
-      "src/pokeathlon/pokeathlon_pennant_capture.c": "5d123262db7ce8f395a0ec17a49865133b762a95ff4361d5709a84a28f533af9",
-      "src/pokeathlon/pokeathlon_pennant_capture_display.c": "96cb1c7c2e0737add0f0dfb42c96b946367bde8a19989967cac6c8145ab602a2",
-      "src/pokeathlon/pokeathlon_pennant_capture_field.c": "ff20c3bf2002c583ed20446638f55516a371d263a8d8c5e776c3e8b6c2a7d1e9",
-      "src/pokeathlon/pokeathlon_pennant_capture_play.c": "63883cd1bf4571a767c3fc9221bf27e78be14eeb37644cd3de9968399936dc06"
+      "include/pokeathlon/pokeathlon_pennant_capture.h": "f9bafea06dbd1ae226c7c51f61e607569528ba272add83e32a9c1aad8567d206",
+      "src/pokeathlon/pokeathlon_pennant_capture.c": "1530fdc5fdf612d6ebbd95d6acd4044d4bc53866a140bb240ec95ca901c02777",
+      "src/pokeathlon/pokeathlon_pennant_capture_display.c": "52b88e459a74c062bab0fdcec057add5f1a874132b48233c4fb6355dfceb25b5",
+      "src/pokeathlon/pokeathlon_pennant_capture_field.c": "c89994660562d0ab44b934ae82470edb8f763e55f37c8b3ce1472ea00269bc62",
+      "src/pokeathlon/pokeathlon_pennant_capture_play.c": "cb75c86d2930e7312b1f16e240d0d22bda265f53c1deb030e1e3b4dc802ea8ca"
     },
     "layouts": {
       "gPennantCaptureBgTemplate_Main0": {
@@ -6879,13 +6909,14 @@
         "source_size": 4
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "d229242581e19a6005f79cf6e4a2ca148701435bbe210696aac22e9e878b453d"
   },
   "asm/pokeathlon_relay_run_map_rodata.o": {
     "inputs": {
       "asm/pokeathlon_relay_run_map_rodata.s": "a791924644867c4235923b87c46a55b2c5693ae1e6f601034f43425692bbfa81",
       "include/pokeathlon/pokeathlon_relay_run.h": "2294ff79558fac04a735a10f518608f54505f1ad4a45be15c6e9395168c40efe",
-      "src/pokeathlon/pokeathlon_relay_run_hud.c": "b2f4a2399aa90e3a6311c0b4f27f6b2d8bb7356fd501dace6da601b67ecb61c0"
+      "src/pokeathlon/pokeathlon_relay_run_hud.c": "9e7497f0c9265f3e5044f6605db8857c37f55599b15e4aebb27c4e96382e5398"
     },
     "layouts": {
       "gRelayRunMapCenter": {
@@ -6895,13 +6926,14 @@
         "source_size": 12
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "9b90c0ca5c43b36551c54d8d55040f87e15d19d322275850fbe68ee6c4a20d46"
   },
   "asm/pokeathlon_ring_drop_rodata.o": {
     "inputs": {
       "asm/pokeathlon_ring_drop_rodata.s": "36b972eea6b88aae49186e15ab5653e0e8c426614bfaae1ef91155f7b5226917",
       "include/pokeathlon/pokeathlon_ring_drop.h": "fc76fda3fd5298e32b481a5db794df58ae9e821ba8be49e3ce41cdab1372b2e9",
-      "src/pokeathlon/pokeathlon_ring_drop.c": "a1b630fb3c3cd4296b5ccc9db209651bed74cd3833983c276d4dbca3f0b3834d",
+      "src/pokeathlon/pokeathlon_ring_drop.c": "30b8dca06bdf7bf6aa01504c9eadf0b2a44de76aaaef1a6ed9242e5fed0c03d0",
       "src/pokeathlon/pokeathlon_ring_drop_display.c": "8ecbe0f16106937371f84b89de3a16a6d7dd7e5a11e24e61c431d925eccda607",
       "src/pokeathlon/pokeathlon_ring_drop_field.c": "a853ab974a12cb4c45a33c2be48e3bdc5974d52841b3d2dd363d2bd6deaa8bfe",
       "src/pokeathlon/pokeathlon_ring_drop_mon.c": "d3b41f46ad50665db1240939fe2593b70754de2c7ab73188c5b9daa6a2ab6dd3"
@@ -6953,13 +6985,14 @@
         "source_size": 24
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "2065346dc04118c1faa9c834c79eaf1f3d2beb2b5edf798a556ac772cd6dfe80"
   },
   "asm/record_mixing_data.o": {
     "inputs": {
       "asm/record_mixing_data.s": "fcd98dfe9afb936190c75bbaa6ae975196fb26e78c325cf8f148fe9d0b45643b",
-      "include/record_mixing/record_mixing_exchange.h": "bbc38dc22fb80e2d58111b1c20410a997894345d9ce5487a75b3267b60cfb5d9",
-      "src/record_mixing/record_mixing_exchange.c": "40d6716981e75900fa21b1e37fb2da87c64dbe6eab927255fc14059fe69cd473"
+      "include/record_mixing/record_mixing_exchange.h": "91c5bdb65558b02617d3e86081614ca40f9f471ca89c30e7a763ebd358d7f6a6",
+      "src/record_mixing/record_mixing_exchange.c": "f5ea9be6886e3b8f2492ab5593de648b5677b1d822d2991dbdc51a815a0fe473"
     },
     "layouts": {
       "sRecordMixingHandlers": {
@@ -6998,12 +7031,13 @@
         "source_size": 120
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "e6784cd67b5fe8baf86932aa66fa1b08fcca7fab2312fb92e9188e30d1d1163a"
   },
   "asm/wifi_plaza_lobby_data.o": {
     "inputs": {
       "asm/wifi_plaza_lobby_data.s": "022c003040402aa16ecf0ef4d139908657a43884edaffefd38b0c52f6798b465",
-      "src/wifi_plaza/wifi_plaza_lobby_events.c": "12193a9651d7ad1e759ad79c9073783c4ed5020599638963a435de565e042407"
+      "src/wifi_plaza/wifi_plaza_lobby_events.c": "573d188ce8905a125e55163673c0a21ba82ea2492c309473b8269154b05fadf9"
     },
     "layouts": {
       "gWiFiPlazaPlayerObjectActions": {
@@ -7024,13 +7058,14 @@
         "source_size": 48
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "54a89008c214819ed0e486c8d1737bd05d31f7bd13359c5fae92ff598a1787c2"
   },
   "asm/wobbuffet_pop_balloon_mesh_data.o": {
     "inputs": {
       "asm/wobbuffet_pop_balloon_mesh_data.s": "42b1f2e1640af68007643854008b784aa21f292f8d502758eec2a5739568a3f1",
-      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
-      "src/application/wobbuffet_pop_balloon_mesh.c": "6897ad9ed6a0bd3c8990be46741565bef19076eaa29d56c7db8e19e802ea22d2"
+      "include/wobbuffet_pop_internal.h": "c71d3a2dbfcf68be817933477705bc71cf07b7829c4d6ffb41dd7eb6f8a011b0",
+      "src/application/wobbuffet_pop_balloon_mesh.c": "1f6de17f6fac0248110f8ee812be3db9567c3f85f52e543b4354b11e09df92e5"
     },
     "layouts": {
       "_02262C04": {
@@ -7043,13 +7078,14 @@
         "source_size": 52
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "d296d02653e1908b249af880796027a0a551baa352d05ccef740495298ce95e9"
   },
   "asm/wobbuffet_pop_data.o": {
     "inputs": {
       "asm/wobbuffet_pop_data.s": "b894cf9e3df910083f5eccbaed9cb925be369fe2b454038f02508a0ebc2bb663",
-      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
-      "src/application/wobbuffet_pop.c": "ca4d000e3570abfc48154120e2252f529959e15302ab23fff24e1db7851e4e72"
+      "include/wobbuffet_pop_internal.h": "c71d3a2dbfcf68be817933477705bc71cf07b7829c4d6ffb41dd7eb6f8a011b0",
+      "src/application/wobbuffet_pop.c": "e9af527261a79869129f0470cef2bc17cb83d4625114d7b18af346f180a50da2"
     },
     "layouts": {
       "gWobbuffetPopBanks": {
@@ -7109,16 +7145,17 @@
         "source_size": 112
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "0a6bb41146ece204084238a7526a2c3ce8f72ded55d928e3c7febdc9faf0d0d2"
   },
   "asm/wobbuffet_pop_scene_data.o": {
     "inputs": {
       "asm/wobbuffet_pop_scene_data.s": "18eb82bb628107f5a60650d7b3d65c10e417ab9a1373dba5967f87b0477cfa62",
-      "include/wobbuffet_pop_internal.h": "9663a4d37544bb5b9490f65f3bb9f3d6aa13a1c6c19d76aba8807ecdf4591712",
-      "src/application/wobbuffet_pop.c": "ca4d000e3570abfc48154120e2252f529959e15302ab23fff24e1db7851e4e72",
-      "src/application/wobbuffet_pop_scene.c": "b5255566ebb454e58c31a304c7bdc0dc634cff4511fbdd7779e4ecfe7a80f138",
+      "include/wobbuffet_pop_internal.h": "c71d3a2dbfcf68be817933477705bc71cf07b7829c4d6ffb41dd7eb6f8a011b0",
+      "src/application/wobbuffet_pop.c": "e9af527261a79869129f0470cef2bc17cb83d4625114d7b18af346f180a50da2",
+      "src/application/wobbuffet_pop_scene.c": "95916cf6091429dd99a98b096055ccaeac0f82099dbc5d395eb277a3601914d6",
       "include/communication_command.h": "c0f930112bf91a10e13ff12c95bb4c16ea2691698992274d1af492297f047c04",
-      "src/communication_command.c": "2983247831d50cdcfb4023780fb9ee23e665e5a69057fea75fc1b71a3861b03b"
+      "src/communication_command.c": "09f61765dc9b95edb4180a832a313fb0630265c81d139513a4c15c0d25ff2a80"
     },
     "layouts": {
       "gWobbuffetPopBalloonAirRates": {
@@ -7158,7 +7195,8 @@
         "public": true
       }
     },
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "564efd7043cf158acb43ebafed985a565b9b085e34aa308f5ecb7651a8073151"
   },
   "asm/plaza_game_data.o": {
     "reviewed": true,
@@ -7166,8 +7204,8 @@
       "asm/plaza_game_data.s": "2db307d75366c9646ebb2f0ed2f111cb2a3e8a9feca4354f3c9797954d10c8b0",
       "include/application/plaza_game.h": "40089279ffc8d88364f48537c14ff25018d60d248e62e623281b7ffdf1888c67",
       "include/communication_command.h": "c0f930112bf91a10e13ff12c95bb4c16ea2691698992274d1af492297f047c04",
-      "src/communication_command.c": "2983247831d50cdcfb4023780fb9ee23e665e5a69057fea75fc1b71a3861b03b",
-      "src/application/plaza_game.c": "649fb17f69399ccc12141fb1773d2d33fbda6fd107cb2637b36e2eb873e63583"
+      "src/communication_command.c": "09f61765dc9b95edb4180a832a313fb0630265c81d139513a4c15c0d25ff2a80",
+      "src/application/plaza_game.c": "242ea1d6117a70114173e672175e3f6c7d8e40a62ea6498b3f8dc5d950c8fad5"
     },
     "layouts": {
       "gPlazaGameMimeJrTopSelectionWeights": {
@@ -7283,14 +7321,15 @@
           56
         ]
       }
-    }
+    },
+    "native_output_sha256": "5f73d8f0d4c798a1ee4778b46a262c30604c1a717efe0b0291ac2245ba198715"
   },
   "asm/battle_main_data.o": {
     "reviewed": true,
     "inputs": {
       "asm/battle_main_data.s": "ba1db809da44b3fe1d886cda1d724eb4cd051d583bc93229411ce8c6141f6e6d",
-      "src/battle/battle_main.c": "aaf11b0d6ca2965c6a106b2816967bc122565e860d65967b9b61d6a723697a63",
-      "include/battle/battle_main.h": "fcbdad20aca182fc245e3a6a2ea643dac7dd41e9b7e9d0f89748d3fe4f91c550",
+      "src/battle/battle_main.c": "4879c1e0f55f5b45baf7f5026559912f17b779973d69336a352b43d0a67ce8b9",
+      "include/battle/battle_main.h": "f093a16c3bbed24b845538facd0ea75eecddeecb859698ffbe30646a66235729",
       "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf"
     },
     "layouts": {
@@ -7303,7 +7342,8 @@
       "gDoublesBattlerTypes": {
         "source_size": 4
       }
-    }
+    },
+    "native_output_sha256": "60d5c31a224abe11e62178565b9db242c5e9187973951ef46b972cd9a8d2ae3a"
   },
   "asm/battle_controller_opponent_data.o": {
     "reviewed": true,
@@ -7311,7 +7351,7 @@
       "asm/battle_controller_opponent_data.s": "d64cf0fcbadd2d3fbeba51d5e3bf82239cd412ccfa4fcb23d635e7745cffcf6b",
       "include/constants/pokemon.h": "64d5d0cee8001830298ec7175c1863165ffccdf037685a51ea27037273187c74",
       "include/constants/sndseq.h": "8d6b246a5eca81b8711a410aa260cf5d87f4c33286955f6d0d0155ef3f28dca1",
-      "src/battle/battle_controller_opponent.c": "c5550b36e7db24296301cd54f2e4de9c51059ac02216ef9dc05edb538824cba9"
+      "src/battle/battle_controller_opponent.c": "a01d174dd4cb746b0da0f45358150ac70aee036c8100aca09e2fe6197ff4e348"
     },
     "layouts": {
       "gOpponentBallKinds": {
@@ -7339,7 +7379,8 @@
     "cpp_headers": [
       "constants/pokemon.h",
       "constants/sndseq.h"
-    ]
+    ],
+    "native_output_sha256": "f06cae5b089948c0af1762c0625c5640c9fa75c896e5503d9f76ca4b7115b990"
   },
   "asm/overlay_12_battle_command.o": {
     "reviewed": true,
@@ -7351,7 +7392,7 @@
       "include/constants/moves.h": "72c58ed137cd5737e5c5fb8f43dfe70904f6f09618c75ab7b92b97062444b6d9",
       "include/constants/species.h": "a72ce01027d83aabd9ff61dc8f3afbbf43eee30b25c39b6e23ed42c5ac587732",
       "include/constants/trainer_class.h": "311fdbde1f643a41a67f887f179bb0b5abfe7e1e212f3d669397ecb033f71622",
-      "src/battle/battle_command.c": "a114933389c816dacd8e8e000a890fef03c0de7a0f313b109f9d0581a23e7899"
+      "src/battle/battle_command.c": "c27ebd803506094796eb0fe48fe907471f2639f21ab16bee19f7a24f6c90a9ec"
     },
     "layouts": {
       "sStandardBallCatchRates": {
@@ -7658,7 +7699,8 @@
       "constants/moves.h",
       "constants/species.h",
       "constants/trainer_class.h"
-    ]
+    ],
+    "native_output_sha256": "503c21c442d47fd2b0360e7ee7d556b3f96f8160e4b73e2dbeddd6eed3aa268c"
   },
   "asm/battle_anim_data.o": {
     "reviewed": true,
@@ -7666,17 +7708,17 @@
       "asm/battle_anim_data.s": "9219e36f27058a1531de263f8d21701f8cea86f8996183cbefd710b5d7ccdb7f",
       "src/battle/battle_anim_effects.c": "a0da16074268f7d99898471d5b616fc37980981eb8413715fbe165704f2fb022",
       "src/battle/battle_anim_funcs.c": "6253e915a349e9cd8a4de68718aa958f217f613f16eda91be7f54f460cffc925",
-      "src/battle/battle_controller_opponent.c": "c5550b36e7db24296301cd54f2e4de9c51059ac02216ef9dc05edb538824cba9",
-      "src/battle/battle_anim_ball.c": "1206595a2aaa78de22c8aaa6d0c44c9ab087603edfdfe17fd2610351a5af0113",
-      "src/battle/battle_command.c": "a114933389c816dacd8e8e000a890fef03c0de7a0f313b109f9d0581a23e7899",
-      "src/battle/battle_controller_player.c": "f7af28b3c492876a56c8a9621c463de71e27d2f04665253bd5abd77b63a7888b",
-      "src/battle/battle_022378C0.c": "03d03bb20391a23ab608b2d2e043ed35e4f31f8a595952d4dc0359ac6b955735",
-      "src/battle/battle_anim_emitter.c": "c8537ae6e93162bfae0d693c5a0589fd15d741f673c97a5deaf282dc01a05ea1",
-      "src/battle/battle_anim_util.c": "0cfd9277e25425a2e29517ebb54b9d80b587638489b7db4e6849d03fc6e17004",
+      "src/battle/battle_controller_opponent.c": "a01d174dd4cb746b0da0f45358150ac70aee036c8100aca09e2fe6197ff4e348",
+      "src/battle/battle_anim_ball.c": "0d4430428e4c421b7e34624d1d7d5ad7854ea2bbf9f80c0627e3b4eccc373948",
+      "src/battle/battle_command.c": "c27ebd803506094796eb0fe48fe907471f2639f21ab16bee19f7a24f6c90a9ec",
+      "src/battle/battle_controller_player.c": "03f7687a0019e150db010c4f0e5615c2a6a13ad1f544a88adf022438004f1b5e",
+      "src/battle/battle_022378C0.c": "f94a91e25aef22b86774ccee956ac882b4b7c86e05c9aa0c9a74f1c405b7893a",
+      "src/battle/battle_anim_emitter.c": "5cf023c6c3180862bf34529068c792db6052bda0226fbba9188737eef18f8476",
+      "src/battle/battle_anim_util.c": "93b1d9202a391827eb4dd9c2b4b0c31308e68a5aff8fe8a7d38492959c782e17",
       "src/battle/battle_anim_battler_util.c": "4b3fb465af113528f94c0009323e9010479c23e2954acf1fcaa36fc382f4341d",
-      "src/battle/battle_system.c": "b769b5d6b1bff31fcb0b57df32372b86f3f5602fa165feac228614039eff835a",
-      "src/battle/battle_main.c": "aaf11b0d6ca2965c6a106b2816967bc122565e860d65967b9b61d6a723697a63",
-      "src/battle/battle_anim_system.c": "4283a7e9f24df715009d3f8438ed7a621f17432a594546babd20e899bf01db29",
+      "src/battle/battle_system.c": "a6d353d6666405029d7adf6280342235c51be2b5daea2af4c977cb5f875739cf",
+      "src/battle/battle_main.c": "4879c1e0f55f5b45baf7f5026559912f17b779973d69336a352b43d0a67ce8b9",
+      "src/battle/battle_anim_system.c": "29837675d99a0eb197e797d8e449810853e0ea58d575f6e32b29e36616f1b0a8",
       "src/battle/battle_anim_move_effects.c": "d95cb1e9f196a6b2d53505d80e5a1f4ca811cf0f350819edf1671a1cb0fdc195",
       "include/battle/battle_anim_battler_util.h": "cd3e7060dc76be1d0ab5fbf0dbd21ae68c22fbba9fd7aec20e7ab4a77ae5972f",
       "include/battle/battle_anim_util.h": "bd56e665702d184883467f3e97b408020dd6804516f925eea05351c3bc0b46c7",
@@ -7686,7 +7728,7 @@
       "include/battle/battle_anim_effects.h": "db6bc322a6252ec6eb0353c46029d278e0c811e1e6f503489ccc9e5c1660bd44",
       "include/battle/battle_anim_funcs.h": "045f9af8a56306ab88655254cb16e5f25430c090603ee77784dd608b7307e314",
       "include/battle/battle_anim_internal.h": "9605b01a101b20e1656f3d3d83abece18bd566568325fc754a7419f47a8261e5",
-      "include/battle/battle_anim_ball.h": "603abf2ab7c1ea1845dfa9b0229147f461706af1f6d137791facb924974df3d8"
+      "include/battle/battle_anim_ball.h": "9f1348d4c2c9d008c48e6da16c75c8b6381824cd117b2d60b1658b6bda862f51"
     },
     "layouts": {
       "gBattleAnimEmitterCallbackTable": {
@@ -8188,13 +8230,14 @@
       "_022378C0": {
         "source_size": 0
       }
-    }
+    },
+    "native_output_sha256": "2608cc321fe09940cf1ac99353282590269ac9592173ae3d3f14126e8ab87967"
   },
   "asm/battle_menu_data.o": {
     "reviewed": true,
     "inputs": {
       "asm/battle_menu_data.s": "060b206005ddc0bfab4fc9e8b47cedad423dd3db630948de43110f84e5e1ba9c",
-      "src/battle/battle_party_menu.c": "9353b39744a536413e8cb2123e70a4d241927eb0552fafe1a0ae13c55d5773c1",
+      "src/battle/battle_party_menu.c": "91d886464d21698f11263ef3a5c131e46815e7242da6126b25beae5d214e457c",
       "src/battle/battle_bag_menu.c": "6813266206e5e47c0fa0bd72e23f71d1442e87482fa73337b6a05f93edc4dee9",
       "include/battle/battle_bag_menu.h": "621ed3e33767adb952f6a7089be062faf8534714354df22a3bd8c24324b4c66b",
       "include/battle/battle_party_menu.h": "57a2b63636e43757782a629e5a4d742ac26144cbe25912278156b2f720f262fc"
@@ -8646,14 +8689,15 @@
         ],
         "public": true
       }
-    }
+    },
+    "native_output_sha256": "bb16083b9538fe874ffd282d7d2a078e0f7920c2575ae7389959f8c830982f9b"
   },
   "asm/wifi_plaza_map_rodata.o": {
     "reviewed": true,
     "inputs": {
       "asm/wifi_plaza_map_rodata.s": "dc4fe188bd9071f8caebfb1421e3647845d6ae933fb1189e9ec03c15346957dd",
-      "src/wifi_plaza/wifi_plaza_event.c": "1f9033c61ec9c0e4fc75900afe658e61bf45a1c5ea5a57043718a653092e1404",
-      "src/wifi_plaza/wifi_plaza_instrument.c": "a76f3608ced824d35d9e7492edf5f19be44d8577e362ebb505f160beeae9e507",
+      "src/wifi_plaza/wifi_plaza_event.c": "4d2ef7651c62f2df46294ba0d33dab44e8e11f6801f3a2743fc543aa6fb546e4",
+      "src/wifi_plaza/wifi_plaza_instrument.c": "c1f69200ee45c6815bbefad19bf35249e495e59d5afb780465450628541e1a9f",
       "include/wifi_plaza/wifi_plaza_event.h": "437c3bf15b025693b45339dc698b9133ac4e2237e492bdd8e296a0a5492226cc",
       "include/wifi_plaza/wifi_plaza_light.h": "202158d758aea0a66de83c4b7f9b2c8e0dde22c3a196e3dfbafc14488a7a947d",
       "include/wifi_plaza/wifi_plaza_instrument.h": "114afddad23b59d157a5f6df13f576be9f0892fc0bb532787ec79bc3ed2e0db6"
@@ -8955,7 +8999,8 @@
         "source_size": 60,
         "public": true
       }
-    }
+    },
+    "native_output_sha256": "330bb06a69b8399bb4daab1e1020e37e3ba710ce09a59ea84ced93e388ac4921"
   },
   "asm/lock_capsule_card_data.o": {
     "reviewed": true,
@@ -8963,7 +9008,7 @@
       "asm/lock_capsule_card_data.s": "ceae9c1bac2db56784710faf70f5b82ee3634cbddebebcf13d09e117520acee0",
       "include/application/main_menu/wonder_card_album.h": "d436a931493fb08dc4c546d9ba364d9aafa0e76e96751bf57c7b2fb8d2f6b2af",
       "include/application/main_menu/lock_capsule_card.h": "7d1e150b4bff235a1439e1ec1ab0943e9120e75a14391c17456ffcf1f5854795",
-      "src/application/main_menu/lock_capsule_card.c": "46d990982e87f0ed232a3719fcd1ed2e12ff429c6dc4c6fa57fbc8f56836a09d"
+      "src/application/main_menu/lock_capsule_card.c": "e065a9dc75c9a0bf3ff31c305d91c9f7c8886f32aaeea9e1f67fcb4e4348f090"
     },
     "layouts": {
       "gLockCapsuleCardTextBoxes": {
@@ -8995,7 +9040,8 @@
           "516": 4
         }
       }
-    }
+    },
+    "native_output_sha256": "58381a0ed2876fa8fa51aa2cffd709d034ddce21d031e43c38f79bf05668eff5"
   },
   "asm/nitrocrypto_data.o": {
     "reviewed": true,
@@ -9059,12 +9105,12 @@
     "reviewed": true,
     "inputs": {
       "asm/pokedex_rodata.s": "ded88f38f29a2a0d568d91783abe560770f7e3c2ca7c7b07ab0b7bd797320489",
-      "include/application/pokedex/pokedex_internal.h": "b9ae4715a0be0903067823275f1c61fc30f5b1cff6afdef6b17ccf5dce6c89e3",
+      "include/application/pokedex/pokedex_internal.h": "4317ff0ec095d744e9abdc95bad7ad3ee2981ca7598638f8e2a2878851359e3e",
       "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0",
       "include/obj_char_transfer.h": "f13e3242b90e1f91fff50a2840636ca3c338baa467e863b8b981edeaed4f5e14",
       "src/application/pokedex/pokedex_forms.c": "4159bd2fe33eb935a5a54280157566cc6893360ca05119b7f43cd1dc6a8a0b5c",
       "src/application/pokedex/pokedex_area_sprites.c": "708d084cf4be1666c01f902922d574c07c3b8d06c5f29b6cfd21f8c85f670295",
-      "src/application/pokedex/pokedex_sprites.c": "a6ee92ec1b9628db6a0b9e5976470c73e91aec88b0e1feb06df2d36310c61bb3",
+      "src/application/pokedex/pokedex_sprites.c": "b9f7b78161db97b5b947ce85cb99de2ac80096648e5ebba394359f5b36910f65",
       "src/application/pokedex/pokedex_size_check.c": "37e12f3f2165aabe64a4edc3501f522bc1a138aa7ceb2d8a5221d09bc8ecc891"
     },
     "layouts": {
@@ -9189,26 +9235,27 @@
       "gPokedexMonPicBgTilemap": {
         "source_size": 100
       }
-    }
+    },
+    "native_output_sha256": "b271409badd48fd85f83b4acaf0cc2df6f565dcda80d6792c11fff14e6177b52"
   },
   "lib/NitroDWC/asm/dwc_lobby_data.o": {
     "reviewed": true,
     "inputs": {
       "lib/NitroDWC/asm/dwc_lobby_data.s": "2f2a15327bb3b8c0b4c2bb73bf8e9652cd860597c466067ed8114278f852de13",
       "include/lobby_chat_internal.h": "f2a2b89dd52162f599faa399c7b8222656c749c04223db9ee2887f5cb6397e2e",
-      "include/ppw_lobby_work.h": "d38ef4ba397cf48da63633d5fc17c362386251ec6c24581515a534c4fe0c3106",
+      "include/ppw_lobby_work.h": "758d70b76bbdd78ccd23350f0e282059f8b9102e97b49e1e09b8fdb60e14d533",
       "lib/include/dwc/chat_internal.h": "f5fe7a323beabe9efe48773dde3df5b04af24373550ecae336a20b358745a521",
       "lib/include/dwc/chat_connection.h": "18dcdb54b8d7888feb34a51cfeed81cd269e2134cd5e8fa463073e85b349a4ac",
       "src/chat/chat_main.c": "e7c16d32ddd652d70321496df8f96e4d1e3b014efd54d53c865f16102194f3d8",
       "src/chat/chat_socket.c": "6465735595eb9b8c718fecd0087a28678c6cbd37405e567454191be824cebc62",
       "src/lobby/lobby_chat_on_enum_users.cpp": "be05941ecf5f3bf3558bb529762c7cdb76d07c928289d53c63b1c37352300da6",
       "src/lobby/lobby_chat_timer_connect_timeout.c": "a050ba9e7ad3e0a8bcd948854e5e407ab82fb3b4db21b73b68c44722859bd459",
-      "src/lobby/ppw_lobby_get_channel_data.cpp": "94c4f90c6a7d19ceafe62dc4729490e20b3c2547ec5763feebff644e83604273",
-      "src/lobby/ppw_lobby_update_my_profile.cpp": "71bc8e8c473ba97b7a8f5d49a3d50e9f8236867f090aaea38f4e7cfcd4f4b1f2",
-      "src/lobby/lobby_chat_channel_queries.cpp": "29977108a43aab2cf36144544c684dd94eb950d50c06a516922267942cff1bec",
-      "src/lobby/lobby_chat_initialize.cpp": "a3fca559c390cbf69efd4d0c2734cf0b2589385cf51b706d867be696a82b10fe",
+      "src/lobby/ppw_lobby_get_channel_data.cpp": "bc196a676e3c80a58230a1b1826b556a0fb18e34b48f0a9b1985ad5948eac4e0",
+      "src/lobby/ppw_lobby_update_my_profile.cpp": "59e9cad19f36d1a62f691f5567dd5d9b382e25a233343b9c54f1bb47e7ff1475",
+      "src/lobby/lobby_chat_channel_queries.cpp": "3caa773996a3dd4a690be7cb6a87ba925c91db300c5c7eec168e9c9bed53f032",
+      "src/lobby/lobby_chat_initialize.cpp": "739c711bfc64185790fc76931e95cdbed96139b2cf42e4123a84df5f4f39b2eb",
       "src/lobby/ppw_lobby_recruit.c": "b753a8d9bd8c7e0796a684b628fd3305ef6b092bb8a0fcad13a18b85bb4a8bb0",
-      "src/lobby/lobby_chat_get_channel_mode_async.cpp": "210b37ba1261e57b32a432c72491f4b40e24fa12bf84acd317fd933a865c3bad",
+      "src/lobby/lobby_chat_get_channel_mode_async.cpp": "38ec9bf3a0c0667caee535ff729b52a51b6e44359c5a35c29a4b94b0aa3ee847",
       "src/lobby/ppw_lobby_initialize.cpp": "bdb0dad679622f8b7ed8a272d683ebd43eb9713992baf7e07329c479bee01969",
       "src/lobby/lobby_event_deque_map_allocate.c": "4d66ead59f24be4cf62b21d9938fe805b408f0ca4b8192b725c91dae701f1250",
       "src/lobby/ppw_lobby_join_sub_channel_async.cpp": "374798a8a978f9b541d289b94dcf9995d82fa8f114d01d4f27552b1e48490d16",
@@ -9218,27 +9265,27 @@
       "src/lobby/lobby_chat_manager_init.cpp": "8b6ea8dce71386fe46954ca8cf1f237fc17978ccc818b4cf1d2d8227b0a5156d",
       "src/lobby/lobby_event_deque_map_buffer.c": "e4debdb7af975a6cbcaab34ce0c7475bbb653e35fa1536a39d1bf45023383282",
       "src/lobby/lobby_event_deque_add_back_capacity.cpp": "14f61c2b56a6d0c4603b5470b44a1ca13de85159bb40ff6034825f804983a436",
-      "src/lobby/ppw_lobby.cpp": "ad8de6c54db36fd14766440891b9eade0b7af4ad4e11e1e1c8481461af750fa2",
-      "src/lobby/lobby_chat_enter_channel.cpp": "70f60f3c3c2950a868065d7424a08f33466ce7c3ac0c0dd09a767757c34d64a4",
+      "src/lobby/ppw_lobby.cpp": "2886b3f35ef29e9950be98a404475d0225d5f8cc79d0c432648fd5eced90056a",
+      "src/lobby/lobby_chat_enter_channel.cpp": "2cde21e3de811a198548d4fe7130df391252d0a1f293a7c9cd7923bb0e7b4436",
       "src/lobby/lobby_chat_set_channel_mode.c": "6c79a40deb21bd51e8c597e98552e7e5ff3d51a6be86cfcfb1fe3556444f081a",
       "src/lobby/lobby_event_deque_capacity.cpp": "b16831a601be7c81d2766ef9193aedc287bae4bff02ca4ad22f1c660626d5580",
       "src/lobby/ppw_lobby_get_time_info.c": "465f0a0deb9b69369c30f364c2df2ab21b8e27a89aaf87cec8ef220cdf7f79a9",
-      "src/lobby/ppw_lobby_leave_sub_channel.cpp": "a305151efb45547b52a8a0ce74fa646d17c7af3a20355f2342f21aec4c2336d8",
+      "src/lobby/ppw_lobby_leave_sub_channel.cpp": "0f31e5db9ceb99c94f65cc7039bf2d708992d3f7c4dac64d04d88155ff10bdf8",
       "src/lobby/ppw_lobby_shutdown.c": "434bb79295b86e6496cb6581027cd01f57fc9718b9190bffef1b2cb5c6077b7f",
       "src/lobby/lobby_chat_is_in_channel.c": "a69f5220de39261957f51d797b47c550833363d0ff81f2768566944ffd8fb397",
       "src/lobby/ppw_lobby_get_channel_name.c": "fe53f396773ee38a5bc333f4c240abb6e992de192b75af374f4435f56402efb3",
       "src/lobby/lobby_chat_process.cpp": "13a3ffbf15e607b7ebadcf87c24eca9d668919a98103050c41a156deabaf1846",
       "src/lobby/lobby_mem.c": "f5265783de611e16bac49850cb48eee714779be7d51c0a4bb7749113f1159392",
-      "src/lobby/ppw_lobby_start_recruit.cpp": "042517909adeb7bd516b023cc5b4d193345a332f15b0807a8087f9ee6f2a8392",
+      "src/lobby/ppw_lobby_start_recruit.cpp": "fdc51fe97b6f221a80b4c901356e5c809a6bea8de5965f0b0e317156ddb9f110",
       "src/lobby/ppw_lobby_process.cpp": "0c0d35203050cedfa47015cd2769c21d94a97c86eda12234538422bce41332fe",
-      "src/lobby/ppw_lobby_set_channel_data.c": "07ada790c4bd4405e29956084f3e211a594f1518088abd5f67552c3a76cc8432",
+      "src/lobby/ppw_lobby_set_channel_data.c": "5a5e14a33a461f8515a96df20984ee22cfe47a468640894e43029140406cad91",
       "src/lobby/ppw_lobby_get_work.c": "bd04e1ce8bfdb8ffe66ec420d1381114e736192bea91a2ca118638efbf4564d8",
       "src/lobby/lobby_chat_channel_commands.c": "d5e7c1767eb6da66bddb0d9545033156747cf105c6653c99a6aaef0540b7aee4",
       "src/lobby/lobby_chat_on_private_message.c": "632e0918ae621f36f49b201e2f1422a999975568f3346297ae5e70cd30d005e8",
       "src/lobby/lobby_chat_shutdown.c": "f5c162bca4d54bf93ea2a83eab0efc0ac8cb078ec8ae38852c59d1c06bcaac98",
       "src/lobby/lobby_chat_on_enum_channels.cpp": "3241d6001687120fa5792ad653e333ce18d2ffbe863a25b2fac2f6798a88ce8d",
       "src/lobby/ppw_lobby_get_sub_channel_state.c": "2367444595857c189e9bf7c23078ed94a36d879f7860b7c93094627a37038ae3",
-      "src/lobby/lobby_chat_channel_callbacks.cpp": "bc73895f360e9f602fb58375c7560c49a2075ac1919ce585a894dfb23fdf953f"
+      "src/lobby/lobby_chat_channel_callbacks.cpp": "e06e1fe6faa8be7017d8c6f20c4c028366872a6496cd19452172d5684a8d247c"
     },
     "layouts": {
       "gPPWLobbyChannelNamePrefixes": {
@@ -9348,7 +9395,8 @@
         "source_size": 8,
         "alignment": 8
       }
-    }
+    },
+    "native_output_sha256": "eb7bdeed338bbbccc7e6d67caeb136f5eda2de5a8c23199d8fbc4337ff96dad7"
   },
   "lib/NitroDWC/asm/dwc_lobby_chat_data.o": {
     "inputs": {
@@ -9357,7 +9405,7 @@
       "src/lobby/lobby_chat_remove_channel.cpp": "008cf358b0a00e92c198d5135ce6e3d68a1077688d69e3708ef3169f9dab227f",
       "include/lobby_chat_manager.h": "e8e377caf80b3956e183cd2052d789babb446335210ef6748e9407f315ddcad7",
       "include/lobby_tree.h": "abb7c22c25e4f41ccd18c5879b032b0bff767d8f1a24c5402baabeed82132647",
-      "include/ppw_lobby_work.h": "d38ef4ba397cf48da63633d5fc17c362386251ec6c24581515a534c4fe0c3106",
+      "include/ppw_lobby_work.h": "758d70b76bbdd78ccd23350f0e282059f8b9102e97b49e1e09b8fdb60e14d533",
       "src/lobby/ppw_lobby_player_has_profiles.c": "1208b1fcde209e75858bb1015d37a3094247557558b2537f37263a831e22b970"
     },
     "layouts": {
@@ -9678,7 +9726,8 @@
           }
         ]
       }
-    ]
+    ],
+    "native_output_sha256": "1e4db1120c2e99d981f1fab36a407a1e3760e3b4a555a956b922755241973ee3"
   },
   "lib/NitroDWC/asm/dwc_bm_data.o": {
     "inputs": {
@@ -9736,7 +9785,7 @@
   "asm/spin_trade_flow_data.o": {
     "inputs": {
       "asm/spin_trade_flow_data.s": "206627c68c5057beb8ad98de692afa9863235aef1036447bd393d8ba83902a1b",
-      "src/spin_trade_flow.c": "78122df08d47aef4d3e79df22bd4ffee846ce9f9de9760b7c9bb03b7c154ef87",
+      "src/spin_trade_flow.c": "12b50e50110c480cdc2637e45063df81b67a1e0df3855c7ad10bb29ef099da8d",
       "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf"
     },
     "layouts": {
@@ -9797,12 +9846,13 @@
     },
     "constants": {
       "FS_OVERLAY_ID(OVY_85)": 85
-    }
+    },
+    "native_output_sha256": "2fb1f9cd6652269675b58bc129c33cb021a862801f5fe4cd0cbb2121f13b921f"
   },
   "asm/spin_trade_data.o": {
     "inputs": {
       "asm/spin_trade_data.s": "8e1211b6f09e96d45922dd0b6a2ac8756fef6ff523843ea18d47c5eb6205f109",
-      "src/application/spin_trade/spin_trade_app.c": "3a7167d21045752aa7c2b1dcc16d409faae6ba90dde61b8376493db7133c2fd4",
+      "src/application/spin_trade/spin_trade_app.c": "e624305ff00f6dbbea0b56c4b68ddfb217e0e362f06db1525bfd5ebed7c2af42",
       "include/bg_window.h": "7b149412fcd5d02c355a2969111378668a76cbca386def3d83eb1ad460248ebf",
       "include/gf_gfx_planes.h": "84fd426ae4d02ef8902859102ce70f42a8de07a5df66adb968d3f1ffe6440ddd",
       "include/sprite_system.h": "eddaef2c3fd1e3e4858d89861e437a400cb03b5dcb5cf3e6d51a4498c3e1e8a0"
@@ -10025,12 +10075,13 @@
         "source_size": 64,
         "alignment": 4
       }
-    }
+    },
+    "native_output_sha256": "7380635249e119b201eabba5a53672abb55e4229be2c4284bc0257f87764af9e"
   },
   "asm/ball_capsule_editor_data.o": {
     "inputs": {
       "asm/ball_capsule_editor_data.s": "2927153db250575d9eeff056be99839d08306182bc378283e9240e6cbaf99422",
-      "src/application/ball_capsule_editor.c": "1c1360893c1876ccfe2e071bcbffb81fc7ebedafc26bdb3122bdf9c5c7178f36"
+      "src/application/ball_capsule_editor.c": "2314ba45b4a9c381b35a0243b87669a02dd2860d763c89ba2d859f52676eee39"
     },
     "layouts": {
       "gBallCapsuleEditorModes": {
@@ -10045,12 +10096,13 @@
     },
     "reviewed": true,
     "expected_blocks": 13,
-    "expected_relocations": 10
+    "expected_relocations": 10,
+    "native_output_sha256": "0d5b89b62f0c291b5236c9d32aca00f45862cb48e57311ecb2a4c100fd0219c1"
   },
   "asm/overlay_14_state_dispatch_rodata_67.o": {
     "inputs": {
       "asm/overlay_14_state_dispatch_rodata_67.s": "edb327cab3fa974511306c99bf324ad1f9fccc6c8e83dbbc06086096543ba0fb",
-      "include/application/pc_box/pc_box_internal.h": "bca40619b4fe7d0859d351758a81a95cd997e134fcae2eba7ed2f54815d481c3"
+      "include/application/pc_box/pc_box_internal.h": "c3f2b29b1cc82c1a3e4145b5c794e4a934b30bc6e492bd18a97b2495b8bb4b90"
     },
     "layouts": {
       "gPCBoxSubApps": {
@@ -10118,7 +10170,8 @@
     },
     "reviewed": false,
     "expected_blocks": 89,
-    "expected_relocations": 272
+    "expected_relocations": 272,
+    "native_output_sha256": "26f5a10c12158b5431518beaa8b8738d1d973a62b61e75c139f9ed73432c8456"
   },
   "asm/pokewalker_ir_bss.o": {
     "inputs": {
@@ -10141,7 +10194,7 @@
       "asm/pokewalker_data.s": "38ecad9fbf2acf8ce8e987f502b8467857f8253847f35eb31acc2fa0c6f349fd",
       "include/overlay_manager.h": "8ef3461aae09ab92063af9ef29b6094e5b7a3b1f9e1dba83db4aeb068f2762bf",
       "include/application/pokewalker/pokewalker_app_internal.h": "aa587d32cfea44e8c7f58a04b5274400c2644ba4f5d930cf22d742c4371df4e6",
-      "src/application/main_menu/main_menu.c": "a16014501dcc5367e644f856d8bb530d06d03faf002fd4aa24c21a4464057be2",
+      "src/application/main_menu/main_menu.c": "48cef44c6a7b54093928009edfde44c91531731aa5028b59c3d94f83ab0e00ba",
       "include/application/pokewalker/pokewalker_ir_internal.h": "6a0ec0b5ef36c2d20798b04d86ec1166c83cb56c95fd3824f26dfdd424a77101"
     },
     "layouts": {
@@ -10243,16 +10296,17 @@
     },
     "reviewed": false,
     "expected_blocks": 334,
-    "expected_relocations": 323
+    "expected_relocations": 323,
+    "native_output_sha256": "e9eb3644b8a74a3d0fe73a51a888b61ce05f3953d58f08a0442e2d4be7445a72"
   },
   "asm/footprint_stamp_data.o": {
     "inputs": {
       "asm/footprint_stamp_data.s": "8258ec000c0f684f70cbd949d87b693f14bbca17de805df0fe483e30e1ecb223",
-      "include/application/footprint_stamp.h": "f617428042727c153021313419c80742a858fcc289b0bd8624eab439c3b72c30",
-      "src/application/footprint_stamp.c": "ad831b6dca4001b4ed176c1e3adc16d0e7a2b9ef22d3a1f5c12555dcd3e5ffcc",
+      "include/application/footprint_stamp.h": "7f376351bb15bb55763ef926274df646fd3b476f9a5702ef650bb6b45c7a3e78",
+      "src/application/footprint_stamp.c": "17d625cb76219c1a8c44bb31ab3a12e3c9ccb8920d0fcc51a27826e49eccd8b0",
       "src/application/footprint_stamp_effects.c": "aa6a4cadb2188647e22a671363806fcd10f6b29959c0abe6ba08c1b73f852f35",
-      "include/wifi_plaza/wifi_plaza_internal.h": "66fed7c31f042be8ef6e395aa076c29c9976fa9a491b806336704f8720e67d58",
-      "src/wifi_plaza/wifi_plaza_lobby_events.c": "12193a9651d7ad1e759ad79c9073783c4ed5020599638963a435de565e042407"
+      "include/wifi_plaza/wifi_plaza_internal.h": "3cb00953dc7a1faa732c1b07aea4526d4043b7f657143c5733b302540209df61",
+      "src/wifi_plaza/wifi_plaza_lobby_events.c": "573d188ce8905a125e55163673c0a21ba82ea2492c309473b8269154b05fadf9"
     },
     "layouts": {
       "__native_ovy89_anonymous_prefix": {
@@ -10366,13 +10420,14 @@
       }
     },
     "expected_blocks": 12,
-    "expected_relocations": 40
+    "expected_relocations": 40,
+    "native_output_sha256": "2d2d75ec8e9097169f80cf16d9c3edc5330e030970bcb5712c43594c3fd75658"
   },
   "asm/plaza_game_swalot_plop_data.o": {
     "inputs": {
       "asm/plaza_game_swalot_plop_data.s": "cbdf69c75339aab8cae672399351bd842047f01bfc28a6462f2c224dbd45f695",
       "include/application/plaza_game_swalot_plop.h": "25ff6c9a56fbeaaed9b0b3317fe2fe43698f9e727668a4e1273b2f43c883c6a6",
-      "src/application/plaza_game_swalot_plop.c": "d6129742dee86bc88a8755c22d7c8f3aeff1bf91f22585fb7721a0e36a742415"
+      "src/application/plaza_game_swalot_plop.c": "26497d9c90c2ae3b828452ed48270f94763170b272f2a67389ed8acc92166c9a"
     },
     "layouts": {
       "gSwalotPlopStageAnimFiles": {
@@ -10530,13 +10585,14 @@
       }
     },
     "expected_blocks": 30,
-    "expected_relocations": 19
+    "expected_relocations": 19,
+    "native_output_sha256": "6c17f836fae51e2cc0b511c7c273fa0ab533523213bec8e06dd0e26282fb442d"
   },
   "asm/plaza_game_mime_jr_top_data.o": {
     "inputs": {
       "asm/plaza_game_mime_jr_top_data.s": "ed0c6d0216998e45644012be954d7c01f66da9b61a26454b44c967928dab602d",
       "include/application/plaza_game_mime_jr_top.h": "bffebedbadb99862d35818088ef36d805a2c9c0543bbd00fcb046d31cefd8311",
-      "src/application/plaza_game_mime_jr_top.c": "83ec77662a263f8b8731a1ce6d2b9de13648b6e07ca5cc3bc274a9cc4c334dfc"
+      "src/application/plaza_game_mime_jr_top.c": "43f55e7919ed4e80da2059e1d8fbbb228b39566fee8993fae72b8a4cfce506cf"
     },
     "layouts": {
       "gMimeJrTopDemoTurnTiltAxis": {
@@ -10743,7 +10799,8 @@
       }
     },
     "expected_blocks": 45,
-    "expected_relocations": 8
+    "expected_relocations": 8,
+    "native_output_sha256": "c1bc8c65c5c2360f2fc50665e531dfb4dc3f22e66b02e88b61c7c2be9e03dfec"
   },
   "lib/asm/vct_data.o": {
     "inputs": {
@@ -11070,7 +11127,7 @@
       "asm/vs_recorder_screen_data.s": "58b945ac80efe173aae97df430df58e313a50820abe283dab46123ec8d58d9fb",
       "files/msgdata/msg/msg_0013.gmm": "199002df5ec1ffa5f5721dd23cd9658b78eb24e57d609c85c69e54cbc2572f54",
       "asm/include/vs_recorder_screen_data.inc": "80fc992e0e1c6313dd6b93aabff476a083028391fd294021a96d53aecad66dd9",
-      "include/application/vs_recorder/vs_recorder_internal.h": "a88ca5b4cff96547e448e320154bd665940560999b71200032fb24e0e5e30701",
+      "include/application/vs_recorder/vs_recorder_internal.h": "262981e7cfd270c6d9c254158b29e0c3ae1569700227e7b751f144eaff8fb470",
       "src/vs_recorder_menu_app.c": "5c4fcdfceb1c95b403c58e2d05a237e036a6e68967129e63ce441ee3ce3e2d8e"
     },
     "layouts": {
@@ -11331,20 +11388,21 @@
     ],
     "expected_blocks": 23,
     "expected_relocations": 22,
-    "reviewed": true
+    "reviewed": true,
+    "native_output_sha256": "85cf39ef19e65bb4b069e9687b2836bfae6df8f37307d835ab66dcdfe73aa4e5"
   },
   "asm/main_menu_bss.o": {
     "inputs": {
       "asm/main_menu_bss.s": "a559616337ccfe51647387a9720a96fb28527c8b83c34bbab58f2dfe2166d0ee",
       "asm/main_menu_data.s": "a9757fb33f143bf124d94fbf21a2256f1d83b6cd1ebfeb4d30c73a59f13e4308",
       "src/application/main_menu/main_menu_shared.c": "70d1518a3f4a216a46f583d59b088a766894a0eea5bb69851595e7250ea7eda2",
-      "src/application/main_menu/main_menu_util.c": "29f269b406bb52ed5c3952d8c17c07e73dc57e431fbb1fc5c529365ee918fc83",
+      "src/application/main_menu/main_menu_util.c": "3fa28864772e3439bec0ad1e42c5ff4e87ec8dc7e866eef11c318554abd20bb9",
       "src/application/main_menu/agb_cartridge.c": "d9b0c9e9334a2d748d4049d976d550fb9901cc4cad1184ed4b159cd325dc2b2b",
       "include/application/main_menu/main_menu_util.h": "84ba1ce0bca3fbe95e2265762fed01b5f22d5c5735dad39157d178b5cbd65d44",
       "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
       "include/sprite_resource_header.h": "eb98a8918eda59120082cb11a8da235a0022c138444a6b7b9e75e2850efa7956",
       "src/application/main_menu/mystery_gift_beacon.c": "20abb77559f99e9c063cad49428ebb2c79d66c26617825624494c7d8438453db",
-      "src/application/main_menu/mystery_gift_wfc.c": "d64b30360f76bf4cbf0281b059e654c431213d823a3f33b7b1f8aa33506e384e",
+      "src/application/main_menu/mystery_gift_wfc.c": "de3d451d286529be450bb071fed87ab2c3106fbeced681529b19cda582995bfd",
       "include/config.h": "773f3b3ffaabd2750f040be690dc91c605d1ce58a6686bc85d41e6e1335ad419",
       "main.lsf": "fb91a386cb18560c63434b14dc435d92a800481ad848d6a0d011a815286e6753"
     },
@@ -11392,20 +11450,21 @@
     "coalesced_members": [
       "src/application/main_menu/main_menu_shared.o",
       "asm/main_menu_data.o"
-    ]
+    ],
+    "native_output_sha256": "8b7de01f46e07a6b16aada9adae04da5c61c93ea5bc09a83341f2e395c111dc4"
   },
   "asm/main_menu_data.o": {
     "inputs": {
       "asm/main_menu_bss.s": "a559616337ccfe51647387a9720a96fb28527c8b83c34bbab58f2dfe2166d0ee",
       "asm/main_menu_data.s": "a9757fb33f143bf124d94fbf21a2256f1d83b6cd1ebfeb4d30c73a59f13e4308",
       "src/application/main_menu/main_menu_shared.c": "70d1518a3f4a216a46f583d59b088a766894a0eea5bb69851595e7250ea7eda2",
-      "src/application/main_menu/main_menu_util.c": "29f269b406bb52ed5c3952d8c17c07e73dc57e431fbb1fc5c529365ee918fc83",
+      "src/application/main_menu/main_menu_util.c": "3fa28864772e3439bec0ad1e42c5ff4e87ec8dc7e866eef11c318554abd20bb9",
       "src/application/main_menu/agb_cartridge.c": "d9b0c9e9334a2d748d4049d976d550fb9901cc4cad1184ed4b159cd325dc2b2b",
       "include/application/main_menu/main_menu_util.h": "84ba1ce0bca3fbe95e2265762fed01b5f22d5c5735dad39157d178b5cbd65d44",
       "include/sprite.h": "93b45857cb99ec9f69e9a8675081a8ec839a47bb0bb730ded1aefa390616e7b1",
       "include/sprite_resource_header.h": "eb98a8918eda59120082cb11a8da235a0022c138444a6b7b9e75e2850efa7956",
       "src/application/main_menu/mystery_gift_beacon.c": "20abb77559f99e9c063cad49428ebb2c79d66c26617825624494c7d8438453db",
-      "src/application/main_menu/mystery_gift_wfc.c": "d64b30360f76bf4cbf0281b059e654c431213d823a3f33b7b1f8aa33506e384e",
+      "src/application/main_menu/mystery_gift_wfc.c": "de3d451d286529be450bb071fed87ab2c3106fbeced681529b19cda582995bfd",
       "include/config.h": "773f3b3ffaabd2750f040be690dc91c605d1ce58a6686bc85d41e6e1335ad419",
       "main.lsf": "fb91a386cb18560c63434b14dc435d92a800481ad848d6a0d011a815286e6753"
     },
@@ -11456,6 +11515,7 @@
       "gMainMenuUtilRenderer": "asm/main_menu_bss.o",
       "gMainMenuUtilGiftSpriteWork": "asm/main_menu_bss.o",
       "gMainMenuUtilVBlankWork": "asm/main_menu_bss.o"
-    }
+    },
+    "native_output_sha256": "22d6ff24ce25ca5c551f8188436c66ad71daf532bf9c8e375762e3feb071763a"
   }
 }
