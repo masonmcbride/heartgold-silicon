@@ -1,27 +1,22 @@
-"""Guest32-only correction of reconstructed trainer-approach prototypes."""
+"""Validate the pinned trainer task ABI before guest32 virtual-source publication."""
 
 def adapt(relative, text):
     if str(relative) != "src/scrcmd_battle.c":
         return text
-    before = "if (TrainerApproach_IsDone() == TRUE) {"
-    after = (
-        "if (TrainerApproach_IsDone("
-        "(void *)(uintptr_t)(*approachTask)) == TRUE) {"
-    )
     for fragment in (
-        before,
-        "if (*approachTask == 0) {",
+        "SysTask **approachTask;",
+        "if (TrainerApproach_IsDone(*approachTask) == TRUE) {",
+        "if (*approachTask == NULL) {",
         "TrainerApproach_Delete(*approachTask);",
     ):
-        if text.count(fragment) != 1:
+        expected = 2 if fragment == "SysTask **approachTask;" else 1
+        if text.count(fragment) != expected:
             raise ValueError("Original task lifecycle drift: " + fragment)
-    return '#include <stdint.h>\n' + text.replace(before, after)
+    return text
 
 
 def adapt_public_header(text):
-    before = "BOOL TrainerApproach_IsDone(void);"
+    before = "BOOL TrainerApproach_IsDone(SysTask *task);"
     if text.count(before) != 1:
         raise ValueError("Original trainer public prototype drift")
-    return text.replace(
-        before, "BOOL TrainerApproach_IsDone(void *task);"
-    )
+    return text

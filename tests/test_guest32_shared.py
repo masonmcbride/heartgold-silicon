@@ -269,6 +269,16 @@ g32_destroy(ram);return 0;}
     victim=next(iter(broken['OVY_38']['original_assembly_globals']))
     broken['OVY_38']['original_assembly_globals'][victim]['offset']=known['gDwcMatchKeys']
     try:plan(broken)
+    except ValueError as error:assert 'historical section coordinate mismatch' in str(error),str(error)
+    else:raise AssertionError('changed historical coordinate accepted')
+    # Keep every section view consistent so this independent mutation reaches
+    # the cross-image overlap gate rather than the historical-coordinate gate.
+    broken=copy.deepcopy(originals)
+    section=next(s for s in broken['OVY_38']['assembly_sections'] if victim in s['labels'])
+    section['original_placement']['address']=known['gDwcMatchKeys']
+    for name,offset in section['labels'].items():
+        broken['OVY_38']['original_assembly_globals'][name]['offset']=known['gDwcMatchKeys']+offset
+    try:plan(broken)
     except ValueError as error:assert 'overlapping image storage' in str(error),str(error)
     else:raise AssertionError('overlapping image ownership accepted')
     broken=copy.deepcopy(originals)

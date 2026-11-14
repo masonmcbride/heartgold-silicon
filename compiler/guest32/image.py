@@ -15,6 +15,25 @@ from native_image_graph import parse_manifest,source_record
 from incremental import run as cached_run
 from original_layout import anchored_sections,verified_sections,overlay_id_constants,verify_recovery
 
+def argument_liveness(functions):
+    """Shared catalog argument observability, flattened into guest ABI slots."""
+    used={key:[bool(u['observed']) for u in f['argument_uses']] for key,f in functions.items() if f['definition']}
+    changed=True
+    while changed:
+        changed=False
+        for key,f in functions.items():
+            if not f['definition']:continue
+            for j,u in enumerate(f['argument_uses']):
+                live=bool(u['observed'])
+                for d in u['dependencies']:
+                    target=used.get(d['function'])
+                    live |= target is None or (d['argument']<len(target) and target[d['argument']])
+                if live and not used[key][j]:used[key][j]=True;changed=True
+    def flat_used(t,live):
+        return sum((flat_used(t['element'],live) for _ in range(t['array'])),[]) if isinstance(t,dict) and 'array' in t else [live]
+    return {key:sum((flat_used(t,live) for t,live in zip(f['params'],used.get(key,[True]*len(f['params'])))),[])
+            for key,f in functions.items()}
+
 def private_inline_plan(members):
     names={f['name'] for r in members for f in r.get('description',{}).get('functions',[])
            if f.get('private_inline_eligible')}
@@ -182,20 +201,7 @@ def main():
     (a.out/'ownership-conflicts.json').write_text(json.dumps(ownership_conflicts,indent=2)+'\n')
     if ownership_conflicts:
         raise ValueError('original code ownership conflicts: '+', '.join(r['identity'] for r in ownership_conflicts))
-    used={key:[bool(u['observed']) for u in f['argument_uses']] for key,f in functions.items() if f['definition']}
-    changed=True
-    while changed:
-        changed=False
-        for key,f in functions.items():
-            if not f['definition']:continue
-            for j,u in enumerate(f['argument_uses']):
-                live=bool(u['observed'])
-                for d in u['dependencies']:
-                    target=used.get(d['function'])
-                    live |= target is None or (d['argument']<len(target) and target[d['argument']])
-                if live and not used[key][j]:used[key][j]=True;changed=True
-    def flat_used(t,live):
-        return sum((flat_used(t['element'],live) for _ in range(t['array'])),[]) if isinstance(t,dict) and 'array' in t else [live]
+    liveness=argument_liveness(functions)
     codes=[]
     for i,key in enumerate(sorted(functions)):
         f=dict(functions[key],address=0x10000000+i*4)
@@ -215,7 +221,7 @@ def main():
             f['native']='guest32_local_'+hashlib.sha256(identity.encode()).hexdigest()[:16]+'_'+f['name']
         else:f['native']='guest32_'+f['name']
         if any(ref['expression']==f['name'] for s in sections for ref in s['references']):f['address_taken']=True
-        f['used_flat']=sum((flat_used(t,live) for t,live in zip(f['params'],used.get(key,[True]*len(f['params'])))),[])
+        f['used_flat']=liveness[key]
         codes.append(f)
     def flat_types(t):
         if isinstance(t,dict) and 'array' in t:return flat_types(t['element'])*t['array']

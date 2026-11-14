@@ -12,7 +12,7 @@ extern int32_t guest32_NdEngine_Base64Decode(void *,uint32_t,uint32_t,int32_t);
 static void put(void *ram,uint32_t address,uint32_t value){memcpy(g32_resolve(ram,address,4,0),&value,4);}
 int main(int argc,char **argv){
     /* Full physical window, including its first and last bytes. */
-    void *whole=g32_create_ds(G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE);assert(whole);
+    void *whole=g32_create_ds(G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE-4096);assert(whole);
     uint8_t *first=g32_resolve(whole,G32_MAIN_RAM_BASE,1,0);
     uint8_t *last=g32_resolve(whole,G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE-1,1,0);
     *first=17;*last=29;assert(last-first==G32_MAIN_RAM_SIZE-1);
@@ -50,7 +50,7 @@ int main(int argc,char **argv){
     uint32_t dest=g32_encode(ram,decoded,16,0);
     assert(guest32_NdEngine_Base64Decode(ram,dest,encoded,4)==3);
     assert(!memcmp(decoded,p+32,3));
-    assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE);
+    assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE - 4096 /* reserved DS system RAM */);
     assert(g32_live_allocations(ram)==3);
     g32_release(ram,p,64);g32_check_consumed(ram,addr);
     if(argc>1){

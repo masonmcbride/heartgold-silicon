@@ -36,6 +36,21 @@ class CoordinatedSources(unittest.TestCase):
             with self.assertRaises(ValueError):
                 batch.adapt(relative, original + '\n')
 
+    def test_mb_fragment_guards(self):
+        for name in ('mb_cache', 'mb_task_thread', 'mb_parent_send_block', 'mb_read_segment',
+                     'mb_parent_data', 'mb_parent_send_data'):
+            relative = 'lib/NitroSDK/src/mb/' + name + '.c'
+            original = (GAME / relative).read_text()
+            record = batch.SOURCES[relative]
+            saved = record['edits']
+            try:
+                for i, (old, new) in enumerate(saved):
+                    record['edits'] = saved[:i] + [(old + ' changed guard', new)] + saved[i+1:]
+                    with self.assertRaisesRegex(ValueError, 'fragment changed'):
+                        batch.adapt(relative, original)
+            finally:
+                record['edits'] = saved
+
     def test_field_protection_boundary_only(self):
         relative = 'src/field/fieldmap.c'
         original = (GAME / relative).read_text()

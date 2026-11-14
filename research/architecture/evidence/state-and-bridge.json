@@ -1,0 +1,43 @@
+{
+  "commit": "d4213f19aab9b144145d60d3dc6b43005373c2a2",
+  "findings": [
+    "AR-0008",
+    "AR-0010"
+  ],
+  "limits": [
+    "Available state report is historical; full current-source typed plan and state execution not proved.",
+    "Shared parser accepts normal bracket whitespace and supplies rejection diagnostics; exact pinned-input projections preserved.",
+    "Argument type validation retained even when flattened signature omits zero-length array elements.",
+    "No original game or handwritten host runtime behavior changed.",
+    "Complete game/cold build remains unproved."
+  ],
+  "logs": [
+    "build/architecture/state-contracts/comparison.json",
+    "build/architecture/state-contracts/focused.log",
+    "build/architecture/state-contracts/recovery-all.log",
+    "build/architecture/native-bridge/comparison.json",
+    "build/architecture/native-bridge/build-final.log",
+    "build/architecture/native-bridge/ctest.log"
+  ],
+  "results": {
+    "compiler_ctests": "7/7, 21.34 seconds",
+    "compiler_replay": "100 cases: 81 success, 19 rejected; identical emitted IR and stdout/stderr",
+    "full_recovery_tests": "15/16; prior trainer prototype guard unchanged",
+    "net_production_lines_removed": 46,
+    "script_field_projections_equal": 853,
+    "shape_classifications_equal": 412,
+    "source_built_llvm23_lowerer": "passed",
+    "state_owner_publication_tests": "12/12",
+    "typed_plan_source_guard": "src/main.c drift unchanged"
+  },
+  "schema_version": 1,
+  "source_hashes": {
+    "cmake/guest32_state.py": "86914a74b596fcef05fa1161d7e4ba94e96dd9c82aed94a1be787d3aa9dfc45c",
+    "cmake/guest32_typed_state.py": "79866db5bcef31a94a10985bad3786dfb1c737e23039c42c733ae029bfbc4f81",
+    "compiler/guest32/abi.h": "ca401dd0df6fff010a0427c67452f7741c8f2aa487d77b6019abe330abd66a8b",
+    "compiler/guest32/lower.cpp": "a13b73de7d164a23222da5f38a2fb8543d671a7d5e7677f47c2952f3e3a555a4",
+    "tests/test_guest32_compiler.py": "b4519c90a3ea016015f8b3a91f2215068a91032bf839c21761a9854a42695f6f",
+    "tests/test_guest32_recovery.py": "4734dbeb8b2f7aa0baadacd866ee6541a2eb1de1058e64407bd1a0bfdbd35e88"
+  },
+  "timestamp_utc": "2026-11-14T21:56:16.980515+00:00"
+}

@@ -2235,7 +2235,13 @@ def guest32_frontend(relative, text, root):
             text=replace(text,'struct OSiAlarmQueue OSi_AlarmQueue;', 'extern struct OSiAlarmQueue OSi_AlarmQueue;')
         return text
     if relative == 'src/comm_state.c':
-        return adapt(relative, text, root)
+        # ARM32 uses the original SDK headers, which do not supply libntr's
+        # MATHRandContext32 typedef. Retain its original local declaration and
+        # pointer arithmetic; only the reconstructed const-array assignment
+        # requires a frontend spelling correction.
+        return replace(text,
+            "    void (*const linkedStates[3])(void);\n    ARRAY_ASSIGN(linkedStates, gCommLinkedStates);",
+            "    void (*const *linkedStates)(void) = gCommLinkedStates;")
     if relative == 'lib/include/nitro/os/thread.h':
         original = (root/'lib/NitroSDK/src/os/os_thread.c').read_text()
         if original.count('static void OSi_InsertLinkToQueue(OSThreadQueue *queue, OSThread *thread) {') != 1:

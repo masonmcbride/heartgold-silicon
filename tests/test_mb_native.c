@@ -28,6 +28,36 @@ extern int MB_ReadSegment(FSFile *, void *, u32);
 #define H(p,o) (*(u16 *)((u8 *)(p)+(o)))
 #define W(p,o) (*(u32 *)((u8 *)(p)+(o)))
 static int wm_calls, parent_calls, last_event;
+extern u8 bsendBuff[];
+extern void MBi_SendFixedBeacon(u32, u16, u8);
+extern void MBi_SendVolatBeacon(u32, u16, u8);
+static u32 beacon_game;
+static u16 beacon_tgid;
+static u8 beacon_attribute;
+static int beacon_calls;
+int WM_SetGameInfo(void (*callback)(void *), const void *data, u16 size,
+                   u32 game, u16 tgid, u8 attribute) {
+    CHECK(!callback && data == bsendBuff && size == 112);
+    beacon_game = game; beacon_tgid = tgid; beacon_attribute = attribute;
+    ++beacon_calls;
+    return 2;
+}
+static void test_beacon_arguments(void) {
+    u8 *game = calloc(1, 0x500);
+    CHECK(game);
+    MB_PTR(gMbBeaconState, 0x1c) = game;
+    MB_PTR(gMbBeaconState, 0x20) = game;
+    gMbBeaconState[0x28] = 1;
+    MBi_SendFixedBeacon(0x89abcdef, 0xfedc, 0x80);
+    CHECK(beacon_calls == 1 && beacon_game == 0x89abcdef);
+    CHECK(beacon_tgid == 0xfedc && beacon_attribute == 0x83);
+    MBi_SendVolatBeacon(0x76543210, 0xabcd, 0x40);
+    CHECK(beacon_calls == 2 && beacon_game == 0x76543210);
+    CHECK(beacon_tgid == 0xabcd && beacon_attribute == 0x43);
+    MB_NativeForget(gMbBeaconState, sizeof(gMbBeaconState));
+    memset(gMbBeaconState, 0, sizeof(gMbBeaconState));
+    free(game);
+}
 static void *last_arg;
 static void wm(int event, void *arg) {
     if (event == 255) CHECK(((u16 *)arg)[0] == 12 && ((u16 *)arg)[1] == 4);
@@ -86,6 +116,7 @@ BOOL FS_SeekFile(FSFile *f, s32 off, FSSeekFileMode mode) {
 void DC_FlushRange(const void *p, u32 n) { CHECK(p && n); ++flushes; }
 
 int main(void) {
+    test_beacon_arguments();
     u8 *allocation = calloc(1, 0xb000);
     u8 user[22] = {0};
     CHECK((uintptr_t)allocation > UINT32_MAX);

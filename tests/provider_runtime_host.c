@@ -27,7 +27,7 @@ int main(int argc,char **argv) {
         assert(*(uint32_t*)g32_resolve(ram,a,4,0)==i);
         g32_frame_leave(ram,f);
         if(heap){uint32_t h=g32_encode(ram,heap,32,0);g32_release(ram,heap,32);g32_check_consumed(ram,h);}
-        assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE);
+        assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE - 4096 /* reserved DS system RAM */);
     }
     assert(g32_live_allocations(ram)==0);g32_destroy(ram);
 }

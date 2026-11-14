@@ -16,6 +16,106 @@ from recovery import load, verify_callbacks, code_constants, historical_objects,
 from closure import merge_main_overlay_pins
 
 
+class StateContractTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory(dir=BUILD)
+        self.addCleanup(self.tmp.cleanup)
+        self.game=Path(self.tmp.name)
+        (self.game/'include').mkdir()
+        (self.game/'src/data/fieldmap').mkdir(parents=True)
+        self.header=self.game/'include/script.h'
+        self.table=self.game/'src/data/fieldmap/script_cmd_table.h'
+        self.header.write_text('typedef BOOL (*ScrCmdFunc)(ScriptContext *ctx);\n')
+        self.table.write_text('const ScrCmdFunc gScriptCmdTable[] = {First, /* repeat */ First, // slot\n Second,};\n')
+
+    def test_plain_shapes_reject_nested_pointers_and_unknown_kinds(self):
+        from guest32_state import pointer_free
+        from guest32_typed_state import plain
+        self.assertIs(pointer_free,plain)
+        for kind,expected in [('integer',True),('float',True),('pointer',False),('opaque',False)]:
+            shape=dict(kind='struct',fields=[dict(type=dict(kind='array',element=dict(kind=kind)))])
+            self.assertEqual(pointer_free(shape),expected)
+        self.assertTrue(pointer_free(dict(kind='struct',fields=[])))
+
+    def fields(self):
+        from guest32_typed_state import flat
+        guest=dict(kind='array',count=3,size=12,element=dict(kind='pointer',size=4))
+        native=dict(kind='array',count=3,size=24,element=dict(kind='pointer',size=8))
+        return flat(guest,native)
+
+    def test_original_table_slots_keep_repetition_and_callable_roles(self):
+        from script_callback_roots import original_script_names
+        from guest32_typed_state import prove_script_command_roles
+        self.assertEqual(original_script_names(self.game),['First','First','Second'])
+        fields=self.fields()
+        self.assertEqual(prove_script_command_roles(self.game,dict(size=12),dict(size=24),fields),3)
+        self.assertEqual([f['kind'] for f in fields],[2,2,2])
+
+    def test_table_layout_and_projection_drift_is_rejected(self):
+        from guest32_typed_state import prove_script_command_roles
+        for guest,native,fields in [(13,24,self.fields()),(12,25,self.fields()),(12,24,self.fields()[:-1])]:
+            with self.subTest(guest=guest,native=native), self.assertRaisesRegex(ValueError,'layout/count'):
+                prove_script_command_roles(self.game,dict(size=guest),dict(size=native),fields)
+        for key,value in [('kind',0),('width',8),('guest_offset',5),('native_offset',12)]:
+            fields=self.fields();fields[1][key]=value
+            with self.subTest(field=key), self.assertRaisesRegex(ValueError,'field projection'):
+                prove_script_command_roles(self.game,dict(size=12),dict(size=24),fields)
+
+    def test_signature_and_unverified_initializers_are_rejected(self):
+        from guest32_typed_state import prove_script_command_roles
+        original=self.table.read_text()
+        for initializer in ('', '(ScrCmdFunc)0', 'First + 1'):
+            self.table.write_text('const ScrCmdFunc gScriptCmdTable[] = {'+initializer+'};')
+            with self.subTest(initializer=initializer), self.assertRaises(ValueError):
+                prove_script_command_roles(self.game,dict(size=12),dict(size=24),self.fields())
+        self.table.write_text(original)
+        self.header.write_text('typedef void (*ScrCmdFunc)(ScriptContext *ctx);\n')
+        with self.assertRaisesRegex(ValueError,'signature drift'):
+            prove_script_command_roles(self.game,dict(size=12),dict(size=24),self.fields())
+
+    def test_typed_flattening_keeps_scalar_width_and_array_count_gates(self):
+        from guest32_typed_state import flat
+        with self.assertRaisesRegex(ValueError,'Scalar width'):
+            flat(dict(kind='integer',size=4),dict(kind='integer',size=8))
+        with self.assertRaisesRegex(ValueError,'element counts'):
+            flat(dict(kind='array',count=2),dict(kind='array',count=3))
+
+
+class OwnerTests(unittest.TestCase):
+    def owners(self, text):
+        from script_callback_roots import original_owners
+        with tempfile.TemporaryDirectory(dir=BUILD) as directory:
+            game=Path(directory)
+            (game/'main.lsf').write_text(text)
+            return original_owners(game)
+
+    def test_resident_section_splits_keep_overlay_ownership_distinct(self):
+        self.assertEqual(self.owners('''Static main
+{
+Object irq.o (.text)
+}
+Autoload ITCM
+{
+Object irq.o (.itcm)
+}
+Autoload DTCM
+{
+Object irq.o (.dtcm)
+}
+Overlay OVY_0
+{
+After main
+Object script.o
+}
+'''), {'irq.o':'main','script.o':'OVY_0'})
+
+    def test_competing_resident_or_overlay_root_owner_is_rejected(self):
+        for first in ('Static main', 'Overlay OVY_0'):
+            second='OVY_0' if first=='Static main' else 'OVY_1'
+            with self.subTest(first=first), self.assertRaisesRegex(ValueError,'Conflicting original owner'):
+                self.owners(first+'\n{\nObject shared.o\n}\nOverlay '+second+'\n{\nObject shared.o\n}\n')
+
+
 class PublicationTests(unittest.TestCase):
     def test_explicit_retry_does_not_defer_historical_failures(self):
         report = dict(results=[
@@ -123,7 +223,17 @@ class HistoricalTests(unittest.TestCase):
         source = ROOT / 'upstream/pokeheartgold/src/scrcmd_battle.c'
         before = source.read_bytes()
         adapted = adapt('src/scrcmd_battle.c', before.decode())
-        self.assertIn('TrainerApproach_IsDone((void *)(uintptr_t)(*approachTask))', adapted)
+        self.assertEqual(adapted, before.decode())
+        from trainer_approach_abi import adapt_public_header
+        header=(ROOT / 'upstream/pokeheartgold/include/map_object_behavior.h').read_text()
+        self.assertEqual(adapt_public_header(header), header)
+        with self.assertRaisesRegex(ValueError, 'prototype drift'):
+            adapt_public_header(header.replace('SysTask *task', 'void'))
+        for fragment in ('if (*approachTask == NULL) {',
+                         'TrainerApproach_IsDone(*approachTask)',
+                         'TrainerApproach_Delete(*approachTask);'):
+            with self.subTest(fragment=fragment), self.assertRaisesRegex(ValueError, 'lifecycle drift'):
+                adapt('src/scrcmd_battle.c', before.decode().replace(fragment, 'changed'))
         self.assertEqual(before, source.read_bytes())
 
 

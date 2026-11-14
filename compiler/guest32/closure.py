@@ -15,6 +15,7 @@ import subprocess
 import sys
 from incremental import run as cached_run
 from original_layout import annotated_sections, verified_sections, MAIN_BASE, MAIN_SIZE
+from image import argument_liveness
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_image_graph import parse_manifest,source_record
@@ -114,7 +115,7 @@ def build(a):
     sys.path.insert(0,str(ROOT/'cmake'))
     from native_sources import guest32_frontend,write_if_changed
     adapted=[]
-    for relative in ('lib/include/nitro/os/thread.h','lib/include/nitro/os/context.h','src/comm_state_private.h','src/comm_state.c',
+    for relative in ('lib/include/nitro/os/thread.h','lib/include/nitro/os/context.h','src/comm_state.c',
                      'lib/NitroSDK/src/os/os_alarm_before_handler.c','lib/NitroSDK/src/os/os_alarm_after_handler.c',
                      'lib/libCPS/src/cps_bignum.c','lib/libVCT/src/vct_audio_send.c',
                      'lib/NitroSDK/src/mic.c','lib/NitroSDK/src/rtc/rtc_api.c','lib/src/nitrocrypto_rc4_fast.c'):
@@ -146,11 +147,7 @@ def build(a):
         battle_text=Path(battle_entry['external-contents']).read_text()
     else:
         battle_text=battle_source.read_text()
-    if "if (TrainerApproach_IsDone() == TRUE) {" in battle_text:
-        battle_text=adapt_battle_call(
-            'src/scrcmd_battle.c',battle_text)
-    elif "TrainerApproach_IsDone((void *)(uintptr_t)(*approachTask))" not in battle_text:
-        raise ValueError("Trainer approach virtual-source drift")
+    battle_text=adapt_battle_call('src/scrcmd_battle.c',battle_text)
     battle_output=a.out/'adapted/src/scrcmd_battle.c'
     write_if_changed(battle_output,battle_text)
     if battle_entry:
@@ -313,20 +310,7 @@ def build(a):
     for member in selected:
         taken.update(f['key'] for f in descriptions.get(member,{}).get('functions',[]) if f['address_taken'])
     for key,f in functions.items():f['address_taken']=key in taken
-    # Scalar liveness uses the same fixed point as the image compiler.
-    used={k:[bool(u['observed']) for u in f['argument_uses']] for k,f in functions.items() if f['definition']}
-    changed=True
-    while changed:
-        changed=False
-        for key,f in functions.items():
-            if not f['definition']:continue
-            for j,u in enumerate(f['argument_uses']):
-                live=bool(u['observed'])
-                for d in u['dependencies']:
-                    target=used.get(d['function']);live|=target is None or (d['argument']<len(target) and target[d['argument']])
-                if live and not used[key][j]:used[key][j]=True;changed=True
-    def flat(t,v):return sum((flat(t['element'],v) for _ in range(t['array'])),[]) if isinstance(t,dict) and 'array' in t else [v]
-    for key,f in functions.items():f['used_flat']=sum((flat(t,v) for t,v in zip(f['params'],used.get(key,[True]*len(f['params'])))),[])
+    for key,live in argument_liveness(functions).items():functions[key]['used_flat']=live
     placements=dict(shared['globals']);occupied=[(v['offset'],v['offset']+v['size']) for v in placements.values()]
     cursor=shared['static_end'];unplaced=[];assembly=[]
     historical=json.loads(Path(__file__).with_name('original_data_layouts.json').read_text())

@@ -1,3 +1,4 @@
+static_assert(sizeof(u32) == 4, "Nintendo word width must match the native game build");
 int main() {
     static_assert(offsetof(LobbyTimerMap, leftmost) - offsetof(LobbyTimerMap, root) == 2 * sizeof(void *), "native map header");
     static_assert(offsetof(LobbyTimerMapNode, id) == 3 * sizeof(void *), "native node prefix");

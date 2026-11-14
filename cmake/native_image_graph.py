@@ -186,6 +186,7 @@ def data_commands(game, output_root, originals):
 
 def configure(game, out):
     model = graph(game,out.parent)
+    policy=image_policy(model['images']['main'])
     write(out / 'images.json', json.dumps(model, indent=2, sort_keys=True)+'\n')
     lines = ['# Generated from main.lsf by native_image_graph.py', 'set(game_sources']
     inventory = ['group\tobject\timplementation']
@@ -193,7 +194,6 @@ def configure(game, out):
         for obj in image['objects']:
             record = model['members'][obj]
             base = obj[:-2]
-            policy=image_policy(model['images']['main'])
             approved=(base.startswith(tuple(policy['c_source_prefixes'])) or
                       base+'.c' in policy['c_sources'])
             if record['kind'] == 'C' and approved:

@@ -16,7 +16,35 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_data_ir import parse,raw_layout,integer
 
+def check_argument_liveness():
+    sys.path.insert(0,str(ROOT/'compiler/guest32'))
+    from image import argument_liveness
+    def function(params, uses=None):
+        return dict(params=params,definition=uses is not None,argument_uses=uses or [])
+    def use(observed=False, *dependencies):
+        return dict(observed=observed,dependencies=[dict(function=f,argument=i) for f,i in dependencies])
+    functions={
+        'dead_a':function(['i32'],[use(False,('dead_b',0))]),
+        'dead_b':function(['i32'],[use(False,('dead_a',0))]),
+        'live_a':function(['i32'],[use(False,('live_b',0))]),
+        'live_b':function(['i32'],[use(False,('observed',0))]),
+        'observed':function(['i32'],[use(True)]),
+        'unknown':function(['ptr'],[use(False,('absent',0))]),
+        'declaration':function(['i32']),
+        'decl_caller':function(['i32'],[use(False,('declaration',0))]),
+        'missing_index':function(['i32'],[use(False,('observed',1))]),
+        'arrays':function([dict(array=2,element=dict(array=3,element='i16')),
+                           dict(array=0,element='i32'),'ptr'],[use(True),use(True),use()]),
+    }
+    expected={name:[True] for name in ('live_a','live_b','observed','unknown','declaration','decl_caller')}
+    expected.update(dead_a=[False],dead_b=[False],missing_index=[False],arrays=[True]*6+[False])
+    snapshot=copy.deepcopy(functions)
+    assert argument_liveness(functions)==expected
+    assert argument_liveness(dict(reversed(list(functions.items()))))==expected
+    assert functions==snapshot, 'liveness analysis mutated original descriptions'
+
 def main():
+    check_argument_liveness()
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--build',type=Path,required=True)
     p.add_argument('--image-dir',type=Path,required=True)

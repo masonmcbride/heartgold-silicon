@@ -1,17 +1,5 @@
 # Original HeartGold JSON -> ARM assembly -> NitroFS binaries.
 
-find_package(Python3 REQUIRED COMPONENTS Interpreter)
-
-find_program(HG_LLVM_OBJCOPY
-    NAMES llvm-objcopy
-    HINTS /opt/homebrew/opt/llvm/bin /usr/local/opt/llvm/bin
-    REQUIRED)
-
-find_program(HG_LLVM_READELF
-    NAMES llvm-readelf
-    HINTS /opt/homebrew/opt/llvm/bin /usr/local/opt/llvm/bin
-    REQUIRED)
-
 set(hg_json_binary_outputs)
 
 function(hg_add_json_binary relative expected_sha1)
@@ -33,8 +21,8 @@ function(hg_add_json_binary relative expected_sha1)
             "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/build_heartgold_json_binary.py"
             --jsonproc "$<TARGET_FILE:hg_jsonproc>"
             --clang "${CMAKE_C_COMPILER}"
-            --objcopy "${HG_LLVM_OBJCOPY}"
-            --readelf "${HG_LLVM_READELF}"
+            --objcopy "${HG_ASSET_OBJCOPY}"
+            --readelf "${HG_ASSET_READELF}"
             --source "${source}"
             --template "${template}"
             --output "${output}"

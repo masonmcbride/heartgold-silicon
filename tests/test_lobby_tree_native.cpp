@@ -1,4 +1,5 @@
 using Node = TreeEraseRebalance::Node;
+static_assert(sizeof(u32) == 4, "Nintendo word width must match the native game build");
 #define PREFIX(T, field) \
     static_assert(offsetof(T, field) == 2 * sizeof(void *), "tagged parent offset"); \
     static_assert(alignof(T) >= 2, "parent low bit is available"); \
@@ -53,7 +54,66 @@ static void check(Node *sentinel, int expected) {
     }
     assert(traversed == expected);
 }
+static unsigned allocations, frees;
+extern "C" {
+char gLobbyStr_TreeInsertLengthError_2[] = "tree length overflow";
+void *LobbyMem_Alloc(u32 size) {
+    assert(size == sizeof(PPWLobbyPlayerSetNode));
+    void *p = malloc(size);
+    assert(p && (uintptr_t)p > UINT32_MAX);
+    // A narrow parent write must not accidentally pass using zeroed padding.
+    memset(p, 0xa5, size);
+    ++allocations;
+    return p;
+}
+void DWC_Free(int heap, void *p, u32 size) {
+    assert(heap == 0 && p && size == 0);
+    ++frees;
+    free(p);
+}
+}
+static void player_set_lifetime() {
+    PPWLobbyPlayer players[128] = {};
+    for (unsigned trial = 0; trial < 8; ++trial) {
+        PPWLobbyPlayerSet set = {};
+        auto *sentinel = reinterpret_cast<PPWLobbyPlayerSetNode *>(&set.root);
+        set.leftmost = sentinel;
+        unsigned minimum = 128;
+        for (unsigned i = 0; i < 128; ++i) {
+            unsigned key = (i * 73 + trial * 17) % 128;
+            PPWLobbyPlayer *player = players + key;
+            player->id = key;
+            PPWLobbyPlayerSetNode *parent;
+            u8 left, leftmost;
+            auto *position = PPWLobbyPlayerSet_FindInsertPos(&set, &player, &parent, &left, &leftmost);
+            auto *node = PPWLobbyPlayerSet_InsertNode(&set, position, left, leftmost, &player);
+            assert(node->player == player && set.count == i + 1);
+            if (key < minimum) minimum = key;
+            assert(set.leftmost->player->id == (int)minimum);
+            // Traverse the C-produced objects through the actual C++ iterator.
+            Iterator it = {set.leftmost};
+            int last = -1;
+            unsigned count = 0;
+            while (it.current != sentinel) {
+                auto *current = static_cast<PPWLobbyPlayerSetNode *>(it.current);
+                assert(current->player->id > last);
+                last = current->player->id;
+                assert(++count <= set.count);
+                TreeIterator::LobbyTreeIterator_Advance(&it);
+            }
+            assert(count == set.count);
+            assert((set.root->parent & ~(uintptr_t)1) == (uintptr_t)sentinel);
+            assert(!(set.root->parent & 1));
+        }
+        assert(PPWLobbyPlayerSet_Destroy(&set) == &set);
+        assert(allocations == frees);
+        // The original destructor owns nodes only; never reuse dangling links.
+        set = {};
+        for (unsigned i = 0; i < 128; ++i) assert(players[i].id == (int)i);
+    }
+}
 int main() {
+    player_set_lifetime();
     // Real heap addresses on this ARM64 host are above the DS address range.
     Item *nodes = new Item[128]();
     assert((uintptr_t)nodes > UINT32_MAX);

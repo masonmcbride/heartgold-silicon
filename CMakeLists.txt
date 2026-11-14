@@ -303,6 +303,10 @@ if(HEARTGOLD_BUILD_GAME)
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/heartgold.cmake")
     set(HEARTGOLD_GUEST32_LLVM_DIR "" CACHE PATH "Opt-in LLVM 23 configuration for original OVY_0 guest compilation")
     if(HEARTGOLD_GUEST32_LLVM_DIR)
+        if(NOT HEARTGOLD_NATIVE_OVERLAYS)
+            message(FATAL_ERROR
+                "Guest32 requires HEARTGOLD_NATIVE_OVERLAYS=ON: its provider closure and state proof consume the native overlay contract and semantic-slot registry.")
+        endif()
         include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
     endif()
     # Original-image integration is now an explicit build feature rather than
@@ -385,4 +389,27 @@ if(TARGET ntr_spi AND APPLE AND HEARTGOLD_NATIVE_MIC)
         "-framework CoreFoundation")
 
     message(STATUS "HeartGold native Core Audio MIC provider selected")
+endif()
+
+# Native fixtures launch Clang directly; inherit the build's SDK without
+# replacing test-specific environments. Guest32 subdirectory tests stay separate.
+if(APPLE)
+    set(hg_test_sdk "${CMAKE_OSX_SYSROOT}")
+    if(NOT hg_test_sdk)
+        set(hg_test_sdk "${CMAKE_C_COMPILER_APPLE_SYSROOT}")
+    endif()
+    if(NOT IS_DIRECTORY "${hg_test_sdk}")
+        if(NOT hg_test_sdk)
+            set(hg_test_sdk macosx)
+        endif()
+        execute_process(COMMAND xcrun --sdk "${hg_test_sdk}" --show-sdk-path
+            OUTPUT_VARIABLE hg_test_sdk OUTPUT_STRIP_TRAILING_WHITESPACE
+            COMMAND_ERROR_IS_FATAL ANY)
+    endif()
+    if(NOT IS_DIRECTORY "${hg_test_sdk}")
+        message(FATAL_ERROR "Native tests require the configured macOS SDK: ${hg_test_sdk}")
+    endif()
+    file(REAL_PATH "${hg_test_sdk}" hg_test_sdk)
+    get_property(hg_native_tests DIRECTORY PROPERTY TESTS)
+    set_property(TEST ${hg_native_tests} APPEND PROPERTY ENVIRONMENT "SDKROOT=${hg_test_sdk}")
 endif()

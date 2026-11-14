@@ -281,10 +281,8 @@ int main(int argc, char **argv) {
     }
     if (!Selected.count(&F) && !(GuestExternals && F.isDeclaration() && !F.isIntrinsic())) continue;
     if (F.isVarArg() && !GuestExternals) reject("varargs");
-    SmallVector<Type *> Args{PointerType::getUnqual(C)};
-    for (Argument &A : F.args()) {
-      Args.push_back(valueType(A.getType()));
-    }
+    // Flattening omits zero-length array elements; validate their types too.
+    for (Argument &A : F.args()) valueType(A.getType());
     FunctionType *NativeType=guestSignature(F.getFunctionType(),C);
     auto Canonical=Img.codes.find(symbolKey(F));
     if(GuestExternals && Canonical!=Img.codes.end() && Canonical->second.definition)NativeType=guestSignature(Canonical->second.type,C);
@@ -367,12 +365,6 @@ int main(int argc, char **argv) {
       Current=&B;
       Value *PreviousResult=nullptr;std::string PreviousTarget;
       bool PreviousSign=false,PreviousZero=false;
-      auto Address = [&](Value *P, Type *T) {
-        // i32 arithmetic wraps before zero-extension. No host inbounds promise.
-        if (!AbiPath.empty()) return runtime(B,Out,"g32_resolve",B.getPtrTy(),
-            {Base,Get(P),B.getInt32(DL.getTypeStoreSize(T).getFixedValue()),B.getInt32(0)});
-        return B.CreateGEP(B.getInt8Ty(), Base, B.CreateZExt(Get(P), B.getInt64Ty()));
-      };
       std::function<Value*(Type*,Value*,bool)> LoadGuest;
       std::function<void(Type*,Value*,Value*,bool)> StoreGuest;
       auto Span=[&](Value *Offset,Type *T){
@@ -521,18 +513,12 @@ int main(int argc, char **argv) {
           }
           auto Boundary = Interfaces.calls.find(Callee ? Callee->getName().str() : "");
           if (Boundary != Interfaces.calls.end()) {
-            const auto &S = Boundary->second; SmallVector<Value *> GuestArgs, NativeArgs{Base};
+            const auto &S = Boundary->second; SmallVector<Value *> GuestArgs;
             if(X->arg_size()!=S.args.size() || X->getType()!=ABI::nativeType(C,S.result))reject("callsite ABI signature: "+Callee->getName());
             auto BoundaryFacts=RepresentationFacts;BoundaryFacts.insert("typed-boundary");
             Contracts.apply("boundary",Out,BoundaryFacts);
             for (Value *A : X->args()) GuestArgs.push_back(Get(A));
-            Value *Epoch = S.result.role == "owned" ? runtime(B,Out,"g32_epoch",B.getInt64Ty(),{Base}) : nullptr;
-            for (unsigned J = 0; J < S.args.size(); ++J)
-              NativeArgs.push_back(S.args[J].type == "ptr" ? decode(B,Out,Base,GuestArgs[J],S.args[J],GuestArgs) : GuestArgs[J]);
-            auto Native = Out.getOrInsertFunction(S.native, ABI::nativeSignature(C,S));
-            R = B.CreateCall(Native,NativeArgs);
-            if (S.result.type == "ptr") R = encode(B,Out,Base,R,S.result,GuestArgs);
-            postconditions(B,Out,Base,S,GuestArgs,R,Epoch);
+            R = bridgeCall(B,Out,Base,S,GuestArgs);
             V[&I] = R; continue;
           }
           if (!Callee || !Functions.count(Callee))

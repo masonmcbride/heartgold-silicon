@@ -307,9 +307,22 @@ target_link_libraries(hg_dwc_status_code PRIVATE nitro_config)
 add_dependencies(hg_dwc_status_code heartgold_overlay_native_sources heartgold_native_headers fx_constants)
 foreach(id IN LISTS hg_selected_overlay_ids)
     list(APPEND hg_interface_outputs "${overlay_link_dir}/interfaces/image_${id}.tbd"
-        "${overlay_link_dir}/image_${id}.rsp")
+        "${overlay_link_dir}/image_${id}.rsp" "${overlay_link_dir}/image_${id}.link.json")
 endforeach()
-add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}"
+# Archive changes require global validation, but do not necessarily change any
+# linker input. Only this completion stamp advances after a successful run.
+set(overlay_link_stamp "${overlay_link_dir}/contracts.stamp")
+set(hg_contract_artifacts ${hg_interface_outputs} "${overlay_imports}"
+    "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}")
+set(hg_contract_outputs OUTPUT "${overlay_link_stamp}" BYPRODUCTS ${hg_contract_artifacts})
+set(hg_contract_touch "${overlay_link_stamp}")
+if(NOT CMAKE_GENERATOR MATCHES "^Ninja")
+    # Make cannot recover a missing BYPRODUCT of an up-to-date stamp. Preserve
+    # its existing multi-output/timestamp behavior, including deletion recovery.
+    set(hg_contract_outputs OUTPUT "${overlay_link_stamp}" ${hg_contract_artifacts})
+    list(APPEND hg_contract_touch ${hg_contract_artifacts})
+endif()
+add_custom_command(${hg_contract_outputs}
     COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
         --nm "${CMAKE_NM}" --image-graph "${PROJECT_BINARY_DIR}/native-graph/images.json" ${overlay_link_args}
         --resident-owner "$<TARGET_FILE:hg_dwc_main>=OVY_0"
@@ -317,14 +330,13 @@ add_custom_command(OUTPUT ${hg_interface_outputs} "${overlay_imports}" "${overla
         "$<$<BOOL:$<TARGET_OBJECTS:hg_ovy0_wifi_code>>:--resident-consumer;$<JOIN:$<TARGET_OBJECTS:hg_ovy0_wifi_code>,;--resident-consumer;>>"
         "--resident-consumer;$<JOIN:$<TARGET_OBJECTS:hg_dwc_status_code>,;--resident-consumer;>"
         --imports "${overlay_imports}" --exports "${overlay_exports}" --contracts "${overlay_contracts}"
-    COMMAND "${CMAKE_COMMAND}" -E touch ${hg_interface_outputs}
-        "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}"
+    COMMAND "${CMAKE_COMMAND}" -E touch ${hg_contract_touch}
     DEPENDS ${overlay_link_dependencies} hg_ovy0_wifi_code $<TARGET_OBJECTS:hg_ovy0_wifi_code>
         hg_dwc_status_code $<TARGET_OBJECTS:hg_dwc_status_code>
         "${CMAKE_CURRENT_LIST_DIR}/native_overlay_link.py"
         "${CMAKE_CURRENT_LIST_DIR}/native_provider_registry.py" "${PROJECT_BINARY_DIR}/native-graph/images.json"
     COMMAND_EXPAND_LISTS VERBATIM)
-add_custom_target(heartgold_overlay_link_contract DEPENDS ${hg_interface_outputs} "${overlay_imports}" "${overlay_exports}" "${overlay_contracts}" "${overlay_registry}")
+add_custom_target(heartgold_overlay_link_contract DEPENDS "${overlay_link_stamp}")
 
 # OVY_0 original-code partial provider: independently closed Wi-Fi exports.
 # Do not duplicate these identities if full OVY_0 is selected.
@@ -518,7 +530,7 @@ foreach(id IN LISTS hg_selected_overlay_ids)
     set_target_properties(heartgold_image_${id} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY "${overlay_link_dir}"
         INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE
-        LINK_DEPENDS "${hg_interface_outputs};$<TARGET_FILE:${archive}>")
+        LINK_DEPENDS "${overlay_link_dir}/image_${id}.rsp;${overlay_link_dir}/image_${id}.link.json;$<TARGET_FILE:${archive}>")
     add_dependencies(heartgold_image_${id} heartgold_overlay_link_contract)
     if(id EQUAL 45)
         set_target_properties(heartgold_image_${id} PROPERTIES LINKER_LANGUAGE CXX)
@@ -639,6 +651,9 @@ include("${CMAKE_CURRENT_LIST_DIR}/dwc_native_data.cmake")
 add_test(NAME native_overlay_bindings COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_overlay_bindings.py"
     --build "${PROJECT_BINARY_DIR}" --sdk "${ntr_source}" --compiler "${CMAKE_C_COMPILER}")
+add_test(NAME native_overlay_incremental COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_overlay_incremental.py" --build "${PROJECT_BINARY_DIR}"
+    --generator "${CMAKE_GENERATOR}")
 add_test(NAME native_field_effect_abi COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_field_effect_abi.py" --build "${PROJECT_BINARY_DIR}")
 add_test(NAME native_overlay_data COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover

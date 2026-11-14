@@ -9,6 +9,7 @@ import unittest
 import contextlib
 import io
 import sys
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location(
     "converter", Path(__file__).resolve().parents[1] / "cmake/assets/build_heartgold_script.py"
@@ -75,6 +76,54 @@ class InitializerConversion(unittest.TestCase):
         for arguments in ("entry, 1", "entry, 0, 0", ", 0", "entry, unknown"):
             with self.subTest(arguments=arguments), self.assertRaises(ValueError):
                 converter.normalize_initializers("InitScriptEntry_OnResume " + arguments)
+
+
+class ObjectAdmission(unittest.TestCase):
+    def test_real_arm_objects_preserve_acceptance_and_rejection(self):
+        root = Path(__file__).resolve().parents[1]
+        cache = (DepfilePaths.work / 'CMakeCache.txt').read_text()
+
+        def tool(name):
+            return next(line.split('=', 1)[1] for line in cache.splitlines()
+                        if line.startswith(name + ':'))
+
+        cases = (
+            ('rodata', '.section .rodata\n.byte 1, 2, 3\n', b'\x01\x02\x03'),
+            ('data', '.data\n.byte 4, 5\n', b'\x04\x05'),
+            ('relocation', '.data\n.word unresolved\n', 'unresolved relocations'),
+            ('code', '.text\n.word 0\n', 'unexpected executable code'),
+            ('mixed', '.data\n.byte 1\n.section .rodata\n.byte 2\n', 'data sections'),
+            ('empty', '.data\n', 'data sections'),
+        )
+        with tempfile.TemporaryDirectory(prefix='script admission ', dir=DepfilePaths.work) as directory:
+            work = Path(directory)
+            for name, assembly, expected in cases:
+                with self.subTest(name=name):
+                    source = work / (name + '.s')
+                    binary = work / (name + '.bin')
+                    source.write_text(assembly)
+                    binary.write_bytes(b'stale output')
+                    argv = [str(converter.__file__),
+                            '--source', str(source), '--binary', str(binary),
+                            '--work-dir', str(work), '--game', str(root / 'upstream/pokeheartgold'),
+                            '--libntr', str(root / 'upstream/libntr'),
+                            '--generated-files', str(DepfilePaths.work / 'generated/files'),
+                            '--clang', tool('CMAKE_C_COMPILER'),
+                            '--objcopy', tool('HG_ASSET_OBJCOPY'),
+                            '--readelf', tool('HG_ASSET_READELF')]
+                    with patch.object(sys, 'argv', argv), patch.object(converter, 'run', wraps=converter.run) as calls:
+                        if isinstance(expected, bytes):
+                            converter.main()
+                            self.assertEqual(binary.read_bytes(), expected)
+                            self.assertIn(converter.depfile_escape(source),
+                                          (work / (name + '.d')).read_text())
+                        else:
+                            with self.assertRaisesRegex(ValueError, expected):
+                                converter.main()
+                            self.assertFalse(binary.exists())
+                        inspections = [c for c in calls.call_args_list
+                                       if c.args[0][0] == tool('HG_ASSET_READELF')]
+                        self.assertEqual(len(inspections), 1)
 
 
 class DepfilePaths(unittest.TestCase):

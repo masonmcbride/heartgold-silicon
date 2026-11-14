@@ -1,0 +1,59 @@
+{
+  "all_mb_source_line_counts_equal": true,
+  "comparison_logs": [
+    "build/architecture/multiboot/audit-before.json",
+    "build/architecture/multiboot/audit-after-layout.json",
+    "build/architecture/multiboot/audit-after.json",
+    "build/architecture/multiboot/compile-before.json",
+    "build/architecture/multiboot/compile-after.json"
+  ],
+  "cpp_header_api": "passed",
+  "findings": [
+    "AR-0011",
+    "AR-0012"
+  ],
+  "focused_ctest": {
+    "log": "build/architecture/multiboot/ctest-final.log",
+    "passed": 4,
+    "total": 4
+  },
+  "limits": [
+    "21 translation units compared with common fixture flags; current production compile databases do not admit these MB units.",
+    "Original task scheduling and interrupt lifecycle are not exercised by the runtime fixture.",
+    "Full build and cold/runtime parity remain unresolved."
+  ],
+  "moved_declaration_sources": [
+    "lib/NitroSDK/src/mb/mb_beacon_volat_init.c",
+    "lib/NitroSDK/src/mb/mb_cache.c",
+    "lib/NitroSDK/src/mb/mb_comm_params.c",
+    "lib/NitroSDK/src/mb/mb_download_info.c",
+    "lib/NitroSDK/src/mb/mb_parent_comm.c",
+    "lib/NitroSDK/src/mb/mb_parent_send_block.c",
+    "lib/NitroSDK/src/mb/mb_parent_start_end.c",
+    "lib/NitroSDK/src/mb/mb_parent_util.c",
+    "lib/NitroSDK/src/mb/mb_task_piece_buffer.c",
+    "lib/NitroSDK/src/mb/mb_wm_error.c"
+  ],
+  "native_ir_and_diagnostics_equal": 21,
+  "negative_guards": "source/typedef drift and incompatible callback covered by CTest",
+  "obsolete_layout_step_outputs_changed": 0,
+  "other_audit_outputs_identical": 805,
+  "production_delta": {
+    "bytes": -6253,
+    "lines": -71
+  },
+  "registered_edits_after": 419,
+  "registered_edits_before": 423,
+  "reproduction_inputs": [
+    "build/architecture/multiboot/native_coordinated.before.py",
+    "build/architecture/multiboot/mb_native.before.h",
+    "build/architecture/multiboot/compile.py"
+  ],
+  "source_changes_only_task_declarations": true,
+  "source_sha256": {
+    "cmake/native_coordinated.py": "351b01934a8854ea94a1663dd61a0a306d0ec6b7c56a5323341398ce5033ecc2",
+    "hardware_drivers/wireless/mb_native.h": "55a9206748cec0ac27b68bbd81d5945be9c84924b76e617b221f7d1096ad3d0c",
+    "tests/test_mb_native.py": "9c89347a80d7a95de8e43f0f10c9ecda91ff7f7511e6f27a709c5cc28b88e6cf"
+  },
+  "whole_audit_records": 815
+}

@@ -184,14 +184,14 @@ def main():
         "-o", str(obj), "-"
     ], input=preprocessed)
 
-    relocations = run([a.readelf, "-r", str(obj)])
-    if "There are no relocations in this file." not in relocations:
+    inspection = run([a.readelf, "-r", "-SW", str(obj)])
+    if "There are no relocations in this file." not in inspection:
         raise ValueError(
-            f"{source.name}: unresolved relocations:\n{relocations}"
+            f"{source.name}: unresolved relocations:\n{inspection}"
         )
 
     sections = {}
-    for line in run([a.readelf, "-SW", str(obj)]).splitlines():
+    for line in inspection.splitlines():
         m = re.search(
             r"\[\s*\d+\]\s+(\.\S+)\s+PROGBITS\s+"
             r"\S+\s+\S+\s+([0-9a-fA-F]+)\s+",

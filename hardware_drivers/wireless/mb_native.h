@@ -43,6 +43,10 @@ typedef union MBNativeReference {
 #ifdef __cplusplus
 extern "C" {
 #endif
+void MBi_SetTask(Task *, MBNativeTaskCallback, MBNativeTaskCallback, uint32_t);
+void MBi_EndTaskThread(MBNativeTaskCallback);
+void MBi_SendFixedBeacon(uint32_t, uint16_t, uint8_t);
+void MBi_SendVolatBeacon(uint32_t, uint16_t, uint8_t);
 MBNativeReference *MB_NativeReference(const void *owner, size_t offset);
 void MB_NativeForget(const void *owner, size_t length);
 #ifdef __cplusplus

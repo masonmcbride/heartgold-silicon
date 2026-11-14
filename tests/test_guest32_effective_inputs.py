@@ -18,13 +18,13 @@ for value in (17,29):
  r=run(command,[obj],inputs=[source],depfile=dep,virtual_files={str(header):str(effective)});assert r.returncode==0,r.stderr
  assert 'ret i32 '+str(value) in obj.read_text(), 'stale effective header cache'
 assert header.read_text()=='#define VALUE 0\n'
-paths=('src/comm_state_private.h','src/comm_state.c','lib/NitroSDK/src/mic.c','lib/NitroSDK/src/rtc/rtc_api.c','lib/src/nitrocrypto_rc4_fast.c')
+paths=('src/comm_state.c','lib/NitroSDK/src/mic.c','lib/NitroSDK/src/rtc/rtc_api.c','lib/src/nitrocrypto_rc4_fast.c')
 vfs=[]
 for relative in paths:
  original=game/relative;adapted=out/'frontend'/relative;write_if_changed(adapted,guest32_frontend(relative,original.read_text(),game));vfs.append(dict(type='file',name=str(original),**{'external-contents':str(adapted),'use-external-name':False}))
 overlay=out/'frontend.json';overlay.write_text(json.dumps(dict(version=0,roots=vfs)))
 results=[]
-for relative in paths[1:]:
+for relative in paths:
  target=out/(Path(relative).stem+'.ll');r=subprocess.run(list(map(str,[llvm/'clang',*flags(game,b),'-ivfsoverlay',overlay,'-S','-emit-llvm',game/relative,'-o',target])),capture_output=True,text=True);assert r.returncode==0,r.stderr
  preprocessed=target.with_suffix('.i');r=subprocess.run(list(map(str,[llvm/'clang',*flags(game,b),'-ivfsoverlay',overlay,'-E',game/relative,'-o',preprocessed])),capture_output=True,text=True);assert r.returncode==0,r.stderr
  assert not any('asm void '+name in preprocessed.read_text() for name in ('MicWaitBusy','RtcWaitBusy','CRYPTO_RC4FastEncrypt'))

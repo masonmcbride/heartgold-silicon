@@ -1,0 +1,60 @@
+{
+  "IR_changed_only_two_definitions": [
+    "lib/NitroSDK/src/mb/mb_beacon_fixed.c",
+    "lib/NitroSDK/src/mb/mb_beacon_volat.c"
+  ],
+  "all_21_compile": true,
+  "audit_failures": {},
+  "audit_records": 815,
+  "before_regression": "build/architecture/beacon-repair/before-O0-ctest.log fails full-width game-ID assertion; O1 had passed",
+  "body_statement_changes": 0,
+  "caller_contract": "2/2 pass, build/architecture/beacon-repair/caller-contract-after.json",
+  "changed_sources": [
+    "lib/NitroSDK/src/mb/mb_beacon_fixed.c",
+    "lib/NitroSDK/src/mb/mb_beacon_volat.c",
+    "lib/NitroSDK/src/mb/mb_download_info.c"
+  ],
+  "ctest": {
+    "log": "build/architecture/beacon-repair/after-ctest.log",
+    "passed": 4,
+    "total": 4
+  },
+  "diagnostics_unchanged": true,
+  "finding": "AR-0013",
+  "limitations": [
+    "Common fixture flags; no production MB overlay admission proof.",
+    "WM call boundary captured by test, not real wireless/device execution.",
+    "Original task/interrupt lifecycle and cold/default-build parity remain unresolved."
+  ],
+  "negative": "tests/test_mb_native.py rejects old narrow beacon declaration against shared header",
+  "pinned_authorities": [
+    "upstream/libntr/libraries/mb/src/mb_gameinfo.c:90-92,372-488",
+    "upstream/pokeheartgold/lib/NitroSDK/src/wm_settings.c:68-91",
+    "upstream/pokeheartgold/lib/include/nitro/wm/wm_internal.h:387"
+  ],
+  "production_delta": {
+    "cmake/native_coordinated.py": {
+      "bytes": 1367,
+      "lines": 13
+    },
+    "hardware_drivers/wireless/mb_native.h": {
+      "bytes": 110,
+      "lines": 2
+    }
+  },
+  "rules": {
+    "added": 5,
+    "baseline": 423,
+    "current": 424,
+    "removed": 4
+  },
+  "source_sha256": {
+    "cmake/native_coordinated.py": "8f9dd492599676a457ea3cdd25edcc3c87f05f0206a2704fceb9aa694ca92d94",
+    "hardware_drivers/wireless/mb_native.h": "27c1231fb0932055d65c23239295a9235548d698d18c018af62527f6ad900b29",
+    "tests/mb_native_unexpected.c": "39b7110f24db4e26b2cad72e47ac28fe06facc9d9ce8157bf8f229a183f1279c",
+    "tests/test_mb_native.c": "a3aaff1d1e64952490f83960bf2da4b86023b2816b1dd14b2fba6744939add9e",
+    "tests/test_mb_native.py": "9806ff69479ed735adbaa3c9f81b01024c5db95f788622a2560d025e4d32b99f"
+  },
+  "unchanged_IR_members": 19,
+  "unchanged_sources": 812
+}

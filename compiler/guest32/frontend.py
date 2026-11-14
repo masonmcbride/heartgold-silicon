@@ -36,13 +36,10 @@ def private_overlay(game, out, records):
         'lib/NitroSDK/src/rtc/rtc_api.c',
         'lib/src/nitrocrypto_rc4_fast.c',
         'src/comm_state.c',
-        'src/comm_state_private.h',
         'lib/include/nitro/os/thread.h',
     }
     selected={r['source'] for r in records}
     paths.update(selected & approved)
-    if 'src/comm_state.c' in selected:
-        paths.add('src/comm_state_private.h')
     if 'lib/NitroSDK/src/os/os_thread.c' in selected:
         paths.add('lib/include/nitro/os/thread.h')
     roots=[]

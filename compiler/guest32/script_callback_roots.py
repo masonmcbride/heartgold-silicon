@@ -1,29 +1,21 @@
 """Original resident script-table callback roots. MIT."""
 import re
 from pathlib import Path
+import sys
+
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'cmake'))
+from native_image_graph import parse_manifest,ownership
 
 
 def original_owners(game):
+    """Project original static/autoload sections into the resident root domain."""
+    images = parse_manifest(Path(game) / "main.lsf")
     owners = {}
-    stack = []
-    pending = None
-    for line in (Path(game) / "main.lsf").read_text().splitlines():
-        s = line.strip()
-        h = re.match(r"^Overlay\s+(\S+)", s)
-        if h:
-            pending = h.group(1)
-        if "{" in s:
-            stack.append(pending or (stack[-1] if stack else "main"))
-            pending = None
-        m = re.match(r"^Object\s+(\S+\.o)\b", s)
-        if m:
-            obj = m.group(1)
-            owner = stack[-1] if stack else "main"
-            if obj in owners and owners[obj] != owner:
-                raise ValueError("Conflicting original owner: " + obj)
-            owners[obj] = owner
-        if "}" in s and stack:
-            stack.pop()
+    for obj, names in ownership(images).items():
+        domains = {name if images[name]['kind'] == 'Overlay' else 'main' for name in names}
+        if len(domains) != 1:
+            raise ValueError("Conflicting original owner: " + obj)
+        owners[obj] = domains.pop()
     return owners
 
 

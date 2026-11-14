@@ -1,6 +1,10 @@
 """Source-derived field projections; unknown pointer roles never become bytes. MIT."""
 import json
 from pathlib import Path
+import sys
+
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'compiler/guest32'))
+from script_callback_roots import original_script_names
 
 
 def flat(guest,native,go=0,no=0,path=()):
@@ -29,41 +33,12 @@ def plain(shape):
     return False
 
 
-ROLE_INPUTS={'include/system.h': '5934b8f85966bb3a86b159d53008a6fbe2287d7482275e36f21b2292df1f8d76', 'include/main.h': '243e6fa876ab5d29475416b2b06decf2aae519db3f7e1d028e5ccf4914d92468', 'src/main.c': '12795237f5f62c01d8d75af3df9b8768155b44a6825d0b3fa6dd952b41e404fc'}
+ROLE_INPUTS={'include/system.h': '5934b8f85966bb3a86b159d53008a6fbe2287d7482275e36f21b2292df1f8d76', 'include/main.h': '243e6fa876ab5d29475416b2b06decf2aae519db3f7e1d028e5ccf4914d92468', 'src/main.c': '863e25fcc674429f89637f4773e08301ad3755ff79a43572c7facdbc2ca6254b'}
 
 
 def prove_script_command_roles(game, guest, native, fields):
     """Classify original script-table entries; do not authorize execution."""
-    import re
-
-    declaration = (game / 'include/script.h').read_text()
-    table = (game / 'src/data/fieldmap/script_cmd_table.h').read_text()
-
-    if not re.search(
-        r'typedef\s+BOOL\s*\(\s*\*\s*ScrCmdFunc\s*\)'
-        r'\s*\(\s*ScriptContext\s*\*\s*ctx\s*\)\s*;',
-        declaration
-    ):
-        raise ValueError('Original ScrCmdFunc callable signature unproven')
-
-    match = re.search(
-        r'const\s+ScrCmdFunc\s+gScriptCmdTable\[\s*\]\s*='
-        r'\s*\{(.*?)\};',
-        table, re.S
-    )
-    if not match:
-        raise ValueError('Original script callback initializer missing')
-
-    body = re.sub(r'/\*.*?\*/|//[^\n]*', '', match.group(1), flags=re.S)
-    entries = [x.strip() for x in body.split(',') if x.strip()]
-
-    if not entries or any(
-        re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', x) is None
-        for x in entries
-    ):
-        raise ValueError('Script table includes an unverified initializer')
-
-    count = len(entries)
+    count = len(original_script_names(game))
     if (len(fields) != count or guest['size'] != 4 * count
             or native['size'] != 8 * count):
         raise ValueError('Script callback table layout/count mismatch')

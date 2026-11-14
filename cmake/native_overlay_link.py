@@ -126,6 +126,13 @@ def generate_contracts(main_paths, overlay_paths, out, nm='nm', executable_name=
         # No -U, flat namespace, dynamic lookup or partial-image fallback.
         write_if_changed(out/f'image_{ident}.rsp',
                          ''.join(json.dumps(str(interfaces[d])) + '\n' for d in dependencies))
+        # ld64 reads these interfaces through the response file. Publish their
+        # content identities from this same global ownership decision so CMake
+        # need not reconstruct providers or depend on every image's interface.
+        link_inputs = [out/f'image_{ident}.rsp', *(interfaces[d] for d in dependencies)]
+        write_if_changed(out/f'image_{ident}.link.json', json.dumps(
+            {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in link_inputs},
+            sort_keys=True, indent=2)+'\n')
     if imports_path: write_if_changed(imports_path, '# Explicit interfaces are in image_<id>.rsp\n')
     if exports_path:
         exported = sorted((imports & main) | resident_exports | {'_main'})

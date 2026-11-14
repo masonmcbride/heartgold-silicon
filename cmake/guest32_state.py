@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+from guest32_typed_state import plain as pointer_free, plans, emit
 
 
 def conflicts(build, closure):
@@ -14,13 +15,6 @@ def conflicts(build, closure):
     return [dict(name=g['name'],original_member=m['object'],guest_extent=g['size'])
             for m in discovery['members'] for g in m.get('description',{}).get('globals',[])
             if g['definition'] and not g.get('local') and g['name'] in names]
-
-
-def pointer_free(shape):
-    if shape['kind'] in ('integer','float'):return True
-    if shape['kind']=='array':return pointer_free(shape['element'])
-    if shape['kind']=='struct':return all(pointer_free(f['type']) for f in shape['fields'])
-    return False
 
 
 def emit_bindings(proven):
@@ -100,7 +94,6 @@ def prove(build,closure,game,lowerer,out):
             if max(r['guest_address'],other['guest_address'])<min(r['guest_address']+r['size'],other['guest_address']+other['size']):
                 raise ValueError('Overlapping backing objects require an explicit common native owner')
     (out/'bindings.c').write_text(emit_bindings(proven))
-    from guest32_typed_state import plans,emit
     typed=plans(rows,game)
     selected=[r for r in typed if r['name'] in ('gSystem','gMainOverlayState') and 'fields' in r]
     (out/'typed-plans.json').write_text(json.dumps(typed,indent=2)+'\n')

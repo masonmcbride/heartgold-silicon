@@ -92,7 +92,7 @@ code += (root / 'tests/test_lobby_timers_native.cpp').read_text()
 out = build / 'lobby-timers-native'; out.mkdir(parents=True, exist_ok=True)
 src, exe = out / 'timers.cpp', out / 'timers'; src.write_text(code)
 flags = ['-std=c++11', '-O1', '-g', '-UNDEBUG', '-fsanitize=address,undefined', '-fno-sanitize-recover=all',
-         '-DSDK_PORT', '-DSDK_64BIT', '-I' + str(root / 'upstream/libntr/include'),
+         '-DSDK_PORT', '-DSDK_64BIT', '-DSDK_BUILD_MACOS', '-I' + str(root / 'upstream/libntr/include'),
          '-iquote' + str(build / 'native/include'), '-iquote' + str(game / 'include'),
          '-idirafter' + str(game / 'lib/include'), '-include', str(build / 'native/lib/NitroDWC/src/tree-iterator4.h')]
 vector_src = out / 'assign.cpp'; vector_obj = out / 'assign.o'

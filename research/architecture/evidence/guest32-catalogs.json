@@ -1,0 +1,46 @@
+{
+  "commit": "d4213f19aab9b144145d60d3dc6b43005373c2a2",
+  "findings": [
+    "AR-0006",
+    "AR-0007"
+  ],
+  "limits": [
+    "No full current resident-closure publication or game execution claimed.",
+    "Canonical ownership preserves autoload section identity; only resident admission projects static/autoload into main.",
+    "Former permissive ownership parser no longer accepts unsupported grammar.",
+    "Original image compilation proof covers these two guest images only."
+  ],
+  "logs": [
+    "build/architecture/liveness/comparison.json",
+    "build/architecture/liveness/plans.json",
+    "build/architecture/liveness/compiled-images.json",
+    "build/architecture/liveness/ctest.log",
+    "build/architecture/liveness/resident-roots-comparison.json",
+    "build/architecture/liveness/recovery-focused.log",
+    "build/architecture/liveness/recovery-all.log"
+  ],
+  "results": {
+    "compiler_ctests": "5/5",
+    "complete_guest_images": [
+      "OVY_0",
+      "OVY_38"
+    ],
+    "full_recovery_tests": "10/11, prior trainer-approach source guard error unchanged",
+    "generated_output_hashes_identical": 126,
+    "liveness_function_records_identical": 15355,
+    "net_production_lines_removed": 14,
+    "original_owner_records_identical": 1751,
+    "owner_publication_tests": "7/7",
+    "resident_callback_identities_identical": 736,
+    "resident_callback_members_identical": 23
+  },
+  "schema_version": 1,
+  "source_hashes": {
+    "compiler/guest32/closure.py": "39fe5ef57eaab65e5905fea5e794fd513f8f297b0360ddf0b9030a66362e8100",
+    "compiler/guest32/image.py": "3184d06f5cd77fa0b996c6b76476c1406fe6f184f8a7601766fb5267a7ee2943",
+    "compiler/guest32/script_callback_roots.py": "c8e97cf8720ea5a34f7df75949cfddab1fa5858d3d8d647a8f562210c0ca2f6e",
+    "tests/test_guest32_image.py": "a394202e224ae884aba82d15a234d84661ea3bfc8d7dcd3dd405b009039f1a09",
+    "tests/test_guest32_recovery.py": "d85db19d3dbfd6deb03e8e1d3d3edddde26ccd7bd0b77c7b3e83b297190c87f4"
+  },
+  "timestamp_utc": "2026-11-14T21:45:15.947905+00:00"
+}

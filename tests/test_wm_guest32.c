@@ -199,7 +199,7 @@ int main(int argc, char **argv)
     assert(command == 0 && words[0] == buf && words[1] == work->status && words[2] == work->fifoBuffer && words[3] == 3);
     assert(HG_Wm32_WM_InitializeForListening(ram, buf, callback, 2, 1) == 2 && words[3] == 1);
     /* Every original temporary frame was released after command capture. */
-    assert(g32_stack_pointer(ram) == G32_MAIN_RAM_BASE + G32_MAIN_RAM_SIZE);
+    assert(g32_stack_pointer(ram) == G32_MAIN_RAM_BASE + G32_MAIN_RAM_SIZE - 4096 /* reserved DS system RAM */);
     g32_destroy(ram);
     puts("WM: four wire records, guest state, callbacks, varargs, errors and >4GiB translations passed");
     return 0;

@@ -306,7 +306,12 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      ('S.src', '((u8 *)MB_PTR(&S, 0x20))'),
                                                      ('u32 end = (u32)', 'uintptr_t end = (uintptr_t)'),
                                                      ('u32 len = (u32)', 'uintptr_t len = (uintptr_t)'),
-                                                     ('end - (u32)', 'end - (uintptr_t)')],
+                                                     ('end - (u32)', 'end - (uintptr_t)'),
+                                                     ('extern int WM_SetGameInfo(void *callback, void *buf, u16 size, u16 a, u32 b, u8 c);\n'
+                                                      'void MBi_SendFixedBeacon(u16 a, u32 b, u32 c);',
+                                                      '#include <nitro/wm/wm_internal.h>'),
+                                                     ('void MBi_SendFixedBeacon(u16 a, u32 b, u32 c) {',
+                                                      'void MBi_SendFixedBeacon(u32 a, u16 b, u8 c) {')],
                                            'sha256': '4c1431dae5707fe1c0df601e6ac963ff15f0074d48f7f95015f4bf38e45aba3e'},
  'lib/NitroSDK/src/mb/mb_beacon_volat.c': {'edits': [('#include "global.h"',
                                                       '#include "global.h"\n#include "mb_native.h"'),
@@ -314,7 +319,12 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      ('    u8 *src;', '    u32 src;'),
                                                      ('S.gameInfo', '((BeaconGameInfo *)MB_PTR(&S, 0x1c))'),
                                                      ('void (*callback)(u32);', 'u32 callback;'),
-                                                     ('S.callback', 'MB_NativeReference(&S, 0x14)->beacon')],
+                                                     ('S.callback', 'MB_NativeReference(&S, 0x14)->beacon'),
+                                                     ('extern int WM_SetGameInfo(void *callback, void *buf, u16 size, u16 a, u32 b, u8 c);\n'
+                                                      'void MBi_SendVolatBeacon(u16 a, u32 b, u32 c);',
+                                                      '#include <nitro/wm/wm_internal.h>'),
+                                                     ('void MBi_SendVolatBeacon(u16 a, u32 b, u32 c) {',
+                                                      'void MBi_SendVolatBeacon(u32 a, u16 b, u8 c) {')],
                                            'sha256': 'abdc3dff08658d5968e1253bf18f3af0e3dad47ce9cf680c32f9b6a903029eab'},
  'lib/NitroSDK/src/mb/mb_beacon_volat_init.c': {'edits': [('void MBi_AttachCacheBuffer(void *p, u32 a, u32 b, u32 c, '
                                                            'u32 d);',
@@ -346,23 +356,17 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                            'extern u8 ov13_0224CF84[];\n'),
                                                           ('(void *)U32(gMbBeaconState, 0x1c)',
                                                            'MB_PTR(gMbBeaconState, 0x1c)'),
-                                                          ('void MBi_SetTask(void *, void *, void *, int);',
-                                                           'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                           'MBNativeTaskCallback, u32);'),
-                                                          ('void MBi_EndTaskThread(void *cb)',
-                                                           'void MBi_EndTaskThread(MBNativeTaskCallback cb)')],
+                                                          ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                           ''),
+                                                          ('void MBi_EndTaskThread(void *cb);',
+                                                           '')],
                                                 'sha256': '711fb40a2a9785ba03e50b79bf0770a295ce4eba9bc575935ea0412569675ded'},
- 'lib/NitroSDK/src/mb/mb_cache.c': {'edits': [('#include "global.h"\n'
-                                               '// The code below is compiled as ARM (32-bit) code.\n'
+ 'lib/NitroSDK/src/mb/mb_cache.c': {'edits': [('// The code below is compiled as ARM (32-bit) code.\n'
                                                '#include <nitro/code32.h>\n'
                                                '#define U32(p, o) (*(u32 *)((u8 *)(p) + (o)))\n'
                                                '#define U16(p, o) (*(u16 *)((u8 *)(p) + (o)))\n'
                                                '#define U8(p, o)  (*(u8 *)((u8 *)(p) + (o)))\n'
-                                               'extern u8 *mbc;\n'
-                                               'extern u8 gMbBeaconState[];\n'
-                                               'extern u8 gMbGlobalState[];\n'
-                                               'extern u8 ov13_0224CF84[];\n',
-                                               '#include "global.h"\n'
+                                               'extern u8 *mbc;\n',
                                                '#include "mb_native.h"\n'
                                                '#define mbc ((u8 *)MB_PTR(&gMbGlobalState, 12))\n'
                                                '// The code below is compiled as ARM (32-bit) code.\n'
@@ -370,59 +374,19 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                '#define U32(p, o) (*(u32 *)((u8 *)(p) + (o)))\n'
                                                '#define U16(p, o) (*(u16 *)((u8 *)(p) + (o)))\n'
                                                '#define U8(p, o)  (*(u8 *)((u8 *)(p) + (o)))\n'
-                                               '\n'
-                                               'extern u8 gMbBeaconState[];\n'
-                                               'extern u8 gMbGlobalState[];\n'
-                                               'extern u8 ov13_0224CF84[];\n'),
-                                              ('\n'
-                                               'typedef struct {\n'
-                                               '    u32 offset, size;\n'
-                                               '    void *data;\n'
-                                               '    u32 state;\n'
-                                               '} Entry;\n'
-                                               '\n',
-                                               '\n'
-                                               'typedef struct {\n'
-                                               '    u32 offset, size;\n'
-                                               '    u32 data;\n'
-                                               '    u32 state;\n'
-                                               '} Entry;\n'
                                                '\n'),
-                                              ('void MBi_AttachCacheBuffer(Cache *c, u32 offset, u32 size, void *data, '
-                                               'u32 state);\n'
-                                               '\n'
+                                              ('    void *data;\n',
+                                               '    u32 data;\n'),
+                                              ('void MBi_InitCache(void *p) {\n',
                                                'void MBi_InitCache(void *p) {\n'
-                                               '    MI_CpuFill8(p, 0, 0x70);\n'
-                                               '}\n'
-                                               '\n',
-                                               'void MBi_AttachCacheBuffer(Cache *c, u32 offset, u32 size, void *data, '
-                                               'u32 state);\n'
-                                               '\n'
-                                               'void MBi_InitCache(void *p) {\n'
-                                               '    MB_NativeForget(p, 0x70);\n'
-                                               '    MI_CpuFill8(p, 0, 0x70);\n'
-                                               '}\n'
-                                               '\n'),
-                                              ('        if (e->state == 0) {\n'
-                                               '            e->offset = offset;\n'
-                                               '            e->size = size;\n'
-                                               '            e->data = data;\n'
-                                               '            e->state = state;\n'
-                                               '            break;\n'
-                                               '        }\n',
-                                               '        if (e->state == 0) {\n'
-                                               '            e->offset = offset;\n'
-                                               '            e->size = size;\n'
+                                               '    MB_NativeForget(p, 0x70);\n'),
+                                              ('            e->data = data;\n',
                                                '            e->data = 0;\n'
-                                               '            MB_PTR(e, 8) = data;\n'
-                                               '            e->state = state;\n'
-                                               '            break;\n'
-                                               '        }\n'),
-                                              ('void MBi_SetTask(void *, void *, void *, int);',
-                                               'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                               'MBNativeTaskCallback, u32);'),
-                                              ('void MBi_EndTaskThread(void *cb)',
-                                               'void MBi_EndTaskThread(MBNativeTaskCallback cb)'),
+                                               '            MB_PTR(e, 8) = data;\n'),
+                                              ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                               ''),
+                                              ('void MBi_EndTaskThread(void *cb);',
+                                               ''),
                                               ('typedef struct Task {\n'
                                                '    struct Task *next;\n'
                                                '    u32 flags;\n'
@@ -591,11 +555,10 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      '    return U8((void *)((Parent *)MB_PTR(&gMbGlobalState, 8)), '
                                                      '0x50d) == 1;\n'
                                                      '}\n'),
-                                                    ('void MBi_SetTask(void *, void *, void *, int);',
-                                                     'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                     'MBNativeTaskCallback, u32);'),
-                                                    ('void MBi_EndTaskThread(void *cb)',
-                                                     'void MBi_EndTaskThread(MBNativeTaskCallback cb)'),
+                                                    ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                     ''),
+                                                    ('void MBi_EndTaskThread(void *cb);',
+                                                     ''),
                                                     ('typedef struct Task {\n'
                                                      '    struct Task *next;\n'
                                                      '    u32 flags;\n'
@@ -991,11 +954,13 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                       ('void MB_InitSendGameInfoStatus(void) {',
                                                        'void MB_InitSendGameInfoStatus(void) {\n'
                                                        '    MB_NativeForget(&gMbBeaconState, 0x24);'),
-                                                      ('void MBi_SetTask(void *, void *, void *, int);',
-                                                       'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                       'MBNativeTaskCallback, u32);'),
-                                                      ('void MBi_EndTaskThread(void *cb)',
-                                                       'void MBi_EndTaskThread(MBNativeTaskCallback cb)')],
+                                                      ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                       ''),
+                                                      ('void MBi_EndTaskThread(void *cb);',
+                                                       ''),
+                                                      ('extern void MBi_SendFixedBeacon(u32, u16, u8);\n'
+                                                       'extern void MBi_SendVolatBeacon(u32, u16, u8);',
+                                                       '')],
                                             'sha256': 'bede53db87df386292a1376b99bb89ce9d7362f13f68d8b0ef9d14fbda875577'},
  'lib/NitroSDK/src/mb/mb_init.c': {'edits': [('#include "global.h"\n'
                                               '\n'
@@ -1185,107 +1150,56 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                     ('MB_NativeForget(MB_PTR(&gMbGlobalState, 12), 0x7d00);',
                                                      'MB_NativeForget(MB_PTR(&gMbGlobalState, 12), 0x7d00);\n'
                                                      '        MB_NativeForget(gMbBeaconState, 0x24);'),
-                                                    ('void MBi_SetTask(void *, void *, void *, int);',
-                                                     'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                     'MBNativeTaskCallback, u32);'),
-                                                    ('void MBi_EndTaskThread(void *cb)',
-                                                     'void MBi_EndTaskThread(MBNativeTaskCallback cb)')],
+                                                    ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                     ''),
+                                                    ('void MBi_EndTaskThread(void *cb);',
+                                                     '')],
                                           'sha256': '5689da945965c883d975c8aeda6e398a0110735bd296808413a57e67413e002c'},
- 'lib/NitroSDK/src/mb/mb_parent_data.c': {'edits': [('#include "global.h"\n'
-                                                     '// The code below is compiled as ARM (32-bit) code.\n'
+ 'lib/NitroSDK/src/mb/mb_parent_data.c': {'edits': [('// The code below is compiled as ARM (32-bit) code.\n'
                                                      '#include <nitro/code32.h>\n'
-                                                     'extern u8 *mbc;\n'
-                                                     'extern u32 gMbParentChildRecvMask;\n'
-                                                     'extern u16 *WM_ReadMPData(void *, u16);\n'
-                                                     'extern void MBi_CommParentRecvDataPerChild(void *, u16);\n',
-                                                     '#include "global.h"\n'
+                                                     'extern u8 *mbc;\n',
                                                      'extern u8 gMbGlobalState[];\n'
                                                      '#include "mb_native.h"\n'
                                                      '#define mbc ((u8 *)MB_PTR(&gMbGlobalState, 12))\n'
                                                      '// The code below is compiled as ARM (32-bit) code.\n'
                                                      '#include <nitro/code32.h>\n'
-                                                     '\n'
-                                                     'extern u32 gMbParentChildRecvMask;\n'
-                                                     'extern u16 *WM_ReadMPData(void *, u16);\n'
-                                                     'extern void MBi_CommParentRecvDataPerChild(void *, u16);\n'),
-                                                    ('\n'
-                                                     'typedef struct Cache {\n'
-                                                     '    u32 position, size;\n'
-                                                     '    void *destination;\n'
-                                                     '    int state;\n'
-                                                     '} Cache;\n'
-                                                     '\n',
-                                                     '\n'
-                                                     'typedef struct Cache {\n'
-                                                     '    u32 position, size;\n'
-                                                     '    u32 destination;\n'
-                                                     '    int state;\n'
-                                                     '} Cache;\n'
                                                      '\n'),
-                                                    ('    char pad[16];\n'
-                                                     '    char name[4];\n'
-                                                     '    u32 length;\n'
-                                                     '    FSArchive *archive;\n'
+                                                    ('    void *destination;\n',
+                                                     '    u32 destination;\n'),
+                                                    ('    FSArchive *archive;\n'
                                                      '} Owner;\n'
                                                      '\n'
                                                      'typedef struct Request {\n'
                                                      '    char pad[16];\n'
                                                      '    Cache *cache;\n'
-                                                     '    Owner *owner;\n'
-                                                     '} Request;\n'
-                                                     '\n'
-                                                     'extern int MBi_CommParentSendBlock(void);\n',
-                                                     '    char pad[16];\n'
-                                                     '    char name[4];\n'
-                                                     '    u32 length;\n'
+                                                     '    Owner *owner;\n',
                                                      '    u32 archive;\n'
                                                      '} Owner;\n'
                                                      '\n'
                                                      'typedef struct Request {\n'
                                                      '    char pad[16];\n'
                                                      '    u32 cache;\n'
-                                                     '    u32 owner;\n'
-                                                     '} Request;\n'
-                                                     '\n'
-                                                     'extern int MBi_CommParentSendBlock(void);\n'),
-                                                    ('}\n'
-                                                     '\n'
-                                                     'void MBi_ReloadCache(Request *request) {\n'
-                                                     '    Owner *owner = request->owner;\n'
+                                                     '    u32 owner;\n'),
+                                                    ('    Owner *owner = request->owner;\n'
                                                      '    Cache *c = request->cache;\n'
-                                                     '    FSArchive *archive = FS_FindArchive(owner->name, '
-                                                     'owner->length);\n'
+                                                     '    FSArchive *archive = FS_FindArchive(owner->name, owner->length);\n'
                                                      '    FSFile file;\n'
                                                      '    if (!archive) {\n'
                                                      '        archive = owner->archive;\n'
                                                      '    }\n'
                                                      '    FS_InitFile(&file);\n'
-                                                     '    if (FS_OpenFileDirect(&file, archive, c->position, '
-                                                     'c->position + c->size, (u32)-1)) {\n'
-                                                     '        if (FS_ReadFile(&file, c->destination, c->size) == '
-                                                     'c->size) {\n'
-                                                     '            c->state = 2;\n'
-                                                     '        }\n'
-                                                     '        FS_CloseFile(&file);\n',
-                                                     '}\n'
-                                                     '\n'
-                                                     'void MBi_ReloadCache(Request *request) {\n'
+                                                     '    if (FS_OpenFileDirect(&file, archive, c->position, c->position + c->size, (u32)-1)) {\n'
+                                                     '        if (FS_ReadFile(&file, c->destination, c->size) == c->size) {\n',
                                                      '    Owner *owner = MB_PTR(request, 0x14);\n'
                                                      '    Cache *c = MB_PTR(request, 0x10);\n'
-                                                     '    FSArchive *archive = FS_FindArchive(owner->name, '
-                                                     'owner->length);\n'
+                                                     '    FSArchive *archive = FS_FindArchive(owner->name, owner->length);\n'
                                                      '    FSFile file;\n'
                                                      '    if (!archive) {\n'
                                                      '        archive = MB_PTR(owner, 0x18);\n'
                                                      '    }\n'
                                                      '    FS_InitFile(&file);\n'
-                                                     '    if (FS_OpenFileDirect(&file, archive, c->position, '
-                                                     'c->position + c->size, (u32)-1)) {\n'
-                                                     '        if (FS_ReadFile(&file, MB_PTR(c, 8), c->size) == '
-                                                     'c->size) {\n'
-                                                     '            c->state = 2;\n'
-                                                     '        }\n'
-                                                     '        FS_CloseFile(&file);\n'),
+                                                     '    if (FS_OpenFileDirect(&file, archive, c->position, c->position + c->size, (u32)-1)) {\n'
+                                                     '        if (FS_ReadFile(&file, MB_PTR(c, 8), c->size) == c->size) {\n'),
                                                     ('void MBi_ReloadCache(Request *request);',
                                                      'void MBi_ReloadCache(void *);'),
                                                     ('void MBi_ReloadCache(Request *request) {',
@@ -1389,147 +1303,50 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                            'MB_COMM_PSTATE_MEMBER_FULL, 0);\n'
                                                            '                return;\n')],
                                                 'sha256': '9f544e6cf50cb9cd9fb1eaede9f62fb859d0b4f239765fdf70d2f56735dbdc6d'},
- 'lib/NitroSDK/src/mb/mb_parent_send_block.c': {'edits': [('#include "global.h"\n'
-                                                           '\n'
-                                                           '// The code below is compiled as ARM (32-bit) code.\n'
-                                                           '#include <nitro/code32.h>\n',
+ 'lib/NitroSDK/src/mb/mb_parent_send_block.c': {'edits': [('#include "global.h"\n',
                                                            '#include "global.h"\n'
                                                            'extern u8 gMbGlobalState[];\n'
                                                            '#include "mb_native.h"\n'
-                                                           '#define mbc ((u8 *)MB_PTR(&gMbGlobalState, 12))\n'
-                                                           '\n'
-                                                           '// The code below is compiled as ARM (32-bit) code.\n'
-                                                           '#include <nitro/code32.h>\n'),
-                                                          ('typedef struct {\n'
-                                                           '    u32 offset;\n'
-                                                           '    u32 size;\n'
-                                                           '    u8 *data;\n'
-                                                           '    u32 state;\n'
-                                                           '} CacheEntry;\n'
-                                                           '\n',
-                                                           'typedef struct {\n'
-                                                           '    u32 offset;\n'
-                                                           '    u32 size;\n'
-                                                           '    u32 data;\n'
-                                                           '    u32 state;\n'
-                                                           '} CacheEntry;\n'
-                                                           '\n'),
-                                                          ('\n'
-                                                           'typedef struct {\n'
-                                                           '    u8 pad[0x10];\n'
-                                                           '    void *arg;\n'
-                                                           '    void *arg2;\n'
-                                                           '} Task;\n'
-                                                           '\n'
-                                                           'typedef struct {\n',
-                                                           '\n'
-                                                           'typedef struct {\n'
-                                                           '    u8 pad[0x10];\n'
-                                                           '    u32 arg;\n'
-                                                           '    u32 arg2;\n'
-                                                           '} Task;\n'
-                                                           '\n'
-                                                           'typedef struct {\n'),
-                                                          ('    u8 pad4e[4];\n'
-                                                           '    u8 active; /* 0x1d52 */\n'
-                                                           '    u8 pad53;\n'
-                                                           '    Cache *cache; /* 0x1d54 */\n'
+                                                           '#define mbc ((u8 *)MB_PTR(&gMbGlobalState, 12))\n'),
+                                                          ('    u8 *data;\n',
+                                                           '    u32 data;\n'),
+                                                          ('    Cache *cache; /* 0x1d54 */\n'
                                                            '    u32 *base;    /* 0x1d58 */\n'
                                                            '} Slot;\n'
                                                            '\n'
-                                                           'extern u8 *mbc;\n'
-                                                           'extern void MBi_calc_sendblock(int);\n'
-                                                           'extern int MBi_get_blockinfo(Block *, void *, u16, void '
-                                                           '*);\n'
-                                                           'extern void *MBi_MakeParentSendBuffer(Header *, void *);\n',
-                                                           '    u8 pad4e[4];\n'
-                                                           '    u8 active; /* 0x1d52 */\n'
-                                                           '    u8 pad53;\n'
+                                                           'extern u8 *mbc;\n',
                                                            '    u32 cache; /* 0x1d54 */\n'
                                                            '    u32 base;    /* 0x1d58 */\n'
                                                            '} Slot;\n'
                                                            '\n'
-                                                           '\n'
-                                                           'extern void MBi_calc_sendblock(int);\n'
-                                                           'extern int MBi_get_blockinfo(Block *, void *, u16, void '
-                                                           '*);\n'
-                                                           'extern void *MBi_MakeParentSendBuffer(Header *, void '
-                                                           '*);\n'),
-                                                          ('    u8 pad[4];\n'
-                                                           '    u8 active;\n'
-                                                           '    u8 pad2;\n'
-                                                           '    Cache *cache;\n'
-                                                           '    u32 *base;\n'
-                                                           '} Child;\n'
-                                                           '\n'
-                                                           'typedef struct {\n',
-                                                           '    u8 pad[4];\n'
-                                                           '    u8 active;\n'
-                                                           '    u8 pad2;\n'
+                                                           '\n'),
+                                                          ('    Cache *cache;\n'
+                                                           '    u32 *base;\n',
                                                            '    u32 cache;\n'
-                                                           '    u32 base;\n'
-                                                           '} Child;\n'
-                                                           '\n'
-                                                           'typedef struct {\n'),
-                                                          ('    hdr.child = CUR;\n'
-                                                           '    hdr.block = SLOT(CUR)->sendBlock;\n'
-                                                           '    buf = MBi_MakeParentSendBuffer(&hdr, mbc);\n'
-                                                           '    addr = info.offset - SLOT(CUR)->table[info.seg] + '
-                                                           'SLOT(CUR)->base[info.seg];\n'
-                                                           '    cache = SLOT(CUR)->cache;\n'
-                                                           '    if (!MBi_ReadFromCache(cache, addr, buf, info.size)) '
-                                                           '{\n'
-                                                           '        Task *task = (Task *)(mbc + 0x7ce0);\n'
-                                                           '        if (!MBi_IsTaskBusy(task)) {\n',
-                                                           '    hdr.child = CUR;\n'
-                                                           '    hdr.block = SLOT(CUR)->sendBlock;\n'
-                                                           '    buf = MBi_MakeParentSendBuffer(&hdr, mbc);\n'
-                                                           '    addr = info.offset - SLOT(CUR)->table[info.seg] + '
-                                                           '((u32 *)MB_PTR(mbc, 0x1d58 + CUR * 0x5d4))[info.seg];\n'
-                                                           '    cache = MB_PTR(mbc, 0x1d54 + CUR * 0x5d4);\n'
-                                                           '    if (!MBi_ReadFromCache(cache, addr, buf, info.size)) '
-                                                           '{\n'
-                                                           '        Task *task = (Task *)(mbc + 0x7ce0);\n'
-                                                           '        if (!MBi_IsTaskBusy(task)) {\n'),
-                                                          ('                cache->busy = 2;\n'
-                                                           '                entry->state = 1;\n'
-                                                           '                entry->offset = addr & ~0x1f;\n'
-                                                           '                task->arg = entry;\n'
-                                                           '                task->arg2 = cache;\n'
-                                                           '                MBi_SetTask(task, MBi_ReloadCache, NULL, '
-                                                           '4);\n'
-                                                           '            }\n'
-                                                           '        }\n',
-                                                           '                cache->busy = 2;\n'
-                                                           '                entry->state = 1;\n'
-                                                           '                entry->offset = addr & ~0x1f;\n'
+                                                           '    u32 base;\n'),
+                                                          ('    addr = info.offset - SLOT(CUR)->table[info.seg] + SLOT(CUR)->base[info.seg];\n'
+                                                           '    cache = SLOT(CUR)->cache;\n',
+                                                           '    addr = info.offset - SLOT(CUR)->table[info.seg] + ((u32 *)MB_PTR(mbc, 0x1d58 + CUR * 0x5d4))[info.seg];\n'
+                                                           '    cache = MB_PTR(mbc, 0x1d54 + CUR * 0x5d4);\n'),
+                                                          ('                task->arg = entry;\n'
+                                                           '                task->arg2 = cache;\n',
                                                            '                MB_PTR(task, 0x10) = entry;\n'
-                                                           '                MB_PTR(task, 0x14) = cache;\n'
-                                                           '                MBi_SetTask(task, MBi_ReloadCache, NULL, '
-                                                           '4);\n'
-                                                           '            }\n'
-                                                           '        }\n'),
-                                                          ('void MBi_SetTask(void *, void *, void *, int);',
-                                                           'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                           'MBNativeTaskCallback, u32);'),
+                                                           '                MB_PTR(task, 0x14) = cache;\n'),
+                                                          ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                           ''),
                                                           ('typedef struct {\n'
                                                            '    u8 pad[0x10];\n'
-                                                           '    u32 arg;\n'
-                                                           '    u32 arg2;\n'
+                                                           '    void *arg;\n'
+                                                           '    void *arg2;\n'
                                                            '} Task;',
                                                            '')],
                                                 'sha256': 'ed7ecc5654c63429db5e937e87cce2331ace494d8cbc3a007da364c7ed1ccf06'},
- 'lib/NitroSDK/src/mb/mb_parent_send_data.c': {'edits': [('#include "global.h"\n'
-                                                          '#pragma opt_loop_invariants off\n'
+ 'lib/NitroSDK/src/mb/mb_parent_send_data.c': {'edits': [('#pragma opt_loop_invariants off\n'
                                                           '\n'
                                                           '// The code below is compiled as ARM (32-bit) code.\n'
                                                           '#include <nitro/code32.h>\n'
                                                           '#include <nitro/mb/mb_comm.h>\n'
-                                                          'extern char *mbc;\n'
-                                                          'extern u32 gMbParentChildRecvMask;\n'
-                                                          'extern void MBi_MakeParentSendBuffer(void *, void *);\n'
-                                                          'extern int MBi_BlockHeaderEnd(int, u16, void *);\n',
-                                                          '#include "global.h"\n'
+                                                          'extern char *mbc;\n',
                                                           '#include "mb_native.h"\n'
                                                           '#define mbc ((char *)MB_PTR(&gMbGlobalState, 12))\n'
                                                           'extern u8 gMbGlobalState[];\n'
@@ -1538,25 +1355,9 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                           '// The code below is compiled as ARM (32-bit) code.\n'
                                                           '#include <nitro/code32.h>\n'
                                                           '#include <nitro/mb/mb_comm.h>\n'
-                                                          '\n'
-                                                          'extern u32 gMbParentChildRecvMask;\n'
-                                                          'extern void MBi_MakeParentSendBuffer(void *, void *);\n'
-                                                          'extern int MBi_BlockHeaderEnd(int, u16, void *);\n'),
-                                                         ('    MIi_CpuClear16(0, masks, 10);\n'
-                                                          '    root = mbc;\n'
-                                                          '    for (i = 1; i <= 15; i++) {\n'
-                                                          '        switch (*(u32 *)((u32)root + 0x14e4 + i * 4)) {\n'
-                                                          '        case MB_COMM_PSTATE_CONNECTED:\n'
-                                                          '            masks[0] |= 1 << i;\n'
-                                                          '            break;\n',
-                                                          '    MIi_CpuClear16(0, masks, 10);\n'
-                                                          '    root = mbc;\n'
-                                                          '    for (i = 1; i <= 15; i++) {\n'
-                                                          '        switch (*(u32 *)((uintptr_t)root + 0x14e4 + i * 4)) '
-                                                          '{\n'
-                                                          '        case MB_COMM_PSTATE_CONNECTED:\n'
-                                                          '            masks[0] |= 1 << i;\n'
-                                                          '            break;\n'),
+                                                          '\n'),
+                                                         ('        switch (*(u32 *)((u32)root + 0x14e4 + i * 4)) {\n',
+                                                          '        switch (*(u32 *)((uintptr_t)root + 0x14e4 + i * 4)) {\n'),
                                                          ('void MBi_ReloadCache(Request *);',
                                                           'void MBi_ReloadCache(void *);')],
                                                'sha256': '16c512d4b83d4a8b9cdded42fe00aef36da4cdfb014e37ef67452057e2775d5b'},
@@ -1919,8 +1720,8 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                           '        OS_Terminate();\n'
                                                           '    }\n'
                                                           '    MBi_CommEnd();\n'),
-                                                         ('void MBi_EndTaskThread(void *cb)',
-                                                          'void MBi_EndTaskThread(MBNativeTaskCallback cb)'),
+                                                         ('extern void MBi_EndTaskThread(void *cb);',
+                                                          ''),
                                                          ('int MBi_OnReset(void);',
                                                           'int MBi_OnReset(void);\n'
                                                           'static void ResetAfterTask(void *unused) { (void)unused; '
@@ -1955,52 +1756,24 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      'extern u8 gMbBeaconState[];\n'
                                                      'extern u8 gMbGlobalState[];\n'
                                                      'extern u8 ov13_0224CF84[];\n'),
-                                                    ('void MBi_SetTask(void *, void *, void *, int);',
-                                                     'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                     'MBNativeTaskCallback, u32);'),
-                                                    ('void MBi_EndTaskThread(void *cb)',
-                                                     'void MBi_EndTaskThread(MBNativeTaskCallback cb)')],
+                                                    ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                     ''),
+                                                    ('void MBi_EndTaskThread(void *cb);',
+                                                     '')],
                                           'sha256': 'fe816ed143b3bfd4ba7184f7394816e3c2f9bbf4cf528f4d6ef5841f7bdcc3c8'},
- 'lib/NitroSDK/src/mb/mb_read_segment.c': {'edits': [('#include "global.h"\n'
-                                                      '\n'
-                                                      '// The code below is compiled as ARM (32-bit) code.\n'
-                                                      '#include <nitro/code32.h>\n',
+ 'lib/NitroSDK/src/mb/mb_read_segment.c': {'edits': [('#include "global.h"\n',
                                                       '#include "global.h"\n'
-                                                      '#include "mb_native.h"\n'
-                                                      '\n'
-                                                      '// The code below is compiled as ARM (32-bit) code.\n'
-                                                      '#include <nitro/code32.h>\n'),
-                                                     ('\n'
-                                                      'typedef struct {\n'
-                                                      '    u32 offset, size;\n'
-                                                      '    void *data;\n'
-                                                      '    u32 state;\n'
-                                                      '} Entry;\n'
-                                                      '\n',
-                                                      '\n'
-                                                      'typedef struct {\n'
-                                                      '    u32 offset, size;\n'
-                                                      '    u32 data;\n'
-                                                      '    u32 state;\n'
-                                                      '} Entry;\n'
-                                                      '\n'),
-                                                     ('    u8 opaque04[12];\n'
-                                                      '    char archiveName[4];\n'
-                                                      '    u32 nameLength;\n'
-                                                      '    FSArchive *archive;\n'
+                                                      '#include "mb_native.h"\n'),
+                                                     ('    void *data;\n',
+                                                      '    u32 data;\n'),
+                                                     ('    FSArchive *archive;\n'
                                                       '    u8 opaque1c[20];\n'
                                                       '    Entry entries[4];\n'
                                                       '} Cache;\n'
                                                       '\n'
                                                       'typedef struct Segment {\n'
                                                       '    u32 start;\n'
-                                                      '    char *source, *destination;\n'
-                                                      '    u32 size;\n'
-                                                      '} Segment;\n'
-                                                      '\n',
-                                                      '    u8 opaque04[12];\n'
-                                                      '    char archiveName[4];\n'
-                                                      '    u32 nameLength;\n'
+                                                      '    char *source, *destination;\n',
                                                       '    u32 archive;\n'
                                                       '    u8 opaque1c[20];\n'
                                                       '    Entry entries[4];\n'
@@ -2008,73 +1781,28 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                       '\n'
                                                       'typedef struct Segment {\n'
                                                       '    u32 start;\n'
-                                                      '    u32 source, destination;\n'
-                                                      '    u32 size;\n'
-                                                      '} Segment;\n'
-                                                      '\n'),
-                                                     ('    u8 *cursor;\n'
-                                                      '    Cache *cache;\n'
+                                                      '    u32 source, destination;\n'),
+                                                     ('    W39055Segments *segments;\n',
                                                       '    W39055Segments *segments;\n'
-                                                      '    if (length >= 0x164) {\n'
-                                                      '        remain = length;\n'
-                                                      '        cursor = buffer;\n',
-                                                      '    u8 *cursor;\n'
-                                                      '    Cache *cache;\n'
-                                                      '    W39055Segments *segments;\n'
-                                                      '    if (!file) { return 0; } /* Runtime blocker: DS self-image '
-                                                      'mapping unavailable. */\n'
-                                                      '    if (length >= 0x164) {\n'
-                                                      '        remain = length;\n'
-                                                      '        cursor = buffer;\n'),
-                                                     ('            }\n'
-                                                      '            MI_CpuCopy8(archive->name.ptr, cache->archiveName, '
-                                                      'count);\n'
-                                                      '            cache->nameLength = count;\n'
-                                                      '            cache->archive = archive;\n'
-                                                      '        } else {\n'
-                                                      '            remain = 0;\n'
-                                                      '        }\n',
-                                                      '            }\n'
-                                                      '            MI_CpuCopy8(archive->name.ptr, cache->archiveName, '
-                                                      'count);\n'
-                                                      '            cache->nameLength = count;\n'
-                                                      '            MB_PTR(cache, 0x18) = archive;\n'
-                                                      '        } else {\n'
-                                                      '            remain = 0;\n'
-                                                      '        }\n'),
-                                                     ('            FS_CloseFile(&local);\n'
-                                                      '            if (result) {\n'
-                                                      '                const W39055Range *range = mbi_seg_header;\n'
-                                                      '                info.start = header->arm9Offset;\n'
-                                                      '                info.source = (char *)(header->arm9Address - '
-                                                      'header->arm9Offset);\n'
-                                                      '                info.destination = (char '
-                                                      '*)((u32)cache->entries[1].data - header->arm9Offset);\n'
+                                                      '    if (!file) { return 0; } /* Runtime blocker: DS self-image mapping unavailable. */\n'),
+                                                     ('            cache->archive = archive;\n',
+                                                      '            MB_PTR(cache, 0x18) = archive;\n'),
+                                                     ('                info.start = header->arm9Offset;\n'
+                                                      '                info.source = (char *)(header->arm9Address - header->arm9Offset);\n'
+                                                      '                info.destination = (char *)((u32)cache->entries[1].data - header->arm9Offset);\n'
                                                       '                info.size = length;\n'
-                                                      '                MBi_ReadSegmentHeader(&info, 0x4000, 0x8000, '
-                                                      '1);\n'
+                                                      '                MBi_ReadSegmentHeader(&info, 0x4000, 0x8000, 1);\n'
                                                       '                while (range->size) {\n'
                                                       '                    W41040ReadRange(&info, range);\n'
                                                       '                    range++;\n'
                                                       '                }\n'
                                                       '                {\n'
                                                       '                    u8 *image = cache->entries[1].data;\n'
-                                                      '                    u32 offset = '
-                                                      '(u32)_start_AutoloadDoneCallback - header->arm9Address;\n'
+                                                      '                    u32 offset = (u32)_start_AutoloadDoneCallback - header->arm9Address;\n'
                                                       '                    *(u32 *)(image + offset) = 0xe12fff1e;\n'
-                                                      '                }\n'
-                                                      '            }\n'
-                                                      '        }\n'
-                                                      '        if (result) {\n',
-                                                      '            FS_CloseFile(&local);\n'
-                                                      '            if (result) {\n'
-                                                      '                const W39055Range *range = mbi_seg_header;\n'
-                                                      '                /* The self-image operation requires a DS '
-                                                      'address mapping. */\n'
-                                                      '                result = 0;\n'
-                                                      '            }\n'
-                                                      '        }\n'
-                                                      '        if (result) {\n')],
+                                                      '                }\n',
+                                                      '                /* The self-image operation requires a DS address mapping. */\n'
+                                                      '                result = 0;\n')],
                                            'sha256': '53acd4b0ee05bd3df2b20fb50f6ec507407225f21defa66875deab1ed6becc8a'},
  'lib/NitroSDK/src/mb/mb_task_piece_buffer.c': {'edits': [('void MBi_AttachCacheBuffer(void *p, u32 a, u32 b, u32 c, '
                                                            'u32 d);',
@@ -2102,37 +1830,6 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                            'extern u8 gMbBeaconState[];\n'
                                                            'extern u8 gMbGlobalState[];\n'
                                                            'extern int MBi_StartParentCore(int);\n'),
-                                                          ('void MB_UpdateGameInfoMember(void *p, void *src, u32 bits, '
-                                                           'u32 value);\n'
-                                                           '\n'
-                                                           'typedef struct Task {\n'
-                                                           '    struct Task *next;\n'
-                                                           '\n'
-                                                           '    union {\n'
-                                                           '        u32 flags;\n',
-                                                           'void MB_UpdateGameInfoMember(void *p, void *src, u32 bits, '
-                                                           'u32 value);\n'
-                                                           '\n'
-                                                           'typedef struct Task {\n'
-                                                           '    u32 next;\n'
-                                                           '\n'
-                                                           '    union {\n'
-                                                           '        u32 flags;\n'),
-                                                          ('        } bits;\n'
-                                                           '    };\n'
-                                                           '\n'
-                                                           '    void (*function)(void);\n'
-                                                           '    void (*callback)(void);\n'
-                                                           '} Task;\n'
-                                                           '\n'
-                                                           'extern OSThread *volatile gMbTaskWork;\n',
-                                                           '        } bits;\n'
-                                                           '    };\n'
-                                                           '\n'
-                                                           '    u32 function, callback;\n'
-                                                           '} Task;\n'
-                                                           '\n'
-                                                           'extern OSThread *volatile gMbTaskWork;\n'),
                                                           ('int MBi_IsTaskAvailable(void);\n'
                                                            'void MBi_InitTaskInfo(void *p);\n'
                                                            'int MBi_IsTaskBusy(Task *t);\n'
@@ -2144,9 +1841,8 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                            'int MBi_IsTaskAvailable(void);\n'
                                                            'void MBi_InitTaskInfo(void *p);\n'
                                                            'int MBi_IsTaskBusy(Task *t);\n'
-                                                           'void MBi_SetTask(Task *t, void (*fn)(Task *), void '
-                                                           '(*cb)(Task *), u32 priority);\n'
-                                                           'void MBi_EndTaskThread(void *cb);\n'
+                                                           '\n'
+                                                           '\n'
                                                            'void MBi_SetChildMPMaxSize(int size);\n'
                                                            'void MBi_SetParentPieceBuffer(void *p);\n'),
                                                           ('}\n'
@@ -2289,7 +1985,7 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                           ('void (*fn)(Task *), void (*cb)(Task *)',
                                                            'MBNativeTaskCallback fn, MBNativeTaskCallback cb'),
                                                           ('typedef struct Task {\n'
-                                                           '    u32 next;\n'
+                                                           '    struct Task *next;\n'
                                                            '\n'
                                                            '    union {\n'
                                                            '        u32 flags;\n'
@@ -2299,22 +1995,18 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                            '        } bits;\n'
                                                            '    };\n'
                                                            '\n'
-                                                           '    u32 function, callback;\n'
+                                                           '    void (*function)(void);\n'
+                                                           '    void (*callback)(void);\n'
                                                            '} Task;',
                                                            '')],
                                                 'sha256': '6ee2c6f0d887b4af907c67bf26f85cb496ddaf8ebc06beb9f2e514bbe5f8eff2'},
- 'lib/NitroSDK/src/mb/mb_task_thread.c': {'edits': [('#include "global.h"\n'
-                                                     '// The code below is compiled as ARM (32-bit) code.\n'
+ 'lib/NitroSDK/src/mb/mb_task_thread.c': {'edits': [('// The code below is compiled as ARM (32-bit) code.\n'
                                                      '#include <nitro/code32.h>\n'
                                                      '\n'
                                                      'typedef struct {\n'
                                                      '    u32 offset;\n'
                                                      '    u32 size;\n'
-                                                     '    u8 *data;\n'
-                                                     '    u32 state;\n'
-                                                     '} CacheEntry;\n'
-                                                     '\n',
-                                                     '#include "global.h"\n'
+                                                     '    u8 *data;\n',
                                                      '#include "mb_native.h"\n'
                                                      '// The code below is compiled as ARM (32-bit) code.\n'
                                                      '#include <nitro/code32.h>\n'
@@ -2322,48 +2014,10 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      'typedef struct {\n'
                                                      '    u32 offset;\n'
                                                      '    u32 size;\n'
-                                                     '    u32 data;\n'
-                                                     '    u32 state;\n'
-                                                     '} CacheEntry;\n'
-                                                     '\n'),
-                                                    ('} Cache;\n'
-                                                     '\n'
-                                                     'typedef struct Task {\n'
-                                                     '    struct Task *next;\n'
-                                                     '    u32 flags;\n'
-                                                     '    void (*run)(struct Task *);\n'
-                                                     '    void (*done)(struct Task *);\n'
-                                                     '    u8 p[16];\n'
-                                                     '} Task;\n'
-                                                     '\n',
-                                                     '} Cache;\n'
-                                                     '\n'
-                                                     'typedef struct Task {\n'
-                                                     '    u32 next;\n'
-                                                     '    u32 flags;\n'
-                                                     '    u32 run, done;\n'
-                                                     '    u8 p[16];\n'
-                                                     '} Task;\n'
-                                                     '\n'),
-                                                    ('        if (p->state >= 2) {\n'
-                                                     '            int pos = offset - p->offset;\n'
-                                                     '            if (pos >= 0 && pos + len <= p->size) {\n'
-                                                     '                MI_CpuCopy8(p->data + pos, buf, len);\n'
-                                                     '                cache->busy = 0;\n'
-                                                     '                ret = TRUE;\n'
-                                                     '                break;\n',
-                                                     '        if (p->state >= 2) {\n'
-                                                     '            int pos = offset - p->offset;\n'
-                                                     '            if (pos >= 0 && pos + len <= p->size) {\n'
-                                                     '                MI_CpuCopy8((u8 *)MB_PTR(p, 8) + pos, buf, '
-                                                     'len);\n'
-                                                     '                cache->busy = 0;\n'
-                                                     '                ret = TRUE;\n'
-                                                     '                break;\n'),
-                                                    ('            OS_SleepThread(NULL);\n'
-                                                     '        }\n'
-                                                     '        task = w->queue;\n'
-                                                     '        w->queue = w->queue->next;\n'
+                                                     '    u32 data;\n'),
+                                                    ('                MI_CpuCopy8(p->data + pos, buf, len);\n',
+                                                     '                MI_CpuCopy8((u8 *)MB_PTR(p, 8) + pos, buf, len);\n'),
+                                                    ('        w->queue = w->queue->next;\n'
                                                      '        OS_SetThreadPriority(&w->thread, task->flags >> 1);\n'
                                                      '        OS_RestoreInterrupts(e);\n'
                                                      '        done = task->run;\n'
@@ -2373,18 +2027,11 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      '        e = OS_DisableInterrupts();\n'
                                                      '        done = task->done;\n'
                                                      '        cur = OS_GetThreadPriority(&w->thread);\n'
-                                                     '        prio = (w->queue == NULL) ? 0 : ((w->queue->flags >> 1) '
-                                                     '> cur ? (w->queue->flags >> 1) : cur);\n'
+                                                     '        prio = (w->queue == NULL) ? 0 : ((w->queue->flags >> 1) > cur ? (w->queue->flags >> 1) : cur);\n'
                                                      '        if (prio != cur) {\n'
                                                      '            OS_SetThreadPriority(&w->thread, prio);\n'
                                                      '        }\n'
-                                                     '        task->next = NULL;\n'
-                                                     '        task->flags &= ~1;\n'
-                                                     '        if (done != NULL) {\n'
-                                                     '            done(task);\n',
-                                                     '            OS_SleepThread(NULL);\n'
-                                                     '        }\n'
-                                                     '        task = w->queue;\n'
+                                                     '        task->next = NULL;\n',
                                                      '        w->queue = MB_PTR(w->queue, 0);\n'
                                                      '        OS_SetThreadPriority(&w->thread, task->flags >> 1);\n'
                                                      '        OS_RestoreInterrupts(e);\n'
@@ -2395,20 +2042,17 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                      '        e = OS_DisableInterrupts();\n'
                                                      '        done = MB_NativeReference(task, 12)->task;\n'
                                                      '        cur = OS_GetThreadPriority(&w->thread);\n'
-                                                     '        prio = (w->queue == NULL) ? 0 : ((w->queue->flags >> 1) '
-                                                     '> cur ? (w->queue->flags >> 1) : cur);\n'
+                                                     '        prio = (w->queue == NULL) ? 0 : ((w->queue->flags >> 1) > cur ? (w->queue->flags >> 1) : cur);\n'
                                                      '        if (prio != cur) {\n'
                                                      '            OS_SetThreadPriority(&w->thread, prio);\n'
                                                      '        }\n'
-                                                     '        MB_PTR(task, 0) = NULL;\n'
-                                                     '        task->flags &= ~1;\n'
-                                                     '        if (done != NULL) {\n'
-                                                     '            done(task);\n'),
+                                                     '        MB_PTR(task, 0) = NULL;\n'),
                                                     ('void (*done)(Task *);', 'MBNativeTaskCallback done;'),
                                                     ('typedef struct Task {\n'
-                                                     '    u32 next;\n'
+                                                     '    struct Task *next;\n'
                                                      '    u32 flags;\n'
-                                                     '    u32 run, done;\n'
+                                                     '    void (*run)(struct Task *);\n'
+                                                     '    void (*done)(struct Task *);\n'
                                                      '    u8 p[16];\n'
                                                      '} Task;',
                                                      '')],
@@ -3235,11 +2879,10 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                                   '    cb = MB_WM(MB_PTR(gMbGlobalState, 8));\n'
                                                   '    cb(255, a);\n'
                                                   '}\n'),
-                                                 ('void MBi_SetTask(void *, void *, void *, int);',
-                                                  'void MBi_SetTask(struct Task *, MBNativeTaskCallback, '
-                                                  'MBNativeTaskCallback, u32);'),
-                                                 ('void MBi_EndTaskThread(void *cb)',
-                                                  'void MBi_EndTaskThread(MBNativeTaskCallback cb)')],
+                                                 ('extern void MBi_SetTask(void *, void *, void *, int);',
+                                                  ''),
+                                                 ('void MBi_EndTaskThread(void *cb);',
+                                                  '')],
                                        'sha256': '20f388de9036cfdebf82b2ff7db1aac7af57aa6f4a7a02b92c96e6866429f2b4'},
  'lib/NitroSDK/src/wm_requests.c': {'edits': [],
                                     'sha256': '224be3a3adef3221a15676f8f54325fbc3b5c0b737155f7221b7b97ef3495c94'},
@@ -7878,3309 +7521,2080 @@ SOURCES = {'include/field/field_effect_manager.h': {'edits': [],
                                            'prefix': '#include <stdint.h>\n#include <string.h>\n',
                                            'sha256': '21092dcad0a5d3a821aeaae539cde7ffadb035da29829c291dade61d22d5d568'}}
 
-HEADER_ROUTES = {'include/alph_checks.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                           'sha256': '168897b2faa129db56af072dccf2a4f1af1fa4607b7b0c65adc94f3c5a3a07c3'},
- 'include/alph_puzzle.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                           'sha256': '749a66b162da064ae1890fe58654199bc27eb56018686c978e66fe4bd145958d'},
- 'include/application/apricorn_box/apricorn_box_overlay_internal.h': {'edits': [('#include "party_menu.h"',
-                                                                                 '#include <party_menu.h>')],
-                                                                      'sha256': '7075006ef0992ae827ab60413e29dc56bec5273c695d657808494dfc766b88d3'},
- 'include/application/apricorn_box/apricorn_box_screen_internal.h': {'edits': [('#include '
-                                                                                '"application/apricorn_box/apricorn_box_overlay_internal.h"',
-                                                                                '#include '
-                                                                                '<application/apricorn_box/apricorn_box_overlay_internal.h>')],
-                                                                     'sha256': '228603c87b8e46b2c9a73cdb3db74650d57058b1fca586e73c31bf2b162aaefb'},
- 'include/application/mailbox_app_internal.h': {'edits': [('#include "mailbox_app.h"', '#include <mailbox_app.h>')],
-                                                'sha256': '5fd86524c565e1c5ad8930a509eba061f6053a117873bbf657aced5b0b49854b'},
- 'include/application/palpad/palpad_internal.h': {'edits': [('#include "naming_screen.h"',
-                                                             '#include <naming_screen.h>')],
-                                                  'sha256': '3a1722cdda93d2b80646801806f32adba5bb7fb91f1065fa7c1fd57ad0ee2f9a'},
- 'include/application/pokegear/configure/pokegear_configure_internal.h': {'edits': [('#include '
-                                                                                     '"application/pokegear/pokegear_internal.h"',
-                                                                                     '#include '
-                                                                                     '<application/pokegear/pokegear_internal.h>')],
-                                                                          'sha256': '61e185689a2eb61ab6f49153c37b4916f883ffa1569590e83d9fd21515202351'},
- 'include/application/pokegear/map/pokegear_map_internal.h': {'edits': [('#include '
-                                                                         '"application/pokegear/pokegear_internal.h"',
-                                                                         '#include '
-                                                                         '<application/pokegear/pokegear_internal.h>')],
-                                                              'sha256': '9c00a5d743f14f80751dcaa24288d5e24738f65869cff977b7b15953ed771611'},
- 'include/application/pokegear/phone/phone_internal.h': {'edits': [('#include '
-                                                                    '"application/pokegear/pokegear_internal.h"',
-                                                                    '#include '
-                                                                    '<application/pokegear/pokegear_internal.h>')],
-                                                         'sha256': '896fddb95ce011aac189ad899cc046e0938425470867e33d75e10f34ff658999'},
- 'include/application/pokegear/pokegear_internal.h': {'edits': [('#include "gear_phone_ring_manager.h"',
-                                                                 '#include <gear_phone_ring_manager.h>')],
-                                                      'sha256': '022cb640705ed4fadf2c8e5acef8c4b437d63c70269d2f6f1bedc221b6dde1fc'},
- 'include/application/pokegear/radio/radio_internal.h': {'edits': [('#include '
-                                                                    '"application/pokegear/pokegear_internal.h"',
-                                                                    '#include '
-                                                                    '<application/pokegear/pokegear_internal.h>')],
-                                                         'sha256': 'a13f45887ee647b3f0c829cc14f25c91e01d6481db0176980122ac875c1f8a2c'},
- 'include/application/view_photo.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                      'sha256': '1f8e3d6da3fa19dfeb2ef7b819555b74e93061e952d5e1aecfcd4c41e324bdd5'},
- 'include/apricorn_tree.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                             'sha256': 'd9286e365e00b8f7889363f6bf1b0daf2dedd05d233059ae59a0790bd8b9ffb9'},
- 'include/bag_view.h': {'edits': [('#include "field_use_item.h"', '#include <field_use_item.h>')],
-                        'sha256': 'd00a34e8d7b1bba19e5dee3bff0fe3c1377ea821f6d0046250e3b8cfdc93b7d2'},
- 'include/battle_greeting_task.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                    'sha256': 'f8a23e8e604ea0c22c564c0168e33e1a21613ea054f71984908704befd9df845'},
- 'include/battle_transition_task.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                      'sha256': 'f589e1d1825f1edba0dc94888bb89fa71888c286a75c4fcde78838d43c008c30'},
- 'include/berry_pots_app_internal.h': {'edits': [('#include "launch_application.h"',
-                                                  '#include <launch_application.h>')],
-                                       'sha256': '407140907a6e43e8c474e5a90cfe969481393a7470218117bbbdd1290fa99a10'},
- 'include/blackout.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "task.h"', '#include <task.h>')],
-                        'sha256': '1f0242aa191c03dd634ecfbff47263c0c3bb35a6645571e2de2e85f1f2c0fdac'},
- 'include/bug_contest.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                           'sha256': '8cb92dcbdb4881b43c83c2b94cc1ec79ade973578deb9f9bc80f7635366a91af'},
- 'include/catching_show.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                             'sha256': 'e16d317814739e02a20375805a3941515832a144e5f0a2e7dfebaed41e754c4e'},
- 'include/choose_starter.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                              'sha256': '944853fcc0babbc4d291b6bb5857f0c4cc27e91a031c72ebbc8341b4b21ce6b9'},
- 'include/colosseum_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                            ('#include "task.h"', '#include <task.h>')],
-                                  'sha256': '1b555d6c9b9a9e33ffe21b5350aa7d3de14cd94b66b8c8243580bd828bb45bf0'},
- 'include/comm_player_manager.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                   'sha256': '4882ba9340ff618e7fb6b893b703f3a474e76f55cbb7d6f4087f502e820d69ea'},
- 'include/comm_player_manager_internal.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                            'sha256': 'b2146d03cf2fc8bb7bd6ff28270869206bf42ba386947d3ac729aab0d3394781'},
- 'include/communication_club_link.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "script.h"', '#include <script.h>')],
-                                       'sha256': 'eb8db81b97c96e506518ad47c84da174413e505a518ec5615294a84061245a3f'},
- 'include/communication_club_link_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                                'sha256': 'af2c51453016927ae96dcacedd385d790490357187d79c3eb13a1de42376c506'},
- 'include/drawing_session.h': {'edits': [('#include "launch_application_internal.h"',
-                                          '#include <launch_application_internal.h>')],
-                               'sha256': '98c1cd7f4e3d5c6b5d474135f5917e1b660e248d03acac0ced34312ea399b32b'},
- 'include/encounter.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                   ('#include "task.h"', '#include <task.h>')],
-                         'sha256': '9467275524421eadf2d48577f505ad29c054f2802c80d58f2df4ab218ee6372b'},
- 'include/field/apricorn_tree_anim.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                        'sha256': 'e8c4d5bf236c1aae684fde9a3ac5f44f1381ef765e2e9ee70e20c683b3f42f0e'},
- 'include/field/bottom_screen_app.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                       'sha256': '092dba4a297223c101ca19021aaca527276786dc1c6d14bf87fb100e1d422bb7'},
- 'include/field/door_transition.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                               ('#include "task.h"', '#include <task.h>')],
-                                     'sha256': '24bb31a46bc8ceb72e508330e5fa4bb4edd7524d10fb4075503fde6ce3702e74'},
- 'include/field/encounter_check.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                     'sha256': 'a9d2d41c9f02059a28512070282688af2711f76959263234e4c7f7ed9b5afcce'},
- 'include/field/encounter_effect.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                      'sha256': 'fcacb1694732382f11a731b35426faad23a0b46b889ba01ae4d3e9e418f02807'},
- 'include/field/encounter_effect_leaders.h': {'edits': [('#include "field/encounter_effect.h"',
-                                                         '#include <field/encounter_effect.h>')],
-                                              'sha256': '1f09b5089f2be2269f02aac83490244eee37d3ce521a71f3d02f002576ca0e4b'},
- 'include/field/field_bottom_screen.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                         'sha256': '97003423f74be5c2ea851b85673b05a86b3f15f1c2905550ae83d03d06ccefad'},
- 'include/field/field_camera.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                  'sha256': 'feb4bf129f68586ac4a8e0fe9ae460ffcd7aa398569055ae6bf94123d2f57c48'},
- 'include/field/field_camera_zoom.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                       'sha256': '537f658fb9e08370dfc067fdddbaf51263df9052f0d3027567474c2e7a3ca74a'},
- 'include/field/field_control.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                   'sha256': '4898111f275a9af202c0cf93353c81515d0c858ddd96bcaf0d43b869d6343087'},
- 'include/field/field_effect_helpers.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                     '#include <field/field_effect_manager.h>'),
-                                                    ('#include "render_animation.h"', '#include <render_animation.h>')],
-                                          'sha256': '8a6055188d048d0acec94baf14c70a6887fc78eed289d28db7f9d8f109ef3862'},
- 'include/field/field_effect_manager.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                    ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                    ('#include "script.h"', '#include <script.h>'),
-                                                    ('#include "task.h"', '#include <task.h>')],
-                                          'sha256': 'e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133'},
- 'include/field/field_effect_manager_internal.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                              '#include <field/field_effect_manager.h>')],
-                                                   'sha256': '9d648d9198d7fe221adae9e304a36b870ff65213864f14ff13ebacf64ffc1c03'},
- 'include/field/field_flash_darkness.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                     '#include <field/field_effect_manager.h>'),
-                                                    ('#include "map_object.h"', '#include <map_object.h>')],
-                                          'sha256': 'fb60ca28901e78a98809294d6ee1f212100723bc45a50ecdc193b70783595204'},
- 'include/field/field_follow_mon.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                ('#include "task.h"', '#include <task.h>')],
-                                      'sha256': 'e435e61d4022fc7ee8e91ef6af4634dcef1b17f84d27ec10d1dac60f3a5e58b0'},
- 'include/field/field_move_cut_in.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "field_system.h"', '#include <field_system.h>')],
-                                       'sha256': 'd89812ea237c647a5480114696065d8271c9b7bd16fd322fb8007ee348d1d5f4'},
- 'include/field/field_move_effects.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                        'sha256': '269979e101529f37c3e12aee7e88fd9afc491a0c3dabac72045f0b39b3a5fb7d'},
- 'include/field/field_shaymin_form_change.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                          '#include <field/field_effect_manager.h>')],
-                                               'sha256': '6737a557b084db93bbb65dd0f51a28043a60f3254b0e50ce4e45e6dc4bf9e34f'},
- 'include/field/fieldmap.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                              'sha256': 'a2e0a570d65ffa753d1e59526068a1db31c8eecbb58c419a0e66f816e5835cc7'},
- 'include/field/fly_landing_effect.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                   '#include <field/field_effect_manager.h>'),
-                                                  ('#include "field_system.h"', '#include <field_system.h>')],
-                                        'sha256': '3db127bac3e51c117ebbb8b0699edf1a8a3de690c0e90c133dd921dc39a52775'},
- 'include/field/legend_cutscene_camera.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                            'sha256': '8bd1892d35115b69dab6097df504d734bc6adb24d2aaadf1ab4158c6d844744d'},
- 'include/field/map_load_manager.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                      'sha256': 'a2c0d459b9317a128f142c39fa4a475c438628fb90be012acfc81c72c43f4398'},
- 'include/field/map_load_manager_internal.h': {'edits': [('#include "field/field_control.h"',
-                                                          '#include <field/field_control.h>'),
-                                                         ('#include "field/map_load_manager.h"',
-                                                          '#include <field/map_load_manager.h>')],
-                                               'sha256': 'a45c56538acaf5fa44f7ae61a8b190af5333413b61987d6ad852563e34c3cdaf'},
- 'include/field/map_object_billboard_motion.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>')],
-                                                 'sha256': '9e11dd617c73c36661fab932b1df838d1b90c2662721162d5235f0828419490f'},
- 'include/field/map_object_model_list.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                      '#include <field/field_effect_manager.h>')],
-                                           'sha256': 'a9a486ed3e11ee114a32c69d1f2d87c3c57daf5a6186b012f793ca82c9d61fd0'},
- 'include/field/map_object_models.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "field/map_object_render.h"',
-                                                  '#include <field/map_object_render.h>')],
-                                       'sha256': '1b639f7260d22b98751df39365967cf718455c2e736a829670095260d8a24b3f'},
- 'include/field/map_object_render.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>')],
-                                       'sha256': '0f3f7d0ffb4e24edfbefe80636b275ebd3e2f911fdd5d8aee044cc2f2847c560'},
- 'include/field/map_object_render_internal.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                          ('#include "field/map_object_render.h"',
-                                                           '#include <field/map_object_render.h>')],
-                                                'sha256': '3d89857e021c70a96bc28a495b55d4d6fb7d95d86e725f9c484c1343b4fab387'},
- 'include/field/overlay116_scene_internal.h': {'edits': [('#include "field/encounter_effect.h"',
-                                                          '#include <field/encounter_effect.h>')],
-                                               'sha256': 'e1f98c07a1357dc89c9832c6a162dac9c5c10ce165c5c5031cb9bb4fc2083442'},
- 'include/field/pal_pad_registration.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                          'sha256': '93bde030d1134b7f622471d9c4cd88bf41a0b9687a3bbc641b1efb6dac9be1cd'},
- 'include/field/rock_smash_item.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                     'sha256': '34944b7cfe52633261a8f46c7890a0a98516d9d5bfab91393c7dbd59cf4ea9e9'},
- 'include/field/script_menu.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                 'sha256': '5cab7c21433707da3ca38814bfab8fb47ee8dda669dbfda039f3a8959c27bdf2'},
- 'include/field/signpost.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                              'sha256': '72083de586567d5b11a4029c74f8f9bba34c959e671499d1cb1a78b1f177a255'},
- 'include/field/spin_slide.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                          ('#include "field_system.h"', '#include <field_system.h>')],
-                                'sha256': '879e36ca73be7d8e4d5f90a393ff20704c894b9cefc790b220474ff62694ea58'},
- 'include/field/touch_mart_app.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "overlay_03.h"', '#include <overlay_03.h>')],
-                                    'sha256': '5227d427f75a5df3b4b954e2b09b3f6fb572263237de9d001416677bbdad544b'},
- 'include/field/touchscreen_choice_menu.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                             'sha256': '8f763c37d4e8ee8c7fb40858fca8a75fd609960a807156f91b8645cad3401249'},
- 'include/field/warp_spin.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                               'sha256': 'ee52801441f38b60d27467c9b873e1cbf462e51486daa3d20427b867c0f6bcdb'},
- 'include/field/weather_manager.h': {'edits': [],
-                                     'sha256': '9790ad75e3e9d4e3560bc8a42f68e60f47602c96b647ec09fca9ab036290c2ad'},
- 'include/field_apricorn_regrowth.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>')],
-                                       'sha256': '4ea21e5dff1e95aa451283753d399fcd895f1f8fd1c18b9f0da3dbc05ed55cb1'},
- 'include/field_bgm.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                   ('#include "script.h"', '#include <script.h>')],
-                         'sha256': '87287e6d8c8cf513168db4377010a0cf44765c3a9262a02cf8dc4e635c8c86d6'},
- 'include/field_emote_bubble.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>')],
-                                  'sha256': 'e21838cedea50e120d2beefadecf09f42d7123b1e3837574f06594cab79fc9e4'},
- 'include/field_emote_mark.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                'sha256': '0f6cb5a2a07723ee13d03de4c6eaccc900b0d8a96ea05ca31a82a1ceec65bb26'},
- 'include/field_follow_mon_ball.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                '#include <field/field_effect_manager.h>')],
-                                     'sha256': 'ee52da6f1371732400a1c1a35cf11f9579434c88c28cea3671912e5ca86795f5'},
- 'include/field_footprints.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>')],
-                                'sha256': '44f4ddc0db62baff7ab981db49a6d0d23a4c2fc5d4a09b0a953474933f018ec2'},
- 'include/field_ground_dust.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                            '#include <field/field_effect_manager.h>')],
-                                 'sha256': '7e055960a0af6e06418253bf99b085ecfe438d2c5a6b7fc9ce5a4555722a321d'},
- 'include/field_hidden_object_cover.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                    '#include <field/field_effect_manager.h>')],
-                                         'sha256': '95c2a52266cbecc132581f50930b13eb0fb31dfad5b6b91bebde78b3a6a1c8fb'},
- 'include/field_interaction.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                 'sha256': '95ac7de1ff0f276e82ec870ba60662614e785708aab1b0bf2d78068d8beb41b1'},
- 'include/field_misc_events.h': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                           ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                                           ('#include "task.h"', '#include <task.h>')],
-                                 'sha256': '422a3a400b72d5fde29cd68a2d07d37ccfdf6b3446acf3326a19bb21fef8a731'},
- 'include/field_move.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "task.h"', '#include <task.h>')],
-                          'sha256': '1bcead4a115d698c74f7ac3f8f276ecadffa10bf2fb498f4db17cc05a4164607'},
- 'include/field_mud_splash.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>')],
-                                'sha256': 'e8f393ef86ec577617c4d0e8f03795080ec1812ec6485a9812e43a8e4f941c82'},
- 'include/field_overworld_restore.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                       'sha256': '94d88796677e93c316239b053060c1d8f7d7269d2ae5cf58b3c5bb49bf50f584'},
- 'include/field_overworld_transition.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                          'sha256': 'f8ef669ad2a91ba4db8f2795728f3c19bc6c6dca464ae8a2f6983ec36a981b24'},
- 'include/field_puddle_splash.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                              '#include <field/field_effect_manager.h>')],
-                                   'sha256': '23dacb58653d10db99f84abc5c316ae4e09b19a9339df84310cea48f452e2860'},
- 'include/field_reflection.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>')],
-                                'sha256': '1db08aabbd08f382f730c15c1f97fcb91b5b491288a413b6f086a8ae7bcf6a5d'},
- 'include/field_rock_climb_effect.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>')],
-                                       'sha256': 'f3051288e49a751a18ad345acd1e6c2ee653ae19e5abcbe9026ec37ae52a2dd2'},
- 'include/field_shadow.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                       '#include <field/field_effect_manager.h>')],
-                            'sha256': '675aca2eb056c610b97893ee122ac4226337a602d9a763b31d4a34ff344c2cb0'},
- 'include/field_shallow_water_ripple.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                     '#include <field/field_effect_manager.h>')],
-                                          'sha256': 'd5ce67d6e1059487147b9ec1a4f1011841c6a2fd8fe810292f679a1a6c227ce2'},
- 'include/field_surf_mount.h': {'edits': [('#include "map_object_manager.h"', '#include <map_object_manager.h>')],
-                                'sha256': '890b67c1135c9d09f122453c6d1c873f6115ef8aaf7bcd5e149871813b5ba912'},
- 'include/field_system.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                       '#include <field/field_effect_manager.h>'),
-                                      ('#include "field/signpost.h"', '#include <field/signpost.h>'),
-                                      ('#include "terrain_attributes.h"', '#include <terrain_attributes.h>'),
-                                      ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                      ('#include "field/weather_manager.h"', '#include <field/weather_manager.h>')],
-                            'sha256': '1afa6731f64e985e0cf4b05ccf9cbfbbd0e2fb6f2ab4110f3d3c4d2ae2d81ae4'},
- 'include/field_system_rtc_weather.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                        'sha256': 'b6552b3bff944d234cb57c04026faec7b31bca75ff70f85378b32ab9a9e1dcc7'},
- 'include/field_take_photo.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                'sha256': 'a0c938eb07126019322328de99ad27d0e3e18a4e04803a313dd5000c15e70c60'},
- 'include/field_tall_grass.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>')],
-                                'sha256': '4b8f91320bf6f56cd6f254f925d0ba78d73d850e429904372685086fcb0a97cc'},
- 'include/field_terrain.h': {'edits': [('#include "field/field_control.h"', '#include <field/field_control.h>')],
-                             'sha256': '2dcff508c85e389e8a89eb7d3135a9eec2257562f15590a5aaeccf5aab53de41'},
- 'include/field_time_events.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                 'sha256': 'c75f718964c8776c22d3a0c7bb8d49890754ddae0fffb4dcb7047e7220351769'},
- 'include/field_trainer_reveal.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                               '#include <field/field_effect_manager.h>')],
-                                    'sha256': 'd81ea8b832b2fc0906cd7521710e8fd53ef6071018b9a9af1bae438da9b90dd7'},
- 'include/field_transition_effects.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                  ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                                  ('#include "task.h"', '#include <task.h>')],
-                                        'sha256': '2e478380358a365f6e0adc04ae62271b2af5a46209b798ac851b87fb251fb04b'},
- 'include/field_transition_tasks.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                      'sha256': '975a57b5b330a4483970622a6401d7c41886c5e38d8cfebbcbc5069ecf549942'},
- 'include/field_union_chat_marker.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>')],
-                                       'sha256': '9db66b2af0f56b7ceef54d2e66cc52e7415f3408ca8745b2698182b9f73d0ae0'},
- 'include/field_unused_billboard_effect.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                        '#include <field/field_effect_manager.h>')],
-                                             'sha256': '98b408031d92588a2ea472f3b6b084f9fb3473683d47a41420148c913415a9e9'},
- 'include/field_use_item.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                              'sha256': '44b9532c3fef62ff6dfa7d7de6c1d2d4a631ca5b9f3a75f9cc3083617ba599fd'},
- 'include/field_very_tall_grass.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                                '#include <field/field_effect_manager.h>')],
-                                     'sha256': 'c3eeca5a37f4d680af6bed5602af5bab5ed8d04548f4411597bbfcb91c935f57'},
- 'include/field_warp_arrow.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>'),
-                                          ('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                'sha256': '3ee36730aec586260c48cd1816d045c3058833305eb7e39ecd6314d31e9fcc54'},
- 'include/field_warp_reset.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>'),
-                                          ('#include "script.h"', '#include <script.h>'),
-                                          ('#include "npc_trade.h"', '#include <npc_trade.h>')],
-                                'sha256': '5284d414f51b56f190dac8c65ac209905963db059bcd76dbde23df04309197d2'},
- 'include/field_warp_reset_suppress.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                         'sha256': '318f2f48ac52c5ddf24422d4bcf454d0fedc7d3796f9556dea4dfab8a50d9c07'},
- 'include/field_warp_tasks.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                'sha256': '846cb2d5ab654120dc67b93973229950316e9d8856b92cada7b9cc5e0a71ea3e'},
- 'include/follow_mon.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "map_object_manager.h"', '#include <map_object_manager.h>')],
-                          'sha256': '67d15d820a833d55d7a48a3703a6b9364c25ff6f2348d0835716e75842a3b949'},
- 'include/frontier/battle_arcade_setup.h': {'edits': [('#include "frontier/frontier.h"',
-                                                       '#include <frontier/frontier.h>')],
-                                            'sha256': '1fb4f23df4279841498adae4e4e20518eb7394f23ab8df496e91490596a0db86'},
- 'include/frontier/battle_castle_setup.h': {'edits': [('#include "frontier/frontier.h"',
-                                                       '#include <frontier/frontier.h>')],
-                                            'sha256': '33719e3d98a79b8cf322328dfaec27031765d606b1c92c115041c37db128fa15'},
- 'include/frontier/battle_factory_setup.h': {'edits': [('#include "frontier/frontier.h"',
-                                                        '#include <frontier/frontier.h>')],
-                                             'sha256': '3d9c4ec2f04e00b584358db80c0e006301628f7eb824fbeae19543455e55179b'},
- 'include/frontier/battle_hall_setup.h': {'edits': [('#include "frontier/frontier.h"',
-                                                     '#include <frontier/frontier.h>')],
-                                          'sha256': '5416301664717a389ffc833b842a0df2a7bf382628c2bc88e4eb94add20b0b10'},
- 'include/frontier/battle_tower_setup.h': {'edits': [('#include "frontier/frontier.h"',
-                                                      '#include <frontier/frontier.h>')],
-                                           'sha256': '2acdd72d9097a488d43abbd77a5f8de3f578da96f1f806c0c96cbe3f64ea85e1'},
- 'include/frontier/frontier.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                 'sha256': 'ad08a5b9eea7f80c867154f133762635d548ebef3de57638a5cb64f199535f4a'},
- 'include/frontier_field_support.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                      'sha256': 'be40c9071ea770ead2a2d008809960373d172612df49be28132adbc79e3019b6'},
- 'include/frontier_field_system.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                     'sha256': '62bd514814708f39f98e19b488c5b78fff286ac1c3496e95812b5d8b9bcb1e29'},
- 'include/frontier_launch.h': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>')],
-                               'sha256': 'ba64c5064c5d9eba661c89cca7a0488e6405842bef3b8d8b5ec5cb40c3444784'},
- 'include/game_clear.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                          'sha256': '43e59aadff2f618f9eb0392f5d8e9bfb8051939c33e3e10faca257f0ed26311a'},
- 'include/gear_phone_ring_manager.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "script.h"', '#include <script.h>'),
-                                                 ('#include "save_local_field_data.h"',
-                                                  '#include <save_local_field_data.h>')],
-                                       'sha256': '54986ad23e0d5cb89edae671ffc60915674676a6eae9194bce46fce3a93c633e'},
- 'include/get_egg.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                       'sha256': '8f1a641b6168bdac71ff70ed0a8eb68c21097c068ef279dbbf3b7b5c3c97ae66'},
- 'include/global_terminal/global_terminal_app.h': {'edits': [('#include "field_system.h"',
-                                                              '#include <field_system.h>')],
-                                                   'sha256': '6b385f4a265e6a4fae0d1273ac90a572334312697caf54a8adad58c1dd501436'},
- 'include/global_terminal/global_terminal_app_internal.h': {'edits': [('#include "launch_application.h"',
-                                                                       '#include <launch_application.h>')],
-                                                            'sha256': '97ca5beb7caffa7d2954d7459ececda18795ef278167c7428855a9bebe5548bf'},
- 'include/gts/gts_internal.h': {'edits': [('#include "launch_application_internal.h"',
-                                           '#include <launch_application_internal.h>')],
-                                'sha256': '658460905493c56eb724f4cd30a1bf7e65ce64aa8fcd8711579b399e8755931d'},
- 'include/gymmick_collision.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                 'sha256': '5315ff5e509e4972f5fe570aa05b1fdbff6e7ab824457154c90eebff4920a94e'},
- 'include/gymmick_init.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                            'sha256': '17b4d18534acdfe1d1f5aae2f5b3fa60585d8bcd7f5bc57369077d670d8c4c37'},
- 'include/hatch_egg_app_internal.h': {'edits': [('#include "hatch_egg_task_data.h"',
-                                                 '#include <hatch_egg_task_data.h>')],
-                                      'sha256': 'bb3a8821ba94698e40cbd8b9954289f22b0c0cbe2cfa353165481ea40e6f30d9'},
- 'include/hatch_egg_task.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                              'sha256': '5ba4c1fce2d86e11ddddd06d1d865164a2e0554eadc14d5257a1ce84db2c228a'},
- 'include/hatch_egg_task_data.h': {'edits': [('#include "naming_screen.h"', '#include <naming_screen.h>'),
-                                             ('#include "hatch_egg_task.h"', '#include <hatch_egg_task.h>')],
-                                   'sha256': '92ba12b6cf47ff9a4aacfd69d6d4a349bd5aedc3389810a6af1d4f1d6d4b5e9b'},
- 'include/headbutt_tree.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "script.h"', '#include <script.h>')],
-                             'sha256': '08a2fa0bb2c358217c73d38381ea514910a3f0d5ae8dcdcecf58cf2265aefcc9'},
- 'include/launch_application.h': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                            ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                            ('#include "mailbox_app.h"', '#include <mailbox_app.h>'),
-                                            ('#include "record_mixing/record_mixing.h"',
-                                             '#include <record_mixing/record_mixing.h>'),
-                                            ('#include "gear_phone_ring_manager.h"',
-                                             '#include <gear_phone_ring_manager.h>'),
-                                            ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                            ('#include "alph_puzzle.h"', '#include <alph_puzzle.h>')],
-                                  'sha256': '01ebfc641092da87f28d2e58c84317a8c95ae9851a9cd15b516f49bb1fc50f7e'},
- 'include/launch_application_internal.h': {'edits': [('#include "launch_application.h"',
-                                                      '#include <launch_application.h>'),
-                                                     ('#include "naming_screen.h"', '#include <naming_screen.h>')],
-                                           'sha256': 'ee097c0637faf4a0a6993136282c4185efe410718c8685627402dfe511b75479'},
- 'include/legendary_cinematic_task.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                        'sha256': 'edc2c11a2c8b85f80a78e93b61f0bc2fcc8f85e91f5ab43887374fb862027341'},
- 'include/location_backup.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                               'sha256': '82c1f4f3b86d0ceb33e155ebf52bf589072667cc6502c668c39fbbdf2481b023'},
- 'include/magnet_train_ride.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                 'sha256': 'aced4b623cf5dc1725a27c190541c8bc47451d5016d3f7a7aa52f24db5a87526'},
- 'include/mailbox_app.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                           'sha256': '05fc3773953dd0a9def033a27c2133b8a7e62090d318276fe36324794a4845d8'},
- 'include/map_events.h': {'edits': [('#include "script_manager.h"', '#include <script_manager.h>')],
-                          'sha256': 'e3473abbb03b94de312250a300fdb1640f22de9bc369c9e8bb9eb0c2e0521c47'},
- 'include/map_object_behavior.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                   'sha256': '52c1fcc88455bfc906490caffd3273f766abdd4ec541e5aab22ce13bd4d3611d'},
- 'include/map_object_behavior_internal.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                      ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                      ('#include "field/map_object_render.h"',
-                                                       '#include <field/map_object_render.h>'),
-                                                      ('#include "field_system.h"', '#include <field_system.h>')],
-                                            'sha256': '655b23943aae3d24a8a1a090638198c0fdba4cd6cfe39298526f4273319e8fdb'},
- 'include/map_object_follow.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>')],
-                                 'sha256': '597828cbf64c5ef875ab794caf6c81128620a66f178feb9147abe152988f416c'},
- 'include/map_object_follow_internal.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                    ('#include "map_object_follow.h"',
-                                                     '#include <map_object_follow.h>'),
-                                                    ('#include "map_object_movement_commands_internal.h"',
-                                                     '#include <map_object_movement_commands_internal.h>')],
-                                          'sha256': '96c199e9548189a2eebe06c049e3f8e446f93cc2ee14cb5b588661277a22b839'},
- 'include/map_object_manager.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                  'sha256': '59c6acf1b6c49c9dbf52ab506c44e46f24a4ddc6cdef65e80ab06d86d126b059'},
- 'include/map_object_movement.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>')],
-                                   'sha256': 'e8e2a69c3e637cd51e0f15f5339fb8547646e56b978c33455eb25ea382948941'},
- 'include/map_object_movement_commands.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                            'sha256': 'a6230a172d820433d080c43a3a0c7e1545e0207350cd9f336b104b2416a180c2'},
- 'include/map_object_movement_commands_internal.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                               ('#include "map_object_movement_commands.h"',
-                                                                '#include <map_object_movement_commands.h>')],
-                                                     'sha256': '4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d'},
- 'include/map_object_movement_utilities.h': {'edits': [('#include "map_object.h"', '#include <map_object.h>')],
-                                             'sha256': '84cb1d300de835c638c13c98ef3fc2739e5063a8c923c004a1820df0543d0dea'},
- 'include/map_object_movement_utilities_internal.h': {'edits': [('#include "map_object_movement_utilities.h"',
-                                                                 '#include <map_object_movement_utilities.h>')],
-                                                      'sha256': '381c27d235b64eee6aa1a86b3a5f743d6645cc12e0310245a1aedc12937e8278'},
- 'include/map_preview_graphic.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                   'sha256': '62cd477d968cfd3cbb448e3179d46387e7aaff1dbff380ea294966e2c75be131'},
- 'include/mart.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                    'sha256': '395ff19de09d42899ca4884ba1e73230416c78d3a2d1cc36bd6156af8557765e'},
- 'include/mart_bag_task.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                             'sha256': '4ae93ec26179586ec6ab52fa587010f72ebb5b448539890c434a5b39f1c51d2c'},
- 'include/money_box.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                         'sha256': '784bb76340c1fcdd0bc6ab8b744e3ac0f558f93094ed624aff89e0f3794badbc'},
- 'include/naming_screen.h': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>')],
-                             'sha256': '1412fa9fca1f5e41a72a7972533a30a0f6cd56da540021f894efb1566bf6e841'},
- 'include/npc_trade.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                         'sha256': '60fdaaefa219e7c22034b9854e1c560b6fbf490d66fd9965dd1efbf5107c9dd5'},
- 'include/oaks_speech.h': {'edits': [('#include "naming_screen.h"', '#include <naming_screen.h>')],
-                           'sha256': 'cfa819b99578eb82ab3235064504e4f4190c7093b0135faff3f15b3ebac270a1'},
- 'include/oaks_speech_internal.h': {'edits': [('#include "naming_screen.h"', '#include <naming_screen.h>')],
-                                    'sha256': '1bd4b543c1dab254a28283cd206c5846f977b9adda409614794c1bd2266c5d4a'},
- 'include/overlay_01.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "script.h"', '#include <script.h>'),
-                                    ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                    ('#include "field/rock_smash_item.h"', '#include <field/rock_smash_item.h>')],
-                          'sha256': '97188a71e13f674c389814c7c6d574878a66c780ad83d5c69d0f0915d7c92596'},
- 'include/overlay_02.h': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                    ('#include "start_menu.h"', '#include <start_menu.h>')],
-                          'sha256': '76251ec4e44f9ace71d72528781e0ebe190c1c1462a703c30d304beee46b3678'},
- 'include/overlay_03.h': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                    ('#include "mart.h"', '#include <mart.h>')],
-                          'sha256': '7db94952405bea3813d33f4c843b5276dd9a4bddeb990c8db2aa8c729945d8b5'},
- 'include/overlay_04.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                          'sha256': 'b3b9e75e204778a2410140c8a678e3289989437e074d53807a46d1c072232f21'},
- 'include/overlay_124.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                           'sha256': '2a00739a9043fa0c83d8f28269f9c8df6d8f577c6bd97b74124cd64a48f54571'},
- 'include/overlay_2/event_cutscene.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                        'sha256': '684dcb8e91036904c37a659d353c2d16b9f4a8c43b5f6b3cedf968ff0540a19b'},
- 'include/overlay_2/gear_phone_calls.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                    ('#include "gear_phone_ring_manager.h"',
-                                                     '#include <gear_phone_ring_manager.h>')],
-                                          'sha256': 'f8efce19ec85bbda51332e218458989091fea89e4a3606a6004d9b8e0fa7e1bc'},
- 'include/overlay_2/overlay_02_field_utils.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                                'sha256': '29935d057a9a4201f7068d24509a938180424056caea605ce85857f1c05d4cfc'},
- 'include/overlay_25.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                          'sha256': '4312e1145639b53f698c71d12a55f966b09d70a45df3aea721804fe0d7778294'},
- 'include/overlay_26.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                          'sha256': 'a51dcc0b17c60edf819e3d366186744db2f907e39f201a8d96546385c2488691'},
- 'include/overlay_94.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                          'sha256': '62687130e7ce02a4ae59faa74ce90c82884c9ea9f4e40644a5a17282632f7aed'},
- 'include/party_context_menu.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                  'sha256': '1b7da1b1345b103ed698b2312b4e790ce0ec691d2c64bbfee0b69007a5b4454f'},
- 'include/party_menu.h': {'edits': [('#include "field_move.h"', '#include <field_move.h>'),
-                                    ('#include "task.h"', '#include <task.h>')],
-                          'sha256': '01f50a16079f78787b36a14277b2ede0f21b92ec08a6d61b887a38ae300da4d7'},
- 'include/party_menu_items.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                'sha256': '94cdf41c8cbec6ec47f9b7c2d37b2aa7d9a3a8fcac5642f029de69217d66a242'},
- 'include/party_menu_list_items.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                     'sha256': '251d2390a3439a6c18850c606383437145af1702ae9e3db43dd9b74cf7fa4049'},
- 'include/party_menu_sprites.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                  'sha256': '8f71fa678ff39f5c9762969d4b253fd9e148248772ef147a735f3f4427499639'},
- 'include/player_avatar_actions.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                     'sha256': '57227fd2798b4a0d64b8f80700bbede88d4925a4c112128e0dc8f66e2ac88456'},
- 'include/player_avatar_movement.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                      'sha256': '1536559e128c0e19de90d8c30caff071bd92676ade775b15c64b46885c1b9a7d'},
- 'include/pokeathlon_course_task.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                      'sha256': '8cae9c10d4878a38dd62abe32ec450194d409df483712c3535f0b41b0b881b06'},
- 'include/record_mixing/record_mixing.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                           'sha256': 'c4b5febca4d3652fb86ca6dfd02cbe683ac4327893c4410e2b5b64e9ae8a65c5'},
- 'include/record_mixing/record_mixing_internal.h': {'edits': [('#include "record_mixing/record_mixing.h"',
-                                                               '#include <record_mixing/record_mixing.h>')],
-                                                    'sha256': 'c56c614799266a71ad0d22b8bf4303459aa891300728fb266db20ea61106c96e'},
- 'include/render_animation.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                           '#include <field/field_effect_manager.h>')],
-                                'sha256': 'e4ba2ff91d8f70be3a352695914cc9fc493c9101f05201b4a5920093d58c828c'},
- 'include/render_model.h': {'edits': [('#include "field/field_effect_manager.h"',
-                                       '#include <field/field_effect_manager.h>')],
-                            'sha256': '247abd0172fb5597d28acb034e1c9ce14143be593bc644f969cc0c44509ce6d9'},
- 'include/safari_decoration_task.h': {'edits': [('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                ('#include "task.h"', '#include <task.h>')],
-                                      'sha256': 'd754000eff7c712973161103add1bc2c9a8cabe4f12fd4d536f4dc956a76530b'},
- 'include/safari_zone_encounters.h': {'edits': [('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                      'sha256': '720cea8b039fe4347fb9397ac0739388cbbdba785c0eb97abcd8ff6659efae33'},
- 'include/save_local_field_data.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                     'sha256': 'ef15a664fd33ffc9c1b32987f705313dfe1f638b8c1cee758090ff0b5430a75c'},
- 'include/scrcmd.h': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                ('#include "script_manager.h"', '#include <script_manager.h>')],
-                      'sha256': 'd4bc820c70c1a09c7e76969a306e23c52aa50d3b435536d93aebaafcb0bb0fd0'},
- 'include/scrcmd_link_sync.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                                'sha256': 'e7f5c6f3597ec4c0f406cdf4b7c1d579f3bdf62db141fa12d2f5c5e8e9ce261e'},
- 'include/script.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                      'sha256': 'b2f4e6229e58a72a51dde308efdad60b5ca598f6ccbb7164ff6fc43d0b327933'},
- 'include/script_manager.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                              'sha256': '192119de96be9eeaba5c63a060e6668c50fe156cadcfee567e3a81990f4c8c89'},
- 'include/ship_voyage.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                           'sha256': 'd17fd892cd9818f5d8c85348fd2f79034e5a15178e71cb0aebbe7d73bd096f69'},
- 'include/spawn_warp.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                          'sha256': 'e1da8669a5fa9b3e6b490c7c4393cf070e8e53607d71c649b218637a23194875'},
- 'include/spawn_warp_lookup_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                          'sha256': 'be4962b4e71020dd3a1500269434aa50e9da9764e36499a604c8b503c159cdb1'},
- 'include/spin_trade_flow.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                               'sha256': 'ce89d909224836fb455f2d08fc15f25b44b23425110efebd7217628797419d51'},
- 'include/start_menu.h': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "field_use_item.h"', '#include <field_use_item.h>')],
-                          'sha256': '09772417c10d65007e49030f80d801816f646be3d38dd39854652876e86ca270'},
- 'include/task.h': {'edits': [('#include "script_manager.h"', '#include <script_manager.h>')],
-                    'sha256': 'cc6339509e83612441ecd70c46a39d362657fd26fa2c783e6a244c776d594ce6'},
- 'include/terrain_attributes.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                  'sha256': '8c448c5413c45596d2efee81dcbce33d6300566c7563dd639ad9dcd8bd5e2c8a'},
- 'include/touch_save_app.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                              'sha256': '97446472bfc3ec3aa480848fbcbed68887b1e88a6caae8c6cdafbbfd708b3b51'},
- 'include/trade_communication_internal.h': {'edits': [('#include "wireless_trade_select_mon_internal.h"',
-                                                       '#include <wireless_trade_select_mon_internal.h>')],
-                                            'sha256': '8da964e9f8722452a72d50475d29b4c0ad6e779b57f41b7358eb6bcd770bb706'},
- 'include/trainer_card_data.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                 'sha256': '51e6eb027ce74fb31340a066a306ad1c8f9977828ce1eff10a645224e5ac3d2e'},
- 'include/union_chat_log.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "union_room_objects.h"', '#include <union_room_objects.h>')],
-                              'sha256': '93488ce9d8e0861295d42d6b387d1e1fb7a4e30bc189f9ac4ecb7d9a93573bc7'},
- 'include/union_room.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                          'sha256': 'ed24c52ae3f5328178598195a4a34b5ef23cb2c17a577d13cddb8b0806ce3dd1'},
- 'include/union_room_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                   'sha256': '0680c9338b8e19e312b1dff8050f0fcc05c236772724541f8400075736ee80c0'},
- 'include/union_room_objects.h': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>')],
-                                  'sha256': '7c3e353e93fc65f102b420ffcd07e4e49035d18023e2bc28862c5633a46668f3'},
- 'include/union_room_talk.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                               'sha256': '99cc011d56d0de4d3c7a8c50380134e6f79c397f685cec76fa613da45d83d6f5'},
- 'include/vs_recorder_app_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                        'sha256': 'c84b2db1c8067fe030b4d4184a3b51b4f7bb0f2b11464ee79b5910d6d1bce9eb'},
- 'include/wifi_club.h': {'edits': [('#include "task.h"', '#include <task.h>')],
-                         'sha256': '4e7aa69dc0a0909a0fa5d7b70e3dc0ea24ed992b20194d59151e5520539109fb'},
- 'include/wireless_trade_select_mon_internal.h': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                            ('#include "launch_application_internal.h"',
-                                                             '#include <launch_application_internal.h>')],
-                                                  'sha256': '743206c80dab7b3c2180b69d3a5e0cf0f56ebda43d11c13c4a0c9086708f147f'},
- 'src/alph_checks.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                 ('#include "alph_checks.h"', '#include <alph_checks.h>'),
-                                 ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>')],
-                       'sha256': '5301542027b6ddb28ebd173516ea8e4830e920f69eabb0da2cfb5c6634f5fa85'},
- 'src/alph_puzzle.c': {'edits': [('#include "alph_puzzle.h"', '#include <alph_puzzle.h>')],
-                       'sha256': '5d66b30e8fcaf918a4f79a2fd911bbdb48165c3a14dfaba2549bd076c8140ce9'},
- 'src/application/apricorn_box/apricorn_box_input.c': {'edits': [('#include '
-                                                                  '"application/apricorn_box/apricorn_box_screen_internal.h"',
-                                                                  '#include '
-                                                                  '<application/apricorn_box/apricorn_box_screen_internal.h>')],
-                                                       'sha256': 'd91d1ae507ae0f84b522fd70e299e517186c9509399656c82ab233a88d81a64b'},
- 'src/application/apricorn_box/apricorn_box_overlay.c': {'edits': [('#include '
-                                                                    '"application/apricorn_box/apricorn_box_overlay_internal.h"',
-                                                                    '#include '
-                                                                    '<application/apricorn_box/apricorn_box_overlay_internal.h>')],
-                                                         'sha256': 'a7fc6ff655049d41a0721da4fb8933856aaed730d71297fdec9588007e05c97e'},
- 'src/application/apricorn_box/apricorn_box_screens.c': {'edits': [('#include '
-                                                                    '"application/apricorn_box/apricorn_box_screen_internal.h"',
-                                                                    '#include '
-                                                                    '<application/apricorn_box/apricorn_box_screen_internal.h>')],
-                                                         'sha256': '8d919080886298f0d4c30179c1afd5e0ae9e49404955cd9ff1c9be54c9581823'},
- 'src/application/apricorn_box/aprijuice_screen.c': {'edits': [('#include '
-                                                                '"application/apricorn_box/apricorn_box_overlay_internal.h"',
-                                                                '#include '
-                                                                '<application/apricorn_box/apricorn_box_overlay_internal.h>')],
-                                                     'sha256': '541771d63a20adac721672979d20f17cfa9dcbfaaa80c1f634632b11e646b89e'},
- 'src/application/arceus_cinematic.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                        'sha256': 'c1af1b13bce82fdf85df363637bbd1d8332235f6d4bb3da4cd0bfca48dd958a8'},
- 'src/application/bag/bag_app.c': {'edits': [('#include "field_use_item.h"', '#include <field_use_item.h>'),
-                                             ('#include "bag_view.h"', '#include <bag_view.h>')],
-                                   'sha256': 'fc8a60eaa93f065bb63cc6c90c07d2dc684c8c6579555679504db6ee75e0363b'},
- 'src/application/drawing_session/drawing_session.c': {'edits': [('#include "union_room_objects.h"',
-                                                                  '#include <union_room_objects.h>'),
-                                                                 ('#include "union_room_talk.h"',
-                                                                  '#include <union_room_talk.h>'),
-                                                                 ('#include "drawing_session.h"',
-                                                                  '#include <drawing_session.h>')],
-                                                       'sha256': '4aa14cdfc2741077b56677fbdd6b4c719c332cae76d0c825fa82c448fbfd3d36'},
- 'src/application/dress_up/dress_up.c': {'edits': [('#include "launch_application_internal.h"',
-                                                    '#include <launch_application_internal.h>')],
-                                         'sha256': 'b5cb45d6043fdeef81067d1cc3b5f7c0dc6d35cb274a06be823b449f90e350bc'},
- 'src/application/hatch_egg_app.c': {'edits': [('#include "hatch_egg_app_internal.h"',
-                                                '#include <hatch_egg_app_internal.h>')],
-                                     'sha256': '632bf1a74e3b2dbb6fa7d280be9f138bb2b78656d5560454834aa0db102b715c'},
- 'src/application/hatch_egg_gfx.c': {'edits': [('#include "hatch_egg_app_internal.h"',
-                                                '#include <hatch_egg_app_internal.h>')],
-                                     'sha256': '94a80b18f925294b9e8b0a416e9e2a6f5c205932e5d6b79fe221aa191951af2f'},
- 'src/application/ho_oh_cinematic.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                       'sha256': '552708bfc7e5beadc7121443279fdb511cbff70c8beeaf64115db37a97682d42'},
- 'src/application/legendary_cinematic.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                           'sha256': 'c69b3b73477c0bd2a487dcccb1498d5729ff86e12841999e1e2978bfacc4f4cd'},
- 'src/application/lugia_cinematic.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                       'sha256': 'ee49ba8c712d5bc848aba4b06c3db2bd2e11e21f91a7f3f5fc63980d45c09ead'},
- 'src/application/mailbox_app.c': {'edits': [('#include "mailbox_app.h"', '#include <mailbox_app.h>'),
-                                             ('#include "application/mailbox_app_internal.h"',
-                                              '#include <application/mailbox_app_internal.h>')],
-                                   'sha256': '8de0ef036b14ce651e40075406360c1373aadafda79165ab24e46ad768228ad0'},
- 'src/application/mailbox_app_input.c': {'edits': [('#include "application/mailbox_app_internal.h"',
-                                                    '#include <application/mailbox_app_internal.h>')],
-                                         'sha256': 'd2101190859f0143a98826f96d298095a4474f67ff035ec0df0ea3f4e14cd796'},
- 'src/application/mailbox_app_sprites.c': {'edits': [('#include "application/mailbox_app_internal.h"',
-                                                      '#include <application/mailbox_app_internal.h>')],
-                                           'sha256': '8e7d22e3947546171281ab3945d1eaec341296e2b938daa5b9f378250a052fa7'},
- 'src/application/mailbox_app_states.c': {'edits': [('#include "application/mailbox_app_internal.h"',
-                                                     '#include <application/mailbox_app_internal.h>'),
-                                                    ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                          'sha256': '0cdb8e50860f859b85a900d91b85a7da1f1b2b1ebe7dbf77b63baf5ecf83626b'},
- 'src/application/mailbox_app_text.c': {'edits': [('#include "application/mailbox_app_internal.h"',
-                                                   '#include <application/mailbox_app_internal.h>')],
-                                        'sha256': '70da3f6ee94ad700d71965f337c197233c4b3697ec1048de53b42325f1d71da3'},
- 'src/application/palpad/palpad.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                '#include <application/palpad/palpad_internal.h>')],
-                                     'sha256': 'fa9e673038a8a2364e082e3fc27e5fdb701f4dc325adfa9e741609af88f1c866'},
- 'src/application/palpad/palpad_details.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                        '#include <application/palpad/palpad_internal.h>')],
-                                             'sha256': '9f9d22d4e461fb7e92890a6bfaa8282b7d9469c08ddf8406b7b66024c690498b'},
- 'src/application/palpad/palpad_details_text.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                             '#include <application/palpad/palpad_internal.h>')],
-                                                  'sha256': '13a6cb7d3e4079073bf37175453dbe199bedf8ceb0d32c24cae316c01f8f2181'},
- 'src/application/palpad/palpad_friend_code.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                            '#include <application/palpad/palpad_internal.h>')],
-                                                 'sha256': 'd59a51039fa5cd48f89edeb0d83b3fde9d97617dbf0a929bd2c5b2952aa7cb3e'},
- 'src/application/palpad/palpad_menu.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                     '#include <application/palpad/palpad_internal.h>')],
-                                          'sha256': '433caea60d9fc405bfb00a4cacfe06bdac1b2b827f2ec6f9be9bd6fd199cbe74'},
- 'src/application/palpad/palpad_roster.c': {'edits': [('#include "application/palpad/palpad_internal.h"',
-                                                       '#include <application/palpad/palpad_internal.h>')],
-                                            'sha256': 'cef07698d8f91518f1610455a8e1b585d57394b3922bb0d3144e2a5465c023a4'},
- 'src/application/pc_box/pc_box_ui.c': {'edits': [('#include "naming_screen.h"', '#include <naming_screen.h>'),
-                                                  ('#include "bag_view.h"', '#include <bag_view.h>')],
-                                        'sha256': '8ba3d2b1426bc9355fb3dc206fe1b2a0b19705c5baf10f68ac800beed9907920'},
- 'src/application/pokegear/configure/pokegear_configure.c': {'edits': [('#include '
-                                                                        '"application/pokegear/configure/pokegear_configure_internal.h"',
-                                                                        '#include '
-                                                                        '<application/pokegear/configure/pokegear_configure_internal.h>')],
-                                                             'sha256': 'a44b497c7670a28dc2c41a6975a697abccfdad1e038baeb253dc54ce7cdbe502'},
- 'src/application/pokegear/configure/pokegear_configure_gfx.c': {'edits': [('#include '
-                                                                            '"application/pokegear/configure/pokegear_configure_internal.h"',
-                                                                            '#include '
-                                                                            '<application/pokegear/configure/pokegear_configure_internal.h>')],
-                                                                 'sha256': 'dbac374205cf8f899f83a454d4c16683deff9acd1efb7016382f10360eb7f992'},
- 'src/application/pokegear/configure/pokegear_configure_input.c': {'edits': [('#include '
-                                                                              '"application/pokegear/configure/pokegear_configure_internal.h"',
-                                                                              '#include '
-                                                                              '<application/pokegear/configure/pokegear_configure_internal.h>')],
-                                                                   'sha256': '11d8b70a7fca884d3b8756edd055859b0f99cae87fd292e76535b8c79b31da09'},
- 'src/application/pokegear/configure/pokegear_configure_ui.c': {'edits': [('#include '
-                                                                           '"application/pokegear/configure/pokegear_configure_internal.h"',
-                                                                           '#include '
-                                                                           '<application/pokegear/configure/pokegear_configure_internal.h>')],
-                                                                'sha256': '2e11ba01f7ac8ba489665099e69c6a5a2c3dd887ef47073073825901de2cac3a'},
- 'src/application/pokegear/main/pokegear_app_ui.c': {'edits': [('#include "application/pokegear/pokegear_internal.h"',
-                                                                '#include <application/pokegear/pokegear_internal.h>')],
-                                                     'sha256': '7ab4cad7f90df5355485157ec9738911e4ef61cadbce3fa952715ae7cdac47ed'},
- 'src/application/pokegear/main/pokegear_cursor.c': {'edits': [('#include "application/pokegear/pokegear_internal.h"',
-                                                                '#include <application/pokegear/pokegear_internal.h>')],
-                                                     'sha256': '97559c885d14ae45fcbf5df170e110ce08455de39be9b1555fdfc8f74c1965e5'},
- 'src/application/pokegear/main/pokegear_main.c': {'edits': [('#include "gear_phone_ring_manager.h"',
-                                                              '#include <gear_phone_ring_manager.h>'),
-                                                             ('#include "application/pokegear/pokegear_internal.h"',
-                                                              '#include <application/pokegear/pokegear_internal.h>')],
-                                                   'sha256': '31a689327be7120ffe35966cdcd3c0696dc46c8b8c8664dda175981001fc1e39'},
- 'src/application/pokegear/main/pokegear_sprites.c': {'edits': [('#include "application/pokegear/pokegear_internal.h"',
-                                                                 '#include '
-                                                                 '<application/pokegear/pokegear_internal.h>')],
-                                                      'sha256': 'e30553e1f50f720b9b56c3af0289e153780e3f0414f5095d457c2f0164421970'},
- 'src/application/pokegear/map/fly_map.c': {'edits': [('#include "application/pokegear/map/pokegear_map_internal.h"',
-                                                       '#include <application/pokegear/map/pokegear_map_internal.h>')],
-                                            'sha256': '2621668ae95c7296692caa9cedf2cd305162fa352cf7cfe6571352057a1b2373'},
- 'src/application/pokegear/map/fly_map_gfx.c': {'edits': [('#include '
-                                                           '"application/pokegear/map/pokegear_map_internal.h"',
-                                                           '#include '
-                                                           '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                'sha256': '753277c09eb3a192ec774eaf6f0b7d08fc312491e381f0675905da6abe75e3de'},
- 'src/application/pokegear/map/pokegear_map.c': {'edits': [('#include '
-                                                            '"application/pokegear/map/pokegear_map_internal.h"',
-                                                            '#include '
-                                                            '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                 'sha256': 'f8f608e66e29c8985a04a73c09c63c899bc814ee0fcab0bbf99c912fa46861e9'},
- 'src/application/pokegear/map/pokegear_map_flypoints.c': {'edits': [('#include '
-                                                                      '"application/pokegear/map/pokegear_map_internal.h"',
-                                                                      '#include '
-                                                                      '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                           'sha256': '2d9e8863e746194404bc80480202efd71d0357b79610a8f0be82a65bcb57adce'},
- 'src/application/pokegear/map/pokegear_map_gfx.c': {'edits': [('#include '
-                                                                '"application/pokegear/map/pokegear_map_internal.h"',
-                                                                '#include '
-                                                                '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                     'sha256': 'c61bf63479fbc10ff7009b9b5d8aef8b1694bbf51ad9748187710e153277b79b'},
- 'src/application/pokegear/map/pokegear_map_input.c': {'edits': [('#include '
-                                                                  '"application/pokegear/map/pokegear_map_internal.h"',
-                                                                  '#include '
-                                                                  '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                       'sha256': 'd0236d5412a17a336b800c2aab4730035773e88822624753806d13e298496506'},
- 'src/application/pokegear/map/pokegear_map_markings.c': {'edits': [('#include '
-                                                                     '"application/pokegear/map/pokegear_map_internal.h"',
-                                                                     '#include '
-                                                                     '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                          'sha256': '4e59d3f30661e77a73a38f31f48c6a988b783da79cdf82bb71b177ac5b2c5165'},
- 'src/application/pokegear/map/pokegear_map_view.c': {'edits': [('#include '
-                                                                 '"application/pokegear/map/pokegear_map_internal.h"',
-                                                                 '#include '
-                                                                 '<application/pokegear/map/pokegear_map_internal.h>')],
-                                                      'sha256': '8aca0cadc9d902596c276d2927954ecb2bb379e5637c9f7b29f29a4d19d7be54'},
- 'src/application/pokegear/phone/phone_call.c': {'edits': [('#include "application/pokegear/phone/phone_internal.h"',
-                                                            '#include <application/pokegear/phone/phone_internal.h>')],
-                                                 'sha256': 'dfc4dfef8eb5f4b52e1f7ce6afa1a43dbafec8ca0dc404703a9e4c630ade3ff7'},
- 'src/application/pokegear/phone/phone_contact_list_ui.c': {'edits': [('#include '
-                                                                       '"application/pokegear/phone/phone_internal.h"',
-                                                                       '#include '
-                                                                       '<application/pokegear/phone/phone_internal.h>')],
-                                                            'sha256': '68640025d6f1ccad72c2daaecf5bec8dcf2423ac2edafeaef70f01f50123bd59'},
- 'src/application/pokegear/phone/phone_generic_headers.c': {'edits': [('#include '
-                                                                       '"application/pokegear/phone/phone_internal.h"',
-                                                                       '#include '
-                                                                       '<application/pokegear/phone/phone_internal.h>')],
-                                                            'sha256': 'b64f92bf94e3cc9613b12252a3fefa33a68db60603bdb91b8ae3f645d2fa011c'},
- 'src/application/pokegear/phone/phone_script_defs.c': {'edits': [('#include '
-                                                                   '"application/pokegear/phone/phone_internal.h"',
-                                                                   '#include '
-                                                                   '<application/pokegear/phone/phone_internal.h>')],
-                                                        'sha256': 'ff82d76892ba7e4610d68a6897255cf191f4c4bfa8245463ea65b839a1ff7a52'},
- 'src/application/pokegear/phone/pokegear_phone.c': {'edits': [('#include '
-                                                                '"application/pokegear/phone/phone_internal.h"',
-                                                                '#include '
-                                                                '<application/pokegear/phone/phone_internal.h>')],
-                                                     'sha256': '033e09f130b0043bf69ec75d86025378ca5284d89727ffbf8b8e4b380bbaa66d'},
- 'src/application/pokegear/phone/pokegear_phone_contacts.c': {'edits': [('#include '
-                                                                         '"application/pokegear/phone/phone_internal.h"',
-                                                                         '#include '
-                                                                         '<application/pokegear/phone/phone_internal.h>')],
-                                                              'sha256': 'dee62790e9d703035c7f0b4208595b1eb37a71fa3f0ef6a2af2032d0d7c22edf'},
- 'src/application/pokegear/phone/pokegear_phone_gfx.c': {'edits': [('#include '
-                                                                    '"application/pokegear/phone/phone_internal.h"',
-                                                                    '#include '
-                                                                    '<application/pokegear/phone/phone_internal.h>')],
-                                                         'sha256': '2e661068704191e91ab328cec8dd49fd6cd7c2e622d6aeaa001d9299a50d8599'},
- 'src/application/pokegear/phone/pokegear_phone_states.c': {'edits': [('#include '
-                                                                       '"application/pokegear/phone/phone_internal.h"',
-                                                                       '#include '
-                                                                       '<application/pokegear/phone/phone_internal.h>')],
-                                                            'sha256': '122b134d3c761d5db6929bcae26f6cefec4fbb5d172fd817d929c98c70cb0a5f'},
- 'src/application/pokegear/phone/scripts/phone_scripts_baoba.c': {'edits': [('#include '
-                                                                             '"application/pokegear/phone/phone_internal.h"',
-                                                                             '#include '
-                                                                             '<application/pokegear/phone/phone_internal.h>')],
-                                                                  'sha256': '700eb50134fd13971df47967a6fa9c2fe392a2870cc3ebb5d94f044ffc33b162'},
- 'src/application/pokegear/phone/scripts/phone_scripts_bike_shop.c': {'edits': [('#include '
-                                                                                 '"application/pokegear/phone/phone_internal.h"',
-                                                                                 '#include '
-                                                                                 '<application/pokegear/phone/phone_internal.h>')],
-                                                                      'sha256': '490d3ac56f86fd5c1b3c58de8550627990be49cdbfab22475fda95c320b4e402'},
- 'src/application/pokegear/phone/scripts/phone_scripts_bill.c': {'edits': [('#include '
-                                                                            '"application/pokegear/phone/phone_internal.h"',
-                                                                            '#include '
-                                                                            '<application/pokegear/phone/phone_internal.h>')],
-                                                                 'sha256': 'ec2450596def7f1e6c05273034f06ecddad98fbba0962381aab9ecbb719119a3'},
- 'src/application/pokegear/phone/scripts/phone_scripts_blackbelt_kenji.c': {'edits': [('#include '
-                                                                                       '"application/pokegear/phone/phone_internal.h"',
-                                                                                       '#include '
-                                                                                       '<application/pokegear/phone/phone_internal.h>')],
-                                                                            'sha256': 'eb0901ba9d646f45ed4df4e8eeb0566ce3c422f9e19666d19c7784a3e463854c'},
- 'src/application/pokegear/phone/scripts/phone_scripts_buena.c': {'edits': [('#include '
-                                                                             '"application/pokegear/phone/phone_internal.h"',
-                                                                             '#include '
-                                                                             '<application/pokegear/phone/phone_internal.h>')],
-                                                                  'sha256': '85ce464c0ba283cc2424c652e20cccb03122ec89036479f4d744f9598615eb54'},
- 'src/application/pokegear/phone/scripts/phone_scripts_childhood_friend.c': {'edits': [('#include '
-                                                                                        '"application/pokegear/phone/phone_internal.h"',
-                                                                                        '#include '
-                                                                                        '<application/pokegear/phone/phone_internal.h>')],
-                                                                             'sha256': '8d98a5ced6a6bfd6182e7c4414aa96d2ff4afbd7b27159ef593ac66bc94e5166'},
- 'src/application/pokegear/phone/scripts/phone_scripts_daycare_lady.c': {'edits': [('#include "get_egg.h"',
-                                                                                    '#include <get_egg.h>'),
-                                                                                   ('#include '
-                                                                                    '"application/pokegear/phone/phone_internal.h"',
-                                                                                    '#include '
-                                                                                    '<application/pokegear/phone/phone_internal.h>')],
-                                                                         'sha256': '0a7a49f66ff5de5ec318557651f28ee192d4c3422be07b18cf87ec54e549cd4e'},
- 'src/application/pokegear/phone/scripts/phone_scripts_daycare_man.c': {'edits': [('#include "get_egg.h"',
-                                                                                   '#include <get_egg.h>'),
-                                                                                  ('#include '
-                                                                                   '"application/pokegear/phone/phone_internal.h"',
-                                                                                   '#include '
-                                                                                   '<application/pokegear/phone/phone_internal.h>')],
-                                                                        'sha256': 'a7bf4031f8f9715fb3ff5ddb9f3df8e1ca99cf3c0ba20849d33b7d4a843348c3'},
- 'src/application/pokegear/phone/scripts/phone_scripts_generic.c': {'edits': [('#include "map_events.h"',
-                                                                               '#include <map_events.h>'),
-                                                                              ('#include '
-                                                                               '"application/pokegear/phone/phone_internal.h"',
-                                                                               '#include '
-                                                                               '<application/pokegear/phone/phone_internal.h>')],
-                                                                    'sha256': '9cb7f19be7d35405eac1c14436a5c4460eda317c06f053c37832f017e863032d'},
- 'src/application/pokegear/phone/scripts/phone_scripts_gym_leader.c': {'edits': [('#include '
-                                                                                  '"application/pokegear/phone/phone_internal.h"',
-                                                                                  '#include '
-                                                                                  '<application/pokegear/phone/phone_internal.h>')],
-                                                                       'sha256': 'd78a84d048c714cec7f12e2b85621646bf42f1200e9a1dcd53b213448901cb6f'},
- 'src/application/pokegear/phone/scripts/phone_scripts_juggler_irwin.c': {'edits': [('#include '
-                                                                                     '"application/pokegear/phone/phone_internal.h"',
-                                                                                     '#include '
-                                                                                     '<application/pokegear/phone/phone_internal.h>')],
-                                                                          'sha256': '669fa4b31546e3082da83c81e676f81cef8e8e0c3f22c89adc963beec3fe759c'},
- 'src/application/pokegear/phone/scripts/phone_scripts_kurt.c': {'edits': [('#include '
-                                                                            '"application/pokegear/phone/phone_internal.h"',
-                                                                            '#include '
-                                                                            '<application/pokegear/phone/phone_internal.h>')],
-                                                                 'sha256': 'e97b6f5ae3dae20ff9778f63a219f9b41f685c6a0469df546faeaef340a80c0b'},
- 'src/application/pokegear/phone/scripts/phone_scripts_mother.c': {'edits': [('#include '
-                                                                              '"application/pokegear/phone/phone_internal.h"',
-                                                                              '#include '
-                                                                              '<application/pokegear/phone/phone_internal.h>')],
-                                                                   'sha256': '6cfcbea5be0c9021a8e667808b4c279d5eb0b4165c86f3b2072d6c4a6d426c41'},
- 'src/application/pokegear/phone/scripts/phone_scripts_prof_elm.c': {'edits': [('#include '
-                                                                                '"application/pokegear/phone/phone_internal.h"',
-                                                                                '#include '
-                                                                                '<application/pokegear/phone/phone_internal.h>')],
-                                                                     'sha256': '4c788d3180a4cbb1869fdeca366b747fc991bb0e402c38173932bc747cd64cd8'},
- 'src/application/pokegear/phone/scripts/phone_scripts_prof_oak.c': {'edits': [('#include '
-                                                                                '"application/pokegear/phone/phone_internal.h"',
-                                                                                '#include '
-                                                                                '<application/pokegear/phone/phone_internal.h>')],
-                                                                     'sha256': 'a091d0b67605b81584d24e6642ab15fa3d2e0233359088d08b31f50349ca01d3'},
- 'src/application/pokegear/radio/pokegear_radio.c': {'edits': [('#include '
-                                                                '"application/pokegear/radio/radio_internal.h"',
-                                                                '#include '
-                                                                '<application/pokegear/radio/radio_internal.h>')],
-                                                     'sha256': '0fd3fce4dff58c8ec7597ecd6b4254c0b7e6db4c2eba2e3edb937c285f3dfbe2'},
- 'src/application/pokegear/radio/pokegear_radio_gfx.c': {'edits': [('#include '
-                                                                    '"application/pokegear/radio/radio_internal.h"',
-                                                                    '#include '
-                                                                    '<application/pokegear/radio/radio_internal.h>')],
-                                                         'sha256': '30e814edacfab43470d7617145d267a752030454eb3604a52d213143e928baa7'},
- 'src/application/pokegear/radio/pokegear_radio_tuner.c': {'edits': [('#include '
-                                                                      '"application/pokegear/radio/radio_internal.h"',
-                                                                      '#include '
-                                                                      '<application/pokegear/radio/radio_internal.h>')],
-                                                           'sha256': '3f1abeedd473b88ccc5a3dbc8ed8b1ddddc5f60d4babb5ea1aed5586d8c9e3af'},
- 'src/application/pokegear/radio/radio_show.c': {'edits': [('#include "application/pokegear/radio/radio_internal.h"',
-                                                            '#include <application/pokegear/radio/radio_internal.h>')],
-                                                 'sha256': 'e806399a008bc058997eb41a2a2be5dcffaad0e58c814c229a984ba028ba93b5'},
- 'src/application/pokegear/radio/shows/buenas_password.c': {'edits': [('#include '
-                                                                       '"application/pokegear/radio/radio_internal.h"',
-                                                                       '#include '
-                                                                       '<application/pokegear/radio/radio_internal.h>')],
-                                                            'sha256': 'd1346c2799af2d8100a8bfadd06cc25c67419889bc4a97f89c95c4892f21ce53'},
- 'src/application/pokegear/radio/shows/commercials.c': {'edits': [('#include '
-                                                                   '"application/pokegear/radio/radio_internal.h"',
-                                                                   '#include '
-                                                                   '<application/pokegear/radio/radio_internal.h>')],
-                                                        'sha256': 'ff66dbfe115379b68f22612552a73fd6028a2c94c78cf83147c153df1e9cb671'},
- 'src/application/pokegear/radio/shows/mahogany_signal.c': {'edits': [('#include '
-                                                                       '"application/pokegear/radio/radio_internal.h"',
-                                                                       '#include '
-                                                                       '<application/pokegear/radio/radio_internal.h>')],
-                                                            'sha256': 'e1f4226bcb34dcbdd8426f3a5eb78cf1fb440c2855ffe40ac56d19ffe97ba74f'},
- 'src/application/pokegear/radio/shows/poke_flute.c': {'edits': [('#include '
-                                                                  '"application/pokegear/radio/radio_internal.h"',
-                                                                  '#include '
-                                                                  '<application/pokegear/radio/radio_internal.h>')],
-                                                       'sha256': '33371c7bd2e67aadc8f146f219a1b5ac1ab881d12cb3c5f67399924d1c19035f'},
- 'src/application/pokegear/radio/shows/pokemon_music.c': {'edits': [('#include '
-                                                                     '"application/pokegear/radio/radio_internal.h"',
-                                                                     '#include '
-                                                                     '<application/pokegear/radio/radio_internal.h>')],
-                                                          'sha256': 'a951aec576c4898f87633414592863d1eb269bc7c493700d85b3a082f885ae78'},
- 'src/application/pokegear/radio/shows/pokemon_search_party.c': {'edits': [('#include '
-                                                                            '"application/pokegear/radio/radio_internal.h"',
-                                                                            '#include '
-                                                                            '<application/pokegear/radio/radio_internal.h>')],
-                                                                 'sha256': 'da225e52c2148a59a20712175e3328db6cd674d845917767e7ac22b5dcc4130b'},
- 'src/application/pokegear/radio/shows/pokemon_talk.c': {'edits': [('#include "map_events.h"',
-                                                                    '#include <map_events.h>'),
-                                                                   ('#include '
-                                                                    '"application/pokegear/radio/radio_internal.h"',
-                                                                    '#include '
-                                                                    '<application/pokegear/radio/radio_internal.h>')],
-                                                         'sha256': 'd7e466551bf65accf356b1f632743eea13472a1ebd8418cef6f28fdb7c3ff3f1'},
- 'src/application/pokegear/radio/shows/serial_radio_drama.c': {'edits': [('#include '
-                                                                          '"application/pokegear/radio/radio_internal.h"',
-                                                                          '#include '
-                                                                          '<application/pokegear/radio/radio_internal.h>')],
-                                                               'sha256': 'f567b5b4831c3af01ebda88e0be4cf07eb2fa6c7ca37f0b705f221450799b22c'},
- 'src/application/pokegear/radio/shows/team_rocket.c': {'edits': [('#include '
-                                                                   '"application/pokegear/radio/radio_internal.h"',
-                                                                   '#include '
-                                                                   '<application/pokegear/radio/radio_internal.h>')],
-                                                        'sha256': 'bea9b8464514549b7b65c6f2d037d2e8bf8efe19163aee13779458596bd27554'},
- 'src/application/pokegear/radio/shows/that_town_these_people.c': {'edits': [('#include '
-                                                                              '"application/pokegear/radio/radio_internal.h"',
-                                                                              '#include '
-                                                                              '<application/pokegear/radio/radio_internal.h>')],
-                                                                   'sha256': 'd88203159ba7bfe55055f28870c5eea6314ed91b6df2e4ee9d98642b3bb5c019'},
- 'src/application/pokegear/radio/shows/trainer_profiles.c': {'edits': [('#include '
-                                                                        '"application/pokegear/radio/radio_internal.h"',
-                                                                        '#include '
-                                                                        '<application/pokegear/radio/radio_internal.h>')],
-                                                             'sha256': '4ada9ca9ff568424b5a9fb2147b697d603cd97ab4039bb76ad47c0d93b189628'},
- 'src/application/pokegear/radio/shows/unown.c': {'edits': [('#include "application/pokegear/radio/radio_internal.h"',
-                                                             '#include <application/pokegear/radio/radio_internal.h>')],
-                                                  'sha256': 'bcb742d301f42321cc232a05c57b26a60507d4d403af6e909ab004728e8689ac'},
- 'src/application/pokewalker/pokewalker_event_log.c': {'edits': [('#include "follow_mon.h"',
-                                                                  '#include <follow_mon.h>')],
-                                                       'sha256': 'dadfc8c4d5df42788e5ff19c79c6fd96fc31b7ae5a0ddb8776ab18350cd7b380'},
- 'src/application/pokewalker/pokewalker_link.c': {'edits': [('#include "save_local_field_data.h"',
-                                                             '#include <save_local_field_data.h>')],
-                                                  'sha256': 'c7ac897437bfa929d471b92727eb73513caa83c1b0af8420828df916390a702f'},
- 'src/application/safari_area_customizer.c': {'edits': [('#include "safari_zone_encounters.h"',
-                                                         '#include <safari_zone_encounters.h>')],
-                                              'sha256': '6be301976e534501a42b8f31768304952a1457ac6dd8604682f0e87a0aff0657'},
- 'src/application/safari_decoration.c': {'edits': [('#include "safari_zone_encounters.h"',
-                                                    '#include <safari_zone_encounters.h>')],
-                                         'sha256': '021a3f8b12b527c7ea8c524f7fedbb8f00b5074a2cf700b342145c54a62dde86'},
- 'src/application/spin_trade/spin_trade_app.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                            '#include <field/field_effect_manager.h>'),
-                                                           ('#include "render_animation.h"',
-                                                            '#include <render_animation.h>'),
-                                                           ('#include "render_model.h"', '#include <render_model.h>'),
-                                                           ('#include "field_bgm.h"', '#include <field_bgm.h>')],
-                                                 'sha256': 'e624305ff00f6dbbea0b56c4b68ddfb217e0e362f06db1525bfd5ebed7c2af42'},
- 'src/application/spin_trade/spin_trade_group_app.c': {'edits': [('#include "union_room_talk.h"',
-                                                                  '#include <union_room_talk.h>')],
-                                                       'sha256': 'd6ed06d1c129a1906e502ee28100775c3e7bf89a21f73df3eeabf16df2397620'},
- 'src/application/view_photo.c': {'edits': [('#include "application/view_photo.h"',
-                                             '#include <application/view_photo.h>'),
-                                            ('#include "field_take_photo.h"', '#include <field_take_photo.h>')],
-                                  'sha256': '8bdcfada713020918127a740659454dec60724e8dc34a1494d9f1d1073413fd2'},
- 'src/apricorn_tree_sys.c': {'edits': [('#include "apricorn_tree.h"', '#include <apricorn_tree.h>')],
-                             'sha256': '545215087fa7cd939f8e2681617fc387e694546cb4d6daadf367c69c83a9fc7a'},
- 'src/bag.c': {'edits': [('#include "bag_view.h"', '#include <bag_view.h>')],
-               'sha256': '9f4e668cf9df3553c5ad5335814e00c0cb4ba688dbb4895fe34e2a7adba5d5b5'},
- 'src/bag_view.c': {'edits': [('#include "bag_view.h"', '#include <bag_view.h>')],
-                    'sha256': '8f42e519f5461f753ed14b9ebe48082931a80e871f25bc94e4a4b73dde87a46c'},
- 'src/battle/battle_command.c': {'edits': [('#include "naming_screen.h"', '#include <naming_screen.h>')],
-                                 'sha256': 'c27ebd803506094796eb0fe48fe907471f2639f21ab16bee19f7a24f6c90a9ec'},
- 'src/battle/battle_party_menu.c': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                    'sha256': '91d886464d21698f11263ef3a5c131e46815e7242da6126b25beae5d214e457c'},
- 'src/battle/battle_setup.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                         ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                         ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                         ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                         ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                         ('#include "gear_phone_ring_manager.h"',
-                                          '#include <gear_phone_ring_manager.h>')],
-                               'sha256': 'f8db703f5676bfc4a97825f2601b4ac37a81c75e2f301481049d2b2f61316c31'},
- 'src/battle/link_battle_screen.c': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                                     'sha256': '7c065285ee2be778d86baf921a81af7d25fd39d9c17548f3f946f63232914e34'},
- 'src/battle_frontier_communication.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                         'sha256': '904ce777144f0b84babcc76d0e558343002c50da96d441ed608de0ed42923e5f'},
- 'src/battle_greeting_task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                          ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                          ('#include "task.h"', '#include <task.h>'),
-                                          ('#include "battle_greeting_task.h"', '#include <battle_greeting_task.h>')],
-                                'sha256': '0c5437ca5a18581f26da173940c9c1a6fbeb7725bc17309bc7de0b6a52a6c36e'},
- 'src/battle_intro_config.c': {'edits': [('#include "field/encounter_effect.h"',
-                                          '#include <field/encounter_effect.h>')],
-                               'sha256': '4654d07cefde640d250f5da0021cd44194d1da522b71231973c41551cd81fcd2'},
- 'src/battle_transition_task.c': {'edits': [('#include "field/encounter_effect.h"',
-                                             '#include <field/encounter_effect.h>'),
-                                            ('#include "task.h"', '#include <task.h>'),
-                                            ('#include "battle_transition_task.h"',
-                                             '#include <battle_transition_task.h>')],
-                                  'sha256': 'f370dd84521309d7659b3a12002f67369e9d219d5a81c4e35308e938d9c79c43'},
- 'src/berry_pots.c': {'edits': [('#include "bag_view.h"', '#include <bag_view.h>')],
-                      'sha256': '8b315a77c1d9289f7b7119d5e5f78f58e8e6b114ec014ad8db981cde15c2f5c7'},
- 'src/berry_pots_app.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                                    ('#include "berry_pots_app_internal.h"', '#include <berry_pots_app_internal.h>')],
-                          'sha256': 'a5006e718ae43599a681e429cca118433762208ecf4f0b719289f8de9a65708b'},
- 'src/berry_pots_app_tasks.c': {'edits': [('#include "berry_pots_app_internal.h"',
-                                           '#include <berry_pots_app_internal.h>')],
-                                'sha256': '2d468d0b6ba502b3228c05f278712c5eb9acad7bbc593ccd3d952f65db18d427'},
- 'src/blackout.c': {'edits': [('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                              ('#include "blackout.h"', '#include <blackout.h>'),
-                              ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                              ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                              ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                              ('#include "spawn_warp.h"', '#include <spawn_warp.h>'),
-                              ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                              ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                    'sha256': '7622e2c90e8045a177a749c59d9a5dd0104904759d9c75b54a23ef3e263b33ee'},
- 'src/catching_show.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                   ('#include "catching_show.h"', '#include <catching_show.h>'),
-                                   ('#include "field_terrain.h"', '#include <field_terrain.h>')],
-                         'sha256': '789e82b499e21b6ff1d21dbf30ba2262bfdb9932daa52519e6d260ec0539e7b6'},
- 'src/certificates_app.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                      ('#include "launch_application.h"', '#include <launch_application.h>')],
-                            'sha256': '5821917573e18da061188696b5aa861f8d1d100088b824f0309880fdea0faa22'},
- 'src/choose_starter.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "choose_starter.h"', '#include <choose_starter.h>'),
-                                    ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                    ('#include "task.h"', '#include <task.h>')],
-                          'sha256': '5cc4951372b7921da3abc19b93a578c78661838a696a409683480e15b744e4c0'},
- 'src/choose_starter_app.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>')],
-                              'sha256': 'c4a0d169605f4e076d24e7cfffc34537db26bb3892bc20cc2073f91f7724a7f8'},
- 'src/colosseum.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                               ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                               ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                               ('#include "colosseum_internal.h"', '#include <colosseum_internal.h>'),
-                               ('#include "launch_application.h"', '#include <launch_application.h>'),
-                               ('#include "map_object_movement_commands.h"',
-                                '#include <map_object_movement_commands.h>'),
-                               ('#include "union_room_internal.h"', '#include <union_room_internal.h>')],
-                     'sha256': '96fd4ae6aa22dd2c4d77616f6e079d973fdd2363854d54d5af1da96e65b8502c'},
- 'src/comm_player_manager.c': {'edits': [('#include "comm_player_manager_internal.h"',
-                                          '#include <comm_player_manager_internal.h>')],
-                               'sha256': '38441d333bb2138576e7d4cf00d75990b287bb7873bf41cce7019bc17cabd92c'},
- 'src/comm_player_sync.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                      ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                      ('#include "comm_player_manager_internal.h"',
-                                       '#include <comm_player_manager_internal.h>'),
-                                      ('#include "field_system.h"', '#include <field_system.h>'),
-                                      ('#include "map_object_movement_commands_internal.h"',
-                                       '#include <map_object_movement_commands_internal.h>'),
-                                      ('#include "map_object_movement_utilities.h"',
-                                       '#include <map_object_movement_utilities.h>'),
-                                      ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                      ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                      ('#include "map_events.h"', '#include <map_events.h>')],
-                            'sha256': 'b5e1a3ff438a2a77df92989e2877bdd1dc9c3cd63ae1836e2f33f613e4a62266'},
- 'src/communication_club_link.c': {'edits': [('#include "encounter.h"', '#include <encounter.h>'),
-                                             ('#include "communication_club_link_internal.h"',
-                                              '#include <communication_club_link_internal.h>'),
-                                             ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                             ('#include "trainer_card_data.h"', '#include <trainer_card_data.h>')],
-                                   'sha256': '5f5cda8d04b60e54ab7865816af8a4b3227c34c46f6739381154c13aa54a540d'},
- 'src/data/fieldmap/script_cmd_table.h': {'edits': [('#include "script.h"', '#include <script.h>')],
-                                          'sha256': '57637c19321d44dde7106f4190db9aaa681bfe3089d2015bd154903aa7dcd040'},
- 'src/drawing_session_link.c': {'edits': [('#include "drawing_session.h"', '#include <drawing_session.h>')],
-                                'sha256': 'b32f800740e12d38641bb8f60b1be9ebf64b005d0a0a1059b3437f565cd68ee1'},
- 'src/encounter.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                               ('#include "encounter.h"', '#include <encounter.h>'),
-                               ('#include "field_system.h"', '#include <field_system.h>'),
-                               ('#include "field/encounter_check.h"', '#include <field/encounter_check.h>'),
-                               ('#include "blackout.h"', '#include <blackout.h>'),
-                               ('#include "catching_show.h"', '#include <catching_show.h>'),
-                               ('#include "launch_application.h"', '#include <launch_application.h>'),
-                               ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                               ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                               ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                               ('#include "communication_club_link.h"', '#include <communication_club_link.h>'),
-                               ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>'),
-                               ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                               ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                               ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                               ('#include "game_clear.h"', '#include <game_clear.h>'),
-                               ('#include "battle_transition_task.h"', '#include <battle_transition_task.h>'),
-                               ('#include "field_overworld_transition.h"', '#include <field_overworld_transition.h>'),
-                               ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                     'sha256': 'f485ebaee76424affe8a9a89de4e6cf66a3d7675ff9f55b4ecc564f9d2265f05'},
- 'src/field/apricorn_tree_anim.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                              ('#include "field/apricorn_tree_anim.h"',
-                                               '#include <field/apricorn_tree_anim.h>'),
-                                              ('#include "player_avatar_actions.h"',
-                                               '#include <player_avatar_actions.h>'),
-                                              ('#include "field/map_object_render.h"',
-                                               '#include <field/map_object_render.h>'),
-                                              ('#include "script.h"', '#include <script.h>'),
-                                              ('#include "player_avatar_movement.h"',
-                                               '#include <player_avatar_movement.h>'),
-                                              ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                              ('#include "map_object_movement_commands.h"',
-                                               '#include <map_object_movement_commands.h>'),
-                                              ('#include "task.h"', '#include <task.h>')],
-                                    'sha256': 'b683f9c1a54fe44dc6c140f78e90dd0f3b536f8ce1e52f3cde7952b0f092d1cd'},
- 'src/field/bottom_screen_app.c': {'edits': [('#include "field/bottom_screen_app.h"',
-                                              '#include <field/bottom_screen_app.h>'),
-                                             ('#include "field/pal_pad_registration.h"',
-                                              '#include <field/pal_pad_registration.h>'),
-                                             ('#include "field/touchscreen_choice_menu.h"',
-                                              '#include <field/touchscreen_choice_menu.h>'),
-                                             ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                   'sha256': '5e33fc8e6b1aa4e32ff04dfedadf9be17423e3b1e8a9c9807481b29839171653'},
- 'src/field/door_transition.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                           ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                           ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                           ('#include "field/door_transition.h"', '#include <field/door_transition.h>'),
-                                           ('#include "field/field_follow_mon.h"',
-                                            '#include <field/field_follow_mon.h>'),
-                                           ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                           ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                           ('#include "field_transition_effects.h"',
-                                            '#include <field_transition_effects.h>'),
-                                           ('#include "map_object_movement_commands.h"',
-                                            '#include <map_object_movement_commands.h>'),
-                                           ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                 'sha256': '5fa3e5a79182e7deb2ac0b1129b3375b095d1469da82e8302392e3e62e7272ae'},
- 'src/field/dowsing_mchn.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                        ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                        ('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "field/bottom_screen_app.h"',
-                                         '#include <field/bottom_screen_app.h>'),
-                                        ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                        ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                        ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                        ('#include "task.h"', '#include <task.h>')],
-                              'sha256': 'ee73a6c8ff1bfc7c741e76ede6149a3e910d8984957770c2d2849b0447c837b6'},
- 'src/field/draw_map_name.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                               'sha256': '58e967d254f32661be1e35d0296c1ce5945e74bb5820e16080eaf6daf9aa60fe'},
- 'src/field/encounter_check.c': {'edits': [('#include "encounter.h"', '#include <encounter.h>'),
-                                           ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                           ('#include "player_avatar_movement.h"',
-                                            '#include <player_avatar_movement.h>'),
-                                           ('#include "field/encounter_check.h"', '#include <field/encounter_check.h>'),
-                                           ('#include "overlay_2/gear_phone_calls.h"',
-                                            '#include <overlay_2/gear_phone_calls.h>'),
-                                           ('#include "bug_contest.h"', '#include <bug_contest.h>'),
-                                           ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                           ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                           ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                           ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                           ('#include "map_events.h"', '#include <map_events.h>'),
-                                           ('#include "safari_zone_encounters.h"',
-                                            '#include <safari_zone_encounters.h>'),
-                                           ('#include "alph_puzzle.h"', '#include <alph_puzzle.h>')],
-                                 'sha256': 'c7f55fabe99a59ad470d6f9a3ecbf1ca01f1911fe0fde2135369ea4945170be8'},
- 'src/field/encounter_effect.c': {'edits': [('#include "field/encounter_effect.h"',
-                                             '#include <field/encounter_effect.h>')],
-                                  'sha256': '480631162b8d1a2d1b2378b16047c40fec17521d0da014eca3c9fa8dda9be235'},
- 'src/field/encounter_effect_frontier_link.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                           '#include <field/encounter_effect.h>')],
-                                                'sha256': '6d0643a1f1e255841679c622a01070ed23eacf99d70e1d66b4dbdc075827158c'},
- 'src/field/encounter_effect_kimono_girl.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                         '#include <field/encounter_effect.h>')],
-                                              'sha256': '829903ecce2ff0e04dd5a9c0ec1afe3b2532902fdaa840877662778843632e28'},
- 'src/field/encounter_effect_leaders.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                     '#include <field/encounter_effect.h>'),
-                                                    ('#include "field/encounter_effect_leaders.h"',
-                                                     '#include <field/encounter_effect_leaders.h>')],
-                                          'sha256': 'a987fb34d5a962d604c4d05f71c70feca19ee6390e3f1c510ca60a43a68ac039'},
- 'src/field/encounter_effect_leaders_util.c': {'edits': [('#include "field/encounter_effect_leaders.h"',
-                                                          '#include <field/encounter_effect_leaders.h>')],
-                                               'sha256': 'a8e1a094c2b5eaab6a3719925eadf6d6db49e458b685dbcff29b3f25a6b21bb8'},
- 'src/field/encounter_effect_particles.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                       '#include <field/encounter_effect.h>'),
-                                                      ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>')],
-                                            'sha256': '72f77b5491f91ce8e7c8aa83393484a69e110f93b1f85a1db1297882eaabc4e2'},
- 'src/field/encounter_effect_rocket.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                    '#include <field/encounter_effect.h>')],
-                                         'sha256': '1103ad6f4a3967b61157cb282a7ad1fdf5460c42d52fab90e0dbdcecf97b857b'},
- 'src/field/encounter_effect_trainer.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                     '#include <field/encounter_effect.h>')],
-                                          'sha256': 'e7d1760f26f974a8e6e79338fa973c0f7d8e408e3c69e47906a16d8c64181877'},
- 'src/field/encounter_effect_util.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                  '#include <field/encounter_effect.h>')],
-                                       'sha256': 'c03b031eab923518c518762944a8058d67f7cee7a2d454e47d2593145baa2cfd'},
- 'src/field/encounter_effect_wave_direction.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                            '#include <field/encounter_effect.h>')],
-                                                 'sha256': '38cda30d19b1d98c166b815319693955a6183b723f2cdc6aeeb4a8de8a9f91a7'},
- 'src/field/encounter_effect_wild.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                  '#include <field/encounter_effect.h>')],
-                                       'sha256': '959fb3fa56d8b51b567b10ce38850e8fdc80ab70978f2497377c44854519d313'},
- 'src/field/encounter_effect_wipe.c': {'edits': [('#include "field/encounter_effect.h"',
-                                                  '#include <field/encounter_effect.h>')],
-                                       'sha256': '00ae7c0b170cd8add8f6acc889d97c48571de1cb264099de93ad1de9102e905b'},
- 'src/field/event_cutscene_celebi.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                 ('#include "field/map_object_render.h"',
-                                                  '#include <field/map_object_render.h>'),
-                                                 ('#include "overlay_2/event_cutscene.h"',
-                                                  '#include <overlay_2/event_cutscene.h>'),
-                                                 ('#include "field/field_follow_mon.h"',
-                                                  '#include <field/field_follow_mon.h>'),
-                                                 ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                 ('#include "map_object_movement_commands.h"',
-                                                  '#include <map_object_movement_commands.h>'),
-                                                 ('#include "task.h"', '#include <task.h>')],
-                                       'sha256': '90bae6b9e665c49fb439cc28c4b2037db7afd0091e7451b583af72cd470d530f'},
- 'src/field/event_cutscene_shaymin.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                  ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                  ('#include "field/map_object_render.h"',
-                                                   '#include <field/map_object_render.h>'),
-                                                  ('#include "field/field_shaymin_form_change.h"',
-                                                   '#include <field/field_shaymin_form_change.h>'),
-                                                  ('#include "overlay_2/event_cutscene.h"',
-                                                   '#include <overlay_2/event_cutscene.h>'),
-                                                  ('#include "field/field_follow_mon.h"',
-                                                   '#include <field/field_follow_mon.h>'),
-                                                  ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                  ('#include "map_object_movement_commands.h"',
-                                                   '#include <map_object_movement_commands.h>'),
-                                                  ('#include "task.h"', '#include <task.h>')],
-                                        'sha256': '6118d4009fe3a7232fd772892a495020346ba2ec8dec19656efebafa6cb89c80'},
- 'src/field/event_cutscene_sinjoh.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                 ('#include "field/map_object_render.h"',
-                                                  '#include <field/map_object_render.h>'),
-                                                 ('#include "overlay_2/event_cutscene.h"',
-                                                  '#include <overlay_2/event_cutscene.h>'),
-                                                 ('#include "field/field_follow_mon.h"',
-                                                  '#include <field/field_follow_mon.h>'),
-                                                 ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                 ('#include "map_object_movement_commands.h"',
-                                                  '#include <map_object_movement_commands.h>'),
-                                                 ('#include "task.h"', '#include <task.h>')],
-                                       'sha256': 'cd996385d5c99353ff3d644061e2671c1774eb4f7c04cc0b225a333e216133c1'},
- 'src/field/fashion_case_gifts.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                              ('#include "field/map_object_render.h"',
-                                               '#include <field/map_object_render.h>'),
-                                              ('#include "field/field_follow_mon.h"',
-                                               '#include <field/field_follow_mon.h>'),
-                                              ('#include "map_object_movement_commands.h"',
-                                               '#include <map_object_movement_commands.h>')],
-                                    'sha256': 'd5ab3b930410083113a39c1cc9d2a66489ed9eb191609f0b93f295e7585c55d1'},
- 'src/field/field_3d_object_task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                      'sha256': '135a8c4abea576abf824f11b114a2204b5122f81b225369e797f9b5dd898d8b1'},
- 'src/field/field_apricorn_regrowth.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                    '#include <field/field_effect_manager.h>'),
-                                                   ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                   ('#include "map_object.h"', '#include <map_object.h>'),
-                                                   ('#include "field_apricorn_regrowth.h"',
-                                                    '#include <field_apricorn_regrowth.h>'),
-                                                   ('#include "field/field_effect_helpers.h"',
-                                                    '#include <field/field_effect_helpers.h>'),
-                                                   ('#include "field/map_object_models.h"',
-                                                    '#include <field/map_object_models.h>')],
-                                         'sha256': '97438c01f2671062dc4d2c176655b595f5ab5d1f4edde2ad79404daf95922ddf'},
- 'src/field/field_bottom_screen.c': {'edits': [('#include "field/field_bottom_screen.h"',
-                                                '#include <field/field_bottom_screen.h>'),
-                                               ('#include "application/view_photo.h"',
-                                                '#include <application/view_photo.h>'),
-                                               ('#include "field/bottom_screen_app.h"',
-                                                '#include <field/bottom_screen_app.h>'),
-                                               ('#include "field_interaction.h"', '#include <field_interaction.h>')],
-                                     'sha256': 'ac77ff8607f93868443efefe16af53af1b6110a982ebe38ce62d03a0221bf7eb'},
- 'src/field/field_camera.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "field/field_camera.h"', '#include <field/field_camera.h>')],
-                              'sha256': 'caebb16e54cd5eba1697d14aa7fad6e842326b1a1e82ef19911d1dbfc48d380a'},
- 'src/field/field_camera_zoom.c': {'edits': [('#include "field/field_camera_zoom.h"',
-                                              '#include <field/field_camera_zoom.h>')],
-                                   'sha256': '287bd72faafd62406384bb61321f2b54f229e65b599cef01427919b95c5a59fd'},
- 'src/field/field_control.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                         ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                         ('#include "encounter.h"', '#include <encounter.h>'),
-                                         ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                         ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                                         ('#include "field/spin_slide.h"', '#include <field/spin_slide.h>'),
-                                         ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                         ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                         ('#include "field/encounter_check.h"', '#include <field/encounter_check.h>'),
-                                         ('#include "overlay_2/event_cutscene.h"',
-                                          '#include <overlay_2/event_cutscene.h>'),
-                                         ('#include "overlay_2/gear_phone_calls.h"',
-                                          '#include <overlay_2/gear_phone_calls.h>'),
-                                         ('#include "overlay_2/overlay_02_field_utils.h"',
-                                          '#include <overlay_2/overlay_02_field_utils.h>'),
-                                         ('#include "catching_show.h"', '#include <catching_show.h>'),
-                                         ('#include "get_egg.h"', '#include <get_egg.h>'),
-                                         ('#include "gymmick_init.h"', '#include <gymmick_init.h>'),
-                                         ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                         ('#include "field/bottom_screen_app.h"',
-                                          '#include <field/bottom_screen_app.h>'),
-                                         ('#include "overlay_04.h"', '#include <overlay_04.h>'),
-                                         ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                         ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                         ('#include "headbutt_tree.h"', '#include <headbutt_tree.h>'),
-                                         ('#include "field_transition_effects.h"',
-                                          '#include <field_transition_effects.h>'),
-                                         ('#include "communication_club_link.h"',
-                                          '#include <communication_club_link.h>'),
-                                         ('#include "union_room.h"', '#include <union_room.h>'),
-                                         ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                         ('#include "map_object_behavior.h"', '#include <map_object_behavior.h>'),
-                                         ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                         ('#include "map_events.h"', '#include <map_events.h>'),
-                                         ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                                         ('#include "start_menu.h"', '#include <start_menu.h>')],
-                               'sha256': '0582d596b27d52aec1895c0d47d80a824ad0323a8051e672c8e6d65fdbf12c06'},
- 'src/field/field_effect_manager.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                ('#include "map_object.h"', '#include <map_object.h>'),
-                                                ('#include "field/field_effect_manager_internal.h"',
-                                                 '#include <field/field_effect_manager_internal.h>'),
-                                                ('#include "field_system.h"', '#include <field_system.h>'),
-                                                ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                                ('#include "render_model.h"', '#include <render_model.h>')],
-                                      'sha256': 'abea5319c59e84dac238835203fc0c26a60e754d5855c2edbb4311bbf2c8b606'},
- 'src/field/field_emote_bubble.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                               '#include <field/field_effect_manager.h>'),
-                                              ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                              ('#include "map_object.h"', '#include <map_object.h>'),
-                                              ('#include "field_emote_bubble.h"', '#include <field_emote_bubble.h>'),
-                                              ('#include "field/field_effect_helpers.h"',
-                                               '#include <field/field_effect_helpers.h>'),
-                                              ('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                              ('#include "task.h"', '#include <task.h>')],
-                                    'sha256': 'c3e220426dc7eff551f5359a861be4ba6a65400e767419442ae97721c6660473'},
- 'src/field/field_emote_mark.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "field/map_object_models.h"',
-                                             '#include <field/map_object_models.h>')],
-                                  'sha256': 'cc53799b1f6a0aca6bb38d0d8354539ce2c691d28e0ff6245950b91d7d133ac2'},
- 'src/field/field_flash_darkness.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                 '#include <field/field_effect_manager.h>'),
-                                                ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                ('#include "map_object.h"', '#include <map_object.h>'),
-                                                ('#include "field/field_flash_darkness.h"',
-                                                 '#include <field/field_flash_darkness.h>'),
-                                                ('#include "field/field_effect_helpers.h"',
-                                                 '#include <field/field_effect_helpers.h>'),
-                                                ('#include "field_system.h"', '#include <field_system.h>')],
-                                      'sha256': '142ffe88eadec161b84057489b1a9b05bf2c019c776e913bc012390d62c353fd'},
- 'src/field/field_follow_mon.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "map_object_follow_internal.h"',
-                                             '#include <map_object_follow_internal.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "field/map_object_billboard_motion.h"',
-                                             '#include <field/map_object_billboard_motion.h>'),
-                                            ('#include "field/map_object_models.h"',
-                                             '#include <field/map_object_models.h>'),
-                                            ('#include "field/map_object_render.h"',
-                                             '#include <field/map_object_render.h>'),
-                                            ('#include "field/map_object_render_internal.h"',
-                                             '#include <field/map_object_render_internal.h>'),
-                                            ('#include "field_follow_mon_ball.h"',
-                                             '#include <field_follow_mon_ball.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                            ('#include "map_object_movement_commands_internal.h"',
-                                             '#include <map_object_movement_commands_internal.h>'),
-                                            ('#include "script.h"', '#include <script.h>'),
-                                            ('#include "field/field_follow_mon.h"',
-                                             '#include <field/field_follow_mon.h>'),
-                                            ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                            ('#include "map_object_movement_commands.h"',
-                                             '#include <map_object_movement_commands.h>'),
-                                            ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                            ('#include "overlay_25.h"', '#include <overlay_25.h>'),
-                                            ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                            ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                            ('#include "task.h"', '#include <task.h>')],
-                                  'sha256': 'c591a28c9f7e95e81d3e7ece5e4cde5a308fbf1b6135339251e0a76c24ab5951'},
- 'src/field/field_follow_mon_ball.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "field_follow_mon_ball.h"',
-                                                  '#include <field_follow_mon_ball.h>'),
-                                                 ('#include "field/field_effect_helpers.h"',
-                                                  '#include <field/field_effect_helpers.h>'),
-                                                 ('#include "field/map_object_billboard_motion.h"',
-                                                  '#include <field/map_object_billboard_motion.h>'),
-                                                 ('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                 ('#include "map_object_movement_utilities.h"',
-                                                  '#include <map_object_movement_utilities.h>'),
-                                                 ('#include "field/field_follow_mon.h"',
-                                                  '#include <field/field_follow_mon.h>')],
-                                       'sha256': '9ed984f16910f32bfc420ec36c64868d9f7baf85b1c0657006bb4d193d3afd8b'},
- 'src/field/field_footprints.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "field_footprints.h"', '#include <field_footprints.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                            ('#include "render_model.h"', '#include <render_model.h>')],
-                                  'sha256': '093f3b77d3d7ecc477706141bc24f9ca38d225eba40b287dc889ab52976ac855'},
- 'src/field/field_ground_dust.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                              '#include <field/field_effect_manager.h>'),
-                                             ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                             ('#include "map_object.h"', '#include <map_object.h>'),
-                                             ('#include "field_ground_dust.h"', '#include <field_ground_dust.h>'),
-                                             ('#include "field/field_effect_helpers.h"',
-                                              '#include <field/field_effect_helpers.h>'),
-                                             ('#include "map_object_movement_utilities.h"',
-                                              '#include <map_object_movement_utilities.h>')],
-                                   'sha256': '804ccd8f6b4f0f6bf816cd8de869e929e6a79d6f33e47d5e005b3c26e759ccf8'},
- 'src/field/field_hidden_object_cover.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                      '#include <field/field_effect_manager.h>'),
-                                                     ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                     ('#include "map_object.h"', '#include <map_object.h>'),
-                                                     ('#include "map_object_follow.h"',
-                                                      '#include <map_object_follow.h>'),
-                                                     ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                     ('#include "field_hidden_object_cover.h"',
-                                                      '#include <field_hidden_object_cover.h>'),
-                                                     ('#include "map_object_movement_utilities.h"',
-                                                      '#include <map_object_movement_utilities.h>'),
-                                                     ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                                     ('#include "render_model.h"', '#include <render_model.h>')],
-                                           'sha256': 'd8c754e2bc86862f9031c634756a972e05d343c66ad4a14aba3fd6cea742530d'},
- 'src/field/field_move_cut_in.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                             ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                             ('#include "field/field_move_cut_in.h"',
-                                              '#include <field/field_move_cut_in.h>'),
-                                             ('#include "field/field_effect_helpers.h"',
-                                              '#include <field/field_effect_helpers.h>'),
-                                             ('#include "field/fly_landing_effect.h"',
-                                              '#include <field/fly_landing_effect.h>'),
-                                             ('#include "field_system.h"', '#include <field_system.h>'),
-                                             ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                             ('#include "overlay_02.h"', '#include <overlay_02.h>')],
-                                   'sha256': 'e050fbae1d55ea4827c5c3b60388951e35f60e2ee2b92427b2e0b39bfdd47215'},
- 'src/field/field_move_cut_in_effects.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                     ('#include "map_object.h"', '#include <map_object.h>'),
-                                                     ('#include "field/field_effect_helpers.h"',
-                                                      '#include <field/field_effect_helpers.h>'),
-                                                     ('#include "field/field_move_cut_in.h"',
-                                                      '#include <field/field_move_cut_in.h>'),
-                                                     ('#include "field/fly_landing_effect.h"',
-                                                      '#include <field/fly_landing_effect.h>'),
-                                                     ('#include "field_system.h"', '#include <field_system.h>'),
-                                                     ('#include "field/field_camera_zoom.h"',
-                                                      '#include <field/field_camera_zoom.h>'),
-                                                     ('#include "overlay_2/overlay_02_field_utils.h"',
-                                                      '#include <overlay_2/overlay_02_field_utils.h>'),
-                                                     ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                                     ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                     ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                     ('#include "task.h"', '#include <task.h>')],
-                                           'sha256': 'e19891418af22ec383293cfa2030914c0f70c93a7894b1cbac9b7348e0382c3c'},
- 'src/field/field_move_effects.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                              ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                              ('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                              ('#include "field/field_move_effects.h"',
-                                               '#include <field/field_move_effects.h>'),
-                                              ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                              ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                              ('#include "task.h"', '#include <task.h>')],
-                                    'sha256': 'c6504e15e1c409c695d779e44220d3c6feaa9fdd4d074974d1f4197dfef5d535'},
- 'src/field/field_move_sweet_scent.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                  ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                  ('#include "field/field_move_cut_in.h"',
-                                                   '#include <field/field_move_cut_in.h>'),
-                                                  ('#include "field_system.h"', '#include <field_system.h>'),
-                                                  ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                  ('#include "field/field_follow_mon.h"',
-                                                   '#include <field/field_follow_mon.h>'),
-                                                  ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                  ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                  ('#include "task.h"', '#include <task.h>')],
-                                        'sha256': 'ae567df6e3017925387b132006fd794836fde3d8887cc46b354dead5832a77e5'},
- 'src/field/field_move_warp_tasks.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                 ('#include "field/field_move_cut_in.h"',
-                                                  '#include <field/field_move_cut_in.h>'),
-                                                 ('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                 ('#include "field/field_camera_zoom.h"',
-                                                  '#include <field/field_camera_zoom.h>'),
-                                                 ('#include "field/field_follow_mon.h"',
-                                                  '#include <field/field_follow_mon.h>'),
-                                                 ('#include "map_object_movement_commands.h"',
-                                                  '#include <map_object_movement_commands.h>'),
-                                                 ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                 ('#include "save_local_field_data.h"',
-                                                  '#include <save_local_field_data.h>'),
-                                                 ('#include "spawn_warp.h"', '#include <spawn_warp.h>'),
-                                                 ('#include "task.h"', '#include <task.h>'),
-                                                 ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                                       'sha256': '52020fe9e2d89e18dd0800b68405e95db0525cf0f3bbe66c7f39837f1800a93c'},
- 'src/field/field_mud_splash.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "field_mud_splash.h"', '#include <field_mud_splash.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                            ('#include "render_model.h"', '#include <render_model.h>')],
-                                  'sha256': '04041c1237d842cd8b01bbaf843fd02ccf90d09a45dfe85963e213eef77c5bf5'},
- 'src/field/field_puddle_splash.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                '#include <field/field_effect_manager.h>'),
-                                               ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                               ('#include "map_object.h"', '#include <map_object.h>'),
-                                               ('#include "field_puddle_splash.h"', '#include <field_puddle_splash.h>'),
-                                               ('#include "field/field_effect_helpers.h"',
-                                                '#include <field/field_effect_helpers.h>'),
-                                               ('#include "map_object_movement_utilities.h"',
-                                                '#include <map_object_movement_utilities.h>'),
-                                               ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                               ('#include "render_model.h"', '#include <render_model.h>')],
-                                     'sha256': '2d68ea4a1de129d029399328068066c76c69bdef44a02fa77e1f80d14228ea1f'},
- 'src/field/field_reflection.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field_reflection.h"', '#include <field_reflection.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "field/map_object_billboard_motion.h"',
-                                             '#include <field/map_object_billboard_motion.h>'),
-                                            ('#include "field/map_object_render.h"',
-                                             '#include <field/map_object_render.h>'),
-                                            ('#include "field/map_object_render_internal.h"',
-                                             '#include <field/map_object_render_internal.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "field/field_follow_mon.h"',
-                                             '#include <field/field_follow_mon.h>')],
-                                  'sha256': '895ea6cc49638541f0d6b0caebc18f812abffef3f766c46a034aec01ec3c5fdd'},
- 'src/field/field_rock_climb_effect.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                    '#include <field/field_effect_manager.h>'),
-                                                   ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                   ('#include "map_object.h"', '#include <map_object.h>'),
-                                                   ('#include "field_rock_climb_effect.h"',
-                                                    '#include <field_rock_climb_effect.h>'),
-                                                   ('#include "field/field_effect_helpers.h"',
-                                                    '#include <field/field_effect_helpers.h>'),
-                                                   ('#include "map_object_movement_utilities.h"',
-                                                    '#include <map_object_movement_utilities.h>'),
-                                                   ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                                   ('#include "render_model.h"', '#include <render_model.h>')],
-                                         'sha256': '75470ab4963e32df654141f8db6e53297f383ddea2efe58e151a88282d6f6a0a'},
- 'src/field/field_shadow.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                         '#include <field/field_effect_manager.h>'),
-                                        ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                        ('#include "map_object.h"', '#include <map_object.h>'),
-                                        ('#include "field_shadow.h"', '#include <field_shadow.h>'),
-                                        ('#include "field/field_effect_helpers.h"',
-                                         '#include <field/field_effect_helpers.h>'),
-                                        ('#include "field/map_object_models.h"',
-                                         '#include <field/map_object_models.h>'),
-                                        ('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                        ('#include "render_model.h"', '#include <render_model.h>')],
-                              'sha256': '8cf4d3e64dbd5341ec0bc4c461e6f36f3c6a27d551347e74fcf697a075e48665'},
- 'src/field/field_shallow_water_ripple.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                       '#include <field/field_effect_manager.h>'),
-                                                      ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                      ('#include "map_object.h"', '#include <map_object.h>'),
-                                                      ('#include "field_shallow_water_ripple.h"',
-                                                       '#include <field_shallow_water_ripple.h>'),
-                                                      ('#include "field/field_effect_helpers.h"',
-                                                       '#include <field/field_effect_helpers.h>')],
-                                            'sha256': '443c4a8bb78750c7fc6848754f0f940e52c1f1d9954e84fa767b0c6c5f73de44'},
- 'src/field/field_shaymin_form_change.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                      '#include <field/field_effect_manager.h>'),
-                                                     ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                     ('#include "field/field_shaymin_form_change.h"',
-                                                      '#include <field/field_shaymin_form_change.h>'),
-                                                     ('#include "field/field_effect_helpers.h"',
-                                                      '#include <field/field_effect_helpers.h>')],
-                                           'sha256': '5d787dd6672cff1805c8ff01a6556a67f763f41745d586e7aed4b851ddadd635'},
- 'src/field/field_surf_mount.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                            ('#include "render_model.h"', '#include <render_model.h>')],
-                                  'sha256': 'fa055c4987375124ab6effc7b07115ec58a91b03514fae0ac1b9ed595cbe2e2d'},
- 'src/field/field_tall_grass.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "field_tall_grass.h"', '#include <field_tall_grass.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                  'sha256': '0ead7e6f834a80d9e40984be19755ebb65f1984d18e54fad6dfd804040f159b1'},
- 'src/field/field_trainer_reveal.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                 '#include <field/field_effect_manager.h>'),
-                                                ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                ('#include "map_object.h"', '#include <map_object.h>'),
-                                                ('#include "field_trainer_reveal.h"',
-                                                 '#include <field_trainer_reveal.h>'),
-                                                ('#include "field/field_effect_helpers.h"',
-                                                 '#include <field/field_effect_helpers.h>'),
-                                                ('#include "map_object_movement_utilities.h"',
-                                                 '#include <map_object_movement_utilities.h>')],
-                                      'sha256': '327ffaaeecab32044673ba46240d3c5f03fd5c3c0d9b050eed0c4491d6e84e84'},
- 'src/field/field_union_chat_marker.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                    '#include <field/field_effect_manager.h>'),
-                                                   ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                   ('#include "map_object.h"', '#include <map_object.h>'),
-                                                   ('#include "field_union_chat_marker.h"',
-                                                    '#include <field_union_chat_marker.h>'),
-                                                   ('#include "field/field_effect_helpers.h"',
-                                                    '#include <field/field_effect_helpers.h>')],
-                                         'sha256': '1ad1d5afbb2f30ff013f2a2b7c376324a5f18ad5bc3c83958cc268b707c50e99'},
- 'src/field/field_unused_billboard_effect.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                          '#include <field/field_effect_manager.h>'),
-                                                         ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                         ('#include "map_object.h"', '#include <map_object.h>'),
-                                                         ('#include "field_unused_billboard_effect.h"',
-                                                          '#include <field_unused_billboard_effect.h>'),
-                                                         ('#include "field/field_effect_helpers.h"',
-                                                          '#include <field/field_effect_helpers.h>'),
-                                                         ('#include "map_object_movement_utilities.h"',
-                                                          '#include <map_object_movement_utilities.h>')],
-                                               'sha256': '03f7770dd6a78f31b7148d9d1a955beb9f13fd10b8a120477e702a7a2a90661b'},
- 'src/field/field_very_tall_grass.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "field_very_tall_grass.h"',
-                                                  '#include <field_very_tall_grass.h>'),
-                                                 ('#include "field/field_effect_helpers.h"',
-                                                  '#include <field/field_effect_helpers.h>'),
-                                                 ('#include "map_object_movement_utilities.h"',
-                                                  '#include <map_object_movement_utilities.h>'),
-                                                 ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                       'sha256': 'e8de17b0314964230872b0b615b1a0006c63148ec51668e3a62412235053db7f'},
- 'src/field/field_warp_arrow.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                             '#include <field/field_effect_manager.h>'),
-                                            ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                            ('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field_warp_arrow.h"', '#include <field_warp_arrow.h>'),
-                                            ('#include "field/field_effect_helpers.h"',
-                                             '#include <field/field_effect_helpers.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                            ('#include "render_model.h"', '#include <render_model.h>')],
-                                  'sha256': 'd977c0f2e14810beffe2717c7fc84485f8cc4dccb9bc4526a4535e96e4271079'},
- 'src/field/fieldmap.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "field/field_effect_manager.h"',
-                                     '#include <field/field_effect_manager.h>'),
-                                    ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                    ('#include "field/map_object_model_list.h"',
-                                     '#include <field/map_object_model_list.h>'),
-                                    ('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "field/map_object_models.h"', '#include <field/map_object_models.h>'),
-                                    ('#include "field/map_object_render.h"', '#include <field/map_object_render.h>'),
-                                    ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                    ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                    ('#include "field/map_load_manager.h"', '#include <field/map_load_manager.h>'),
-                                    ('#include "field/field_camera.h"', '#include <field/field_camera.h>'),
-                                    ('#include "field/field_bottom_screen.h"',
-                                     '#include <field/field_bottom_screen.h>'),
-                                    ('#include "field/signpost.h"', '#include <field/signpost.h>'),
-                                    ('#include "overlay_2/overlay_02_field_utils.h"',
-                                     '#include <overlay_2/overlay_02_field_utils.h>'),
-                                    ('#include "bug_contest.h"', '#include <bug_contest.h>'),
-                                    ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                    ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                    ('#include "field/bottom_screen_app.h"', '#include <field/bottom_screen_app.h>'),
-                                    ('#include "field/field_follow_mon.h"', '#include <field/field_follow_mon.h>'),
-                                    ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                    ('#include "terrain_attributes.h"', '#include <terrain_attributes.h>'),
-                                    ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                    ('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                                    ('#include "gymmick_collision.h"', '#include <gymmick_collision.h>'),
-                                    ('#include "map_events.h"', '#include <map_events.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "field/weather_manager.h"', '#include <field/weather_manager.h>'),
-                                    ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                          'sha256': 'a0477f0df1192991c8aa18e92a4364c0af7f228bfed521cc4601fd7f69b9c5ce'},
- 'src/field/fishing.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                   ('#include "field_emote_mark.h"', '#include <field_emote_mark.h>'),
-                                   ('#include "map_object.h"', '#include <map_object.h>'),
-                                   ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                   ('#include "encounter.h"', '#include <encounter.h>'),
-                                   ('#include "field_system.h"', '#include <field_system.h>'),
-                                   ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                   ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                                   ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                                   ('#include "map_object_movement_commands.h"',
-                                    '#include <map_object_movement_commands.h>'),
-                                   ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                   ('#include "task.h"', '#include <task.h>')],
-                         'sha256': '9155b2e556966845a55dd278dfdb4485a786a26ffb5128c288f46fdd4f470caa'},
- 'src/field/fly_landing_effect.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                              ('#include "map_object.h"', '#include <map_object.h>'),
-                                              ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                              ('#include "field/fly_landing_effect.h"',
-                                               '#include <field/fly_landing_effect.h>'),
-                                              ('#include "field/field_effect_helpers.h"',
-                                               '#include <field/field_effect_helpers.h>'),
-                                              ('#include "field/field_move_cut_in.h"',
-                                               '#include <field/field_move_cut_in.h>'),
-                                              ('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "field/field_camera_zoom.h"',
-                                               '#include <field/field_camera_zoom.h>')],
-                                    'sha256': '5810d8383d15e4e092cb1b61009998c7e4a232560f01a786b54c0fa44aadcdfe'},
- 'src/field/follow_mon_interaction.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                  ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                  ('#include "field/field_effect_helpers.h"',
-                                                   '#include <field/field_effect_helpers.h>'),
-                                                  ('#include "field/map_object_billboard_motion.h"',
-                                                   '#include <field/map_object_billboard_motion.h>'),
-                                                  ('#include "field/map_object_models.h"',
-                                                   '#include <field/map_object_models.h>'),
-                                                  ('#include "field_system.h"', '#include <field_system.h>'),
-                                                  ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                  ('#include "field/bottom_screen_app.h"',
-                                                   '#include <field/bottom_screen_app.h>'),
-                                                  ('#include "overlay_2/overlay_02_field_utils.h"',
-                                                   '#include <overlay_2/overlay_02_field_utils.h>'),
-                                                  ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                                  ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                                  ('#include "map_object_movement_commands.h"',
-                                                   '#include <map_object_movement_commands.h>'),
-                                                  ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                  ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                  ('#include "save_local_field_data.h"',
-                                                   '#include <save_local_field_data.h>'),
-                                                  ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                  ('#include "map_events.h"', '#include <map_events.h>'),
-                                                  ('#include "task.h"', '#include <task.h>')],
-                                        'sha256': '017c7c6c55c4c527af4c700141e016bad83852225938404a5a0c54676672e3b7'},
- 'src/field/friend_roster_app.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>')],
-                                   'sha256': 'ec0da17c84a7cba9513d68a6458db7566d2731c730170609a73404b2cc8db52d'},
- 'src/field/gear_phone_calls.c': {'edits': [('#include "overlay_2/gear_phone_calls.h"',
-                                             '#include <overlay_2/gear_phone_calls.h>'),
-                                            ('#include "gear_phone_ring_manager.h"',
-                                             '#include <gear_phone_ring_manager.h>'),
-                                            ('#include "save_local_field_data.h"',
-                                             '#include <save_local_field_data.h>'),
-                                            ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                            ('#include "application/pokegear/phone/phone_internal.h"',
-                                             '#include <application/pokegear/phone/phone_internal.h>')],
-                                  'sha256': '2faa0472ad1bc08cf0ccb06e1bd974cf4558e97c3e6d591df1d3fbb660ef5f22'},
- 'src/field/gymmick/azalea.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                          ('#include "map_object_movement_utilities.h"',
-                                           '#include <map_object_movement_utilities.h>'),
-                                          ('#include "field/field_follow_mon.h"',
-                                           '#include <field/field_follow_mon.h>'),
-                                          ('#include "field/map_load_manager.h"',
-                                           '#include <field/map_load_manager.h>'),
-                                          ('#include "map_object_movement_commands.h"',
-                                           '#include <map_object_movement_commands.h>'),
-                                          ('#include "overlay_04.h"', '#include <overlay_04.h>'),
-                                          ('#include "task.h"', '#include <task.h>')],
-                                'sha256': '7dc29fca0397a60fb002eb0ff15d12a2a2046b288691d74c68afb75e13b5c0ec'},
- 'src/field/gymmick/blackthorn.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "map_object_movement_utilities.h"',
-                                               '#include <map_object_movement_utilities.h>'),
-                                              ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                              ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                    'sha256': '830ec891074e472eeb7fc3603cd680fc340c8c743a6b6d4a1cb6c5f662f1ab41'},
- 'src/field/gymmick/cianwood.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                  'sha256': '44a5156c2ab73f5641dd0daaae66efc7b41f45d01ebdd349c37eaa314a5df071'},
- 'src/field/gymmick/ecruteak.c': {'edits': [('#include "field/map_object_billboard_motion.h"',
-                                             '#include <field/map_object_billboard_motion.h>'),
-                                            ('#include "field/map_object_render.h"',
-                                             '#include <field/map_object_render.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                  'sha256': 'b54ec5a504328402e15e07757906f1dd022c498293a9fe5c92fcb5b1c1078b13'},
- 'src/field/gymmick/fuchsia.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                           ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                 'sha256': 'a14fa5ad37ceb6df23349594133b9a487765f101d12a8b40979262d7439c04e5'},
- 'src/field/gymmick/sinjoh.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                'sha256': '2b0366d3542552dc136606f8183d2b7e0640d7e8d1b56abb6c3d22c4655f0a4e'},
- 'src/field/gymmick/vermilion.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                             ('#include "map_object_movement_commands.h"',
-                                              '#include <map_object_movement_commands.h>'),
-                                             ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                   'sha256': '7bd2fd669bda75500d93b5d4074709842034a8ab51d72d88b83ab3187116edff'},
- 'src/field/gymmick/violet.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "field/field_follow_mon.h"',
-                                           '#include <field/field_follow_mon.h>'),
-                                          ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                          ('#include "overlay_04.h"', '#include <overlay_04.h>'),
-                                          ('#include "task.h"', '#include <task.h>')],
-                                'sha256': 'ac6e635581e62133eb805d79027250c0e1175e4a9626c5125a20e9a640090b76'},
- 'src/field/gymmick/viridian.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                  'sha256': '490a4d2900b6bafd070809c4dc5e19e58adf8da36f06cb8617a6724b7c757be8'},
- 'src/field/headbutt.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "encounter.h"', '#include <encounter.h>'),
-                                    ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                    ('#include "script.h"', '#include <script.h>'),
-                                    ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                    ('#include "map_object_movement_utilities.h"',
-                                     '#include <map_object_movement_utilities.h>'),
-                                    ('#include "field/encounter_check.h"', '#include <field/encounter_check.h>'),
-                                    ('#include "money_box.h"', '#include <money_box.h>'),
-                                    ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                    ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                    ('#include "task.h"', '#include <task.h>')],
-                          'sha256': 'c9625f8f0c2a3a09e3f769eeface7cfcf1f20414d84721f7cb716ec1241a10d1'},
- 'src/field/honey_sweet_scent.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                             ('#include "field_system.h"', '#include <field_system.h>'),
-                                             ('#include "field/encounter_check.h"',
-                                              '#include <field/encounter_check.h>'),
-                                             ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                             ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                             ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                             ('#include "task.h"', '#include <task.h>'),
-                                             ('#include "field/weather_manager.h"',
-                                              '#include <field/weather_manager.h>')],
-                                   'sha256': 'c8eb4d8c3daef08a322620beb187e9a73f2bc4a433f3e490827938222d2fd0a9'},
- 'src/field/legend_cutscene_camera.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                  ('#include "field/legend_cutscene_camera.h"',
-                                                   '#include <field/legend_cutscene_camera.h>'),
-                                                  ('#include "task.h"', '#include <task.h>')],
-                                        'sha256': 'e5c738f8969866c689ab967c605f2c70129208295c1939122a7024aea0bcfa76'},
- 'src/field/map_load_manager.c': {'edits': [('#include "field/map_load_manager.h"',
-                                             '#include <field/map_load_manager.h>'),
-                                            ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                            ('#include "field/map_load_manager_internal.h"',
-                                             '#include <field/map_load_manager_internal.h>')],
-                                  'sha256': '0489523b83d5b3a7edeb8d4821fb368b4f8388e2a525a949014ee370afd880a6'},
- 'src/field/map_object_billboard_motion.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                        '#include <field/field_effect_manager.h>'),
-                                                       ('#include "map_object.h"', '#include <map_object.h>'),
-                                                       ('#include "map_object_behavior_internal.h"',
-                                                        '#include <map_object_behavior_internal.h>'),
-                                                       ('#include "field/map_object_billboard_motion.h"',
-                                                        '#include <field/map_object_billboard_motion.h>'),
-                                                       ('#include "field/field_effect_helpers.h"',
-                                                        '#include <field/field_effect_helpers.h>'),
-                                                       ('#include "field/map_object_model_list.h"',
-                                                        '#include <field/map_object_model_list.h>'),
-                                                       ('#include "field/map_object_models.h"',
-                                                        '#include <field/map_object_models.h>'),
-                                                       ('#include "field/map_object_render.h"',
-                                                        '#include <field/map_object_render.h>'),
-                                                       ('#include "field_system.h"', '#include <field_system.h>'),
-                                                       ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                       ('#include "map_object_movement_commands_internal.h"',
-                                                        '#include <map_object_movement_commands_internal.h>'),
-                                                       ('#include "field/field_follow_mon.h"',
-                                                        '#include <field/field_follow_mon.h>'),
-                                                       ('#include "map_object_movement_commands.h"',
-                                                        '#include <map_object_movement_commands.h>')],
-                                             'sha256': '9ad8b4a7d5d17a64db9a0676abd64e25188b475afada5cdf48c4591f034cd10d'},
- 'src/field/map_object_model_list.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "field/map_object_model_list.h"',
-                                                  '#include <field/map_object_model_list.h>'),
-                                                 ('#include "field/field_effect_helpers.h"',
-                                                  '#include <field/field_effect_helpers.h>'),
-                                                 ('#include "render_animation.h"', '#include <render_animation.h>'),
-                                                 ('#include "render_model.h"', '#include <render_model.h>')],
-                                       'sha256': 'c4c032ff6a004673dbf336dcea82e9ffdf05a0bdd5127895d2802f31cd5e11bb'},
- 'src/field/map_object_models.c': {'edits': [('#include "field/map_object_models.h"',
-                                              '#include <field/map_object_models.h>'),
-                                             ('#include "field/field_effect_helpers.h"',
-                                              '#include <field/field_effect_helpers.h>'),
-                                             ('#include "field/map_object_render.h"',
-                                              '#include <field/map_object_render.h>'),
-                                             ('#include "field_shadow.h"', '#include <field_shadow.h>'),
-                                             ('#include "field/field_follow_mon.h"',
-                                              '#include <field/field_follow_mon.h>')],
-                                   'sha256': 'b3d57c0cca5cf6dd85334925e4c09fd1e6dc2016667c82b03b447c3180b3874f'},
- 'src/field/map_object_render.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                              '#include <field/field_effect_manager.h>'),
-                                             ('#include "map_object.h"', '#include <map_object.h>'),
-                                             ('#include "map_object_behavior_internal.h"',
-                                              '#include <map_object_behavior_internal.h>'),
-                                             ('#include "field/map_object_render.h"',
-                                              '#include <field/map_object_render.h>'),
-                                             ('#include "field/field_effect_helpers.h"',
-                                              '#include <field/field_effect_helpers.h>'),
-                                             ('#include "field/map_object_billboard_motion.h"',
-                                              '#include <field/map_object_billboard_motion.h>'),
-                                             ('#include "field/map_object_models.h"',
-                                              '#include <field/map_object_models.h>'),
-                                             ('#include "field/map_object_render_internal.h"',
-                                              '#include <field/map_object_render_internal.h>'),
-                                             ('#include "field_reflection.h"', '#include <field_reflection.h>'),
-                                             ('#include "map_object_movement_utilities_internal.h"',
-                                              '#include <map_object_movement_utilities_internal.h>')],
-                                   'sha256': '1866056cd5b82c397c1a9b5b4d1a8691e680dcb4baacd5525f88d14fcd7818bd'},
- 'src/field/map_object_swap_positions.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                     ('#include "field_system.h"', '#include <field_system.h>'),
-                                                     ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                     ('#include "map_object_movement_commands.h"',
-                                                      '#include <map_object_movement_commands.h>'),
-                                                     ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                     ('#include "task.h"', '#include <task.h>')],
-                                           'sha256': '78e47d8c6f4d36e0ba5e32319ca6faeeaa74791923b6b7e620957c8fa86f72d0'},
- 'src/field/map_prop_anims.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                          ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                          ('#include "task.h"', '#include <task.h>')],
-                                'sha256': '8b581819ddd059797a99644eac729889cc57872e2da4e5827bde9ae45175ecf2'},
- 'src/field/map_prop_manager.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "field/map_load_manager.h"',
-                                             '#include <field/map_load_manager.h>'),
-                                            ('#include "safari_zone_encounters.h"',
-                                             '#include <safari_zone_encounters.h>')],
-                                  'sha256': '52f1315cced28cc23b563ba5f0b79fd4a362851a1797cbc9164026c6a0247ba5'},
- 'src/field/overlay116_scene.c': {'edits': [('#include "field/overlay116_scene_internal.h"',
-                                             '#include <field/overlay116_scene_internal.h>')],
-                                  'sha256': '0c9d747de17b03eda08c5e67f5cd3ed3a1670cb23595162277b37f759d7fda3b'},
- 'src/field/pal_pad_registration.c': {'edits': [('#include "field/pal_pad_registration.h"',
-                                                 '#include <field/pal_pad_registration.h>'),
-                                                ('#include "field/bottom_screen_app.h"',
-                                                 '#include <field/bottom_screen_app.h>'),
-                                                ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                ('#include "task.h"', '#include <task.h>')],
-                                      'sha256': '8ead9ddc50b34278f10f25cbcfa8de8d72068ccf15456c47f25334869c0320e5'},
- 'src/field/player_avatar_actions.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                                  '#include <field/field_effect_manager.h>'),
-                                                 ('#include "field_surf_mount.h"', '#include <field_surf_mount.h>'),
-                                                 ('#include "map_object.h"', '#include <map_object.h>'),
-                                                 ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                 ('#include "player_avatar_actions.h"',
-                                                  '#include <player_avatar_actions.h>'),
-                                                 ('#include "field/field_move_cut_in.h"',
-                                                  '#include <field/field_move_cut_in.h>'),
-                                                 ('#include "field/map_object_render.h"',
-                                                  '#include <field/map_object_render.h>'),
-                                                 ('#include "field_rock_climb_effect.h"',
-                                                  '#include <field_rock_climb_effect.h>'),
-                                                 ('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                                 ('#include "map_object_movement_commands_internal.h"',
-                                                  '#include <map_object_movement_commands_internal.h>'),
-                                                 ('#include "map_object_movement_utilities.h"',
-                                                  '#include <map_object_movement_utilities.h>'),
-                                                 ('#include "player_avatar_movement.h"',
-                                                  '#include <player_avatar_movement.h>'),
-                                                 ('#include "field/field_control.h"',
-                                                  '#include <field/field_control.h>'),
-                                                 ('#include "field/field_follow_mon.h"',
-                                                  '#include <field/field_follow_mon.h>'),
-                                                 ('#include "field/field_move_effects.h"',
-                                                  '#include <field/field_move_effects.h>'),
-                                                 ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                                 ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                                 ('#include "map_object_movement_commands.h"',
-                                                  '#include <map_object_movement_commands.h>'),
-                                                 ('#include "map_object_movement_utilities_internal.h"',
-                                                  '#include <map_object_movement_utilities_internal.h>'),
-                                                 ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                 ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                 ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                 ('#include "task.h"', '#include <task.h>')],
-                                       'sha256': '5a506c25effea5054eb1cc861e9b6dd868dda67648958e25d0dca61278d23a14'},
- 'src/field/primo_password.c': {'edits': [('#include "overlay_02.h"', '#include <overlay_02.h>')],
-                                'sha256': 'e81a02b17d1a3dabfd5e946a5f417b9160671bcec3608cbe79e8fa7c0e75fb26'},
- 'src/field/rock_smash_item.c': {'edits': [('#include "field_emote_mark.h"', '#include <field_emote_mark.h>'),
-                                           ('#include "field_effects.h"', '#include <field_effects.h>'),
-                                           ('#include "encounter.h"', '#include <encounter.h>'),
-                                           ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                           ('#include "script.h"', '#include <script.h>'),
-                                           ('#include "field/rock_smash_item.h"', '#include <field/rock_smash_item.h>'),
-                                           ('#include "field/encounter_check.h"', '#include <field/encounter_check.h>'),
-                                           ('#include "task.h"', '#include <task.h>')],
-                                 'sha256': '1aa54fd210c9bb0cb36215c50f050b867acf530c097d351d9b088f2e38e8eb12'},
- 'src/field/safari_zone_placement.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                 ('#include "field_system.h"', '#include <field_system.h>'),
-                                                 ('#include "map_object_movement_utilities.h"',
-                                                  '#include <map_object_movement_utilities.h>'),
-                                                 ('#include "overlay_2/overlay_02_field_utils.h"',
-                                                  '#include <overlay_2/overlay_02_field_utils.h>'),
-                                                 ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                                 ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                 ('#include "save_local_field_data.h"',
-                                                  '#include <save_local_field_data.h>'),
-                                                 ('#include "safari_zone_encounters.h"',
-                                                  '#include <safari_zone_encounters.h>')],
-                                       'sha256': '493c43339db9f4c51a6a700bd4f80168db21c8253b5cad34ba2afe33de6d4708'},
- 'src/field/save_stats_printer.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                              ('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "field/bottom_screen_app.h"',
-                                               '#include <field/bottom_screen_app.h>'),
-                                              ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                              ('#include "save_local_field_data.h"',
-                                               '#include <save_local_field_data.h>')],
-                                    'sha256': '8fb5bb2a5c7536d39fbc69453c48a34fecbb0d53a78dea48f5542af42ed8c4a9'},
- 'src/field/scrcmd_message.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                          ('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "script.h"', '#include <script.h>'),
-                                          ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                          ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                          ('#include "script_manager.h"', '#include <script_manager.h>')],
-                                'sha256': '1d1ae3c03a58f9c3b4197a5df020a4fb9825a9366ac0bf585ec2b3e9f5a9a42b'},
- 'src/field/scrcmd_moneybox.c': {'edits': [('#include "money_box.h"', '#include <money_box.h>'),
-                                           ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                                 'sha256': '6cb4d41e182151fc50dc0ee0c0a8c0e28f550841898fa40364107928b422b8f7'},
- 'src/field/scrcmd_move_tutor.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                             ('#include "script.h"', '#include <script.h>'),
-                                             ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                             ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                             ('#include "script_manager.h"', '#include <script_manager.h>')],
-                                   'sha256': 'd4ab36731e884e10506118f8b807a7d4b804d982fd84c93d7517b6b57d03135e'},
- 'src/field/scrcmd_pokemon_misc.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                               ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                               ('#include "field/map_object_billboard_motion.h"',
-                                                '#include <field/map_object_billboard_motion.h>'),
-                                               ('#include "field/map_object_render.h"',
-                                                '#include <field/map_object_render.h>'),
-                                               ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                               ('#include "overlay_2/gear_phone_calls.h"',
-                                                '#include <overlay_2/gear_phone_calls.h>'),
-                                               ('#include "bug_contest.h"', '#include <bug_contest.h>'),
-                                               ('#include "get_egg.h"', '#include <get_egg.h>'),
-                                               ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                               ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                               ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                               ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                               ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                               ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                               ('#include "gear_phone_ring_manager.h"',
-                                                '#include <gear_phone_ring_manager.h>')],
-                                     'sha256': '2b38aadd96d1bffe763828b2b081f68484869a105cd819145f89e3314eb7a3e8'},
- 'src/field/script_field_effects.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                ('#include "field_system.h"', '#include <field_system.h>'),
-                                                ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                                ('#include "task.h"', '#include <task.h>')],
-                                      'sha256': '9c0851f03e90ac280719d4d28b64aa5ec2c41b3ffb405c3ef76303c216f13565'},
- 'src/field/script_menu.c': {'edits': [('#include "field/script_menu.h"', '#include <field/script_menu.h>'),
-                                       ('#include "money_box.h"', '#include <money_box.h>'),
-                                       ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                       ('#include "overlay_03.h"', '#include <overlay_03.h>')],
-                             'sha256': '48c12d172f1d3c6ceda8fbae9fa46dc184c42cf593ccd530e9327505c2531cd2'},
- 'src/field/signpost.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "field/signpost.h"', '#include <field/signpost.h>')],
-                          'sha256': '71a73dc7e8618371dabe2c7aaaaa7e7ba9e5c2671be4f52cad95de1a2b87afe0'},
- 'src/field/spin_slide.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                      ('#include "field/spin_slide.h"', '#include <field/spin_slide.h>'),
-                                      ('#include "map_object_movement_commands_internal.h"',
-                                       '#include <map_object_movement_commands_internal.h>'),
-                                      ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                      ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                            'sha256': 'a2be8a7f3f35667a07f7a27fe12cffec9b1339c92c90917ba547dc2ddd1aba0e'},
- 'src/field/sprite_gfx_manager.c': {'edits': [('#include "field/field_move_cut_in.h"',
-                                               '#include <field/field_move_cut_in.h>')],
-                                    'sha256': '77d84d85b1d609631386289fc190a95529b31ef78a928940cb8c34037fbec1d4'},
- 'src/field/touch_mart_app.c': {'edits': [('#include "field/touch_mart_app.h"', '#include <field/touch_mart_app.h>'),
-                                          ('#include "overlay_03.h"', '#include <overlay_03.h>')],
-                                'sha256': '2c4bc1409f52989bb660d6d33106483c5f801e1f1aca50bca89f20a60c4260cd'},
- 'src/field/touchscreen_choice_menu.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                   ('#include "field/touchscreen_choice_menu.h"',
-                                                    '#include <field/touchscreen_choice_menu.h>'),
-                                                   ('#include "field/bottom_screen_app.h"',
-                                                    '#include <field/bottom_screen_app.h>'),
-                                                   ('#include "field/script_menu.h"', '#include <field/script_menu.h>'),
-                                                   ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                   ('#include "task.h"', '#include <task.h>')],
-                                         'sha256': 'd44235a6ee0f6576d1671557c18238490f55693a80f3e21e1a565f51da2bc03a'},
- 'src/field/touchscreen_menu.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "field/bottom_screen_app.h"',
-                                             '#include <field/bottom_screen_app.h>'),
-                                            ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                            ('#include "overlay_2/gear_phone_calls.h"',
-                                             '#include <overlay_2/gear_phone_calls.h>'),
-                                            ('#include "catching_show.h"', '#include <catching_show.h>'),
-                                            ('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                                            ('#include "communication_club_link.h"',
-                                             '#include <communication_club_link.h>'),
-                                            ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                            ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                            ('#include "frontier_field_support.h"',
-                                             '#include <frontier_field_support.h>'),
-                                            ('#include "gear_phone_ring_manager.h"',
-                                             '#include <gear_phone_ring_manager.h>'),
-                                            ('#include "save_local_field_data.h"',
-                                             '#include <save_local_field_data.h>'),
-                                            ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                            ('#include "task.h"', '#include <task.h>'),
-                                            ('#include "start_menu.h"', '#include <start_menu.h>')],
-                                  'sha256': '04dac33ebca1c96780f42031a261af9bf97a6dd51f2ff8cf113ca0310bb2e8de'},
- 'src/field/warp_spin.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                     ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                     ('#include "field/map_object_models.h"', '#include <field/map_object_models.h>'),
-                                     ('#include "field/warp_spin.h"', '#include <field/warp_spin.h>')],
-                           'sha256': 'f4c24980f9c2ece03f4555babe669d50f45d500391622b6621a88a48bf3414d9'},
- 'src/field/weather_manager.c': {'edits': [('#include "field/field_flash_darkness.h"',
-                                            '#include <field/field_flash_darkness.h>'),
-                                           ('#include "field_system.h"', '#include <field_system.h>'),
-                                           ('#include "field/weather_manager.h"',
-                                            '#include <field/weather_manager.h>')],
-                                 'sha256': 'e3c88c91e60e30b637d67968e19dfa6f762eaa0af6ebd2a519bed48e32c768c4'},
- 'src/field_bgm.c': {'edits': [('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                               ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                               ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>')],
-                     'sha256': '62b1c3543e83a6f59f4a9da032d37ba558f06ba5dd827a346b9ddab67d83d082'},
- 'src/field_comm_cmds.c': {'edits': [('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                                     ('#include "communication_club_link.h"', '#include <communication_club_link.h>'),
-                                     ('#include "union_room.h"', '#include <union_room.h>'),
-                                     ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                     ('#include "oaks_speech.h"', '#include <oaks_speech.h>')],
-                           'sha256': '24e417ddba928b03ac82686bacadac8323af46a4261d0d0719f18669f5f24269'},
- 'src/field_effects.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                   ('#include "field/field_effect_manager.h"',
-                                    '#include <field/field_effect_manager.h>'),
-                                   ('#include "field/field_effect_helpers.h"',
-                                    '#include <field/field_effect_helpers.h>'),
-                                   ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>')],
-                         'sha256': '9838d62de0c0db4bebb242cac579922a477d6eb7423efe25f0eaf71e50bb59c8'},
- 'src/field_interaction.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                       ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                       ('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                       ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                       ('#include "script_manager.h"', '#include <script_manager.h>')],
-                             'sha256': 'a0cf30e3e65075f41dcb3feed5b2abf9a1472d979769c8e71147a13dd58e55d9'},
- 'src/field_misc_events.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                       ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                       ('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "script.h"', '#include <script.h>'),
-                                       ('#include "map_object_movement_utilities.h"',
-                                        '#include <map_object_movement_utilities.h>'),
-                                       ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                       ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                       ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                                       ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                       ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                       ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                       ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                       ('#include "map_object_movement_commands.h"',
-                                        '#include <map_object_movement_commands.h>'),
-                                       ('#include "task.h"', '#include <task.h>'),
-                                       ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                             'sha256': '3eb3f943a77e39a6a89b51ab4725208afb9dcfff116eeb88b47359d58fa7124f'},
- 'src/field_misc_util.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                     ('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "task.h"', '#include <task.h>')],
-                           'sha256': 'aa28ebdda0382b146a1983bce9fca1eab444eadbb0f153a01e91de65b4d37cbb'},
- 'src/field_move.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                ('#include "script.h"', '#include <script.h>'),
-                                ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                ('#include "field_move.h"', '#include <field_move.h>'),
-                                ('#include "alph_checks.h"', '#include <alph_checks.h>'),
-                                ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                ('#include "start_menu.h"', '#include <start_menu.h>')],
-                      'sha256': '8f8941ae4c7cb136a37c6997d3ce71857814f2cd6629b7755767e3ade33776de'},
- 'src/field_overworld_transition.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                ('#include "task.h"', '#include <task.h>'),
-                                                ('#include "field_overworld_transition.h"',
-                                                 '#include <field_overworld_transition.h>'),
-                                                ('#include "field_overworld_restore.h"',
-                                                 '#include <field_overworld_restore.h>')],
-                                      'sha256': 'b31de0105054508516ebfe4071d795a277ca14b523f1cf22d589993d85edc55b'},
- 'src/field_system.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                                  ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                  ('#include "field/field_control.h"', '#include <field/field_control.h>'),
-                                  ('#include "field/signpost.h"', '#include <field/signpost.h>'),
-                                  ('#include "field/bottom_screen_app.h"', '#include <field/bottom_screen_app.h>'),
-                                  ('#include "overlay_124.h"', '#include <overlay_124.h>'),
-                                  ('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                                  ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                                  ('#include "map_events.h"', '#include <map_events.h>'),
-                                  ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                        'sha256': 'ff89e8f9143642e77409745e38c959d23d23fd360321ca9d5fdb55d9f73aca71'},
- 'src/field_system_rtc_weather.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "field_system_rtc_weather.h"',
-                                               '#include <field_system_rtc_weather.h>'),
-                                              ('#include "field_time_events.h"', '#include <field_time_events.h>')],
-                                    'sha256': 'faacdf6208d83c87736f3d2d1a5f8db33cc3f5f196bcbdb5d25ce9f3abac8041'},
- 'src/field_take_photo.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                       '#include <field/field_effect_manager.h>'),
-                                      ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                      ('#include "field/map_object_billboard_motion.h"',
-                                       '#include <field/map_object_billboard_motion.h>'),
-                                      ('#include "field/map_object_models.h"', '#include <field/map_object_models.h>'),
-                                      ('#include "field/map_object_render.h"', '#include <field/map_object_render.h>'),
-                                      ('#include "field_take_photo.h"', '#include <field_take_photo.h>'),
-                                      ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                      ('#include "field/field_follow_mon.h"', '#include <field/field_follow_mon.h>'),
-                                      ('#include "headbutt_tree.h"', '#include <headbutt_tree.h>'),
-                                      ('#include "field_warp_reset_suppress.h"',
-                                       '#include <field_warp_reset_suppress.h>'),
-                                      ('#include "task.h"', '#include <task.h>'),
-                                      ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                                      ('#include "field_overworld_transition.h"',
-                                       '#include <field_overworld_transition.h>'),
-                                      ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                            'sha256': '97ba4f0f7470ff9b95e372c80a46415cfcbd461a6a332159cc435b5e1b53046a'},
- 'src/field_terrain.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                   ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                   ('#include "field/map_load_manager.h"', '#include <field/map_load_manager.h>'),
-                                   ('#include "gymmick_collision.h"', '#include <gymmick_collision.h>'),
-                                   ('#include "terrain_attributes.h"', '#include <terrain_attributes.h>'),
-                                   ('#include "field/map_load_manager_internal.h"',
-                                    '#include <field/map_load_manager_internal.h>')],
-                         'sha256': '0a64f7f36df3f68c228b8b27c1ec96fa8811301f0da76ea0fbc485b9bdcbdc87'},
- 'src/field_time_events.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                       ('#include "field/field_effect_manager.h"',
-                                        '#include <field/field_effect_manager.h>'),
-                                       ('#include "script.h"', '#include <script.h>'),
-                                       ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                       ('#include "apricorn_tree.h"', '#include <apricorn_tree.h>'),
-                                       ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                       ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                       ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>'),
-                                       ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                       ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                                       ('#include "safari_zone_encounters.h"', '#include <safari_zone_encounters.h>')],
-                             'sha256': '3ac2644971d4550d920ebce442ef8aa831e6f3243f1edd6bdfec6ae139eac15c'},
- 'src/field_transition_effects.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                              ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                              ('#include "player_avatar_actions.h"',
-                                               '#include <player_avatar_actions.h>'),
-                                              ('#include "field_follow_mon_ball.h"',
-                                               '#include <field_follow_mon_ball.h>'),
-                                              ('#include "script.h"', '#include <script.h>'),
-                                              ('#include "field_transition_effects.h"',
-                                               '#include <field_transition_effects.h>'),
-                                              ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                              ('#include "field/map_load_manager.h"',
-                                               '#include <field/map_load_manager.h>'),
-                                              ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                              ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                              ('#include "field/door_transition.h"',
-                                               '#include <field/door_transition.h>'),
-                                              ('#include "field/field_follow_mon.h"',
-                                               '#include <field/field_follow_mon.h>'),
-                                              ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                              ('#include "map_object_movement_commands.h"',
-                                               '#include <map_object_movement_commands.h>'),
-                                              ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                                              ('#include "map_preview_graphic.h"', '#include <map_preview_graphic.h>'),
-                                              ('#include "field_overworld_transition.h"',
-                                               '#include <field_overworld_transition.h>'),
-                                              ('#include "field_overworld_restore.h"',
-                                               '#include <field_overworld_restore.h>'),
-                                              ('#include "field_transition_tasks.h"',
-                                               '#include <field_transition_tasks.h>')],
-                                    'sha256': 'b71283544f94563b0dae29d79f3f69b57e83df22620e5253b9dd027c786da644'},
- 'src/field_transition_tasks.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                            ('#include "player_avatar_actions.h"',
-                                             '#include <player_avatar_actions.h>'),
-                                            ('#include "field/door_transition.h"',
-                                             '#include <field/door_transition.h>'),
-                                            ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                            ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                            ('#include "field_transition_effects.h"',
-                                             '#include <field_transition_effects.h>'),
-                                            ('#include "map_object_movement_commands.h"',
-                                             '#include <map_object_movement_commands.h>'),
-                                            ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                            ('#include "task.h"', '#include <task.h>'),
-                                            ('#include "field_transition_tasks.h"',
-                                             '#include <field_transition_tasks.h>')],
-                                  'sha256': 'b29259dea2c8957fac4d2e8ffa9e67679b9a1017a28dfea14da5afba5f6b2061'},
- 'src/field_use_item.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                    ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                                    ('#include "script.h"', '#include <script.h>'),
-                                    ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                    ('#include "alph_checks.h"', '#include <alph_checks.h>'),
-                                    ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                    ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                    ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                    ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                    ('#include "field_interaction.h"', '#include <field_interaction.h>'),
-                                    ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                    ('#include "map_object_movement_commands.h"',
-                                     '#include <map_object_movement_commands.h>'),
-                                    ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>'),
-                                    ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "field_use_item.h"', '#include <field_use_item.h>'),
-                                    ('#include "start_menu.h"', '#include <start_menu.h>'),
-                                    ('#include "bag_view.h"', '#include <bag_view.h>')],
-                          'sha256': 'a2611d982fe744231e2778ab9842af17dcfd4794868e2a539730cf0ac454c597'},
- 'src/field_warp_state.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                      ('#include "field/field_move_cut_in.h"', '#include <field/field_move_cut_in.h>'),
-                                      ('#include "field_system.h"', '#include <field_system.h>'),
-                                      ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                      ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                      ('#include "field/field_follow_mon.h"', '#include <field/field_follow_mon.h>'),
-                                      ('#include "field_warp_reset_suppress.h"',
-                                       '#include <field_warp_reset_suppress.h>'),
-                                      ('#include "map_object_movement_commands.h"',
-                                       '#include <map_object_movement_commands.h>'),
-                                      ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                      ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                      ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                      ('#include "spawn_warp.h"', '#include <spawn_warp.h>'),
-                                      ('#include "spawn_warp_lookup_internal.h"',
-                                       '#include <spawn_warp_lookup_internal.h>'),
-                                      ('#include "task.h"', '#include <task.h>'),
-                                      ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                            'sha256': '872b74144f989ca7e3088550d08148a1bfe41209e4d37835bd877158394448eb'},
- 'src/field_warp_tasks.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                      ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                      ('#include "script.h"', '#include <script.h>'),
-                                      ('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                                      ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                      ('#include "field/warp_spin.h"', '#include <field/warp_spin.h>'),
-                                      ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                      ('#include "field_system_rtc_weather.h"',
-                                       '#include <field_system_rtc_weather.h>'),
-                                      ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                      ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                      ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                      ('#include "terrain_attributes.h"', '#include <terrain_attributes.h>'),
-                                      ('#include "spawn_warp.h"', '#include <spawn_warp.h>'),
-                                      ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                      ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                      ('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                                      ('#include "union_room.h"', '#include <union_room.h>'),
-                                      ('#include "map_events.h"', '#include <map_events.h>'),
-                                      ('#include "task.h"', '#include <task.h>'),
-                                      ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                                      ('#include "field_overworld_transition.h"',
-                                       '#include <field_overworld_transition.h>'),
-                                      ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                            'sha256': 'e858778f929cf4d9d019e88a5026e7703995c6aa86684e98f823272cc9e858c9'},
- 'src/follow_mon.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                ('#include "script.h"', '#include <script.h>'),
-                                ('#include "map_object_manager.h"', '#include <map_object_manager.h>')],
-                      'sha256': '9e3d91b81948dc0e5734417eedee5264c0d5a907d1765160f290058b463d4db7'},
- 'src/frontier/battle_arcade_data.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                 ('#include "frontier/battle_arcade_setup.h"',
-                                                  '#include <frontier/battle_arcade_setup.h>')],
-                                       'sha256': '8e9ebd347d84c512784bfaeac8d19f7c1a721c816fd1593ddf082b29c774a635'},
- 'src/frontier/battle_arcade_game_board.c': {'edits': [('#include "frontier/battle_arcade_setup.h"',
-                                                        '#include <frontier/battle_arcade_setup.h>'),
-                                                       ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                             'sha256': '01ca88b36d39b0bf6c60273ab5aec85cf9401116c45343256e329bdb5c6795be'},
- 'src/frontier/battle_arcade_setup.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                  ('#include "frontier/battle_arcade_setup.h"',
-                                                   '#include <frontier/battle_arcade_setup.h>')],
-                                        'sha256': '8dc00a1bd2f94964a242568a43e3ea4567cd7498c92e9427099216c3c8e671e2'},
- 'src/frontier/battle_castle_challenge.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                      ('#include "frontier/battle_castle_setup.h"',
-                                                       '#include <frontier/battle_castle_setup.h>')],
-                                            'sha256': '7efe9fc6020d66a5a14a3e7c4db8b786c91775600454650173c5e4cfe6dbcc17'},
- 'src/frontier/battle_castle_display.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                    ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                          'sha256': '74d7f7e9074d2d934e592fcc23139a4ec4e7a596c2089ae4a091f52d6531300a'},
- 'src/frontier/battle_castle_opponent_app.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                         ('#include "frontier/battle_castle_setup.h"',
-                                                          '#include <frontier/battle_castle_setup.h>')],
-                                               'sha256': '2c3fe5936adc284676e7a3c7dc08f21d0aa35e14177d8316c1696531af7aa0c0'},
- 'src/frontier/battle_castle_party_app.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                      ('#include "frontier/battle_castle_setup.h"',
-                                                       '#include <frontier/battle_castle_setup.h>')],
-                                            'sha256': '9be3f9a6e20423684f3ada6fcf2876213e837c656f9e17d772b2282042a2d24f'},
- 'src/frontier/battle_castle_setup.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                  ('#include "frontier/battle_castle_setup.h"',
-                                                   '#include <frontier/battle_castle_setup.h>')],
-                                        'sha256': 'ddb4b96265bdff56c8d3b905f863f8f4ec473fc9e9a29f43fef411d9a7255305'},
- 'src/frontier/battle_factory_app.c': {'edits': [('#include "frontier/battle_factory_setup.h"',
-                                                  '#include <frontier/battle_factory_setup.h>')],
-                                       'sha256': 'b967076cb653100d4ffb130027412225104312a899e9f8dc081746a9392798bb'},
- 'src/frontier/battle_factory_app_gfx.c': {'edits': [('#include "frontier/battle_factory_setup.h"',
-                                                      '#include <frontier/battle_factory_setup.h>')],
-                                           'sha256': '8e63ac1e64a52140d2d4eef957c7bff1336c5b6d92314e76fa8c0640d0fb1d3b'},
- 'src/frontier/battle_factory_data.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                  ('#include "frontier/battle_factory_setup.h"',
-                                                   '#include <frontier/battle_factory_setup.h>')],
-                                        'sha256': '4c8a4d96448780b2a3b9ccccda7a3d2d59de11c39f3e84ead032487d584bb3ab'},
- 'src/frontier/battle_factory_setup.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                   ('#include "frontier/battle_factory_setup.h"',
-                                                    '#include <frontier/battle_factory_setup.h>')],
-                                         'sha256': '5b0f91eb981f70359934024fa15c8f7b1517c9fd9dd8e2dcb04d82ae594c2fe1'},
- 'src/frontier/battle_hall_app.c': {'edits': [('#include "frontier/battle_hall_setup.h"',
-                                               '#include <frontier/battle_hall_setup.h>')],
-                                    'sha256': '71b54b1c258abf2956af9020f0dade7d51f263294f5f0305e02c34252e2c9e32'},
- 'src/frontier/battle_hall_data.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                               ('#include "frontier/battle_hall_setup.h"',
-                                                '#include <frontier/battle_hall_setup.h>')],
-                                     'sha256': '80d0833f183c6f450f731dbfcec34566e5c2f2d84eeff24d72c1000d79db1324'},
- 'src/frontier/battle_hall_setup.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                ('#include "frontier/battle_hall_setup.h"',
-                                                 '#include <frontier/battle_hall_setup.h>')],
-                                      'sha256': '5f968559e61a8f4bdf0028a201dde12596c20193fc1d037b7a6f17e78ebda006'},
- 'src/frontier/battle_tower_setup.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                 ('#include "frontier_field_system.h"',
-                                                  '#include <frontier_field_system.h>'),
-                                                 ('#include "frontier/battle_tower_setup.h"',
-                                                  '#include <frontier/battle_tower_setup.h>')],
-                                       'sha256': '350d16a6bfe3bcf0776b951156b6f51b291b9c801485265e6f664817e7ecce2b'},
- 'src/frontier/frontier_cmd_arcade.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                  ('#include "launch_application.h"',
-                                                   '#include <launch_application.h>'),
-                                                  ('#include "frontier/battle_arcade_setup.h"',
-                                                   '#include <frontier/battle_arcade_setup.h>')],
-                                        'sha256': 'd47df95b246dacc8ecea2afbf5dc20e9e3212c160698c66d6fe00673ffe83c79'},
- 'src/frontier/frontier_cmd_castle.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                  ('#include "launch_application.h"',
-                                                   '#include <launch_application.h>'),
-                                                  ('#include "frontier/battle_castle_setup.h"',
-                                                   '#include <frontier/battle_castle_setup.h>')],
-                                        'sha256': 'cf24ebe2c98b640936971655c8e4363b3ea727fc4a779c65d16938da9d90d337'},
- 'src/frontier/frontier_cmd_factory.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                   ('#include "launch_application.h"',
-                                                    '#include <launch_application.h>'),
-                                                   ('#include "frontier/battle_factory_setup.h"',
-                                                    '#include <frontier/battle_factory_setup.h>')],
-                                         'sha256': 'd6cb107583f3ca43c557fb1bbfa71612b857ff127f2c96a6457acf9a83b475de'},
- 'src/frontier/frontier_cmd_hall.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                                ('#include "frontier/battle_hall_setup.h"',
-                                                 '#include <frontier/battle_hall_setup.h>')],
-                                      'sha256': '89f0598d85455a6cc1d76c272b0ee6cc0b57ca35abb73f3896ce9356574ace49'},
- 'src/frontier/frontier_cmd_link_lobby.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                      ('#include "frontier/frontier.h"',
-                                                       '#include <frontier/frontier.h>'),
-                                                      ('#include "frontier_field_system.h"',
-                                                       '#include <frontier_field_system.h>'),
-                                                      ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                            'sha256': 'dd8885a24597304cee29cab58f6d727defb2f4636e7765f61129a39a404c166d'},
- 'src/frontier/frontier_link_lobby.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                  ('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                  ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                        'sha256': 'e055cecf3e2aa9b33e8ae89b8b48080e866f6484014eb82629e7de7bbc2d016d'},
- 'src/frontier/frontier_link_messages.c': {'edits': [('#include "frontier/battle_arcade_setup.h"',
-                                                      '#include <frontier/battle_arcade_setup.h>'),
-                                                     ('#include "frontier/battle_castle_setup.h"',
-                                                      '#include <frontier/battle_castle_setup.h>'),
-                                                     ('#include "frontier/battle_factory_setup.h"',
-                                                      '#include <frontier/battle_factory_setup.h>')],
-                                           'sha256': 'b77c5e59b5e32238a25a7e9958338c4140710006f511207556d2fdaa8fbfa699'},
- 'src/frontier/frontier_map.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                           ('#include "field_bgm.h"', '#include <field_bgm.h>')],
-                                 'sha256': '9cdc0ae620e0438a1a9b013024ba14b900676fa1f34277bdeedc3f158b2d7571'},
- 'src/frontier/frontier_records_app.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>')],
-                                         'sha256': '4ed9dc25dc1e05d574a86fc509115792115334860e25d9137db184ceeeaeeba1'},
- 'src/frontier/frontier_save_data_helpers.c': {'edits': [('#include "frontier_field_support.h"',
-                                                          '#include <frontier_field_support.h>'),
-                                                         ('#include "frontier/battle_tower_setup.h"',
-                                                          '#include <frontier/battle_tower_setup.h>')],
-                                               'sha256': 'da3f403a8a61c237b290a020be6d111acbdd84c8bb03d7450f5f7c716509285b'},
- 'src/frontier/frontier_script_commands.c': {'edits': [('#include "frontier/frontier.h"',
-                                                        '#include <frontier/frontier.h>')],
-                                             'sha256': 'a2ff0297250c151a62040ac19d2fbc22c3598ae7bb5406c46f5ab12ea9608192'},
- 'src/frontier/frontier_script_commands_ext.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                                           ('#include "frontier/frontier.h"',
-                                                            '#include <frontier/frontier.h>'),
-                                                           ('#include "communication_club_link.h"',
-                                                            '#include <communication_club_link.h>'),
-                                                           ('#include "launch_application.h"',
-                                                            '#include <launch_application.h>'),
-                                                           ('#include "naming_screen.h"',
-                                                            '#include <naming_screen.h>')],
-                                                 'sha256': 'ad1d274e7c5dd57a33562cd52882ea1aa062c7e2d1dccdfe3900c3163a78c981'},
- 'src/frontier/frontier_script_commands_misc.c': {'edits': [('#include "frontier/frontier.h"',
-                                                             '#include <frontier/frontier.h>'),
-                                                            ('#include "frontier_field_system.h"',
-                                                             '#include <frontier_field_system.h>'),
-                                                            ('#include "launch_application.h"',
-                                                             '#include <launch_application.h>'),
-                                                            ('#include "frontier/battle_tower_setup.h"',
-                                                             '#include <frontier/battle_tower_setup.h>')],
-                                                  'sha256': '05836c61706129798b18d61a5c782342f217bea0764d49f0c93cddd8ecaff8f8'},
- 'src/frontier/frontier_script_ui.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                                 ('#include "party_menu.h"', '#include <party_menu.h>')],
-                                       'sha256': '4a8e8ca2979c96e0b47a73eaf3c27654ade6956ea37cd2495c7e1d89c6925e54'},
- 'src/frontier_field_support.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "frontier_field_support.h"',
-                                             '#include <frontier_field_support.h>'),
-                                            ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                            ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                            ('#include "task.h"', '#include <task.h>')],
-                                  'sha256': 'ec3f20526faa8df1f6046420953ea9ed20f5e2a8e0fce74ff0bcb26bbd37baea'},
- 'src/frontier_field_system.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                           ('#include "frontier_field_system.h"', '#include <frontier_field_system.h>'),
-                                           ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                           ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                           ('#include "frontier_field_support.h"',
-                                            '#include <frontier_field_support.h>')],
-                                 'sha256': '356ddabf94dd5eb494f9d42df764897012eabe9d1661b0a8ff590b2163c5b199'},
- 'src/frontier_launch.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                                     ('#include "frontier_launch.h"', '#include <frontier_launch.h>')],
-                           'sha256': '4ec0adebf9ad595a73a589862aa9bde55ba826a9f3d36767a0f3b9f89cf7c7f9'},
- 'src/frontier_opponents.c': {'edits': [('#include "frontier_field_system.h"', '#include <frontier_field_system.h>')],
-                              'sha256': '79f48bb9de180b00874b4da28c39b32a4894dffc98fc7725bcbb95bf0f76d7e3'},
- 'src/frontier_runtime.c': {'edits': [('#include "frontier/frontier.h"', '#include <frontier/frontier.h>')],
-                            'sha256': 'e2d147b9cbf537bd0fc12ffcb57d6d9f6391366ac6adb2f99d8b3b8d2a1f350b'},
- 'src/game_clear.c': {'edits': [('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                ('#include "location_backup.h"', '#include <location_backup.h>'),
-                                ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                ('#include "task.h"', '#include <task.h>'),
-                                ('#include "game_clear.h"', '#include <game_clear.h>'),
-                                ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                      'sha256': 'bae8ee590132cce892336fa39216c2ceb6a375aa8100b14c1cd3224159138978'},
- 'src/gear_phone_ring_manager.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                             ('#include "gear_phone_ring_manager.h"',
-                                              '#include <gear_phone_ring_manager.h>'),
-                                             ('#include "overlay_2/gear_phone_calls.h"',
-                                              '#include <overlay_2/gear_phone_calls.h>'),
-                                             ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                             ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                             ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                             ('#include "field_misc_events.h"', '#include <field_misc_events.h>')],
-                                   'sha256': 'f8188f0ab9218f0c55ef62518e6242e2c80324488f8795e43ae8b2272b438655'},
- 'src/get_egg.c': {'edits': [('#include "script.h"', '#include <script.h>'),
-                             ('#include "get_egg.h"', '#include <get_egg.h>'),
-                             ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                             ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                             ('#include "start_menu.h"', '#include <start_menu.h>')],
-                   'sha256': '0908b443c2ea2c94893c4c073bceada92a7f7382011838ce989fcba8daa8cf40'},
- 'src/global_terminal/global_terminal_app.c': {'edits': [('#include "global_terminal/global_terminal_app_internal.h"',
-                                                          '#include <global_terminal/global_terminal_app_internal.h>')],
-                                               'sha256': 'e3b6fbde98f23731ecab15c2e28ead1e3621a04097d2972cf79eea4a12b69c46'},
- 'src/global_terminal/global_terminal_connect.c': {'edits': [('#include "launch_application.h"',
-                                                              '#include <launch_application.h>'),
-                                                             ('#include '
-                                                              '"global_terminal/global_terminal_app_internal.h"',
-                                                              '#include '
-                                                              '<global_terminal/global_terminal_app_internal.h>')],
-                                                   'sha256': 'a94e85857ddf70f23e65c64bf296cdcda75166fc598d1113389c2cffedf505c6'},
- 'src/gts/gts.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                   'sha256': 'ddb0dcac510bec150c80ebabcd8d22fcb0e6a362d5903d9f2f1281cf77d65e11'},
- 'src/gts/gts_avatars.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                           'sha256': 'c80c087af4b98fbd3027ffd624327cd2bc3e954c4bf94c71bf0ccc3a98290335'},
- 'src/gts/gts_connection.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                              'sha256': '16e6c32e534631fee5946f14d201f46f027f04af4c0e6a42f4b7cb7404403228'},
- 'src/gts/gts_main_menu.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                             'sha256': '86875d370d52c52e8b2d7ebf14bbc3d94f4214eb18235c69b433a4eed2a96503'},
- 'src/gts/gts_search.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                          'sha256': 'a0ca964866689173619c640342bbbc8f15a75df3a46b59e171fda5533295e649'},
- 'src/gts/gts_search_result.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                                 'sha256': 'c98936bc115463c477deb01b69420aa1df7677ed262141d75c9b20293d16f927'},
- 'src/gts/gts_select_mon.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                              'sha256': '46adb503630a5a3ac8cd94e6764090c82c7c3c626e9a4cced39eff03a36b30d8'},
- 'src/gts/gts_selector.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                            'sha256': '971ece182aad1b31a29e6983873e8d84e361163c09648bfcb3867b5cb45fadf5'},
- 'src/gts/gts_server.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                          'sha256': '63407439ccffcb322f8ea2ca2f1fa8088dcc36dd9b12b1d1e5fdea6a7f8554d7'},
- 'src/gts/gts_summary.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                           'sha256': '630d7b85d1d6b6927bec795b987151b836948e24dbc8a399b2c567257e36d34a'},
- 'src/gts/gts_trade.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                         'sha256': '730a48c0822bd4ccd124f31a7e5178d9552047e9fa2c33286ea1076e46f6485d'},
- 'src/gts/gts_transaction.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                               'sha256': 'b457c789c3907629df4453ed215e957d79e9382d4e91995ba276d6b6e1891b42'},
- 'src/gts/gts_wanted.c': {'edits': [('#include "gts/gts_internal.h"', '#include <gts/gts_internal.h>')],
-                          'sha256': '6efe7d960d54600676f19f826b4e68b7582c20c11c41a9570462ef5c039dfe01'},
- 'src/gymmick_collision.c': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                       ('#include "gymmick_collision.h"', '#include <gymmick_collision.h>'),
-                                       ('#include "overlay_04.h"', '#include <overlay_04.h>'),
-                                       ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                             'sha256': '271e7eec6f372611a3c8e819af99edfab6f6968ecaa883ed7bd82d1ae8e711d4'},
- 'src/gymmick_init.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "gymmick_init.h"', '#include <gymmick_init.h>')],
-                        'sha256': 'b57b7db020c3fb7dfc9783c1ebe45fc53180ffa37eee5d1947d5974dbc0c4ec1'},
- 'src/hall_of_fame_showcase.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                 'sha256': 'f2de260c3466e414157eb1a88562634a326c60271a1e19759cc5bbf749a7b3e8'},
- 'src/hatch_egg_task.c': {'edits': [('#include "get_egg.h"', '#include <get_egg.h>'),
-                                    ('#include "naming_screen.h"', '#include <naming_screen.h>'),
-                                    ('#include "hatch_egg_task.h"', '#include <hatch_egg_task.h>'),
-                                    ('#include "hatch_egg_task_data.h"', '#include <hatch_egg_task_data.h>'),
-                                    ('#include "field_overworld_transition.h"',
-                                     '#include <field_overworld_transition.h>'),
-                                    ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                          'sha256': '32afc0c2e81bffc35da0be2b88011da382d09beb68e3326d43aee9db822625a5'},
- 'src/headbutt_tree.c': {'edits': [('#include "headbutt_tree.h"', '#include <headbutt_tree.h>'),
-                                   ('#include "field/map_load_manager.h"', '#include <field/map_load_manager.h>')],
-                         'sha256': 'de466a8ca2abdace54dc1bad1c3606662cd1465aa51a70cd44f1cd14bf7582cb'},
- 'src/launch_application.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                        ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                        ('#include "get_egg.h"', '#include <get_egg.h>'),
-                                        ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                        ('#include "mailbox_app.h"', '#include <mailbox_app.h>'),
-                                        ('#include "record_mixing/record_mixing.h"',
-                                         '#include <record_mixing/record_mixing.h>'),
-                                        ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                        ('#include "global_terminal/global_terminal_app.h"',
-                                         '#include <global_terminal/global_terminal_app.h>'),
-                                        ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                        ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                        ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                        ('#include "gear_phone_ring_manager.h"',
-                                         '#include <gear_phone_ring_manager.h>'),
-                                        ('#include "launch_application_internal.h"',
-                                         '#include <launch_application_internal.h>'),
-                                        ('#include "naming_screen.h"', '#include <naming_screen.h>'),
-                                        ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                        ('#include "alph_puzzle.h"', '#include <alph_puzzle.h>'),
-                                        ('#include "hatch_egg_task.h"', '#include <hatch_egg_task.h>'),
-                                        ('#include "start_menu.h"', '#include <start_menu.h>'),
-                                        ('#include "field_overworld_transition.h"',
-                                         '#include <field_overworld_transition.h>'),
-                                        ('#include "field_overworld_restore.h"',
-                                         '#include <field_overworld_restore.h>'),
-                                        ('#include "bag_view.h"', '#include <bag_view.h>')],
-                              'sha256': 'ce04d08d92b9474536112b722c34021dcb193635e3c43b9359b72f1be290cc5a'},
- 'src/legendary_cinematic_task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                              ('#include "legendary_cinematic_task.h"',
-                                               '#include <legendary_cinematic_task.h>'),
-                                              ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                              ('#include "task.h"', '#include <task.h>'),
-                                              ('#include "field_overworld_restore.h"',
-                                               '#include <field_overworld_restore.h>'),
-                                              ('#include "field_overworld_transition.h"',
-                                               '#include <field_overworld_transition.h>')],
-                                    'sha256': 'eec7b2d1c9e9af0fb330c05889c7cf9fc72636e5e5a6bfdce6181a20b40c05bc'},
- 'src/location_backup.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "location_backup.h"', '#include <location_backup.h>'),
-                                     ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>')],
-                           'sha256': '0c38736ef75381ffb199480bbc7fa9e6c06367874b4fc832de050e7bb53c0255'},
- 'src/magnet_train_ride.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "magnet_train_ride.h"', '#include <magnet_train_ride.h>'),
-                                       ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                       ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                       ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                       ('#include "task.h"', '#include <task.h>'),
-                                       ('#include "field_overworld_transition.h"',
-                                        '#include <field_overworld_transition.h>'),
-                                       ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                             'sha256': 'e6bb86197e44e5f765bf6e52e2fa77c2be0158afd94a9bb9de00133419740fef'},
- 'src/map_events.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                ('#include "field_system.h"', '#include <field_system.h>'),
-                                ('#include "map_events.h"', '#include <map_events.h>')],
-                      'sha256': 'ca7ae292989ee6ee51888b56acc73848a3842c83a86ac9da02e18c08a609fa3b'},
- 'src/map_object.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                ('#include "field/map_object_render.h"', '#include <field/map_object_render.h>'),
-                                ('#include "map_object_movement_utilities.h"',
-                                 '#include <map_object_movement_utilities.h>'),
-                                ('#include "script_manager.h"', '#include <script_manager.h>')],
-                      'sha256': '36e6bff1d35b8f8015754b5d8f81fc58cb34421b2f2507f704d470110be714fa'},
- 'src/map_object_behavior.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                         ('#include "field_emote_mark.h"', '#include <field_emote_mark.h>'),
-                                         ('#include "map_object.h"', '#include <map_object.h>'),
-                                         ('#include "map_object_behavior_internal.h"',
-                                          '#include <map_object_behavior_internal.h>'),
-                                         ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                         ('#include "field/field_effect_helpers.h"',
-                                          '#include <field/field_effect_helpers.h>'),
-                                         ('#include "field/map_object_models.h"',
-                                          '#include <field/map_object_models.h>'),
-                                         ('#include "field/map_object_render.h"',
-                                          '#include <field/map_object_render.h>'),
-                                         ('#include "field_apricorn_regrowth.h"',
-                                          '#include <field_apricorn_regrowth.h>'),
-                                         ('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "map_object_movement_commands_internal.h"',
-                                          '#include <map_object_movement_commands_internal.h>'),
-                                         ('#include "map_object_movement_utilities.h"',
-                                          '#include <map_object_movement_utilities.h>'),
-                                         ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                         ('#include "map_object_movement_commands.h"',
-                                          '#include <map_object_movement_commands.h>'),
-                                         ('#include "map_object_movement_utilities_internal.h"',
-                                          '#include <map_object_movement_utilities_internal.h>'),
-                                         ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                         ('#include "script_manager.h"', '#include <script_manager.h>')],
-                               'sha256': '7de6b5e71bd3bd4dbf45b97f9adb129ff898de5c210c14dcc076c54f59bb4fe1'},
- 'src/map_object_follow.c': {'edits': [('#include "field/field_effect_manager.h"',
-                                        '#include <field/field_effect_manager.h>'),
-                                       ('#include "map_object.h"', '#include <map_object.h>'),
-                                       ('#include "map_object_behavior_internal.h"',
-                                        '#include <map_object_behavior_internal.h>'),
-                                       ('#include "map_object_follow_internal.h"',
-                                        '#include <map_object_follow_internal.h>'),
-                                       ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                       ('#include "field_hidden_object_cover.h"',
-                                        '#include <field_hidden_object_cover.h>'),
-                                       ('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "field_tall_grass.h"', '#include <field_tall_grass.h>'),
-                                       ('#include "field_very_tall_grass.h"', '#include <field_very_tall_grass.h>'),
-                                       ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                       ('#include "map_object_movement_commands_internal.h"',
-                                        '#include <map_object_movement_commands_internal.h>'),
-                                       ('#include "field/field_follow_mon.h"', '#include <field/field_follow_mon.h>'),
-                                       ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                       ('#include "map_object_movement_utilities_internal.h"',
-                                        '#include <map_object_movement_utilities_internal.h>'),
-                                       ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                             'sha256': '3566f840dd10f24c40c41014df846180591bc81537b9500e9b5900186fa5f48d'},
- 'src/map_object_movement.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                         ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                         ('#include "map_object_movement.h"', '#include <map_object_movement.h>'),
-                                         ('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "map_object_movement_commands_internal.h"',
-                                          '#include <map_object_movement_commands_internal.h>'),
-                                         ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                         ('#include "map_object_movement_utilities_internal.h"',
-                                          '#include <map_object_movement_utilities_internal.h>')],
-                               'sha256': '0fbc14b8f9005aa1cf00f0c6891cdb130c6ae3558818a5735ab07179bc175c4e'},
- 'src/map_object_movement_commands.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                                  ('#include "field_emote_mark.h"', '#include <field_emote_mark.h>'),
-                                                  ('#include "map_object.h"', '#include <map_object.h>'),
-                                                  ('#include "map_object_follow_internal.h"',
-                                                   '#include <map_object_follow_internal.h>'),
-                                                  ('#include "field_trainer_reveal.h"',
-                                                   '#include <field_trainer_reveal.h>'),
-                                                  ('#include "map_object_movement_commands_internal.h"',
-                                                   '#include <map_object_movement_commands_internal.h>'),
-                                                  ('#include "map_object_movement_utilities.h"',
-                                                   '#include <map_object_movement_utilities.h>'),
-                                                  ('#include "map_object_movement_commands.h"',
-                                                   '#include <map_object_movement_commands.h>'),
-                                                  ('#include "map_object_movement_utilities_internal.h"',
-                                                   '#include <map_object_movement_utilities_internal.h>')],
-                                        'sha256': '860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a'},
- 'src/map_object_movement_utilities.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                                   ('#include "field_system.h"', '#include <field_system.h>'),
-                                                   ('#include "field/field_follow_mon.h"',
-                                                    '#include <field/field_follow_mon.h>'),
-                                                   ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                                   ('#include "map_object_movement_utilities_internal.h"',
-                                                    '#include <map_object_movement_utilities_internal.h>'),
-                                                   ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                                         'sha256': '539afdd7c55800ff61e84f7ef29844134ca369ec1c21fbaa9a6bdf724a6da8b3'},
- 'src/map_object_update.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                       ('#include "map_object_behavior_internal.h"',
-                                        '#include <map_object_behavior_internal.h>'),
-                                       ('#include "map_object_follow_internal.h"',
-                                        '#include <map_object_follow_internal.h>'),
-                                       ('#include "field/map_object_models.h"', '#include <field/map_object_models.h>'),
-                                       ('#include "field_footprints.h"', '#include <field_footprints.h>'),
-                                       ('#include "field_ground_dust.h"', '#include <field_ground_dust.h>'),
-                                       ('#include "field_mud_splash.h"', '#include <field_mud_splash.h>'),
-                                       ('#include "field_puddle_splash.h"', '#include <field_puddle_splash.h>'),
-                                       ('#include "field_reflection.h"', '#include <field_reflection.h>'),
-                                       ('#include "field_shadow.h"', '#include <field_shadow.h>'),
-                                       ('#include "field_shallow_water_ripple.h"',
-                                        '#include <field_shallow_water_ripple.h>'),
-                                       ('#include "field_system.h"', '#include <field_system.h>'),
-                                       ('#include "field_tall_grass.h"', '#include <field_tall_grass.h>'),
-                                       ('#include "field_very_tall_grass.h"', '#include <field_very_tall_grass.h>'),
-                                       ('#include "map_object_movement_commands_internal.h"',
-                                        '#include <map_object_movement_commands_internal.h>'),
-                                       ('#include "field/field_follow_mon.h"', '#include <field/field_follow_mon.h>'),
-                                       ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                       ('#include "map_object_movement_utilities_internal.h"',
-                                        '#include <map_object_movement_utilities_internal.h>'),
-                                       ('#include "overlay_01.h"', '#include <overlay_01.h>')],
-                             'sha256': '6daa7ad3e7d76cf1348d0bc130686242e58f8506c8c41544614a5c6f0acf7ccb'},
- 'src/map_preview_graphic.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                         ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                         ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                         ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                                         ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                         ('#include "map_object_movement_commands.h"',
-                                          '#include <map_object_movement_commands.h>'),
-                                         ('#include "map_preview_graphic.h"', '#include <map_preview_graphic.h>')],
-                               'sha256': '2c4a9c59d556faf3c8c505a14ff0c8dc337870169a572f097220d8d8c3bf74c3'},
- 'src/mart_bag_task.c': {'edits': [('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                   ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                   ('#include "task.h"', '#include <task.h>'),
-                                   ('#include "mart_bag_task.h"', '#include <mart_bag_task.h>'),
-                                   ('#include "bag_view.h"', '#include <bag_view.h>')],
-                         'sha256': 'c8472cd62f95753cfc2f4dd8bbdf4569be2099ea4f864262712ce265ed0053df'},
- 'src/naming_screen.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                                   ('#include "naming_screen.h"', '#include <naming_screen.h>')],
-                         'sha256': 'b696ec482028ffee4f439e9802c7e5cf32aa97ba3571647dfa8fd55148f3c65c'},
- 'src/nintendo_wfc_connect_unused.c': {'edits': [('#include "record_mixing/record_mixing.h"',
-                                                  '#include <record_mixing/record_mixing.h>')],
-                                       'sha256': '62b6feba01e42ffded4a81683557811eb172182e442b73f3b04bc0ea0d740d9c'},
- 'src/npc_trade.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                               ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                               ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                               ('#include "field_misc_events.h"', '#include <field_misc_events.h>')],
-                     'sha256': 'f331e080ef87eed6dccbb3e8d710fbf057db658d7c7e1201868fbd3ecb4af8f7'},
- 'src/npc_trade_task.c': {'edits': [('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                    ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>'),
-                                    ('#include "field_overworld_transition.h"',
-                                     '#include <field_overworld_transition.h>')],
-                          'sha256': 'd8e5a22b52e4a6d6635ef2a480c144261aec91c2de7d25899f61b3239e6ac1fa'},
- 'src/oaks_speech.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                                 ('#include "naming_screen.h"', '#include <naming_screen.h>'),
-                                 ('#include "oaks_speech.h"', '#include <oaks_speech.h>'),
-                                 ('#include "oaks_speech_internal.h"', '#include <oaks_speech_internal.h>')],
-                       'sha256': '6e7be8ddc5c125d0b0af61b3044451e5fac88003264563a6f6b96e92529c37ab'},
- 'src/oaks_speech_obj.c': {'edits': [('#include "oaks_speech_internal.h"', '#include <oaks_speech_internal.h>')],
-                           'sha256': '4c770e90a3e9088553693ecb225d5c6b1829a08cd30bc0558d656db63fa83d29'},
- 'src/oaks_speech_yesnomenu.c': {'edits': [('#include "oaks_speech_internal.h"', '#include <oaks_speech_internal.h>')],
-                                 'sha256': 'a93adcb19518392d18c0a13a958c422888abfc80d45a068680a567c808d999ce'},
- 'src/overlay_03/battle_regulation_menu.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                       ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                                       ('#include "task.h"', '#include <task.h>')],
-                                             'sha256': 'c88a8db63753adbf513b095d7f03fecd8dba7e347e93c9d8ead888100e14573a'},
- 'src/overlay_03/communication_club.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                   ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                   ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                                   ('#include "communication_club_link.h"',
-                                                    '#include <communication_club_link.h>'),
-                                                   ('#include "task.h"', '#include <task.h>')],
-                                         'sha256': '72b0ffe5e1dc38fe6f60d04b0422e2bd27787e2ca59bf31b2bf0e2c0ea4dd1e4'},
- 'src/overlay_03/custom_safari_zone.c': {'edits': [('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                   ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                                   ('#include "task.h"', '#include <task.h>')],
-                                         'sha256': 'be113735f0fcdf5626d2723794a85c9b15cbd7c7b0222fb06790a02d14da3644'},
- 'src/overlay_03/overlay_03_scrcmds.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                   ('#include "map_object_movement_utilities.h"',
-                                                    '#include <map_object_movement_utilities.h>'),
-                                                   ('#include "field/map_load_manager.h"',
-                                                    '#include <field/map_load_manager.h>'),
-                                                   ('#include "launch_application.h"',
-                                                    '#include <launch_application.h>'),
-                                                   ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                                   ('#include "overlay_02.h"', '#include <overlay_02.h>'),
-                                                   ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                                   ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                                   ('#include "safari_zone_encounters.h"',
-                                                    '#include <safari_zone_encounters.h>'),
-                                                   ('#include "safari_decoration_task.h"',
-                                                    '#include <safari_decoration_task.h>')],
-                                         'sha256': '9372a32bd4b846b39439409521d4252c4b7a1da4349a2fccb4f0af8356ae6df0'},
- 'src/overlay_03/pokeathlon_records.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                                   ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                                   ('#include "task.h"', '#include <task.h>')],
-                                         'sha256': 'f6ea83ad96f645b0b5cab804b4c46c11b729cb38d3fcb521b722d9787eb5cca4'},
- 'src/overlay_03/shop_menu.c': {'edits': [('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                          ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                          ('#include "mart.h"', '#include <mart.h>'),
-                                          ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                          ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                                          ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                          ('#include "communication_club_link.h"',
-                                           '#include <communication_club_link.h>'),
-                                          ('#include "task.h"', '#include <task.h>'),
-                                          ('#include "mart_bag_task.h"', '#include <mart_bag_task.h>'),
-                                          ('#include "bag_view.h"', '#include <bag_view.h>')],
-                                'sha256': 'b20e95cbc70562ae7c5e988e87ca4c3e218ffefd513c1a8940f54e1ac14ae073'},
- 'src/overlay_124.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                 ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                 ('#include "overlay_124.h"', '#include <overlay_124.h>'),
-                                 ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                 ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                                 ('#include "map_events.h"', '#include <map_events.h>')],
-                       'sha256': 'ec13d7e447a15fc58472e6580aeb95906d7d5099a2b882f6521b7fb617172da5'},
- 'src/overlay_22.c': {'edits': [('#include "script.h"', '#include <script.h>'),
-                                ('#include "money_box.h"', '#include <money_box.h>'),
-                                ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                ('#include "script_manager.h"', '#include <script_manager.h>')],
-                      'sha256': '0725c1a1702a741f1bf72ded5bd59fa12fd51c8bd5a4dd92fc8c63ea42c95abe'},
- 'src/overlay_25.c': {'edits': [('#include "encounter.h"', '#include <encounter.h>'),
-                                ('#include "script.h"', '#include <script.h>'),
-                                ('#include "overlay_25.h"', '#include <overlay_25.h>'),
-                                ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                ('#include "script_manager.h"', '#include <script_manager.h>')],
-                      'sha256': '95154a22b2e00b1d294b2ae59d52638029faf5a13ceb6ee4dad0b4261b5a5c9e'},
- 'src/overlay_36.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                ('#include "apricorn_tree.h"', '#include <apricorn_tree.h>'),
-                                ('#include "location_backup.h"', '#include <location_backup.h>'),
-                                ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>')],
-                      'sha256': '87af06021f54c29794beedbc28d66da080b8665d925f39a2ad1e4770b02e93e9'},
- 'src/overlay_94.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                ('#include "overlay_94.h"', '#include <overlay_94.h>'),
-                                ('#include "party_context_menu.h"', '#include <party_context_menu.h>'),
-                                ('#include "party_menu_list_items.h"', '#include <party_menu_list_items.h>'),
-                                ('#include "party_menu_sprites.h"', '#include <party_menu_sprites.h>')],
-                      'sha256': '6d51e91d2d967504770dddb3b38654f37c8b4786adab26f6677dd2303c418bd0'},
- 'src/overlay_bug_contest.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "bug_contest.h"', '#include <bug_contest.h>'),
-                                         ('#include "field_time_events.h"', '#include <field_time_events.h>')],
-                               'sha256': 'c34ed3a62938b6a105032a842abbbedc53535329da7013530bbc25f181f06c94'},
- 'src/party_context_menu.c': {'edits': [('#include "party_context_menu.h"', '#include <party_context_menu.h>'),
-                                        ('#include "party_menu_items.h"', '#include <party_menu_items.h>'),
-                                        ('#include "party_menu_list_items.h"', '#include <party_menu_list_items.h>')],
-                              'sha256': 'd122f632342fb3ac4a84661d62e9b4ad3316dd5ed38159082c7d85df5cf162e6'},
- 'src/party_menu.c': {'edits': [('#include "frontier_field_support.h"', '#include <frontier_field_support.h>'),
-                                ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                ('#include "overlay_94.h"', '#include <overlay_94.h>'),
-                                ('#include "party_context_menu.h"', '#include <party_context_menu.h>'),
-                                ('#include "party_menu_items.h"', '#include <party_menu_items.h>'),
-                                ('#include "party_menu_list_items.h"', '#include <party_menu_list_items.h>'),
-                                ('#include "party_menu_sprites.h"', '#include <party_menu_sprites.h>')],
-                      'sha256': 'f94feedd24b2e7b12ccb9df6542d4968f0350b78ed9b0508346d2b83bdbbb564'},
- 'src/party_menu_items.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                      ('#include "party_menu_items.h"', '#include <party_menu_items.h>'),
-                                      ('#include "party_context_menu.h"', '#include <party_context_menu.h>'),
-                                      ('#include "party_menu_list_items.h"', '#include <party_menu_list_items.h>'),
-                                      ('#include "party_menu_sprites.h"', '#include <party_menu_sprites.h>')],
-                            'sha256': 'e2b54af5d61a0a3e5710244ca0ae140d72428cd0f59b2167eb5f7552c0434edd'},
- 'src/party_menu_list_items.c': {'edits': [('#include "field_move.h"', '#include <field_move.h>'),
-                                           ('#include "party_menu_list_items.h"', '#include <party_menu_list_items.h>'),
-                                           ('#include "overlay_94.h"', '#include <overlay_94.h>'),
-                                           ('#include "party_context_menu.h"', '#include <party_context_menu.h>'),
-                                           ('#include "party_menu_sprites.h"', '#include <party_menu_sprites.h>')],
-                                 'sha256': 'f052075b8703b4224d6c31d3c8d01eb426a95876bdd1d66023da62712fa4425d'},
- 'src/party_menu_sprites.c': {'edits': [('#include "party_menu_sprites.h"', '#include <party_menu_sprites.h>')],
-                              'sha256': '7a5877cbe582b593842c110c1487ef0eaef73dbcc693494eb942bf7cd445d389'},
- 'src/phone_rematch.c': {'edits': [('#include "overlay_26.h"', '#include <overlay_26.h>')],
-                         'sha256': 'c399e2b34072be58adaa8c5e6eceec918e46f6112f4d2891b35d456dfe9aff40'},
- 'src/player_avatar.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                   ('#include "map_object.h"', '#include <map_object.h>'),
-                                   ('#include "field_surf_mount.h"', '#include <field_surf_mount.h>'),
-                                   ('#include "field_warp_arrow.h"', '#include <field_warp_arrow.h>'),
-                                   ('#include "map_object_movement_utilities.h"',
-                                    '#include <map_object_movement_utilities.h>'),
-                                   ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                   ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                         'sha256': '2ea71ad419bda58c0cd2e2c57fc0b96990bb5f03e88903aeb037c5fe939fab0c'},
- 'src/player_avatar_movement.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                            ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                            ('#include "player_avatar_movement.h"',
-                                             '#include <player_avatar_movement.h>'),
-                                            ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                            ('#include "map_object_movement_commands_internal.h"',
-                                             '#include <map_object_movement_commands_internal.h>'),
-                                            ('#include "map_object_movement_utilities.h"',
-                                             '#include <map_object_movement_utilities.h>'),
-                                            ('#include "player_avatar_actions.h"',
-                                             '#include <player_avatar_actions.h>'),
-                                            ('#include "field/field_follow_mon.h"',
-                                             '#include <field/field_follow_mon.h>'),
-                                            ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                                            ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                                            ('#include "gymmick_init.h"', '#include <gymmick_init.h>'),
-                                            ('#include "map_object_movement_commands.h"',
-                                             '#include <map_object_movement_commands.h>'),
-                                            ('#include "overlay_04.h"', '#include <overlay_04.h>')],
-                                  'sha256': '0484badad86852a5580b985963e26f30c8f7ea9711a0c8b7cab2ceb5e3035681'},
- 'src/pokeathlon/pokeathlon_course_flow.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                             'sha256': '5be06f8c14b2d78589441dbe9ef897d9ae3afec34e56be215cc77c7e75878b49'},
- 'src/pokeathlon/pokeathlon_course_mon_gfx.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>')],
-                                                'sha256': '83efee76fbe6674138bf07487353b7e85f1b5d6b5042409a908d1ae37dc35e0c'},
- 'src/pokeathlon_course_task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                            ('#include "pokeathlon_course_task.h"',
-                                             '#include <pokeathlon_course_task.h>'),
-                                            ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                            ('#include "task.h"', '#include <task.h>')],
-                                  'sha256': '6a4b37db90e28792e21227f2c08a9fcf74f17587a3082fd63691acd06a6a4014'},
- 'src/pokemon.c': {'edits': [('#include "wifi_club.h"', '#include <wifi_club.h>')],
-                   'sha256': '1d784ece4650b84e426a437ee20e4a926475fc20ef761e67440d0c0136548fa3'},
- 'src/pokemon_summary.c': {'edits': [('#include "party_menu.h"', '#include <party_menu.h>')],
-                           'sha256': '8d87396beab5f367f5d7db2cea875b53a938ebb464a9d0c380708b2ebfa72394'},
- 'src/record_mixing/record_mixing.c': {'edits': [('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                                                 ('#include "record_mixing/record_mixing.h"',
-                                                  '#include <record_mixing/record_mixing.h>'),
-                                                 ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                                 ('#include "record_mixing/record_mixing_internal.h"',
-                                                  '#include <record_mixing/record_mixing_internal.h>')],
-                                       'sha256': 'f8b884d025b2763ef07f2813fb13c57e83ff2424cad7e819da3eb44314ef7176'},
- 'src/record_mixing/record_mixing_link.c': {'edits': [('#include "record_mixing/record_mixing_internal.h"',
-                                                       '#include <record_mixing/record_mixing_internal.h>')],
-                                            'sha256': 'f674c498ba6a3224f63c4886dec64f84817f6b5b771db75f505494b537baad73'},
- 'src/register_hall_of_fame.c': {'edits': [('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                                           ('#include "field_misc_events.h"', '#include <field_misc_events.h>')],
-                                 'sha256': 'a671835c615d5b8664948b71f0d030033cbc2bb9b5d132d62b41409c19a8b2b7'},
- 'src/render_animation.c': {'edits': [('#include "render_animation.h"', '#include <render_animation.h>'),
-                                      ('#include "render_model.h"', '#include <render_model.h>')],
-                            'sha256': 'de759a7b1a153e7e7e10e0e5a020ec810147bb3a8946f011cf4a3448d531ce1a'},
- 'src/render_model.c': {'edits': [('#include "render_model.h"', '#include <render_model.h>')],
-                        'sha256': '6a7e86e4a37deac4ebfcb3aaee9e789b389d5a853be25ee269c5b8f47b115475'},
- 'src/safari_decoration_task.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                                            ('#include "safari_decoration_task.h"',
-                                             '#include <safari_decoration_task.h>'),
-                                            ('#include "field_overworld_restore.h"',
-                                             '#include <field_overworld_restore.h>')],
-                                  'sha256': '620339bade4dcd2bf51b439bffbf15ece7cf7de0080451b75dab5e3c31dbbe72'},
- 'src/safari_zone_encounters.c': {'edits': [('#include "safari_zone_encounters.h"',
-                                             '#include <safari_zone_encounters.h>')],
-                                  'sha256': '7242a8465aae453772b2aba40ebdae455fc592436260367efd58df6abb21610f'},
- 'src/save_arrays.c': {'edits': [('#include "save_local_field_data.h"', '#include <save_local_field_data.h>')],
-                       'sha256': 'dbdf0fb87f52b43f3099da261a4cecc0f10d64f59907d250d516f16e5626545e'},
- 'src/save_local_field_data.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                           ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                           ('#include "field_system.h"', '#include <field_system.h>'),
-                                           ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                           ('#include "spawn_warp.h"', '#include <spawn_warp.h>')],
-                                 'sha256': '415745fc230fa219cc73661e342076bdfd1063be85d350b16cd621c1fd1eb5b5'},
- 'src/save_misc.c': {'edits': [('#include "apricorn_tree.h"', '#include <apricorn_tree.h>')],
-                     'sha256': 'd32cff743c06b5c7d179577be5f1819f2d9913bf4bf33a84c0f533c83ff29681'},
- 'src/save_pokegear.c': {'edits': [('#include "overlay_2/gear_phone_calls.h"',
-                                    '#include <overlay_2/gear_phone_calls.h>')],
-                         'sha256': 'fee5ea697a1da43cb7f469a3903ebaebca31c029921ac53925209ea0d28c86da'},
- 'src/scrcmd_12.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                               ('#include "catching_show.h"', '#include <catching_show.h>'),
-                               ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                               ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>')],
-                     'sha256': '92627326748962b1ada18921802186a1b55ed44286362458b69b1936dc519f20'},
- 'src/scrcmd_17.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                               ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                               ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                     'sha256': '65050460d03bbe1575fe7e414fc25c559615e40edffe2b300f8617c16de3bce5'},
- 'src/scrcmd_8.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                              ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                              ('#include "script_manager.h"', '#include <script_manager.h>')],
-                    'sha256': '094935d0a8ef3bc077acc0e083408472f3638c2b1bbca5f2857e6be6bf9742bb'},
- 'src/scrcmd_9.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                              ('#include "field_system.h"', '#include <field_system.h>'),
-                              ('#include "script.h"', '#include <script.h>'),
-                              ('#include "launch_application.h"', '#include <launch_application.h>'),
-                              ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                              ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                              ('#include "script_manager.h"', '#include <script_manager.h>'),
-                              ('#include "frontier_field_system.h"', '#include <frontier_field_system.h>'),
-                              ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>')],
-                    'sha256': 'eced1902f1e1c540db578cbe50c6dfed10baea695c5570bb40473f4768dac2f3'},
- 'src/scrcmd_apricorn.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "field/apricorn_tree_anim.h"', '#include <field/apricorn_tree_anim.h>'),
-                                     ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                     ('#include "field_time_events.h"', '#include <field_time_events.h>')],
-                           'sha256': 'f830a4861cceda0c410f74862c054499f338aac8aa66487e5f136f6f12c9fedb'},
- 'src/scrcmd_battle.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                   ('#include "encounter.h"', '#include <encounter.h>'),
-                                   ('#include "blackout.h"', '#include <blackout.h>'),
-                                   ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                   ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                   ('#include "map_object_behavior.h"', '#include <map_object_behavior.h>')],
-                         'sha256': 'a6acb1efa0c45dbe05cee3301f3d6280deb617e0ece2cd4cd907627ef112e109'},
- 'src/scrcmd_battle_arcade.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                          ('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "script.h"', '#include <script.h>'),
-                                          ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                          ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                          ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                          ('#include "frontier_field_system.h"', '#include <frontier_field_system.h>'),
-                                          ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                          ('#include "task.h"', '#include <task.h>')],
-                                'sha256': 'b693136257e6d914b76da585cb21d22ef79f9d6091e92dd360f53f18c8505df4'},
- 'src/scrcmd_battle_castle.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                          ('#include "field_system.h"', '#include <field_system.h>'),
-                                          ('#include "script.h"', '#include <script.h>'),
-                                          ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                          ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                          ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                          ('#include "frontier_field_system.h"', '#include <frontier_field_system.h>'),
-                                          ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                          ('#include "task.h"', '#include <task.h>')],
-                                'sha256': '24cdc943f1bf0f6df12d0f0a4ce7579b4064131e961c3cc99fd1ea8929a4d3f3'},
- 'src/scrcmd_battle_hall.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                        ('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "script.h"', '#include <script.h>'),
-                                        ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                        ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                        ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                        ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                        ('#include "task.h"', '#include <task.h>')],
-                              'sha256': '0ed8e264d8f348ba03e064bec663eaf7f26cd2c2fb159cb8eaa30810d562eb7e'},
- 'src/scrcmd_c.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                              ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                              ('#include "map_object_follow.h"', '#include <map_object_follow.h>'),
-                              ('#include "encounter.h"', '#include <encounter.h>'),
-                              ('#include "field_system.h"', '#include <field_system.h>'),
-                              ('#include "follow_mon.h"', '#include <follow_mon.h>'),
-                              ('#include "player_avatar_actions.h"', '#include <player_avatar_actions.h>'),
-                              ('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                              ('#include "map_object_movement_utilities.h"',
-                               '#include <map_object_movement_utilities.h>'),
-                              ('#include "field/field_camera.h"', '#include <field/field_camera.h>'),
-                              ('#include "field/legend_cutscene_camera.h"',
-                               '#include <field/legend_cutscene_camera.h>'),
-                              ('#include "field/map_load_manager.h"', '#include <field/map_load_manager.h>'),
-                              ('#include "field/rock_smash_item.h"', '#include <field/rock_smash_item.h>'),
-                              ('#include "field/signpost.h"', '#include <field/signpost.h>'),
-                              ('#include "frontier/frontier.h"', '#include <frontier/frontier.h>'),
-                              ('#include "overlay_2/event_cutscene.h"', '#include <overlay_2/event_cutscene.h>'),
-                              ('#include "overlay_2/gear_phone_calls.h"', '#include <overlay_2/gear_phone_calls.h>'),
-                              ('#include "blackout.h"', '#include <blackout.h>'),
-                              ('#include "choose_starter.h"', '#include <choose_starter.h>'),
-                              ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                              ('#include "field_take_photo.h"', '#include <field_take_photo.h>'),
-                              ('#include "gymmick_init.h"', '#include <gymmick_init.h>'),
-                              ('#include "launch_application.h"', '#include <launch_application.h>'),
-                              ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                              ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                              ('#include "overlay_03.h"', '#include <overlay_03.h>'),
-                              ('#include "overlay_04.h"', '#include <overlay_04.h>'),
-                              ('#include "mailbox_app.h"', '#include <mailbox_app.h>'),
-                              ('#include "overlay_26.h"', '#include <overlay_26.h>'),
-                              ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                              ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                              ('#include "field_terrain.h"', '#include <field_terrain.h>'),
-                              ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                              ('#include "comm_player_manager.h"', '#include <comm_player_manager.h>'),
-                              ('#include "communication_club_link.h"', '#include <communication_club_link.h>'),
-                              ('#include "union_room.h"', '#include <union_room.h>'),
-                              ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                              ('#include "map_object_movement_commands.h"',
-                               '#include <map_object_movement_commands.h>'),
-                              ('#include "field_warp_reset_suppress.h"', '#include <field_warp_reset_suppress.h>'),
-                              ('#include "trainer_card_data.h"', '#include <trainer_card_data.h>'),
-                              ('#include "field_misc_events.h"', '#include <field_misc_events.h>'),
-                              ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                              ('#include "pokeathlon_course_task.h"', '#include <pokeathlon_course_task.h>'),
-                              ('#include "spin_trade_flow.h"', '#include <spin_trade_flow.h>'),
-                              ('#include "magnet_train_ride.h"', '#include <magnet_train_ride.h>'),
-                              ('#include "ship_voyage.h"', '#include <ship_voyage.h>'),
-                              ('#include "legendary_cinematic_task.h"', '#include <legendary_cinematic_task.h>'),
-                              ('#include "map_events.h"', '#include <map_events.h>'),
-                              ('#include "party_menu.h"', '#include <party_menu.h>'),
-                              ('#include "task.h"', '#include <task.h>'),
-                              ('#include "safari_zone_encounters.h"', '#include <safari_zone_encounters.h>'),
-                              ('#include "alph_puzzle.h"', '#include <alph_puzzle.h>'),
-                              ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>'),
-                              ('#include "game_clear.h"', '#include <game_clear.h>'),
-                              ('#include "field_overworld_transition.h"', '#include <field_overworld_transition.h>'),
-                              ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>'),
-                              ('#include "field_transition_tasks.h"', '#include <field_transition_tasks.h>'),
-                              ('#include "scrcmd_link_sync.h"', '#include <scrcmd_link_sync.h>'),
-                              ('#include "wifi_club.h"', '#include <wifi_club.h>'),
-                              ('#include "battle_greeting_task.h"', '#include <battle_greeting_task.h>')],
-                    'sha256': 'acbb13e9cbfe967d87e618224f46212d43ee8287c651126e30b1188872e396ca'},
- 'src/scrcmd_daycare.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "get_egg.h"', '#include <get_egg.h>'),
-                                    ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                          'sha256': 'd7377ab05f95223a232ac1f136773279004dbfd8cfabb75ec446049e12042e78'},
- 'src/scrcmd_dppl_prizes.c': {'edits': [('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                              'sha256': 'cdc98cf7c64b7e63d2e24ac8d9affa4e5678e1790efa6547817cada6af9dc4b5'},
- 'src/scrcmd_fossils.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                          'sha256': '3e57880fb518846914d5912488a3e12864e86bd8b556fc43c7317cb4b3f983b1'},
- 'src/scrcmd_items.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                        'sha256': '3dc0074f2f29cd571852f49066f3c6e2a550673dab51472f3a79068f00a904c7'},
- 'src/scrcmd_link_sync.c': {'edits': [('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                      ('#include "script.h"', '#include <script.h>'),
-                                      ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                      ('#include "scrcmd.h"', '#include <scrcmd.h>'),
-                                      ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                      ('#include "party_menu.h"', '#include <party_menu.h>'),
-                                      ('#include "task.h"', '#include <task.h>'),
-                                      ('#include "scrcmd_link_sync.h"', '#include <scrcmd_link_sync.h>'),
-                                      ('#include "field_overworld_transition.h"',
-                                       '#include <field_overworld_transition.h>'),
-                                      ('#include "field_overworld_restore.h"', '#include <field_overworld_restore.h>')],
-                            'sha256': '247131eb266389351fb7abffc5d506158a94f9f80f476b22019017252dc7d31a'},
- 'src/scrcmd_lottery.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                          'sha256': '7a85ed0dc28ba0f2eae6d721214c3c81628189a42ea764ec73db2cd7d545f870'},
- 'src/scrcmd_mart.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                 ('#include "mart.h"', '#include <mart.h>'),
-                                 ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                       'sha256': '4931aede80bab2b74c4cb961910550ddcbfb16308fae25bdf0e9a3a495444743'},
- 'src/scrcmd_money.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                        'sha256': '0556fd7978d76c73a1ba81a18f3b6d6b1e9985f4ff32bf491512ce4aac8c2823'},
- 'src/scrcmd_move_relearner.c': {'edits': [('#include "launch_application.h"', '#include <launch_application.h>'),
-                                           ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                                 'sha256': '202f527d83177aa4df0f11213af8b75b4bc1f578a07e00188dfb1d3b51809b06'},
- 'src/scrcmd_mystery_gift.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                               'sha256': 'd1acc5c6071ba6ff14be82b5cea35e903115bec121d1c6bcaf064cb59b68b067'},
- 'src/scrcmd_party.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "get_egg.h"', '#include <get_egg.h>'),
-                                  ('#include "npc_trade.h"', '#include <npc_trade.h>'),
-                                  ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                        'sha256': 'df64cfc7080caa0d4350dcb1aeb0f4790629f7a9c80fc04efc5c11e79312d8cd'},
- 'src/scrcmd_size_record.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                              'sha256': 'd92dbbebd560bf6d23ae799279609ff64bbb5ad4250edf7026283fd958746cdf'},
- 'src/scrcmd_sound.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                  ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                  ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                        'sha256': '72f9643cda5a64f0db483297555aef44495c394e2109ffbff07f629756e5e487'},
- 'src/scrcmd_strbuf.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                   ('#include "scrcmd.h"', '#include <scrcmd.h>')],
-                         'sha256': '2c43e3b9959e10073e4ef85066343b7a326d1fc5e08e4fa0669e4d63892feded'},
- 'src/script.c': {'edits': [('#include "script.h"', '#include <script.h>')],
-                  'sha256': '943601849c46d18b1d8e665d6f449b30307ba5de0dda7449a0b7941a839b6e76'},
- 'src/script_manager.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                    ('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "script_manager.h"', '#include <script_manager.h>'),
-                                    ('#include "map_events.h"', '#include <map_events.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "start_menu.h"', '#include <start_menu.h>')],
-                          'sha256': '51913f32248c70d3f38d7a5bd0407da7a8597c90d18fa0e306fe7b3984db6bd7'},
- 'src/script_pokemon_util.c': {'edits': [('#include "render_animation.h"', '#include <render_animation.h>'),
-                                         ('#include "get_egg.h"', '#include <get_egg.h>')],
-                               'sha256': '5cde9651d058236036df9ee9386d3199e8a1759c19b086443dc116770369f4fc'},
- 'src/ship_voyage.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                 ('#include "ship_voyage.h"', '#include <ship_voyage.h>'),
-                                 ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                 ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                 ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                 ('#include "task.h"', '#include <task.h>'),
-                                 ('#include "field_overworld_transition.h"', '#include <field_overworld_transition.h>'),
-                                 ('#include "field_warp_tasks.h"', '#include <field_warp_tasks.h>')],
-                       'sha256': '2930c2c78a21fd157864679cb6b322d60f6cad0d98d5897b7f8c4eb725292cbb'},
- 'src/spawn_warp.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                ('#include "spawn_warp.h"', '#include <spawn_warp.h>'),
-                                ('#include "spawn_warp_lookup_internal.h"', '#include <spawn_warp_lookup_internal.h>')],
-                      'sha256': 'bc651cc174f9e96cb9140d2143a4941801a2358c6bd2bafea6f244e15eb6fc03'},
- 'src/spin_trade_flow.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                     ('#include "task.h"', '#include <task.h>')],
-                           'sha256': '12b50e50110c480cdc2637e45063df81b67a1e0df3855c7ad10bb29ef099da8d'},
- 'src/spin_trade_link.c': {'edits': [('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                                     ('#include "union_room_talk.h"', '#include <union_room_talk.h>')],
-                           'sha256': '382de3274669287782f61864fff9c8116bf45ec61dc29eee261b006b8e7bcbf6'},
- 'src/start_menu.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                ('#include "field_system.h"', '#include <field_system.h>'),
-                                ('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                                ('#include "player_avatar_movement.h"', '#include <player_avatar_movement.h>'),
-                                ('#include "field/fieldmap.h"', '#include <field/fieldmap.h>'),
-                                ('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                ('#include "field_move.h"', '#include <field_move.h>'),
-                                ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                ('#include "field/bottom_screen_app.h"', '#include <field/bottom_screen_app.h>'),
-                                ('#include "save_local_field_data.h"', '#include <save_local_field_data.h>'),
-                                ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                ('#include "frontier_field_support.h"', '#include <frontier_field_support.h>'),
-                                ('#include "trainer_card_data.h"', '#include <trainer_card_data.h>'),
-                                ('#include "gear_phone_ring_manager.h"', '#include <gear_phone_ring_manager.h>'),
-                                ('#include "start_menu.h"', '#include <start_menu.h>'),
-                                ('#include "field_use_item.h"', '#include <field_use_item.h>'),
-                                ('#include "bag_view.h"', '#include <bag_view.h>')],
-                      'sha256': '746df88e2c47e3b911d0ba7225728de753859cb4ab65be8287c78665d9ecb542'},
- 'src/swarm.c': {'edits': [('#include "map_events.h"', '#include <map_events.h>')],
-                 'sha256': 'f7b7546b1bc41ceb50e61993ae6a31edcc39ed4e2528eb53b4145a28a28764db'},
- 'src/talked_trainer_movement.c': {'edits': [('#include "map_object.h"', '#include <map_object.h>'),
-                                             ('#include "field_system.h"', '#include <field_system.h>'),
-                                             ('#include "overlay_26.h"', '#include <overlay_26.h>'),
-                                             ('#include "map_events.h"', '#include <map_events.h>')],
-                                   'sha256': 'a390fcb21b9c647803aa491e74351302609ab233e23d38647e0dcb76d8d2df6f'},
- 'src/task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                          ('#include "task.h"', '#include <task.h>')],
-                'sha256': 'f096e1a5ed66ccb9d21954ba1e641fd3dab66837781309e45aac52ba543108c5'},
- 'src/terrain_attributes.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "terrain_attributes.h"', '#include <terrain_attributes.h>')],
-                              'sha256': '1201161ae43ab76c88e80f5e4850ce4441b0dd17c96facf11cd036fdcf6d726e'},
- 'src/touch_save_app.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                    ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                    ('#include "task.h"', '#include <task.h>'),
-                                    ('#include "touch_save_app.h"', '#include <touch_save_app.h>')],
-                          'sha256': 'f2538d94c145ba6163131ed50d3415d96eff9f6d22bff03af901bfb6501271bc'},
- 'src/trade_communication.c': {'edits': [('#include "trade_communication_internal.h"',
-                                          '#include <trade_communication_internal.h>')],
-                               'sha256': 'f6f83982bbae6f1725b788ce3fec64e0a7573762ed0de8305c77cdaa67be6fe7'},
- 'src/trainer_card_data.c': {'edits': [('#include "trainer_card_data.h"', '#include <trainer_card_data.h>'),
-                                       ('#include "field_time_events.h"', '#include <field_time_events.h>'),
-                                       ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                       ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                       ('#include "task.h"', '#include <task.h>')],
-                             'sha256': '643aded3d2a7ca84b4622e1ccd1e88b5e1f24945977877902047404a66054284'},
- 'src/trainer_rematch.c': {'edits': [('#include "overlay_26.h"', '#include <overlay_26.h>'),
-                                     ('#include "script_manager.h"', '#include <script_manager.h>')],
-                           'sha256': '879c2acdaadabfc2ce3198be4d5fdf28337c0acd9d55995d58a71481a2f53c61'},
- 'src/union_chat_log.c': {'edits': [('#include "union_chat_log.h"', '#include <union_chat_log.h>'),
-                                    ('#include "overlay_01.h"', '#include <overlay_01.h>'),
-                                    ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                    ('#include "task.h"', '#include <task.h>')],
-                          'sha256': '07b37d3d145278edabe37a56485717001a14a383d0e1e0df64c6bfbaed4df39c'},
- 'src/union_room.c': {'edits': [('#include "union_room_internal.h"', '#include <union_room_internal.h>'),
-                                ('#include "union_room_talk.h"', '#include <union_room_talk.h>')],
-                      'sha256': '06f3a16ad8357b8c2e96d4037d15d454dbd00e981c0b8754cdfabe7b0b10a1cf'},
- 'src/union_room_objects.c': {'edits': [('#include "field_effects.h"', '#include <field_effects.h>'),
-                                        ('#include "map_object.h"', '#include <map_object.h>'),
-                                        ('#include "player_avatar.h"', '#include <player_avatar.h>'),
-                                        ('#include "union_room_objects.h"', '#include <union_room_objects.h>'),
-                                        ('#include "field_shadow.h"', '#include <field_shadow.h>'),
-                                        ('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "field_union_chat_marker.h"',
-                                         '#include <field_union_chat_marker.h>'),
-                                        ('#include "field_warp_reset.h"', '#include <field_warp_reset.h>'),
-                                        ('#include "map_object_movement_commands.h"',
-                                         '#include <map_object_movement_commands.h>'),
-                                        ('#include "task.h"', '#include <task.h>')],
-                              'sha256': 'ff5ccb6441dc9a65f95ebace386339b5aa48312b20c5a132cc5a98a8ad237dfa'},
- 'src/union_room_talk.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                     ('#include "union_room_talk.h"', '#include <union_room_talk.h>'),
-                                     ('#include "trainer_card_data.h"', '#include <trainer_card_data.h>'),
-                                     ('#include "union_room_internal.h"', '#include <union_room_internal.h>')],
-                           'sha256': 'e362282f15d8153275161230bd5baceb62bd4157b429c2e5a48a21b8720ce40a'},
- 'src/union_room_talk_data.c': {'edits': [('#include "union_room_talk.h"', '#include <union_room_talk.h>')],
-                                'sha256': 'b7dd3db0f1d02e67491b83ce92c430233db832bd4fe4d9b8b27ba61e7ccb2575'},
- 'src/view_rankings_task.c': {'edits': [('#include "field_system.h"', '#include <field_system.h>'),
-                                        ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                        ('#include "task.h"', '#include <task.h>')],
-                              'sha256': 'c5ba9ef1da3f7cbef22e428f383c93e47e15ffcc3b30ceec7abfbb4c52935dc0'},
- 'src/voltorb_flip/voltorb_flip_input.c': {'edits': [('#include "global_terminal/global_terminal_app.h"',
-                                                      '#include <global_terminal/global_terminal_app.h>')],
-                                           'sha256': 'ed3fa9e203b1deb6f6f2f7521ae159f806143f54d0cf697bd383ad8f83fbea02'},
- 'src/vs_recorder_app.c': {'edits': [('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                     ('#include "vs_recorder_app_internal.h"', '#include <vs_recorder_app_internal.h>'),
-                                     ('#include "global_terminal/global_terminal_app_internal.h"',
-                                      '#include <global_terminal/global_terminal_app_internal.h>')],
-                           'sha256': 'b2a515a0993cff2885e9cb5f653e8fdaa717df8b659ed1ba6341cc58dbf0b0c6'},
- 'src/vs_recorder_menu_app.c': {'edits': [('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                          ('#include "vs_recorder_app_internal.h"',
-                                           '#include <vs_recorder_app_internal.h>'),
-                                          ('#include "global_terminal/global_terminal_app_internal.h"',
-                                           '#include <global_terminal/global_terminal_app_internal.h>')],
-                                'sha256': '5c4fcdfceb1c95b403c58e2d05a237e036a6e68967129e63ce441ee3ce3e2d8e'},
- 'src/wifi_club/wifi_club.c': {'edits': [('#include "encounter.h"', '#include <encounter.h>'),
-                                         ('#include "field_system.h"', '#include <field_system.h>'),
-                                         ('#include "launch_application.h"', '#include <launch_application.h>'),
-                                         ('#include "frontier_launch.h"', '#include <frontier_launch.h>'),
-                                         ('#include "task.h"', '#include <task.h>'),
-                                         ('#include "wifi_club.h"', '#include <wifi_club.h>')],
-                               'sha256': '5ca57c111b69ea0d38fba215b877f91ec91a85f79ee9d74038e57b775c9eee7f'},
- 'src/wifi_club/wifi_club_app.c': {'edits': [('#include "wifi_club.h"', '#include <wifi_club.h>')],
-                                   'sha256': '952980cc552d24a1bf0e96b93d2d5bdc06f6db27d1aa072ed07489f24579da5d'},
- 'src/wireless_trade_select_mon.c': {'edits': [('#include "field_bgm.h"', '#include <field_bgm.h>'),
-                                               ('#include "wireless_trade_select_mon_internal.h"',
-                                                '#include <wireless_trade_select_mon_internal.h>'),
-                                               ('#include "launch_application_internal.h"',
-                                                '#include <launch_application_internal.h>')],
-                                     'sha256': 'ce27523454f88f4f7267d180ab6be4157795e7659f39228e47dd0b26e4b0c8d7'}}
+def _header_route(sha256, includes):
+    """Expand ordered include names into the exact source-validated edits."""
+    return {'sha256': sha256,
+            'edits': [(f'#include "{name}"', f'#include <{name}>')
+                      for name in includes]}
+
+
+HEADER_ROUTES = {
+    'include/alph_checks.h': _header_route(
+        '168897b2faa129db56af072dccf2a4f1af1fa4607b7b0c65adc94f3c5a3a07c3',
+        ['script.h']),
+    'include/alph_puzzle.h': _header_route(
+        '749a66b162da064ae1890fe58654199bc27eb56018686c978e66fe4bd145958d',
+        ['task.h']),
+    'include/application/apricorn_box/apricorn_box_overlay_internal.h': _header_route(
+        '7075006ef0992ae827ab60413e29dc56bec5273c695d657808494dfc766b88d3',
+        ['party_menu.h']),
+    'include/application/apricorn_box/apricorn_box_screen_internal.h': _header_route(
+        '228603c87b8e46b2c9a73cdb3db74650d57058b1fca586e73c31bf2b162aaefb',
+        ['application/apricorn_box/apricorn_box_overlay_internal.h']),
+    'include/application/mailbox_app_internal.h': _header_route(
+        '5fd86524c565e1c5ad8930a509eba061f6053a117873bbf657aced5b0b49854b',
+        ['mailbox_app.h']),
+    'include/application/palpad/palpad_internal.h': _header_route(
+        '3a1722cdda93d2b80646801806f32adba5bb7fb91f1065fa7c1fd57ad0ee2f9a',
+        ['naming_screen.h']),
+    'include/application/pokegear/configure/pokegear_configure_internal.h': _header_route(
+        '61e185689a2eb61ab6f49153c37b4916f883ffa1569590e83d9fd21515202351',
+        ['application/pokegear/pokegear_internal.h']),
+    'include/application/pokegear/map/pokegear_map_internal.h': _header_route(
+        '9c00a5d743f14f80751dcaa24288d5e24738f65869cff977b7b15953ed771611',
+        ['application/pokegear/pokegear_internal.h']),
+    'include/application/pokegear/phone/phone_internal.h': _header_route(
+        '896fddb95ce011aac189ad899cc046e0938425470867e33d75e10f34ff658999',
+        ['application/pokegear/pokegear_internal.h']),
+    'include/application/pokegear/pokegear_internal.h': _header_route(
+        '022cb640705ed4fadf2c8e5acef8c4b437d63c70269d2f6f1bedc221b6dde1fc',
+        ['gear_phone_ring_manager.h']),
+    'include/application/pokegear/radio/radio_internal.h': _header_route(
+        'a13f45887ee647b3f0c829cc14f25c91e01d6481db0176980122ac875c1f8a2c',
+        ['application/pokegear/pokegear_internal.h']),
+    'include/application/view_photo.h': _header_route(
+        '1f8e3d6da3fa19dfeb2ef7b819555b74e93061e952d5e1aecfcd4c41e324bdd5',
+        ['field_system.h']),
+    'include/apricorn_tree.h': _header_route(
+        'd9286e365e00b8f7889363f6bf1b0daf2dedd05d233059ae59a0790bd8b9ffb9',
+        ['script.h']),
+    'include/bag_view.h': _header_route(
+        'd00a34e8d7b1bba19e5dee3bff0fe3c1377ea821f6d0046250e3b8cfdc93b7d2',
+        ['field_use_item.h']),
+    'include/battle_greeting_task.h': _header_route(
+        'f8a23e8e604ea0c22c564c0168e33e1a21613ea054f71984908704befd9df845',
+        ['task.h']),
+    'include/battle_transition_task.h': _header_route(
+        'f589e1d1825f1edba0dc94888bb89fa71888c286a75c4fcde78838d43c008c30',
+        ['task.h']),
+    'include/berry_pots_app_internal.h': _header_route(
+        '407140907a6e43e8c474e5a90cfe969481393a7470218117bbbdd1290fa99a10',
+        ['launch_application.h']),
+    'include/blackout.h': _header_route(
+        '1f0242aa191c03dd634ecfbff47263c0c3bb35a6645571e2de2e85f1f2c0fdac',
+        ['field_system.h', 'task.h']),
+    'include/bug_contest.h': _header_route(
+        '8cb92dcbdb4881b43c83c2b94cc1ec79ade973578deb9f9bc80f7635366a91af',
+        ['script.h']),
+    'include/catching_show.h': _header_route(
+        'e16d317814739e02a20375805a3941515832a144e5f0a2e7dfebaed41e754c4e',
+        ['script.h']),
+    'include/choose_starter.h': _header_route(
+        '944853fcc0babbc4d291b6bb5857f0c4cc27e91a031c72ebbc8341b4b21ce6b9',
+        ['script.h']),
+    'include/colosseum_internal.h': _header_route(
+        '1b555d6c9b9a9e33ffe21b5350aa7d3de14cd94b66b8c8243580bd828bb45bf0',
+        ['field_system.h', 'party_menu.h', 'task.h']),
+    'include/comm_player_manager.h': _header_route(
+        '4882ba9340ff618e7fb6b893b703f3a474e76f55cbb7d6f4087f502e820d69ea',
+        ['script.h']),
+    'include/comm_player_manager_internal.h': _header_route(
+        'b2146d03cf2fc8bb7bd6ff28270869206bf42ba386947d3ac729aab0d3394781',
+        ['player_avatar.h']),
+    'include/communication_club_link.h': _header_route(
+        'eb8db81b97c96e506518ad47c84da174413e505a518ec5615294a84061245a3f',
+        ['field_system.h', 'script.h']),
+    'include/communication_club_link_internal.h': _header_route(
+        'af2c51453016927ae96dcacedd385d790490357187d79c3eb13a1de42376c506',
+        ['field_system.h']),
+    'include/drawing_session.h': _header_route(
+        '98c1cd7f4e3d5c6b5d474135f5917e1b660e248d03acac0ced34312ea399b32b',
+        ['launch_application_internal.h']),
+    'include/encounter.h': _header_route(
+        '9467275524421eadf2d48577f505ad29c054f2802c80d58f2df4ab218ee6372b',
+        ['player_avatar.h', 'task.h']),
+    'include/field/apricorn_tree_anim.h': _header_route(
+        'e8c4d5bf236c1aae684fde9a3ac5f44f1381ef765e2e9ee70e20c683b3f42f0e',
+        ['player_avatar.h']),
+    'include/field/bottom_screen_app.h': _header_route(
+        '092dba4a297223c101ca19021aaca527276786dc1c6d14bf87fb100e1d422bb7',
+        ['field_system.h']),
+    'include/field/door_transition.h': _header_route(
+        '24bb31a46bc8ceb72e508330e5fa4bb4edd7524d10fb4075503fde6ce3702e74',
+        ['field_system.h', 'task.h']),
+    'include/field/encounter_check.h': _header_route(
+        'a9d2d41c9f02059a28512070282688af2711f76959263234e4c7f7ed9b5afcce',
+        ['field_system.h']),
+    'include/field/encounter_effect.h': _header_route(
+        'fcacb1694732382f11a731b35426faad23a0b46b889ba01ae4d3e9e418f02807',
+        ['field_system.h']),
+    'include/field/encounter_effect_leaders.h': _header_route(
+        '1f09b5089f2be2269f02aac83490244eee37d3ce521a71f3d02f002576ca0e4b',
+        ['field/encounter_effect.h']),
+    'include/field/field_bottom_screen.h': _header_route(
+        '97003423f74be5c2ea851b85673b05a86b3f15f1c2905550ae83d03d06ccefad',
+        ['field_system.h']),
+    'include/field/field_camera.h': _header_route(
+        'feb4bf129f68586ac4a8e0fe9ae460ffcd7aa398569055ae6bf94123d2f57c48',
+        ['field_system.h']),
+    'include/field/field_camera_zoom.h': _header_route(
+        '537f658fb9e08370dfc067fdddbaf51263df9052f0d3027567474c2e7a3ca74a',
+        ['field_system.h']),
+    'include/field/field_control.h': _header_route(
+        '4898111f275a9af202c0cf93353c81515d0c858ddd96bcaf0d43b869d6343087',
+        ['field_system.h']),
+    'include/field/field_effect_helpers.h': _header_route(
+        '8a6055188d048d0acec94baf14c70a6887fc78eed289d28db7f9d8f109ef3862',
+        ['field/field_effect_manager.h', 'render_animation.h']),
+    'include/field/field_effect_manager.h': _header_route(
+        'e119888964f553e8a8855d7b389148f302564c0d24d99a25b210bf050deba133',
+        ['map_object.h', 'field_effects.h', 'script.h', 'task.h']),
+    'include/field/field_effect_manager_internal.h': _header_route(
+        '9d648d9198d7fe221adae9e304a36b870ff65213864f14ff13ebacf64ffc1c03',
+        ['field/field_effect_manager.h']),
+    'include/field/field_flash_darkness.h': _header_route(
+        'fb60ca28901e78a98809294d6ee1f212100723bc45a50ecdc193b70783595204',
+        ['field/field_effect_manager.h', 'map_object.h']),
+    'include/field/field_follow_mon.h': _header_route(
+        'e435e61d4022fc7ee8e91ef6af4634dcef1b17f84d27ec10d1dac60f3a5e58b0',
+        ['field_system.h', 'task.h']),
+    'include/field/field_move_cut_in.h': _header_route(
+        'd89812ea237c647a5480114696065d8271c9b7bd16fd322fb8007ee348d1d5f4',
+        ['field/field_effect_manager.h', 'field_system.h']),
+    'include/field/field_move_effects.h': _header_route(
+        '269979e101529f37c3e12aee7e88fd9afc491a0c3dabac72045f0b39b3a5fb7d',
+        ['field_system.h']),
+    'include/field/field_shaymin_form_change.h': _header_route(
+        '6737a557b084db93bbb65dd0f51a28043a60f3254b0e50ce4e45e6dc4bf9e34f',
+        ['field/field_effect_manager.h']),
+    'include/field/fieldmap.h': _header_route(
+        'a2e0a570d65ffa753d1e59526068a1db31c8eecbb58c419a0e66f816e5835cc7',
+        ['field_system.h']),
+    'include/field/fly_landing_effect.h': _header_route(
+        '3db127bac3e51c117ebbb8b0699edf1a8a3de690c0e90c133dd921dc39a52775',
+        ['field/field_effect_manager.h', 'field_system.h']),
+    'include/field/legend_cutscene_camera.h': _header_route(
+        '8bd1892d35115b69dab6097df504d734bc6adb24d2aaadf1ab4158c6d844744d',
+        ['field_system.h']),
+    'include/field/map_load_manager.h': _header_route(
+        'a2c0d459b9317a128f142c39fa4a475c438628fb90be012acfc81c72c43f4398',
+        ['field_system.h']),
+    'include/field/map_load_manager_internal.h': _header_route(
+        'a45c56538acaf5fa44f7ae61a8b190af5333413b61987d6ad852563e34c3cdaf',
+        ['field/field_control.h', 'field/map_load_manager.h']),
+    'include/field/map_object_billboard_motion.h': _header_route(
+        '9e11dd617c73c36661fab932b1df838d1b90c2662721162d5235f0828419490f',
+        ['map_object.h']),
+    'include/field/map_object_model_list.h': _header_route(
+        'a9a486ed3e11ee114a32c69d1f2d87c3c57daf5a6186b012f793ca82c9d61fd0',
+        ['field/field_effect_manager.h']),
+    'include/field/map_object_models.h': _header_route(
+        '1b639f7260d22b98751df39365967cf718455c2e736a829670095260d8a24b3f',
+        ['map_object.h', 'field/map_object_render.h']),
+    'include/field/map_object_render.h': _header_route(
+        '0f3f7d0ffb4e24edfbefe80636b275ebd3e2f911fdd5d8aee044cc2f2847c560',
+        ['map_object.h']),
+    'include/field/map_object_render_internal.h': _header_route(
+        '3d89857e021c70a96bc28a495b55d4d6fb7d95d86e725f9c484c1343b4fab387',
+        ['map_object.h', 'field/map_object_render.h']),
+    'include/field/overlay116_scene_internal.h': _header_route(
+        'e1f98c07a1357dc89c9832c6a162dac9c5c10ce165c5c5031cb9bb4fc2083442',
+        ['field/encounter_effect.h']),
+    'include/field/pal_pad_registration.h': _header_route(
+        '93bde030d1134b7f622471d9c4cd88bf41a0b9687a3bbc641b1efb6dac9be1cd',
+        ['field_system.h']),
+    'include/field/rock_smash_item.h': _header_route(
+        '34944b7cfe52633261a8f46c7890a0a98516d9d5bfab91393c7dbd59cf4ea9e9',
+        ['field_system.h']),
+    'include/field/script_menu.h': _header_route(
+        '5cab7c21433707da3ca38814bfab8fb47ee8dda669dbfda039f3a8959c27bdf2',
+        ['field_system.h']),
+    'include/field/signpost.h': _header_route(
+        '72083de586567d5b11a4029c74f8f9bba34c959e671499d1cb1a78b1f177a255',
+        ['script.h']),
+    'include/field/spin_slide.h': _header_route(
+        '879e36ca73be7d8e4d5f90a393ff20704c894b9cefc790b220474ff62694ea58',
+        ['player_avatar.h', 'field_system.h']),
+    'include/field/touch_mart_app.h': _header_route(
+        '5227d427f75a5df3b4b954e2b09b3f6fb572263237de9d001416677bbdad544b',
+        ['field_system.h', 'overlay_03.h']),
+    'include/field/touchscreen_choice_menu.h': _header_route(
+        '8f763c37d4e8ee8c7fb40858fca8a75fd609960a807156f91b8645cad3401249',
+        ['field_system.h']),
+    'include/field/warp_spin.h': _header_route(
+        'ee52801441f38b60d27467c9b873e1cbf462e51486daa3d20427b867c0f6bcdb',
+        ['field_system.h']),
+    'include/field/weather_manager.h': _header_route(
+        '9790ad75e3e9d4e3560bc8a42f68e60f47602c96b647ec09fca9ab036290c2ad',
+        []),
+    'include/field_apricorn_regrowth.h': _header_route(
+        '4ea21e5dff1e95aa451283753d399fcd895f1f8fd1c18b9f0da3dbc05ed55cb1',
+        ['field/field_effect_manager.h', 'map_object.h']),
+    'include/field_bgm.h': _header_route(
+        '87287e6d8c8cf513168db4377010a0cf44765c3a9262a02cf8dc4e635c8c86d6',
+        ['field_system.h', 'script.h']),
+    'include/field_emote_bubble.h': _header_route(
+        'e21838cedea50e120d2beefadecf09f42d7123b1e3837574f06594cab79fc9e4',
+        ['field/field_effect_manager.h']),
+    'include/field_emote_mark.h': _header_route(
+        '0f6cb5a2a07723ee13d03de4c6eaccc900b0d8a96ea05ca31a82a1ceec65bb26',
+        ['player_avatar.h']),
+    'include/field_follow_mon_ball.h': _header_route(
+        'ee52da6f1371732400a1c1a35cf11f9579434c88c28cea3671912e5ca86795f5',
+        ['field/field_effect_manager.h']),
+    'include/field_footprints.h': _header_route(
+        '44f4ddc0db62baff7ab981db49a6d0d23a4c2fc5d4a09b0a953474933f018ec2',
+        ['field/field_effect_manager.h']),
+    'include/field_ground_dust.h': _header_route(
+        '7e055960a0af6e06418253bf99b085ecfe438d2c5a6b7fc9ce5a4555722a321d',
+        ['field/field_effect_manager.h']),
+    'include/field_hidden_object_cover.h': _header_route(
+        '95c2a52266cbecc132581f50930b13eb0fb31dfad5b6b91bebde78b3a6a1c8fb',
+        ['field/field_effect_manager.h']),
+    'include/field_interaction.h': _header_route(
+        '95ac7de1ff0f276e82ec870ba60662614e785708aab1b0bf2d78068d8beb41b1',
+        ['script.h']),
+    'include/field_misc_events.h': _header_route(
+        '422a3a400b72d5fde29cd68a2d07d37ccfdf6b3446acf3326a19bb21fef8a731',
+        ['script.h', 'npc_trade.h', 'task.h']),
+    'include/field_move.h': _header_route(
+        '1bcead4a115d698c74f7ac3f8f276ecadffa10bf2fb498f4db17cc05a4164607',
+        ['field_system.h', 'task.h']),
+    'include/field_mud_splash.h': _header_route(
+        'e8f393ef86ec577617c4d0e8f03795080ec1812ec6485a9812e43a8e4f941c82',
+        ['field/field_effect_manager.h']),
+    'include/field_overworld_restore.h': _header_route(
+        '94d88796677e93c316239b053060c1d8f7d7269d2ae5cf58b3c5bb49bf50f584',
+        ['task.h']),
+    'include/field_overworld_transition.h': _header_route(
+        'f8ef669ad2a91ba4db8f2795728f3c19bc6c6dca464ae8a2f6983ec36a981b24',
+        ['task.h']),
+    'include/field_puddle_splash.h': _header_route(
+        '23dacb58653d10db99f84abc5c316ae4e09b19a9339df84310cea48f452e2860',
+        ['field/field_effect_manager.h']),
+    'include/field_reflection.h': _header_route(
+        '1db08aabbd08f382f730c15c1f97fcb91b5b491288a413b6f086a8ae7bcf6a5d',
+        ['field/field_effect_manager.h']),
+    'include/field_rock_climb_effect.h': _header_route(
+        'f3051288e49a751a18ad345acd1e6c2ee653ae19e5abcbe9026ec37ae52a2dd2',
+        ['field/field_effect_manager.h', 'map_object.h']),
+    'include/field_shadow.h': _header_route(
+        '675aca2eb056c610b97893ee122ac4226337a602d9a763b31d4a34ff344c2cb0',
+        ['field/field_effect_manager.h']),
+    'include/field_shallow_water_ripple.h': _header_route(
+        'd5ce67d6e1059487147b9ec1a4f1011841c6a2fd8fe810292f679a1a6c227ce2',
+        ['field/field_effect_manager.h']),
+    'include/field_surf_mount.h': _header_route(
+        '890b67c1135c9d09f122453c6d1c873f6115ef8aaf7bcd5e149871813b5ba912',
+        ['map_object_manager.h']),
+    'include/field_system.h': _header_route(
+        '1afa6731f64e985e0cf4b05ccf9cbfbbd0e2fb6f2ab4110f3d3c4d2ae2d81ae4',
+        ['field/field_effect_manager.h', 'field/signpost.h', 'terrain_attributes.h',
+         'field_time_events.h', 'field/weather_manager.h']),
+    'include/field_system_rtc_weather.h': _header_route(
+        'b6552b3bff944d234cb57c04026faec7b31bca75ff70f85378b32ab9a9e1dcc7',
+        ['script.h']),
+    'include/field_take_photo.h': _header_route(
+        'a0c938eb07126019322328de99ad27d0e3e18a4e04803a313dd5000c15e70c60',
+        ['script.h']),
+    'include/field_tall_grass.h': _header_route(
+        '4b8f91320bf6f56cd6f254f925d0ba78d73d850e429904372685086fcb0a97cc',
+        ['field/field_effect_manager.h']),
+    'include/field_terrain.h': _header_route(
+        '2dcff508c85e389e8a89eb7d3135a9eec2257562f15590a5aaeccf5aab53de41',
+        ['field/field_control.h']),
+    'include/field_time_events.h': _header_route(
+        'c75f718964c8776c22d3a0c7bb8d49890754ddae0fffb4dcb7047e7220351769',
+        ['script.h']),
+    'include/field_trainer_reveal.h': _header_route(
+        'd81ea8b832b2fc0906cd7521710e8fd53ef6071018b9a9af1bae438da9b90dd7',
+        ['field/field_effect_manager.h']),
+    'include/field_transition_effects.h': _header_route(
+        '2e478380358a365f6e0adc04ae62271b2af5a46209b798ac851b87fb251fb04b',
+        ['field_system.h', 'field_warp_reset.h', 'task.h']),
+    'include/field_transition_tasks.h': _header_route(
+        '975a57b5b330a4483970622a6401d7c41886c5e38d8cfebbcbc5069ecf549942',
+        ['task.h']),
+    'include/field_union_chat_marker.h': _header_route(
+        '9db66b2af0f56b7ceef54d2e66cc52e7415f3408ca8745b2698182b9f73d0ae0',
+        ['field/field_effect_manager.h', 'map_object.h']),
+    'include/field_unused_billboard_effect.h': _header_route(
+        '98b408031d92588a2ea472f3b6b084f9fb3473683d47a41420148c913415a9e9',
+        ['field/field_effect_manager.h']),
+    'include/field_use_item.h': _header_route(
+        '44b9532c3fef62ff6dfa7d7de6c1d2d4a631ca5b9f3a75f9cc3083617ba599fd',
+        ['task.h']),
+    'include/field_very_tall_grass.h': _header_route(
+        'c3eeca5a37f4d680af6bed5602af5bab5ed8d04548f4411597bbfcb91c935f57',
+        ['field/field_effect_manager.h']),
+    'include/field_warp_arrow.h': _header_route(
+        '3ee36730aec586260c48cd1816d045c3058833305eb7e39ecd6314d31e9fcc54',
+        ['field/field_effect_manager.h', 'player_avatar.h']),
+    'include/field_warp_reset.h': _header_route(
+        '5284d414f51b56f190dac8c65ac209905963db059bcd76dbde23df04309197d2',
+        ['field/field_effect_manager.h', 'script.h', 'npc_trade.h']),
+    'include/field_warp_reset_suppress.h': _header_route(
+        '318f2f48ac52c5ddf24422d4bcf454d0fedc7d3796f9556dea4dfab8a50d9c07',
+        ['script.h']),
+    'include/field_warp_tasks.h': _header_route(
+        '846cb2d5ab654120dc67b93973229950316e9d8856b92cada7b9cc5e0a71ea3e',
+        ['task.h']),
+    'include/follow_mon.h': _header_route(
+        '67d15d820a833d55d7a48a3703a6b9364c25ff6f2348d0835716e75842a3b949',
+        ['map_object.h', 'map_object_manager.h']),
+    'include/frontier/battle_arcade_setup.h': _header_route(
+        '1fb4f23df4279841498adae4e4e20518eb7394f23ab8df496e91490596a0db86',
+        ['frontier/frontier.h']),
+    'include/frontier/battle_castle_setup.h': _header_route(
+        '33719e3d98a79b8cf322328dfaec27031765d606b1c92c115041c37db128fa15',
+        ['frontier/frontier.h']),
+    'include/frontier/battle_factory_setup.h': _header_route(
+        '3d9c4ec2f04e00b584358db80c0e006301628f7eb824fbeae19543455e55179b',
+        ['frontier/frontier.h']),
+    'include/frontier/battle_hall_setup.h': _header_route(
+        '5416301664717a389ffc833b842a0df2a7bf382628c2bc88e4eb94add20b0b10',
+        ['frontier/frontier.h']),
+    'include/frontier/battle_tower_setup.h': _header_route(
+        '2acdd72d9097a488d43abbd77a5f8de3f578da96f1f806c0c96cbe3f64ea85e1',
+        ['frontier/frontier.h']),
+    'include/frontier/frontier.h': _header_route(
+        'ad08a5b9eea7f80c867154f133762635d548ebef3de57638a5cb64f199535f4a',
+        ['field_system.h']),
+    'include/frontier_field_support.h': _header_route(
+        'be40c9071ea770ead2a2d008809960373d172612df49be28132adbc79e3019b6',
+        ['script.h']),
+    'include/frontier_field_system.h': _header_route(
+        '62bd514814708f39f98e19b488c5b78fff286ac1c3496e95812b5d8b9bcb1e29',
+        ['field_system.h']),
+    'include/frontier_launch.h': _header_route(
+        'ba64c5064c5d9eba661c89cca7a0488e6405842bef3b8d8b5ec5cb40c3444784',
+        ['frontier/frontier.h']),
+    'include/game_clear.h': _header_route(
+        '43e59aadff2f618f9eb0392f5d8e9bfb8051939c33e3e10faca257f0ed26311a',
+        ['task.h']),
+    'include/gear_phone_ring_manager.h': _header_route(
+        '54986ad23e0d5cb89edae671ffc60915674676a6eae9194bce46fce3a93c633e',
+        ['field_system.h', 'script.h', 'save_local_field_data.h']),
+    'include/get_egg.h': _header_route(
+        '8f1a641b6168bdac71ff70ed0a8eb68c21097c068ef279dbbf3b7b5c3c97ae66',
+        ['script.h']),
+    'include/global_terminal/global_terminal_app.h': _header_route(
+        '6b385f4a265e6a4fae0d1273ac90a572334312697caf54a8adad58c1dd501436',
+        ['field_system.h']),
+    'include/global_terminal/global_terminal_app_internal.h': _header_route(
+        '97ca5beb7caffa7d2954d7459ececda18795ef278167c7428855a9bebe5548bf',
+        ['launch_application.h']),
+    'include/gts/gts_internal.h': _header_route(
+        '658460905493c56eb724f4cd30a1bf7e65ce64aa8fcd8711579b399e8755931d',
+        ['launch_application_internal.h']),
+    'include/gymmick_collision.h': _header_route(
+        '5315ff5e509e4972f5fe570aa05b1fdbff6e7ab824457154c90eebff4920a94e',
+        ['field_system.h']),
+    'include/gymmick_init.h': _header_route(
+        '17b4d18534acdfe1d1f5aae2f5b3fa60585d8bcd7f5bc57369077d670d8c4c37',
+        ['script.h']),
+    'include/hatch_egg_app_internal.h': _header_route(
+        'bb3a8821ba94698e40cbd8b9954289f22b0c0cbe2cfa353165481ea40e6f30d9',
+        ['hatch_egg_task_data.h']),
+    'include/hatch_egg_task.h': _header_route(
+        '5ba4c1fce2d86e11ddddd06d1d865164a2e0554eadc14d5257a1ce84db2c228a',
+        ['task.h']),
+    'include/hatch_egg_task_data.h': _header_route(
+        '92ba12b6cf47ff9a4aacfd69d6d4a349bd5aedc3389810a6af1d4f1d6d4b5e9b',
+        ['naming_screen.h', 'hatch_egg_task.h']),
+    'include/headbutt_tree.h': _header_route(
+        '08a2fa0bb2c358217c73d38381ea514910a3f0d5ae8dcdcecf58cf2265aefcc9',
+        ['field_system.h', 'script.h']),
+    'include/launch_application.h': _header_route(
+        '01ebfc641092da87f28d2e58c84317a8c95ae9851a9cd15b516f49bb1fc50f7e',
+        ['script.h', 'overlay_02.h', 'mailbox_app.h', 'record_mixing/record_mixing.h',
+         'gear_phone_ring_manager.h', 'party_menu.h', 'alph_puzzle.h']),
+    'include/launch_application_internal.h': _header_route(
+        'ee097c0637faf4a0a6993136282c4185efe410718c8685627402dfe511b75479',
+        ['launch_application.h', 'naming_screen.h']),
+    'include/legendary_cinematic_task.h': _header_route(
+        'edc2c11a2c8b85f80a78e93b61f0bc2fcc8f85e91f5ab43887374fb862027341',
+        ['script.h']),
+    'include/location_backup.h': _header_route(
+        '82c1f4f3b86d0ceb33e155ebf52bf589072667cc6502c668c39fbbdf2481b023',
+        ['field_system.h']),
+    'include/magnet_train_ride.h': _header_route(
+        'aced4b623cf5dc1725a27c190541c8bc47451d5016d3f7a7aa52f24db5a87526',
+        ['script.h']),
+    'include/mailbox_app.h': _header_route(
+        '05fc3773953dd0a9def033a27c2133b8a7e62090d318276fe36324794a4845d8',
+        ['field_system.h']),
+    'include/map_events.h': _header_route(
+        'e3473abbb03b94de312250a300fdb1640f22de9bc369c9e8bb9eb0c2e0521c47',
+        ['script_manager.h']),
+    'include/map_object_behavior.h': _header_route(
+        '52c1fcc88455bfc906490caffd3273f766abdd4ec541e5aab22ce13bd4d3611d',
+        ['script.h']),
+    'include/map_object_behavior_internal.h': _header_route(
+        '655b23943aae3d24a8a1a090638198c0fdba4cd6cfe39298526f4273319e8fdb',
+        ['map_object.h', 'player_avatar.h', 'field/map_object_render.h', 'field_system.h']),
+    'include/map_object_follow.h': _header_route(
+        '597828cbf64c5ef875ab794caf6c81128620a66f178feb9147abe152988f416c',
+        ['map_object.h']),
+    'include/map_object_follow_internal.h': _header_route(
+        '96c199e9548189a2eebe06c049e3f8e446f93cc2ee14cb5b588661277a22b839',
+        ['map_object.h', 'map_object_follow.h', 'map_object_movement_commands_internal.h']),
+    'include/map_object_manager.h': _header_route(
+        '59c6acf1b6c49c9dbf52ab506c44e46f24a4ddc6cdef65e80ab06d86d126b059',
+        ['field_system.h']),
+    'include/map_object_movement.h': _header_route(
+        'e8e2a69c3e637cd51e0f15f5339fb8547646e56b978c33455eb25ea382948941',
+        ['map_object.h']),
+    'include/map_object_movement_commands.h': _header_route(
+        'a6230a172d820433d080c43a3a0c7e1545e0207350cd9f336b104b2416a180c2',
+        ['field_system.h']),
+    'include/map_object_movement_commands_internal.h': _header_route(
+        '4af6eeb72de3514c5a000d9d720001c113d93cc9482c3baebe9fb8b204de2b2d',
+        ['map_object.h', 'map_object_movement_commands.h']),
+    'include/map_object_movement_utilities.h': _header_route(
+        '84cb1d300de835c638c13c98ef3fc2739e5063a8c923c004a1820df0543d0dea',
+        ['map_object.h']),
+    'include/map_object_movement_utilities_internal.h': _header_route(
+        '381c27d235b64eee6aa1a86b3a5f743d6645cc12e0310245a1aedc12937e8278',
+        ['map_object_movement_utilities.h']),
+    'include/map_preview_graphic.h': _header_route(
+        '62cd477d968cfd3cbb448e3179d46387e7aaff1dbff380ea294966e2c75be131',
+        ['task.h']),
+    'include/mart.h': _header_route(
+        '395ff19de09d42899ca4884ba1e73230416c78d3a2d1cc36bd6156af8557765e',
+        ['script.h']),
+    'include/mart_bag_task.h': _header_route(
+        '4ae93ec26179586ec6ab52fa587010f72ebb5b448539890c434a5b39f1c51d2c',
+        ['task.h']),
+    'include/money_box.h': _header_route(
+        '784bb76340c1fcdd0bc6ab8b744e3ac0f558f93094ed624aff89e0f3794badbc',
+        ['field_system.h']),
+    'include/naming_screen.h': _header_route(
+        '1412fa9fca1f5e41a72a7972533a30a0f6cd56da540021f894efb1566bf6e841',
+        ['launch_application.h']),
+    'include/npc_trade.h': _header_route(
+        '60fdaaefa219e7c22034b9854e1c560b6fbf490d66fd9965dd1efbf5107c9dd5',
+        ['script.h']),
+    'include/oaks_speech.h': _header_route(
+        'cfa819b99578eb82ab3235064504e4f4190c7093b0135faff3f15b3ebac270a1',
+        ['naming_screen.h']),
+    'include/oaks_speech_internal.h': _header_route(
+        '1bd4b543c1dab254a28283cd206c5846f977b9adda409614794c1bd2266c5d4a',
+        ['naming_screen.h']),
+    'include/overlay_01.h': _header_route(
+        '97188a71e13f674c389814c7c6d574878a66c780ad83d5c69d0f0915d7c92596',
+        ['field_system.h', 'script.h', 'field_warp_reset.h', 'field/rock_smash_item.h']),
+    'include/overlay_02.h': _header_route(
+        '76251ec4e44f9ace71d72528781e0ebe190c1c1462a703c30d304beee46b3678',
+        ['script.h', 'start_menu.h']),
+    'include/overlay_03.h': _header_route(
+        '7db94952405bea3813d33f4c843b5276dd9a4bddeb990c8db2aa8c729945d8b5',
+        ['script.h', 'mart.h']),
+    'include/overlay_04.h': _header_route(
+        'b3b9e75e204778a2410140c8a678e3289989437e074d53807a46d1c072232f21',
+        ['script.h']),
+    'include/overlay_124.h': _header_route(
+        '2a00739a9043fa0c83d8f28269f9c8df6d8f577c6bd97b74124cd64a48f54571',
+        ['field_system.h']),
+    'include/overlay_2/event_cutscene.h': _header_route(
+        '684dcb8e91036904c37a659d353c2d16b9f4a8c43b5f6b3cedf968ff0540a19b',
+        ['field_system.h']),
+    'include/overlay_2/gear_phone_calls.h': _header_route(
+        'f8efce19ec85bbda51332e218458989091fea89e4a3606a6004d9b8e0fa7e1bc',
+        ['field_system.h', 'gear_phone_ring_manager.h']),
+    'include/overlay_2/overlay_02_field_utils.h': _header_route(
+        '29935d057a9a4201f7068d24509a938180424056caea605ce85857f1c05d4cfc',
+        ['field_system.h']),
+    'include/overlay_25.h': _header_route(
+        '4312e1145639b53f698c71d12a55f966b09d70a45df3aea721804fe0d7778294',
+        ['field_system.h']),
+    'include/overlay_26.h': _header_route(
+        'a51dcc0b17c60edf819e3d366186744db2f907e39f201a8d96546385c2488691',
+        ['script.h']),
+    'include/overlay_94.h': _header_route(
+        '62687130e7ce02a4ae59faa74ce90c82884c9ea9f4e40644a5a17282632f7aed',
+        ['party_menu.h']),
+    'include/party_context_menu.h': _header_route(
+        '1b7da1b1345b103ed698b2312b4e790ce0ec691d2c64bbfee0b69007a5b4454f',
+        ['party_menu.h']),
+    'include/party_menu.h': _header_route(
+        '01f50a16079f78787b36a14277b2ede0f21b92ec08a6d61b887a38ae300da4d7',
+        ['field_move.h', 'task.h']),
+    'include/party_menu_items.h': _header_route(
+        '94cdf41c8cbec6ec47f9b7c2d37b2aa7d9a3a8fcac5642f029de69217d66a242',
+        ['party_menu.h']),
+    'include/party_menu_list_items.h': _header_route(
+        '251d2390a3439a6c18850c606383437145af1702ae9e3db43dd9b74cf7fa4049',
+        ['party_menu.h']),
+    'include/party_menu_sprites.h': _header_route(
+        '8f71fa678ff39f5c9762969d4b253fd9e148248772ef147a735f3f4427499639',
+        ['party_menu.h']),
+    'include/player_avatar_actions.h': _header_route(
+        '57227fd2798b4a0d64b8f80700bbede88d4925a4c112128e0dc8f66e2ac88456',
+        ['player_avatar.h']),
+    'include/player_avatar_movement.h': _header_route(
+        '1536559e128c0e19de90d8c30caff071bd92676ade775b15c64b46885c1b9a7d',
+        ['player_avatar.h']),
+    'include/pokeathlon_course_task.h': _header_route(
+        '8cae9c10d4878a38dd62abe32ec450194d409df483712c3535f0b41b0b881b06',
+        ['script.h']),
+    'include/record_mixing/record_mixing.h': _header_route(
+        'c4b5febca4d3652fb86ca6dfd02cbe683ac4327893c4410e2b5b64e9ae8a65c5',
+        ['script.h']),
+    'include/record_mixing/record_mixing_internal.h': _header_route(
+        'c56c614799266a71ad0d22b8bf4303459aa891300728fb266db20ea61106c96e',
+        ['record_mixing/record_mixing.h']),
+    'include/render_animation.h': _header_route(
+        'e4ba2ff91d8f70be3a352695914cc9fc493c9101f05201b4a5920093d58c828c',
+        ['field/field_effect_manager.h']),
+    'include/render_model.h': _header_route(
+        '247abd0172fb5597d28acb034e1c9ce14143be593bc644f969cc0c44509ce6d9',
+        ['field/field_effect_manager.h']),
+    'include/safari_decoration_task.h': _header_route(
+        'd754000eff7c712973161103add1bc2c9a8cabe4f12fd4d536f4dc956a76530b',
+        ['overlay_02.h', 'task.h']),
+    'include/safari_zone_encounters.h': _header_route(
+        '720cea8b039fe4347fb9397ac0739388cbbdba785c0eb97abcd8ff6659efae33',
+        ['overlay_01.h']),
+    'include/save_local_field_data.h': _header_route(
+        'ef15a664fd33ffc9c1b32987f705313dfe1f638b8c1cee758090ff0b5430a75c',
+        ['script.h']),
+    'include/scrcmd.h': _header_route(
+        'd4bc820c70c1a09c7e76969a306e23c52aa50d3b435536d93aebaafcb0bb0fd0',
+        ['script.h', 'script_manager.h']),
+    'include/scrcmd_link_sync.h': _header_route(
+        'e7f5c6f3597ec4c0f406cdf4b7c1d579f3bdf62db141fa12d2f5c5e8e9ce261e',
+        ['task.h']),
+    'include/script.h': _header_route(
+        'b2f4e6229e58a72a51dde308efdad60b5ca598f6ccbb7164ff6fc43d0b327933',
+        ['player_avatar.h']),
+    'include/script_manager.h': _header_route(
+        '192119de96be9eeaba5c63a060e6668c50fe156cadcfee567e3a81990f4c8c89',
+        ['script.h']),
+    'include/ship_voyage.h': _header_route(
+        'd17fd892cd9818f5d8c85348fd2f79034e5a15178e71cb0aebbe7d73bd096f69',
+        ['script.h']),
+    'include/spawn_warp.h': _header_route(
+        'e1da8669a5fa9b3e6b490c7c4393cf070e8e53607d71c649b218637a23194875',
+        ['script.h']),
+    'include/spawn_warp_lookup_internal.h': _header_route(
+        'be4962b4e71020dd3a1500269434aa50e9da9764e36499a604c8b503c159cdb1',
+        ['field_system.h']),
+    'include/spin_trade_flow.h': _header_route(
+        'ce89d909224836fb455f2d08fc15f25b44b23425110efebd7217628797419d51',
+        ['field_system.h']),
+    'include/start_menu.h': _header_route(
+        '09772417c10d65007e49030f80d801816f646be3d38dd39854652876e86ca270',
+        ['party_menu.h', 'task.h', 'field_use_item.h']),
+    'include/task.h': _header_route(
+        'cc6339509e83612441ecd70c46a39d362657fd26fa2c783e6a244c776d594ce6',
+        ['script_manager.h']),
+    'include/terrain_attributes.h': _header_route(
+        '8c448c5413c45596d2efee81dcbce33d6300566c7563dd639ad9dcd8bd5e2c8a',
+        ['script.h']),
+    'include/touch_save_app.h': _header_route(
+        '97446472bfc3ec3aa480848fbcbed68887b1e88a6caae8c6cdafbbfd708b3b51',
+        ['task.h']),
+    'include/trade_communication_internal.h': _header_route(
+        '8da964e9f8722452a72d50475d29b4c0ad6e779b57f41b7358eb6bcd770bb706',
+        ['wireless_trade_select_mon_internal.h']),
+    'include/trainer_card_data.h': _header_route(
+        '51e6eb027ce74fb31340a066a306ad1c8f9977828ce1eff10a645224e5ac3d2e',
+        ['field_system.h']),
+    'include/union_chat_log.h': _header_route(
+        '93488ce9d8e0861295d42d6b387d1e1fb7a4e30bc189f9ac4ecb7d9a93573bc7',
+        ['field_system.h', 'union_room_objects.h']),
+    'include/union_room.h': _header_route(
+        'ed24c52ae3f5328178598195a4a34b5ef23cb2c17a577d13cddb8b0806ce3dd1',
+        ['script.h']),
+    'include/union_room_internal.h': _header_route(
+        '0680c9338b8e19e312b1dff8050f0fcc05c236772724541f8400075736ee80c0',
+        ['field_system.h']),
+    'include/union_room_objects.h': _header_route(
+        '7c3e353e93fc65f102b420ffcd07e4e49035d18023e2bc28862c5633a46668f3',
+        ['player_avatar.h', 'field_warp_reset.h']),
+    'include/union_room_talk.h': _header_route(
+        '99cc011d56d0de4d3c7a8c50380134e6f79c397f685cec76fa613da45d83d6f5',
+        ['script.h']),
+    'include/vs_recorder_app_internal.h': _header_route(
+        'c84b2db1c8067fe030b4d4184a3b51b4f7bb0f2b11464ee79b5910d6d1bce9eb',
+        ['field_system.h']),
+    'include/wifi_club.h': _header_route(
+        '4e7aa69dc0a0909a0fa5d7b70e3dc0ea24ed992b20194d59151e5520539109fb',
+        ['task.h']),
+    'include/wireless_trade_select_mon_internal.h': _header_route(
+        '743206c80dab7b3c2180b69d3a5e0cf0f56ebda43d11c13c4a0c9086708f147f',
+        ['field_system.h', 'launch_application_internal.h']),
+    'src/alph_checks.c': _header_route(
+        '5301542027b6ddb28ebd173516ea8e4830e920f69eabb0da2cfb5c6634f5fa85',
+        ['field_system.h', 'alph_checks.h', 'save_local_field_data.h']),
+    'src/alph_puzzle.c': _header_route(
+        '5d66b30e8fcaf918a4f79a2fd911bbdb48165c3a14dfaba2549bd076c8140ce9',
+        ['alph_puzzle.h']),
+    'src/application/apricorn_box/apricorn_box_input.c': _header_route(
+        'd91d1ae507ae0f84b522fd70e299e517186c9509399656c82ab233a88d81a64b',
+        ['application/apricorn_box/apricorn_box_screen_internal.h']),
+    'src/application/apricorn_box/apricorn_box_overlay.c': _header_route(
+        'a7fc6ff655049d41a0721da4fb8933856aaed730d71297fdec9588007e05c97e',
+        ['application/apricorn_box/apricorn_box_overlay_internal.h']),
+    'src/application/apricorn_box/apricorn_box_screens.c': _header_route(
+        '8d919080886298f0d4c30179c1afd5e0ae9e49404955cd9ff1c9be54c9581823',
+        ['application/apricorn_box/apricorn_box_screen_internal.h']),
+    'src/application/apricorn_box/aprijuice_screen.c': _header_route(
+        '541771d63a20adac721672979d20f17cfa9dcbfaaa80c1f634632b11e646b89e',
+        ['application/apricorn_box/apricorn_box_overlay_internal.h']),
+    'src/application/arceus_cinematic.c': _header_route(
+        'c1af1b13bce82fdf85df363637bbd1d8332235f6d4bb3da4cd0bfca48dd958a8',
+        ['follow_mon.h']),
+    'src/application/bag/bag_app.c': _header_route(
+        'fc8a60eaa93f065bb63cc6c90c07d2dc684c8c6579555679504db6ee75e0363b',
+        ['field_use_item.h', 'bag_view.h']),
+    'src/application/drawing_session/drawing_session.c': _header_route(
+        '4aa14cdfc2741077b56677fbdd6b4c719c332cae76d0c825fa82c448fbfd3d36',
+        ['union_room_objects.h', 'union_room_talk.h', 'drawing_session.h']),
+    'src/application/dress_up/dress_up.c': _header_route(
+        'b5cb45d6043fdeef81067d1cc3b5f7c0dc6d35cb274a06be823b449f90e350bc',
+        ['launch_application_internal.h']),
+    'src/application/hatch_egg_app.c': _header_route(
+        '632bf1a74e3b2dbb6fa7d280be9f138bb2b78656d5560454834aa0db102b715c',
+        ['hatch_egg_app_internal.h']),
+    'src/application/hatch_egg_gfx.c': _header_route(
+        '94a80b18f925294b9e8b0a416e9e2a6f5c205932e5d6b79fe221aa191951af2f',
+        ['hatch_egg_app_internal.h']),
+    'src/application/ho_oh_cinematic.c': _header_route(
+        '552708bfc7e5beadc7121443279fdb511cbff70c8beeaf64115db37a97682d42',
+        ['follow_mon.h']),
+    'src/application/legendary_cinematic.c': _header_route(
+        'c69b3b73477c0bd2a487dcccb1498d5729ff86e12841999e1e2978bfacc4f4cd',
+        ['follow_mon.h']),
+    'src/application/lugia_cinematic.c': _header_route(
+        'ee49ba8c712d5bc848aba4b06c3db2bd2e11e21f91a7f3f5fc63980d45c09ead',
+        ['follow_mon.h']),
+    'src/application/mailbox_app.c': _header_route(
+        '8de0ef036b14ce651e40075406360c1373aadafda79165ab24e46ad768228ad0',
+        ['mailbox_app.h', 'application/mailbox_app_internal.h']),
+    'src/application/mailbox_app_input.c': _header_route(
+        'd2101190859f0143a98826f96d298095a4474f67ff035ec0df0ea3f4e14cd796',
+        ['application/mailbox_app_internal.h']),
+    'src/application/mailbox_app_sprites.c': _header_route(
+        '8e7d22e3947546171281ab3945d1eaec341296e2b938daa5b9f378250a052fa7',
+        ['application/mailbox_app_internal.h']),
+    'src/application/mailbox_app_states.c': _header_route(
+        '0cdb8e50860f859b85a900d91b85a7da1f1b2b1ebe7dbf77b63baf5ecf83626b',
+        ['application/mailbox_app_internal.h', 'party_menu.h']),
+    'src/application/mailbox_app_text.c': _header_route(
+        '70da3f6ee94ad700d71965f337c197233c4b3697ec1048de53b42325f1d71da3',
+        ['application/mailbox_app_internal.h']),
+    'src/application/palpad/palpad.c': _header_route(
+        'fa9e673038a8a2364e082e3fc27e5fdb701f4dc325adfa9e741609af88f1c866',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/palpad/palpad_details.c': _header_route(
+        '9f9d22d4e461fb7e92890a6bfaa8282b7d9469c08ddf8406b7b66024c690498b',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/palpad/palpad_details_text.c': _header_route(
+        '13a6cb7d3e4079073bf37175453dbe199bedf8ceb0d32c24cae316c01f8f2181',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/palpad/palpad_friend_code.c': _header_route(
+        'd59a51039fa5cd48f89edeb0d83b3fde9d97617dbf0a929bd2c5b2952aa7cb3e',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/palpad/palpad_menu.c': _header_route(
+        '433caea60d9fc405bfb00a4cacfe06bdac1b2b827f2ec6f9be9bd6fd199cbe74',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/palpad/palpad_roster.c': _header_route(
+        'cef07698d8f91518f1610455a8e1b585d57394b3922bb0d3144e2a5465c023a4',
+        ['application/palpad/palpad_internal.h']),
+    'src/application/pc_box/pc_box_ui.c': _header_route(
+        '8ba3d2b1426bc9355fb3dc206fe1b2a0b19705c5baf10f68ac800beed9907920',
+        ['naming_screen.h', 'bag_view.h']),
+    'src/application/pokegear/configure/pokegear_configure.c': _header_route(
+        'a44b497c7670a28dc2c41a6975a697abccfdad1e038baeb253dc54ce7cdbe502',
+        ['application/pokegear/configure/pokegear_configure_internal.h']),
+    'src/application/pokegear/configure/pokegear_configure_gfx.c': _header_route(
+        'dbac374205cf8f899f83a454d4c16683deff9acd1efb7016382f10360eb7f992',
+        ['application/pokegear/configure/pokegear_configure_internal.h']),
+    'src/application/pokegear/configure/pokegear_configure_input.c': _header_route(
+        '11d8b70a7fca884d3b8756edd055859b0f99cae87fd292e76535b8c79b31da09',
+        ['application/pokegear/configure/pokegear_configure_internal.h']),
+    'src/application/pokegear/configure/pokegear_configure_ui.c': _header_route(
+        '2e11ba01f7ac8ba489665099e69c6a5a2c3dd887ef47073073825901de2cac3a',
+        ['application/pokegear/configure/pokegear_configure_internal.h']),
+    'src/application/pokegear/main/pokegear_app_ui.c': _header_route(
+        '7ab4cad7f90df5355485157ec9738911e4ef61cadbce3fa952715ae7cdac47ed',
+        ['application/pokegear/pokegear_internal.h']),
+    'src/application/pokegear/main/pokegear_cursor.c': _header_route(
+        '97559c885d14ae45fcbf5df170e110ce08455de39be9b1555fdfc8f74c1965e5',
+        ['application/pokegear/pokegear_internal.h']),
+    'src/application/pokegear/main/pokegear_main.c': _header_route(
+        '31a689327be7120ffe35966cdcd3c0696dc46c8b8c8664dda175981001fc1e39',
+        ['gear_phone_ring_manager.h', 'application/pokegear/pokegear_internal.h']),
+    'src/application/pokegear/main/pokegear_sprites.c': _header_route(
+        'e30553e1f50f720b9b56c3af0289e153780e3f0414f5095d457c2f0164421970',
+        ['application/pokegear/pokegear_internal.h']),
+    'src/application/pokegear/map/fly_map.c': _header_route(
+        '2621668ae95c7296692caa9cedf2cd305162fa352cf7cfe6571352057a1b2373',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/fly_map_gfx.c': _header_route(
+        '753277c09eb3a192ec774eaf6f0b7d08fc312491e381f0675905da6abe75e3de',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map.c': _header_route(
+        'f8f608e66e29c8985a04a73c09c63c899bc814ee0fcab0bbf99c912fa46861e9',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map_flypoints.c': _header_route(
+        '2d9e8863e746194404bc80480202efd71d0357b79610a8f0be82a65bcb57adce',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map_gfx.c': _header_route(
+        'c61bf63479fbc10ff7009b9b5d8aef8b1694bbf51ad9748187710e153277b79b',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map_input.c': _header_route(
+        'd0236d5412a17a336b800c2aab4730035773e88822624753806d13e298496506',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map_markings.c': _header_route(
+        '4e59d3f30661e77a73a38f31f48c6a988b783da79cdf82bb71b177ac5b2c5165',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/map/pokegear_map_view.c': _header_route(
+        '8aca0cadc9d902596c276d2927954ecb2bb379e5637c9f7b29f29a4d19d7be54',
+        ['application/pokegear/map/pokegear_map_internal.h']),
+    'src/application/pokegear/phone/phone_call.c': _header_route(
+        'dfc4dfef8eb5f4b52e1f7ce6afa1a43dbafec8ca0dc404703a9e4c630ade3ff7',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/phone_contact_list_ui.c': _header_route(
+        '68640025d6f1ccad72c2daaecf5bec8dcf2423ac2edafeaef70f01f50123bd59',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/phone_generic_headers.c': _header_route(
+        'b64f92bf94e3cc9613b12252a3fefa33a68db60603bdb91b8ae3f645d2fa011c',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/phone_script_defs.c': _header_route(
+        'ff82d76892ba7e4610d68a6897255cf191f4c4bfa8245463ea65b839a1ff7a52',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/pokegear_phone.c': _header_route(
+        '033e09f130b0043bf69ec75d86025378ca5284d89727ffbf8b8e4b380bbaa66d',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/pokegear_phone_contacts.c': _header_route(
+        'dee62790e9d703035c7f0b4208595b1eb37a71fa3f0ef6a2af2032d0d7c22edf',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/pokegear_phone_gfx.c': _header_route(
+        '2e661068704191e91ab328cec8dd49fd6cd7c2e622d6aeaa001d9299a50d8599',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/pokegear_phone_states.c': _header_route(
+        '122b134d3c761d5db6929bcae26f6cefec4fbb5d172fd817d929c98c70cb0a5f',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_baoba.c': _header_route(
+        '700eb50134fd13971df47967a6fa9c2fe392a2870cc3ebb5d94f044ffc33b162',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_bike_shop.c': _header_route(
+        '490d3ac56f86fd5c1b3c58de8550627990be49cdbfab22475fda95c320b4e402',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_bill.c': _header_route(
+        'ec2450596def7f1e6c05273034f06ecddad98fbba0962381aab9ecbb719119a3',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_blackbelt_kenji.c': _header_route(
+        'eb0901ba9d646f45ed4df4e8eeb0566ce3c422f9e19666d19c7784a3e463854c',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_buena.c': _header_route(
+        '85ce464c0ba283cc2424c652e20cccb03122ec89036479f4d744f9598615eb54',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_childhood_friend.c': _header_route(
+        '8d98a5ced6a6bfd6182e7c4414aa96d2ff4afbd7b27159ef593ac66bc94e5166',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_daycare_lady.c': _header_route(
+        '0a7a49f66ff5de5ec318557651f28ee192d4c3422be07b18cf87ec54e549cd4e',
+        ['get_egg.h', 'application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_daycare_man.c': _header_route(
+        'a7bf4031f8f9715fb3ff5ddb9f3df8e1ca99cf3c0ba20849d33b7d4a843348c3',
+        ['get_egg.h', 'application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_generic.c': _header_route(
+        '9cb7f19be7d35405eac1c14436a5c4460eda317c06f053c37832f017e863032d',
+        ['map_events.h', 'application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_gym_leader.c': _header_route(
+        'd78a84d048c714cec7f12e2b85621646bf42f1200e9a1dcd53b213448901cb6f',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_juggler_irwin.c': _header_route(
+        '669fa4b31546e3082da83c81e676f81cef8e8e0c3f22c89adc963beec3fe759c',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_kurt.c': _header_route(
+        'e97b6f5ae3dae20ff9778f63a219f9b41f685c6a0469df546faeaef340a80c0b',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_mother.c': _header_route(
+        '6cfcbea5be0c9021a8e667808b4c279d5eb0b4165c86f3b2072d6c4a6d426c41',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_prof_elm.c': _header_route(
+        '4c788d3180a4cbb1869fdeca366b747fc991bb0e402c38173932bc747cd64cd8',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/phone/scripts/phone_scripts_prof_oak.c': _header_route(
+        'a091d0b67605b81584d24e6642ab15fa3d2e0233359088d08b31f50349ca01d3',
+        ['application/pokegear/phone/phone_internal.h']),
+    'src/application/pokegear/radio/pokegear_radio.c': _header_route(
+        '0fd3fce4dff58c8ec7597ecd6b4254c0b7e6db4c2eba2e3edb937c285f3dfbe2',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/pokegear_radio_gfx.c': _header_route(
+        '30e814edacfab43470d7617145d267a752030454eb3604a52d213143e928baa7',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/pokegear_radio_tuner.c': _header_route(
+        '3f1abeedd473b88ccc5a3dbc8ed8b1ddddc5f60d4babb5ea1aed5586d8c9e3af',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/radio_show.c': _header_route(
+        'e806399a008bc058997eb41a2a2be5dcffaad0e58c814c229a984ba028ba93b5',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/buenas_password.c': _header_route(
+        'd1346c2799af2d8100a8bfadd06cc25c67419889bc4a97f89c95c4892f21ce53',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/commercials.c': _header_route(
+        'ff66dbfe115379b68f22612552a73fd6028a2c94c78cf83147c153df1e9cb671',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/mahogany_signal.c': _header_route(
+        'e1f4226bcb34dcbdd8426f3a5eb78cf1fb440c2855ffe40ac56d19ffe97ba74f',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/poke_flute.c': _header_route(
+        '33371c7bd2e67aadc8f146f219a1b5ac1ab881d12cb3c5f67399924d1c19035f',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/pokemon_music.c': _header_route(
+        'a951aec576c4898f87633414592863d1eb269bc7c493700d85b3a082f885ae78',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/pokemon_search_party.c': _header_route(
+        'da225e52c2148a59a20712175e3328db6cd674d845917767e7ac22b5dcc4130b',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/pokemon_talk.c': _header_route(
+        'd7e466551bf65accf356b1f632743eea13472a1ebd8418cef6f28fdb7c3ff3f1',
+        ['map_events.h', 'application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/serial_radio_drama.c': _header_route(
+        'f567b5b4831c3af01ebda88e0be4cf07eb2fa6c7ca37f0b705f221450799b22c',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/team_rocket.c': _header_route(
+        'bea9b8464514549b7b65c6f2d037d2e8bf8efe19163aee13779458596bd27554',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/that_town_these_people.c': _header_route(
+        'd88203159ba7bfe55055f28870c5eea6314ed91b6df2e4ee9d98642b3bb5c019',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/trainer_profiles.c': _header_route(
+        '4ada9ca9ff568424b5a9fb2147b697d603cd97ab4039bb76ad47c0d93b189628',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokegear/radio/shows/unown.c': _header_route(
+        'bcb742d301f42321cc232a05c57b26a60507d4d403af6e909ab004728e8689ac',
+        ['application/pokegear/radio/radio_internal.h']),
+    'src/application/pokewalker/pokewalker_event_log.c': _header_route(
+        'dadfc8c4d5df42788e5ff19c79c6fd96fc31b7ae5a0ddb8776ab18350cd7b380',
+        ['follow_mon.h']),
+    'src/application/pokewalker/pokewalker_link.c': _header_route(
+        'c7ac897437bfa929d471b92727eb73513caa83c1b0af8420828df916390a702f',
+        ['save_local_field_data.h']),
+    'src/application/safari_area_customizer.c': _header_route(
+        '6be301976e534501a42b8f31768304952a1457ac6dd8604682f0e87a0aff0657',
+        ['safari_zone_encounters.h']),
+    'src/application/safari_decoration.c': _header_route(
+        '021a3f8b12b527c7ea8c524f7fedbb8f00b5074a2cf700b342145c54a62dde86',
+        ['safari_zone_encounters.h']),
+    'src/application/spin_trade/spin_trade_app.c': _header_route(
+        'e624305ff00f6dbbea0b56c4b68ddfb217e0e362f06db1525bfd5ebed7c2af42',
+        ['field/field_effect_manager.h', 'render_animation.h', 'render_model.h', 'field_bgm.h']),
+    'src/application/spin_trade/spin_trade_group_app.c': _header_route(
+        'd6ed06d1c129a1906e502ee28100775c3e7bf89a21f73df3eeabf16df2397620',
+        ['union_room_talk.h']),
+    'src/application/view_photo.c': _header_route(
+        '8bdcfada713020918127a740659454dec60724e8dc34a1494d9f1d1073413fd2',
+        ['application/view_photo.h', 'field_take_photo.h']),
+    'src/apricorn_tree_sys.c': _header_route(
+        '545215087fa7cd939f8e2681617fc387e694546cb4d6daadf367c69c83a9fc7a',
+        ['apricorn_tree.h']),
+    'src/bag.c': _header_route(
+        '9f4e668cf9df3553c5ad5335814e00c0cb4ba688dbb4895fe34e2a7adba5d5b5',
+        ['bag_view.h']),
+    'src/bag_view.c': _header_route(
+        '8f42e519f5461f753ed14b9ebe48082931a80e871f25bc94e4a4b73dde87a46c',
+        ['bag_view.h']),
+    'src/battle/battle_command.c': _header_route(
+        'c27ebd803506094796eb0fe48fe907471f2639f21ab16bee19f7a24f6c90a9ec',
+        ['naming_screen.h']),
+    'src/battle/battle_party_menu.c': _header_route(
+        '91d886464d21698f11263ef3a5c131e46815e7242da6126b25beae5d214e457c',
+        ['party_menu.h']),
+    'src/battle/battle_setup.c': _header_route(
+        'f8db703f5676bfc4a97825f2601b4ac37a81c75e2f301481049d2b2f61316c31',
+        ['follow_mon.h', 'save_local_field_data.h', 'field_terrain.h', 'field_time_events.h',
+         'field_misc_events.h', 'gear_phone_ring_manager.h']),
+    'src/battle/link_battle_screen.c': _header_route(
+        '7c065285ee2be778d86baf921a81af7d25fd39d9c17548f3f946f63232914e34',
+        ['party_menu.h']),
+    'src/battle_frontier_communication.c': _header_route(
+        '904ce777144f0b84babcc76d0e558343002c50da96d441ed608de0ed42923e5f',
+        ['player_avatar.h']),
+    'src/battle_greeting_task.c': _header_route(
+        '0c5437ca5a18581f26da173940c9c1a6fbeb7725bc17309bc7de0b6a52a6c36e',
+        ['field_system.h', 'field/fieldmap.h', 'launch_application.h', 'task.h',
+         'battle_greeting_task.h']),
+    'src/battle_intro_config.c': _header_route(
+        '4654d07cefde640d250f5da0021cd44194d1da522b71231973c41551cd81fcd2',
+        ['field/encounter_effect.h']),
+    'src/battle_transition_task.c': _header_route(
+        'f370dd84521309d7659b3a12002f67369e9d219d5a81c4e35308e938d9c79c43',
+        ['field/encounter_effect.h', 'task.h', 'battle_transition_task.h']),
+    'src/berry_pots.c': _header_route(
+        '8b315a77c1d9289f7b7119d5e5f78f58e8e6b114ec014ad8db981cde15c2f5c7',
+        ['bag_view.h']),
+    'src/berry_pots_app.c': _header_route(
+        'a5006e718ae43599a681e429cca118433762208ecf4f0b719289f8de9a65708b',
+        ['launch_application.h', 'berry_pots_app_internal.h']),
+    'src/berry_pots_app_tasks.c': _header_route(
+        '2d468d0b6ba502b3228c05f278712c5eb9acad7bbc593ccd3d952f65db18d427',
+        ['berry_pots_app_internal.h']),
+    'src/blackout.c': _header_route(
+        '7622e2c90e8045a177a749c59d9a5dd0104904759d9c75b54a23ef3e263b33ee',
+        ['field_warp_reset.h', 'blackout.h', 'field_bgm.h', 'save_local_field_data.h', 'scrcmd.h',
+         'spawn_warp.h', 'field_warp_tasks.h', 'field_overworld_restore.h']),
+    'src/catching_show.c': _header_route(
+        '789e82b499e21b6ff1d21dbf30ba2262bfdb9932daa52519e6d260ec0539e7b6',
+        ['field_system.h', 'catching_show.h', 'field_terrain.h']),
+    'src/certificates_app.c': _header_route(
+        '5821917573e18da061188696b5aa861f8d1d100088b824f0309880fdea0faa22',
+        ['follow_mon.h', 'launch_application.h']),
+    'src/choose_starter.c': _header_route(
+        '5cc4951372b7921da3abc19b93a578c78661838a696a409683480e15b744e4c0',
+        ['field_system.h', 'choose_starter.h', 'launch_application.h', 'task.h']),
+    'src/choose_starter_app.c': _header_route(
+        'c4a0d169605f4e076d24e7cfffc34537db26bb3892bc20cc2073f91f7724a7f8',
+        ['launch_application.h']),
+    'src/colosseum.c': _header_route(
+        '96fd4ae6aa22dd2c4d77616f6e079d973fdd2363854d54d5af1da96e65b8502c',
+        ['map_object.h', 'player_avatar.h', 'field/fieldmap.h', 'colosseum_internal.h',
+         'launch_application.h', 'map_object_movement_commands.h', 'union_room_internal.h']),
+    'src/comm_player_manager.c': _header_route(
+        '38441d333bb2138576e7d4cf00d75990b287bb7873bf41cce7019bc17cabd92c',
+        ['comm_player_manager_internal.h']),
+    'src/comm_player_sync.c': _header_route(
+        'b5e1a3ff438a2a77df92989e2877bdd1dc9c3cd63ae1836e2f33f613e4a62266',
+        ['map_object.h', 'player_avatar.h', 'comm_player_manager_internal.h', 'field_system.h',
+         'map_object_movement_commands_internal.h', 'map_object_movement_utilities.h',
+         'player_avatar_movement.h', 'field_terrain.h', 'map_events.h']),
+    'src/communication_club_link.c': _header_route(
+        '5f5cda8d04b60e54ab7865816af8a4b3227c34c46f6739381154c13aa54a540d',
+        ['encounter.h', 'communication_club_link_internal.h', 'script_manager.h', 'trainer_card_data.h']),
+    'src/data/fieldmap/script_cmd_table.h': _header_route(
+        '57637c19321d44dde7106f4190db9aaa681bfe3089d2015bd154903aa7dcd040',
+        ['script.h']),
+    'src/drawing_session_link.c': _header_route(
+        'b32f800740e12d38641bb8f60b1be9ebf64b005d0a0a1059b3437f565cd68ee1',
+        ['drawing_session.h']),
+    'src/encounter.c': _header_route(
+        'f485ebaee76424affe8a9a89de4e6cf66a3d7675ff9f55b4ecc564f9d2265f05',
+        ['map_object.h', 'encounter.h', 'field_system.h', 'field/encounter_check.h', 'blackout.h',
+         'catching_show.h', 'launch_application.h', 'overlay_02.h', 'overlay_03.h',
+         'save_local_field_data.h', 'communication_club_link.h', 'frontier_field_support.h',
+         'field_misc_events.h', 'gear_phone_ring_manager.h', 'field_warp_tasks.h', 'game_clear.h',
+         'battle_transition_task.h', 'field_overworld_transition.h', 'field_overworld_restore.h']),
+    'src/field/apricorn_tree_anim.c': _header_route(
+        'b683f9c1a54fe44dc6c140f78e90dd0f3b536f8ce1e52f3cde7952b0f092d1cd',
+        ['map_object.h', 'field/apricorn_tree_anim.h', 'player_avatar_actions.h',
+         'field/map_object_render.h', 'script.h', 'player_avatar_movement.h', 'field_time_events.h',
+         'map_object_movement_commands.h', 'task.h']),
+    'src/field/bottom_screen_app.c': _header_route(
+        '5e33fc8e6b1aa4e32ff04dfedadf9be17423e3b1e8a9c9807481b29839171653',
+        ['field/bottom_screen_app.h', 'field/pal_pad_registration.h', 'field/touchscreen_choice_menu.h',
+         'overlay_01.h']),
+    'src/field/door_transition.c': _header_route(
+        '5fa3e5a79182e7deb2ac0b1129b3375b095d1469da82e8302392e3e62e7272ae',
+        ['map_object.h', 'player_avatar.h', 'follow_mon.h', 'field/door_transition.h',
+         'field/field_follow_mon.h', 'field/fieldmap.h', 'field_terrain.h',
+         'field_transition_effects.h', 'map_object_movement_commands.h', 'overlay_01.h']),
+    'src/field/dowsing_mchn.c': _header_route(
+        'ee73a6c8ff1bfc7c741e76ede6149a3e910d8984957770c2d2849b0447c837b6',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'field/bottom_screen_app.h',
+         'field/field_control.h', 'field_interaction.h', 'script_manager.h', 'task.h']),
+    'src/field/draw_map_name.c': _header_route(
+        '58e967d254f32661be1e35d0296c1ce5945e74bb5820e16080eaf6daf9aa60fe',
+        ['field_system.h', 'overlay_01.h']),
+    'src/field/encounter_check.c': _header_route(
+        'c7f55fabe99a59ad470d6f9a3ecbf1ca01f1911fe0fde2135369ea4945170be8',
+        ['encounter.h', 'follow_mon.h', 'player_avatar_movement.h', 'field/encounter_check.h',
+         'overlay_2/gear_phone_calls.h', 'bug_contest.h', 'overlay_01.h', 'overlay_02.h',
+         'field_terrain.h', 'field_misc_events.h', 'map_events.h', 'safari_zone_encounters.h',
+         'alph_puzzle.h']),
+    'src/field/encounter_effect.c': _header_route(
+        '480631162b8d1a2d1b2378b16047c40fec17521d0da014eca3c9fa8dda9be235',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_frontier_link.c': _header_route(
+        '6d0643a1f1e255841679c622a01070ed23eacf99d70e1d66b4dbdc075827158c',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_kimono_girl.c': _header_route(
+        '829903ecce2ff0e04dd5a9c0ec1afe3b2532902fdaa840877662778843632e28',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_leaders.c': _header_route(
+        'a987fb34d5a962d604c4d05f71c70feca19ee6390e3f1c510ca60a43a68ac039',
+        ['field/encounter_effect.h', 'field/encounter_effect_leaders.h']),
+    'src/field/encounter_effect_leaders_util.c': _header_route(
+        'a8e1a094c2b5eaab6a3719925eadf6d6db49e458b685dbcff29b3f25a6b21bb8',
+        ['field/encounter_effect_leaders.h']),
+    'src/field/encounter_effect_particles.c': _header_route(
+        '72f77b5491f91ce8e7c8aa83393484a69e110f93b1f85a1db1297882eaabc4e2',
+        ['field/encounter_effect.h', 'field/fieldmap.h']),
+    'src/field/encounter_effect_rocket.c': _header_route(
+        '1103ad6f4a3967b61157cb282a7ad1fdf5460c42d52fab90e0dbdcecf97b857b',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_trainer.c': _header_route(
+        'e7d1760f26f974a8e6e79338fa973c0f7d8e408e3c69e47906a16d8c64181877',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_util.c': _header_route(
+        'c03b031eab923518c518762944a8058d67f7cee7a2d454e47d2593145baa2cfd',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_wave_direction.c': _header_route(
+        '38cda30d19b1d98c166b815319693955a6183b723f2cdc6aeeb4a8de8a9f91a7',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_wild.c': _header_route(
+        '959fb3fa56d8b51b567b10ce38850e8fdc80ab70978f2497377c44854519d313',
+        ['field/encounter_effect.h']),
+    'src/field/encounter_effect_wipe.c': _header_route(
+        '00ae7c0b170cd8add8f6acc889d97c48571de1cb264099de93ad1de9102e905b',
+        ['field/encounter_effect.h']),
+    'src/field/event_cutscene_celebi.c': _header_route(
+        '90bae6b9e665c49fb439cc28c4b2037db7afd0091e7451b583af72cd470d530f',
+        ['field_effects.h', 'follow_mon.h', 'field/map_object_render.h', 'overlay_2/event_cutscene.h',
+         'field/field_follow_mon.h', 'script_manager.h', 'map_object_movement_commands.h', 'task.h']),
+    'src/field/event_cutscene_shaymin.c': _header_route(
+        '6118d4009fe3a7232fd772892a495020346ba2ec8dec19656efebafa6cb89c80',
+        ['field_effects.h', 'follow_mon.h', 'field/map_object_render.h',
+         'field/field_shaymin_form_change.h', 'overlay_2/event_cutscene.h', 'field/field_follow_mon.h',
+         'script_manager.h', 'map_object_movement_commands.h', 'task.h']),
+    'src/field/event_cutscene_sinjoh.c': _header_route(
+        'cd996385d5c99353ff3d644061e2671c1774eb4f7c04cc0b225a333e216133c1',
+        ['field_effects.h', 'follow_mon.h', 'field/map_object_render.h', 'overlay_2/event_cutscene.h',
+         'field/field_follow_mon.h', 'script_manager.h', 'map_object_movement_commands.h', 'task.h']),
+    'src/field/fashion_case_gifts.c': _header_route(
+        'd5ab3b930410083113a39c1cc9d2a66489ed9eb191609f0b93f295e7585c55d1',
+        ['field_effects.h', 'field/map_object_render.h', 'field/field_follow_mon.h',
+         'map_object_movement_commands.h']),
+    'src/field/field_3d_object_task.c': _header_route(
+        '135a8c4abea576abf824f11b114a2204b5122f81b225369e797f9b5dd898d8b1',
+        ['field_system.h']),
+    'src/field/field_apricorn_regrowth.c': _header_route(
+        '97438c01f2671062dc4d2c176655b595f5ab5d1f4edde2ad79404daf95922ddf',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_apricorn_regrowth.h',
+         'field/field_effect_helpers.h', 'field/map_object_models.h']),
+    'src/field/field_bottom_screen.c': _header_route(
+        'ac77ff8607f93868443efefe16af53af1b6110a982ebe38ce62d03a0221bf7eb',
+        ['field/field_bottom_screen.h', 'application/view_photo.h', 'field/bottom_screen_app.h',
+         'field_interaction.h']),
+    'src/field/field_camera.c': _header_route(
+        'caebb16e54cd5eba1697d14aa7fad6e842326b1a1e82ef19911d1dbfc48d380a',
+        ['field_system.h', 'field/field_camera.h']),
+    'src/field/field_camera_zoom.c': _header_route(
+        '287bd72faafd62406384bb61321f2b54f229e65b599cef01427919b95c5a59fd',
+        ['field/field_camera_zoom.h']),
+    'src/field/field_control.c': _header_route(
+        '0582d596b27d52aec1895c0d47d80a824ad0323a8051e672c8e6d65fdbf12c06',
+        ['map_object.h', 'player_avatar.h', 'encounter.h', 'follow_mon.h', 'player_avatar_actions.h',
+         'field/spin_slide.h', 'player_avatar_movement.h', 'field/field_control.h',
+         'field/encounter_check.h', 'overlay_2/event_cutscene.h', 'overlay_2/gear_phone_calls.h',
+         'overlay_2/overlay_02_field_utils.h', 'catching_show.h', 'get_egg.h', 'gymmick_init.h',
+         'overlay_01.h', 'field/bottom_screen_app.h', 'overlay_04.h', 'field_interaction.h',
+         'field_terrain.h', 'headbutt_tree.h', 'field_transition_effects.h',
+         'communication_club_link.h', 'union_room.h', 'union_room_talk.h', 'map_object_behavior.h',
+         'field_misc_events.h', 'map_events.h', 'field_warp_tasks.h', 'start_menu.h']),
+    'src/field/field_effect_manager.c': _header_route(
+        'abea5319c59e84dac238835203fc0c26a60e754d5855c2edbb4311bbf2c8b606',
+        ['field_effects.h', 'map_object.h', 'field/field_effect_manager_internal.h', 'field_system.h',
+         'render_animation.h', 'render_model.h']),
+    'src/field/field_emote_bubble.c': _header_route(
+        'c3e220426dc7eff551f5359a861be4ba6a65400e767419442ae97721c6660473',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_emote_bubble.h',
+         'field/field_effect_helpers.h', 'field_system.h', 'overlay_01.h', 'task.h']),
+    'src/field/field_emote_mark.c': _header_route(
+        'cc53799b1f6a0aca6bb38d0d8354539ce2c691d28e0ff6245950b91d7d133ac2',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h',
+         'field/field_effect_helpers.h', 'field/map_object_models.h']),
+    'src/field/field_flash_darkness.c': _header_route(
+        '142ffe88eadec161b84057489b1a9b05bf2c019c776e913bc012390d62c353fd',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h',
+         'field/field_flash_darkness.h', 'field/field_effect_helpers.h', 'field_system.h']),
+    'src/field/field_follow_mon.c': _header_route(
+        'c591a28c9f7e95e81d3e7ece5e4cde5a308fbf1b6135339251e0a76c24ab5951',
+        ['map_object.h', 'map_object_follow_internal.h', 'player_avatar.h',
+         'field/field_effect_helpers.h', 'field/map_object_billboard_motion.h',
+         'field/map_object_models.h', 'field/map_object_render.h', 'field/map_object_render_internal.h',
+         'field_follow_mon_ball.h', 'field_system.h', 'follow_mon.h',
+         'map_object_movement_commands_internal.h', 'script.h', 'field/field_follow_mon.h',
+         'field_terrain.h', 'map_object_movement_commands.h', 'overlay_01.h', 'overlay_25.h',
+         'scrcmd.h', 'script_manager.h', 'task.h']),
+    'src/field/field_follow_mon_ball.c': _header_route(
+        '9ed984f16910f32bfc420ec36c64868d9f7baf85b1c0657006bb4d193d3afd8b',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_follow_mon_ball.h',
+         'field/field_effect_helpers.h', 'field/map_object_billboard_motion.h', 'field_system.h',
+         'follow_mon.h', 'map_object_movement_utilities.h', 'field/field_follow_mon.h']),
+    'src/field/field_footprints.c': _header_route(
+        '093f3b77d3d7ecc477706141bc24f9ca38d225eba40b287dc889ab52976ac855',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_footprints.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'render_animation.h',
+         'render_model.h']),
+    'src/field/field_ground_dust.c': _header_route(
+        '804ccd8f6b4f0f6bf816cd8de869e929e6a79d6f33e47d5e005b3c26e759ccf8',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_ground_dust.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h']),
+    'src/field/field_hidden_object_cover.c': _header_route(
+        'd8c754e2bc86862f9031c634756a972e05d343c66ad4a14aba3fd6cea742530d',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'map_object_follow.h',
+         'player_avatar.h', 'field_hidden_object_cover.h', 'map_object_movement_utilities.h',
+         'render_animation.h', 'render_model.h']),
+    'src/field/field_move_cut_in.c': _header_route(
+        'e050fbae1d55ea4827c5c3b60388951e35f60e2ee2b92427b2e0b39bfdd47215',
+        ['map_object.h', 'player_avatar.h', 'field/field_move_cut_in.h', 'field/field_effect_helpers.h',
+         'field/fly_landing_effect.h', 'field_system.h', 'follow_mon.h', 'overlay_02.h']),
+    'src/field/field_move_cut_in_effects.c': _header_route(
+        'e19891418af22ec383293cfa2030914c0f70c93a7894b1cbac9b7348e0382c3c',
+        ['field_effects.h', 'map_object.h', 'field/field_effect_helpers.h', 'field/field_move_cut_in.h',
+         'field/fly_landing_effect.h', 'field_system.h', 'field/field_camera_zoom.h',
+         'overlay_2/overlay_02_field_utils.h', 'field_terrain.h', 'overlay_02.h', 'script_manager.h',
+         'task.h']),
+    'src/field/field_move_effects.c': _header_route(
+        'c6504e15e1c409c695d779e44220d3c6feaa9fdd4d074974d1f4197dfef5d535',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'follow_mon.h',
+         'field/field_move_effects.h', 'field_terrain.h', 'overlay_02.h', 'task.h']),
+    'src/field/field_move_sweet_scent.c': _header_route(
+        'ae567df6e3017925387b132006fd794836fde3d8887cc46b354dead5832a77e5',
+        ['map_object.h', 'player_avatar.h', 'field/field_move_cut_in.h', 'field_system.h',
+         'follow_mon.h', 'field/field_follow_mon.h', 'overlay_01.h', 'overlay_02.h', 'task.h']),
+    'src/field/field_move_warp_tasks.c': _header_route(
+        '52020fe9e2d89e18dd0800b68405e95db0525cf0f3bbe66c7f39837f1800a93c',
+        ['map_object.h', 'player_avatar.h', 'field/field_move_cut_in.h', 'field_system.h',
+         'follow_mon.h', 'field/field_camera_zoom.h', 'field/field_follow_mon.h',
+         'map_object_movement_commands.h', 'overlay_02.h', 'save_local_field_data.h', 'spawn_warp.h',
+         'task.h', 'field_warp_tasks.h']),
+    'src/field/field_mud_splash.c': _header_route(
+        '04041c1237d842cd8b01bbaf843fd02ccf90d09a45dfe85963e213eef77c5bf5',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_mud_splash.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'render_animation.h',
+         'render_model.h']),
+    'src/field/field_puddle_splash.c': _header_route(
+        '2d68ea4a1de129d029399328068066c76c69bdef44a02fa77e1f80d14228ea1f',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_puddle_splash.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'render_animation.h',
+         'render_model.h']),
+    'src/field/field_reflection.c': _header_route(
+        '895ea6cc49638541f0d6b0caebc18f812abffef3f766c46a034aec01ec3c5fdd',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'player_avatar.h',
+         'field_reflection.h', 'field/field_effect_helpers.h', 'field/map_object_billboard_motion.h',
+         'field/map_object_render.h', 'field/map_object_render_internal.h', 'field_system.h',
+         'map_object_movement_utilities.h', 'field/field_follow_mon.h']),
+    'src/field/field_rock_climb_effect.c': _header_route(
+        '75470ab4963e32df654141f8db6e53297f383ddea2efe58e151a88282d6f6a0a',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_rock_climb_effect.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'render_animation.h',
+         'render_model.h']),
+    'src/field/field_shadow.c': _header_route(
+        '8cf4d3e64dbd5341ec0bc4c461e6f36f3c6a27d551347e74fcf697a075e48665',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_shadow.h',
+         'field/field_effect_helpers.h', 'field/map_object_models.h', 'field_system.h',
+         'render_animation.h', 'render_model.h']),
+    'src/field/field_shallow_water_ripple.c': _header_route(
+        '443c4a8bb78750c7fc6848754f0f940e52c1f1d9954e84fa767b0c6c5f73de44',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h',
+         'field_shallow_water_ripple.h', 'field/field_effect_helpers.h']),
+    'src/field/field_shaymin_form_change.c': _header_route(
+        '5d787dd6672cff1805c8ff01a6556a67f763f41745d586e7aed4b851ddadd635',
+        ['field/field_effect_manager.h', 'field_effects.h', 'field/field_shaymin_form_change.h',
+         'field/field_effect_helpers.h']),
+    'src/field/field_surf_mount.c': _header_route(
+        'fa055c4987375124ab6effc7b07115ec58a91b03514fae0ac1b9ed595cbe2e2d',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'render_animation.h',
+         'render_model.h']),
+    'src/field/field_tall_grass.c': _header_route(
+        '0ead7e6f834a80d9e40984be19755ebb65f1984d18e54fad6dfd804040f159b1',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_tall_grass.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'overlay_01.h']),
+    'src/field/field_trainer_reveal.c': _header_route(
+        '327ffaaeecab32044673ba46240d3c5f03fd5c3c0d9b050eed0c4491d6e84e84',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_trainer_reveal.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h']),
+    'src/field/field_union_chat_marker.c': _header_route(
+        '1ad1d5afbb2f30ff013f2a2b7c376324a5f18ad5bc3c83958cc268b707c50e99',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_union_chat_marker.h',
+         'field/field_effect_helpers.h']),
+    'src/field/field_unused_billboard_effect.c': _header_route(
+        '03f7770dd6a78f31b7148d9d1a955beb9f13fd10b8a120477e702a7a2a90661b',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h',
+         'field_unused_billboard_effect.h', 'field/field_effect_helpers.h',
+         'map_object_movement_utilities.h']),
+    'src/field/field_very_tall_grass.c': _header_route(
+        'e8de17b0314964230872b0b615b1a0006c63148ec51668e3a62412235053db7f',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'field_very_tall_grass.h',
+         'field/field_effect_helpers.h', 'map_object_movement_utilities.h', 'overlay_01.h']),
+    'src/field/field_warp_arrow.c': _header_route(
+        'd977c0f2e14810beffe2717c7fc84485f8cc4dccb9bc4526a4535e96e4271079',
+        ['field/field_effect_manager.h', 'field_effects.h', 'map_object.h', 'player_avatar.h',
+         'field_warp_arrow.h', 'field/field_effect_helpers.h', 'field_system.h',
+         'map_object_movement_utilities.h', 'render_animation.h', 'render_model.h']),
+    'src/field/fieldmap.c': _header_route(
+        'a0477f0df1192991c8aa18e92a4364c0af7f228bfed521cc4601fd7f69b9c5ce',
+        ['map_object.h', 'field/field_effect_manager.h', 'player_avatar.h',
+         'field/map_object_model_list.h', 'field_system.h', 'field/map_object_models.h',
+         'field/map_object_render.h', 'field/fieldmap.h', 'field/field_control.h',
+         'field/map_load_manager.h', 'field/field_camera.h', 'field/field_bottom_screen.h',
+         'field/signpost.h', 'overlay_2/overlay_02_field_utils.h', 'bug_contest.h', 'field_bgm.h',
+         'overlay_01.h', 'field/bottom_screen_app.h', 'field/field_follow_mon.h',
+         'save_local_field_data.h', 'terrain_attributes.h', 'field_time_events.h',
+         'comm_player_manager.h', 'gymmick_collision.h', 'map_events.h', 'task.h',
+         'field/weather_manager.h', 'field_warp_tasks.h']),
+    'src/field/fishing.c': _header_route(
+        '9155b2e556966845a55dd278dfdb4485a786a26ffb5128c288f46fdd4f470caa',
+        ['field_effects.h', 'field_emote_mark.h', 'map_object.h', 'player_avatar.h', 'encounter.h',
+         'field_system.h', 'follow_mon.h', 'player_avatar_actions.h', 'gear_phone_ring_manager.h',
+         'map_object_movement_commands.h', 'overlay_01.h', 'task.h']),
+    'src/field/fly_landing_effect.c': _header_route(
+        '5810d8383d15e4e092cb1b61009998c7e4a232560f01a786b54c0fa44aadcdfe',
+        ['field_effects.h', 'map_object.h', 'player_avatar.h', 'field/fly_landing_effect.h',
+         'field/field_effect_helpers.h', 'field/field_move_cut_in.h', 'field_system.h',
+         'field/field_camera_zoom.h']),
+    'src/field/follow_mon_interaction.c': _header_route(
+        '017c7c6c55c4c527af4c700141e016bad83852225938404a5a0c54676672e3b7',
+        ['map_object.h', 'player_avatar.h', 'field/field_effect_helpers.h',
+         'field/map_object_billboard_motion.h', 'field/map_object_models.h', 'field_system.h',
+         'follow_mon.h', 'field/bottom_screen_app.h', 'overlay_2/overlay_02_field_utils.h',
+         'field_terrain.h', 'field_time_events.h', 'map_object_movement_commands.h', 'overlay_01.h',
+         'overlay_02.h', 'save_local_field_data.h', 'script_manager.h', 'map_events.h', 'task.h']),
+    'src/field/friend_roster_app.c': _header_route(
+        'ec0da17c84a7cba9513d68a6458db7566d2731c730170609a73404b2cc8db52d',
+        ['field_system.h']),
+    'src/field/gear_phone_calls.c': _header_route(
+        '2faa0472ad1bc08cf0ccb06e1bd974cf4558e97c3e6d591df1d3fbb660ef5f22',
+        ['overlay_2/gear_phone_calls.h', 'gear_phone_ring_manager.h', 'save_local_field_data.h',
+         'script_manager.h', 'application/pokegear/phone/phone_internal.h']),
+    'src/field/gymmick/azalea.c': _header_route(
+        '7dc29fca0397a60fb002eb0ff15d12a2a2046b288691d74c68afb75e13b5c0ec',
+        ['field_system.h', 'follow_mon.h', 'map_object_movement_utilities.h',
+         'field/field_follow_mon.h', 'field/map_load_manager.h', 'map_object_movement_commands.h',
+         'overlay_04.h', 'task.h']),
+    'src/field/gymmick/blackthorn.c': _header_route(
+        '830ec891074e472eeb7fc3603cd680fc340c8c743a6b6d4a1cb6c5f662f1ab41',
+        ['field_system.h', 'map_object_movement_utilities.h', 'field_terrain.h', 'overlay_04.h']),
+    'src/field/gymmick/cianwood.c': _header_route(
+        '44a5156c2ab73f5641dd0daaae66efc7b41f45d01ebdd349c37eaa314a5df071',
+        ['field_system.h', 'overlay_04.h']),
+    'src/field/gymmick/ecruteak.c': _header_route(
+        'b54ec5a504328402e15e07757906f1dd022c498293a9fe5c92fcb5b1c1078b13',
+        ['field/map_object_billboard_motion.h', 'field/map_object_render.h', 'field_system.h',
+         'overlay_04.h']),
+    'src/field/gymmick/fuchsia.c': _header_route(
+        'a14fa5ad37ceb6df23349594133b9a487765f101d12a8b40979262d7439c04e5',
+        ['field_system.h', 'overlay_04.h']),
+    'src/field/gymmick/sinjoh.c': _header_route(
+        '2b0366d3542552dc136606f8183d2b7e0640d7e8d1b56abb6c3d22c4655f0a4e',
+        ['field_system.h', 'overlay_04.h']),
+    'src/field/gymmick/vermilion.c': _header_route(
+        '7bd2fd669bda75500d93b5d4074709842034a8ab51d72d88b83ab3187116edff',
+        ['field_system.h', 'map_object_movement_commands.h', 'overlay_04.h']),
+    'src/field/gymmick/violet.c': _header_route(
+        'ac6e635581e62133eb805d79027250c0e1175e4a9626c5125a20e9a640090b76',
+        ['field_system.h', 'field/field_follow_mon.h', 'overlay_01.h', 'overlay_04.h', 'task.h']),
+    'src/field/gymmick/viridian.c': _header_route(
+        '490a4d2900b6bafd070809c4dc5e19e58adf8da36f06cb8617a6724b7c757be8',
+        ['field_system.h', 'overlay_04.h']),
+    'src/field/headbutt.c': _header_route(
+        'c9625f8f0c2a3a09e3f769eeface7cfcf1f20414d84721f7cb716ec1241a10d1',
+        ['map_object.h', 'encounter.h', 'follow_mon.h', 'script.h', 'player_avatar_movement.h',
+         'map_object_movement_utilities.h', 'field/encounter_check.h', 'money_box.h', 'scrcmd.h',
+         'script_manager.h', 'task.h']),
+    'src/field/honey_sweet_scent.c': _header_route(
+        'c8eb4d8c3daef08a322620beb187e9a73f2bc4a433f3e490827938222d2fd0a9',
+        ['player_avatar.h', 'field_system.h', 'field/encounter_check.h', 'field_terrain.h',
+         'overlay_01.h', 'script_manager.h', 'task.h', 'field/weather_manager.h']),
+    'src/field/legend_cutscene_camera.c': _header_route(
+        'e5c738f8969866c689ab967c605f2c70129208295c1939122a7024aea0bcfa76',
+        ['map_object.h', 'field/legend_cutscene_camera.h', 'task.h']),
+    'src/field/map_load_manager.c': _header_route(
+        '0489523b83d5b3a7edeb8d4821fb368b4f8388e2a525a949014ee370afd880a6',
+        ['field/map_load_manager.h', 'field/field_control.h', 'field/map_load_manager_internal.h']),
+    'src/field/map_object_billboard_motion.c': _header_route(
+        '9ad8b4a7d5d17a64db9a0676abd64e25188b475afada5cdf48c4591f034cd10d',
+        ['field/field_effect_manager.h', 'map_object.h', 'map_object_behavior_internal.h',
+         'field/map_object_billboard_motion.h', 'field/field_effect_helpers.h',
+         'field/map_object_model_list.h', 'field/map_object_models.h', 'field/map_object_render.h',
+         'field_system.h', 'follow_mon.h', 'map_object_movement_commands_internal.h',
+         'field/field_follow_mon.h', 'map_object_movement_commands.h']),
+    'src/field/map_object_model_list.c': _header_route(
+        'c4c032ff6a004673dbf336dcea82e9ffdf05a0bdd5127895d2802f31cd5e11bb',
+        ['field_effects.h', 'map_object.h', 'field/map_object_model_list.h',
+         'field/field_effect_helpers.h', 'render_animation.h', 'render_model.h']),
+    'src/field/map_object_models.c': _header_route(
+        'b3d57c0cca5cf6dd85334925e4c09fd1e6dc2016667c82b03b447c3180b3874f',
+        ['field/map_object_models.h', 'field/field_effect_helpers.h', 'field/map_object_render.h',
+         'field_shadow.h', 'field/field_follow_mon.h']),
+    'src/field/map_object_render.c': _header_route(
+        '1866056cd5b82c397c1a9b5b4d1a8691e680dcb4baacd5525f88d14fcd7818bd',
+        ['field/field_effect_manager.h', 'map_object.h', 'map_object_behavior_internal.h',
+         'field/map_object_render.h', 'field/field_effect_helpers.h',
+         'field/map_object_billboard_motion.h', 'field/map_object_models.h',
+         'field/map_object_render_internal.h', 'field_reflection.h',
+         'map_object_movement_utilities_internal.h']),
+    'src/field/map_object_swap_positions.c': _header_route(
+        '78e47d8c6f4d36e0ba5e32319ca6faeeaa74791923b6b7e620957c8fa86f72d0',
+        ['map_object.h', 'field_system.h', 'follow_mon.h', 'map_object_movement_commands.h',
+         'overlay_02.h', 'task.h']),
+    'src/field/map_prop_anims.c': _header_route(
+        '8b581819ddd059797a99644eac729889cc57872e2da4e5827bde9ae45175ecf2',
+        ['field_system.h', 'field_terrain.h', 'overlay_02.h', 'task.h']),
+    'src/field/map_prop_manager.c': _header_route(
+        '52f1315cced28cc23b563ba5f0b79fd4a362851a1797cbc9164026c6a0247ba5',
+        ['field_system.h', 'field/map_load_manager.h', 'safari_zone_encounters.h']),
+    'src/field/overlay116_scene.c': _header_route(
+        '0c9d747de17b03eda08c5e67f5cd3ed3a1670cb23595162277b37f759d7fda3b',
+        ['field/overlay116_scene_internal.h']),
+    'src/field/pal_pad_registration.c': _header_route(
+        '8ead9ddc50b34278f10f25cbcfa8de8d72068ccf15456c47f25334869c0320e5',
+        ['field/pal_pad_registration.h', 'field/bottom_screen_app.h', 'overlay_01.h', 'task.h']),
+    'src/field/player_avatar_actions.c': _header_route(
+        '5a506c25effea5054eb1cc861e9b6dd868dda67648958e25d0dca61278d23a14',
+        ['field/field_effect_manager.h', 'field_surf_mount.h', 'map_object.h', 'player_avatar.h',
+         'player_avatar_actions.h', 'field/field_move_cut_in.h', 'field/map_object_render.h',
+         'field_rock_climb_effect.h', 'field_system.h', 'follow_mon.h',
+         'map_object_movement_commands_internal.h', 'map_object_movement_utilities.h',
+         'player_avatar_movement.h', 'field/field_control.h', 'field/field_follow_mon.h',
+         'field/field_move_effects.h', 'field_bgm.h', 'field_terrain.h',
+         'map_object_movement_commands.h', 'map_object_movement_utilities_internal.h', 'overlay_01.h',
+         'overlay_02.h', 'script_manager.h', 'task.h']),
+    'src/field/primo_password.c': _header_route(
+        'e81a02b17d1a3dabfd5e946a5f417b9160671bcec3608cbe79e8fa7c0e75fb26',
+        ['overlay_02.h']),
+    'src/field/rock_smash_item.c': _header_route(
+        '1aa54fd210c9bb0cb36215c50f050b867acf530c097d351d9b088f2e38e8eb12',
+        ['field_emote_mark.h', 'field_effects.h', 'encounter.h', 'follow_mon.h', 'script.h',
+         'field/rock_smash_item.h', 'field/encounter_check.h', 'task.h']),
+    'src/field/safari_zone_placement.c': _header_route(
+        '493c43339db9f4c51a6a700bd4f80168db21c8253b5cad34ba2afe33de6d4708',
+        ['player_avatar.h', 'field_system.h', 'map_object_movement_utilities.h',
+         'overlay_2/overlay_02_field_utils.h', 'field_terrain.h', 'overlay_02.h',
+         'save_local_field_data.h', 'safari_zone_encounters.h']),
+    'src/field/save_stats_printer.c': _header_route(
+        '8fb5bb2a5c7536d39fbc69453c48a34fecbb0d53a78dea48f5542af42ed8c4a9',
+        ['player_avatar.h', 'field_system.h', 'field/bottom_screen_app.h', 'overlay_01.h',
+         'save_local_field_data.h']),
+    'src/field/scrcmd_message.c': _header_route(
+        '1d1ae3c03a58f9c3b4197a5df020a4fb9825a9366ac0bf585ec2b3e9f5a9a42b',
+        ['map_object.h', 'field_system.h', 'script.h', 'overlay_01.h', 'scrcmd.h', 'script_manager.h']),
+    'src/field/scrcmd_moneybox.c': _header_route(
+        '6cb4d41e182151fc50dc0ee0c0a8c0e28f550841898fa40364107928b422b8f7',
+        ['money_box.h', 'scrcmd.h']),
+    'src/field/scrcmd_move_tutor.c': _header_route(
+        'd4ab36731e884e10506118f8b807a7d4b804d982fd84c93d7517b6b57d03135e',
+        ['player_avatar.h', 'script.h', 'overlay_01.h', 'scrcmd.h', 'script_manager.h']),
+    'src/field/scrcmd_pokemon_misc.c': _header_route(
+        '2b38aadd96d1bffe763828b2b081f68484869a105cd819145f89e3314eb7a3e8',
+        ['map_object.h', 'follow_mon.h', 'field/map_object_billboard_motion.h',
+         'field/map_object_render.h', 'field/field_control.h', 'overlay_2/gear_phone_calls.h',
+         'bug_contest.h', 'get_egg.h', 'launch_application.h', 'overlay_02.h', 'overlay_03.h',
+         'scrcmd.h', 'script_manager.h', 'field_misc_events.h', 'gear_phone_ring_manager.h']),
+    'src/field/script_field_effects.c': _header_route(
+        '9c0851f03e90ac280719d4d28b64aa5ec2c41b3ffb405c3ef76303c216f13565',
+        ['player_avatar.h', 'field_system.h', 'overlay_02.h', 'script_manager.h', 'task.h']),
+    'src/field/script_menu.c': _header_route(
+        '48c12d172f1d3c6ceda8fbae9fa46dc184c42cf593ccd530e9327505c2531cd2',
+        ['field/script_menu.h', 'money_box.h', 'overlay_01.h', 'overlay_03.h']),
+    'src/field/signpost.c': _header_route(
+        '71a73dc7e8618371dabe2c7aaaaa7e7ba9e5c2671be4f52cad95de1a2b87afe0',
+        ['field_system.h', 'field/signpost.h']),
+    'src/field/spin_slide.c': _header_route(
+        'a2be8a7f3f35667a07f7a27fe12cffec9b1339c92c90917ba547dc2ddd1aba0e',
+        ['map_object.h', 'field/spin_slide.h', 'map_object_movement_commands_internal.h',
+         'player_avatar_movement.h', 'overlay_04.h']),
+    'src/field/sprite_gfx_manager.c': _header_route(
+        '77d84d85b1d609631386289fc190a95529b31ef78a928940cb8c34037fbec1d4',
+        ['field/field_move_cut_in.h']),
+    'src/field/touch_mart_app.c': _header_route(
+        '2c4bc1409f52989bb660d6d33106483c5f801e1f1aca50bca89f20a60c4260cd',
+        ['field/touch_mart_app.h', 'overlay_03.h']),
+    'src/field/touchscreen_choice_menu.c': _header_route(
+        'd44235a6ee0f6576d1671557c18238490f55693a80f3e21e1a565f51da2bc03a',
+        ['field_system.h', 'field/touchscreen_choice_menu.h', 'field/bottom_screen_app.h',
+         'field/script_menu.h', 'overlay_01.h', 'task.h']),
+    'src/field/touchscreen_menu.c': _header_route(
+        '04dac33ebca1c96780f42031a261af9bf97a6dd51f2ff8cf113ca0310bb2e8de',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'field/bottom_screen_app.h',
+         'field/field_control.h', 'overlay_2/gear_phone_calls.h', 'catching_show.h',
+         'comm_player_manager.h', 'communication_club_link.h', 'field_interaction.h',
+         'field_misc_events.h', 'frontier_field_support.h', 'gear_phone_ring_manager.h',
+         'save_local_field_data.h', 'script_manager.h', 'task.h', 'start_menu.h']),
+    'src/field/warp_spin.c': _header_route(
+        'f4c24980f9c2ece03f4555babe669d50f45d500391622b6621a88a48bf3414d9',
+        ['map_object.h', 'player_avatar.h', 'field/map_object_models.h', 'field/warp_spin.h']),
+    'src/field/weather_manager.c': _header_route(
+        'e3c88c91e60e30b637d67968e19dfa6f762eaa0af6ebd2a519bed48e32c768c4',
+        ['field/field_flash_darkness.h', 'field_system.h', 'field/weather_manager.h']),
+    'src/field_bgm.c': _header_route(
+        '62b1c3543e83a6f59f4a9da032d37ba558f06ba5dd827a346b9ddab67d83d082',
+        ['field_bgm.h', 'field/field_control.h', 'save_local_field_data.h']),
+    'src/field_comm_cmds.c': _header_route(
+        '24e417ddba928b03ac82686bacadac8323af46a4261d0d0719f18669f5f24269',
+        ['comm_player_manager.h', 'communication_club_link.h', 'union_room.h', 'union_room_talk.h',
+         'oaks_speech.h']),
+    'src/field_effects.c': _header_route(
+        '9838d62de0c0db4bebb242cac579922a477d6eb7423efe25f0eaf71e50bb59c8',
+        ['field_effects.h', 'field/field_effect_manager.h', 'field/field_effect_helpers.h',
+         'field_warp_reset.h']),
+    'src/field_interaction.c': _header_route(
+        'a0cf30e3e65075f41dcb3feed5b2abf9a1472d979769c8e71147a13dd58e55d9',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'field_interaction.h', 'field_terrain.h',
+         'script_manager.h']),
+    'src/field_misc_events.c': _header_route(
+        '3eb3f943a77e39a6a89b51ab4725208afb9dcfff116eeb88b47359d58fa7124f',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'script.h',
+         'map_object_movement_utilities.h', 'field_misc_events.h', 'launch_application.h',
+         'npc_trade.h', 'save_local_field_data.h', 'scrcmd.h', 'script_manager.h', 'field_terrain.h',
+         'map_object_movement_commands.h', 'task.h', 'field_warp_tasks.h']),
+    'src/field_misc_util.c': _header_route(
+        'aa28ebdda0382b146a1983bce9fca1eab444eadbb0f153a01e91de65b4d37cbb',
+        ['map_object.h', 'field_system.h', 'task.h']),
+    'src/field_move.c': _header_route(
+        '8f8941ae4c7cb136a37c6997d3ce71857814f2cd6629b7755767e3ade33776de',
+        ['map_object.h', 'player_avatar.h', 'script.h', 'player_avatar_movement.h', 'field_move.h',
+         'alph_checks.h', 'launch_application.h', 'overlay_01.h', 'overlay_02.h',
+         'save_local_field_data.h', 'field_interaction.h', 'field_terrain.h', 'start_menu.h']),
+    'src/field_overworld_transition.c': _header_route(
+        'b31de0105054508516ebfe4071d795a277ca14b523f1cf22d589993d85edc55b',
+        ['field_system.h', 'overlay_01.h', 'task.h', 'field_overworld_transition.h',
+         'field_overworld_restore.h']),
+    'src/field_system.c': _header_route(
+        'ff89e8f9143642e77409745e38c959d23d23fd360321ca9d5fdb55d9f73aca71',
+        ['field_system.h', 'player_avatar_actions.h', 'player_avatar_movement.h',
+         'field/field_control.h', 'field/signpost.h', 'field/bottom_screen_app.h', 'overlay_124.h',
+         'comm_player_manager.h', 'gear_phone_ring_manager.h', 'map_events.h', 'field_warp_tasks.h']),
+    'src/field_system_rtc_weather.c': _header_route(
+        'faacdf6208d83c87736f3d2d1a5f8db33cc3f5f196bcbdb5d25ce9f3abac8041',
+        ['field_system.h', 'field_system_rtc_weather.h', 'field_time_events.h']),
+    'src/field_take_photo.c': _header_route(
+        '97ba4f0f7470ff9b95e372c80a46415cfcbd461a6a332159cc435b5e1b53046a',
+        ['field/field_effect_manager.h', 'follow_mon.h', 'field/map_object_billboard_motion.h',
+         'field/map_object_models.h', 'field/map_object_render.h', 'field_take_photo.h',
+         'launch_application.h', 'field/field_follow_mon.h', 'headbutt_tree.h',
+         'field_warp_reset_suppress.h', 'task.h', 'field_warp_tasks.h', 'field_overworld_transition.h',
+         'field_overworld_restore.h']),
+    'src/field_terrain.c': _header_route(
+        '0a64f7f36df3f68c228b8b27c1ec96fa8811301f0da76ea0fbc485b9bdcbdc87',
+        ['field_system.h', 'field_terrain.h', 'field/map_load_manager.h', 'gymmick_collision.h',
+         'terrain_attributes.h', 'field/map_load_manager_internal.h']),
+    'src/field_time_events.c': _header_route(
+        '3ac2644971d4550d920ebce442ef8aa831e6f3243f1edd6bdfec6ae139eac15c',
+        ['map_object.h', 'field/field_effect_manager.h', 'script.h', 'field_time_events.h',
+         'apricorn_tree.h', 'overlay_01.h', 'script_manager.h', 'frontier_field_support.h',
+         'field_misc_events.h', 'gear_phone_ring_manager.h', 'safari_zone_encounters.h']),
+    'src/field_transition_effects.c': _header_route(
+        'b71283544f94563b0dae29d79f3f69b57e83df22620e5253b9dd027c786da644',
+        ['player_avatar.h', 'follow_mon.h', 'player_avatar_actions.h', 'field_follow_mon_ball.h',
+         'script.h', 'field_transition_effects.h', 'field/fieldmap.h', 'field/map_load_manager.h',
+         'field_bgm.h', 'overlay_01.h', 'field/door_transition.h', 'field/field_follow_mon.h',
+         'field_terrain.h', 'map_object_movement_commands.h', 'field_warp_tasks.h',
+         'map_preview_graphic.h', 'field_overworld_transition.h', 'field_overworld_restore.h',
+         'field_transition_tasks.h']),
+    'src/field_transition_tasks.c': _header_route(
+        'b29259dea2c8957fac4d2e8ffa9e67679b9a1017a28dfea14da5afba5f6b2061',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'follow_mon.h', 'player_avatar_actions.h',
+         'field/door_transition.h', 'field/fieldmap.h', 'field_terrain.h', 'field_transition_effects.h',
+         'map_object_movement_commands.h', 'overlay_01.h', 'task.h', 'field_transition_tasks.h']),
+    'src/field_use_item.c': _header_route(
+        'a2611d982fe744231e2778ab9842af17dcfd4794868e2a539730cf0ac454c597',
+        ['map_object.h', 'follow_mon.h', 'player_avatar_actions.h', 'script.h', 'field/fieldmap.h',
+         'alph_checks.h', 'field_bgm.h', 'launch_application.h', 'overlay_01.h', 'overlay_02.h',
+         'field_interaction.h', 'field_terrain.h', 'map_object_movement_commands.h',
+         'frontier_field_support.h', 'party_menu.h', 'task.h', 'field_use_item.h', 'start_menu.h',
+         'bag_view.h']),
+    'src/field_warp_state.c': _header_route(
+        '872b74144f989ca7e3088550d08148a1bfe41209e4d37835bd877158394448eb',
+        ['player_avatar.h', 'field/field_move_cut_in.h', 'field_system.h', 'field_warp_reset.h',
+         'follow_mon.h', 'field/field_follow_mon.h', 'field_warp_reset_suppress.h',
+         'map_object_movement_commands.h', 'overlay_01.h', 'overlay_02.h', 'save_local_field_data.h',
+         'spawn_warp.h', 'spawn_warp_lookup_internal.h', 'task.h', 'field_warp_tasks.h']),
+    'src/field_warp_tasks.c': _header_route(
+        'e858778f929cf4d9d019e88a5026e7703995c6aa86684e98f823272cc9e858c9',
+        ['map_object.h', 'follow_mon.h', 'script.h', 'union_room_objects.h', 'field_warp_reset.h',
+         'field/warp_spin.h', 'field_bgm.h', 'field_system_rtc_weather.h', 'overlay_01.h',
+         'overlay_02.h', 'save_local_field_data.h', 'terrain_attributes.h', 'spawn_warp.h',
+         'field_terrain.h', 'field_time_events.h', 'comm_player_manager.h', 'union_room.h',
+         'map_events.h', 'task.h', 'field_warp_tasks.h', 'field_overworld_transition.h',
+         'field_overworld_restore.h']),
+    'src/follow_mon.c': _header_route(
+        '9e3d91b81948dc0e5734417eedee5264c0d5a907d1765160f290058b463d4db7',
+        ['map_object.h', 'follow_mon.h', 'script.h', 'map_object_manager.h']),
+    'src/frontier/battle_arcade_data.c': _header_route(
+        '8e9ebd347d84c512784bfaeac8d19f7c1a721c816fd1593ddf082b29c774a635',
+        ['player_avatar.h', 'frontier/battle_arcade_setup.h']),
+    'src/frontier/battle_arcade_game_board.c': _header_route(
+        '01ca88b36d39b0bf6c60273ab5aec85cf9401116c45343256e329bdb5c6795be',
+        ['frontier/battle_arcade_setup.h', 'party_menu.h']),
+    'src/frontier/battle_arcade_setup.c': _header_route(
+        '8dc00a1bd2f94964a242568a43e3ea4567cd7498c92e9427099216c3c8e671e2',
+        ['frontier/frontier.h', 'frontier/battle_arcade_setup.h']),
+    'src/frontier/battle_castle_challenge.c': _header_route(
+        '7efe9fc6020d66a5a14a3e7c4db8b786c91775600454650173c5e4cfe6dbcc17',
+        ['player_avatar.h', 'frontier/battle_castle_setup.h']),
+    'src/frontier/battle_castle_display.c': _header_route(
+        '74d7f7e9074d2d934e592fcc23139a4ec4e7a596c2089ae4a091f52d6531300a',
+        ['player_avatar.h', 'party_menu.h']),
+    'src/frontier/battle_castle_opponent_app.c': _header_route(
+        '2c3fe5936adc284676e7a3c7dc08f21d0aa35e14177d8316c1696531af7aa0c0',
+        ['player_avatar.h', 'frontier/battle_castle_setup.h']),
+    'src/frontier/battle_castle_party_app.c': _header_route(
+        '9be3f9a6e20423684f3ada6fcf2876213e837c656f9e17d772b2282042a2d24f',
+        ['player_avatar.h', 'frontier/battle_castle_setup.h']),
+    'src/frontier/battle_castle_setup.c': _header_route(
+        'ddb4b96265bdff56c8d3b905f863f8f4ec473fc9e9a29f43fef411d9a7255305',
+        ['frontier/frontier.h', 'frontier/battle_castle_setup.h']),
+    'src/frontier/battle_factory_app.c': _header_route(
+        'b967076cb653100d4ffb130027412225104312a899e9f8dc081746a9392798bb',
+        ['frontier/battle_factory_setup.h']),
+    'src/frontier/battle_factory_app_gfx.c': _header_route(
+        '8e63ac1e64a52140d2d4eef957c7bff1336c5b6d92314e76fa8c0640d0fb1d3b',
+        ['frontier/battle_factory_setup.h']),
+    'src/frontier/battle_factory_data.c': _header_route(
+        '4c8a4d96448780b2a3b9ccccda7a3d2d59de11c39f3e84ead032487d584bb3ab',
+        ['player_avatar.h', 'frontier/battle_factory_setup.h']),
+    'src/frontier/battle_factory_setup.c': _header_route(
+        '5b0f91eb981f70359934024fa15c8f7b1517c9fd9dd8e2dcb04d82ae594c2fe1',
+        ['frontier/frontier.h', 'frontier/battle_factory_setup.h']),
+    'src/frontier/battle_hall_app.c': _header_route(
+        '71b54b1c258abf2956af9020f0dade7d51f263294f5f0305e02c34252e2c9e32',
+        ['frontier/battle_hall_setup.h']),
+    'src/frontier/battle_hall_data.c': _header_route(
+        '80d0833f183c6f450f731dbfcec34566e5c2f2d84eeff24d72c1000d79db1324',
+        ['player_avatar.h', 'frontier/battle_hall_setup.h']),
+    'src/frontier/battle_hall_setup.c': _header_route(
+        '5f968559e61a8f4bdf0028a201dde12596c20193fc1d037b7a6f17e78ebda006',
+        ['frontier/frontier.h', 'frontier/battle_hall_setup.h']),
+    'src/frontier/battle_tower_setup.c': _header_route(
+        '350d16a6bfe3bcf0776b951156b6f51b291b9c801485265e6f664817e7ecce2b',
+        ['frontier/frontier.h', 'frontier_field_system.h', 'frontier/battle_tower_setup.h']),
+    'src/frontier/frontier_cmd_arcade.c': _header_route(
+        'd47df95b246dacc8ecea2afbf5dc20e9e3212c160698c66d6fe00673ffe83c79',
+        ['frontier/frontier.h', 'launch_application.h', 'frontier/battle_arcade_setup.h']),
+    'src/frontier/frontier_cmd_castle.c': _header_route(
+        'cf24ebe2c98b640936971655c8e4363b3ea727fc4a779c65d16938da9d90d337',
+        ['frontier/frontier.h', 'launch_application.h', 'frontier/battle_castle_setup.h']),
+    'src/frontier/frontier_cmd_factory.c': _header_route(
+        'd6cb107583f3ca43c557fb1bbfa71612b857ff127f2c96a6457acf9a83b475de',
+        ['frontier/frontier.h', 'launch_application.h', 'frontier/battle_factory_setup.h']),
+    'src/frontier/frontier_cmd_hall.c': _header_route(
+        '89f0598d85455a6cc1d76c272b0ee6cc0b57ca35abb73f3896ce9356574ace49',
+        ['frontier/frontier.h', 'launch_application.h', 'frontier/battle_hall_setup.h']),
+    'src/frontier/frontier_cmd_link_lobby.c': _header_route(
+        'dd8885a24597304cee29cab58f6d727defb2f4636e7765f61129a39a404c166d',
+        ['player_avatar.h', 'frontier/frontier.h', 'frontier_field_system.h', 'party_menu.h']),
+    'src/frontier/frontier_link_lobby.c': _header_route(
+        'e055cecf3e2aa9b33e8ae89b8b48080e866f6484014eb82629e7de7bbc2d016d',
+        ['field_system.h', 'frontier/frontier.h', 'party_menu.h']),
+    'src/frontier/frontier_link_messages.c': _header_route(
+        'b77c5e59b5e32238a25a7e9958338c4140710006f511207556d2fdaa8fbfa699',
+        ['frontier/battle_arcade_setup.h', 'frontier/battle_castle_setup.h',
+         'frontier/battle_factory_setup.h']),
+    'src/frontier/frontier_map.c': _header_route(
+        '9cdc0ae620e0438a1a9b013024ba14b900676fa1f34277bdeedc3f158b2d7571',
+        ['frontier/frontier.h', 'field_bgm.h']),
+    'src/frontier/frontier_records_app.c': _header_route(
+        '4ed9dc25dc1e05d574a86fc509115792115334860e25d9137db184ceeeaeeba1',
+        ['player_avatar.h']),
+    'src/frontier/frontier_save_data_helpers.c': _header_route(
+        'da3f403a8a61c237b290a020be6d111acbdd84c8bb03d7450f5f7c716509285b',
+        ['frontier_field_support.h', 'frontier/battle_tower_setup.h']),
+    'src/frontier/frontier_script_commands.c': _header_route(
+        'a2ff0297250c151a62040ac19d2fbc22c3598ae7bb5406c46f5ab12ea9608192',
+        ['frontier/frontier.h']),
+    'src/frontier/frontier_script_commands_ext.c': _header_route(
+        'ad1d274e7c5dd57a33562cd52882ea1aa062c7e2d1dccdfe3900c3163a78c981',
+        ['player_avatar.h', 'frontier/frontier.h', 'communication_club_link.h', 'launch_application.h',
+         'naming_screen.h']),
+    'src/frontier/frontier_script_commands_misc.c': _header_route(
+        '05836c61706129798b18d61a5c782342f217bea0764d49f0c93cddd8ecaff8f8',
+        ['frontier/frontier.h', 'frontier_field_system.h', 'launch_application.h',
+         'frontier/battle_tower_setup.h']),
+    'src/frontier/frontier_script_ui.c': _header_route(
+        '4a8e8ca2979c96e0b47a73eaf3c27654ade6956ea37cd2495c7e1d89c6925e54',
+        ['frontier/frontier.h', 'party_menu.h']),
+    'src/frontier_field_support.c': _header_route(
+        'ec3f20526faa8df1f6046420953ea9ed20f5e2a8e0fce74ff0bcb26bbd37baea',
+        ['field_system.h', 'frontier_field_support.h', 'launch_application.h', 'party_menu.h', 'task.h']),
+    'src/frontier_field_system.c': _header_route(
+        '356ddabf94dd5eb494f9d42df764897012eabe9d1661b0a8ff590b2163c5b199',
+        ['player_avatar.h', 'frontier_field_system.h', 'launch_application.h',
+         'save_local_field_data.h', 'frontier_field_support.h']),
+    'src/frontier_launch.c': _header_route(
+        '4ec0adebf9ad595a73a589862aa9bde55ba826a9f3d36767a0f3b9f89cf7c7f9',
+        ['field_system.h', 'frontier/frontier.h', 'frontier_launch.h']),
+    'src/frontier_opponents.c': _header_route(
+        '79f48bb9de180b00874b4da28c39b32a4894dffc98fc7725bcbb95bf0f76d7e3',
+        ['frontier_field_system.h']),
+    'src/frontier_runtime.c': _header_route(
+        'e2d147b9cbf537bd0fc12ffcb57d6d9f6391366ac6adb2f99d8b3b8d2a1f350b',
+        ['frontier/frontier.h']),
+    'src/game_clear.c': _header_route(
+        'bae8ee590132cce892336fa39216c2ceb6a375aa8100b14c1cd3224159138978',
+        ['field_warp_reset.h', 'field_bgm.h', 'launch_application.h', 'location_backup.h',
+         'save_local_field_data.h', 'field_time_events.h', 'field_misc_events.h', 'task.h',
+         'game_clear.h', 'field_overworld_restore.h']),
+    'src/gear_phone_ring_manager.c': _header_route(
+        'f8188f0ab9218f0c55ef62518e6242e2c80324488f8795e43ae8b2272b438655',
+        ['field_system.h', 'gear_phone_ring_manager.h', 'overlay_2/gear_phone_calls.h', 'field_bgm.h',
+         'overlay_02.h', 'scrcmd.h', 'field_misc_events.h']),
+    'src/get_egg.c': _header_route(
+        '0908b443c2ea2c94893c4c073bceada92a7f7382011838ce989fcba8daa8cf40',
+        ['script.h', 'get_egg.h', 'field_time_events.h', 'gear_phone_ring_manager.h', 'start_menu.h']),
+    'src/global_terminal/global_terminal_app.c': _header_route(
+        'e3b6fbde98f23731ecab15c2e28ead1e3621a04097d2972cf79eea4a12b69c46',
+        ['global_terminal/global_terminal_app_internal.h']),
+    'src/global_terminal/global_terminal_connect.c': _header_route(
+        'a94e85857ddf70f23e65c64bf296cdcda75166fc598d1113389c2cffedf505c6',
+        ['launch_application.h', 'global_terminal/global_terminal_app_internal.h']),
+    'src/gts/gts.c': _header_route(
+        'ddb0dcac510bec150c80ebabcd8d22fcb0e6a362d5903d9f2f1281cf77d65e11',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_avatars.c': _header_route(
+        'c80c087af4b98fbd3027ffd624327cd2bc3e954c4bf94c71bf0ccc3a98290335',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_connection.c': _header_route(
+        '16e6c32e534631fee5946f14d201f46f027f04af4c0e6a42f4b7cb7404403228',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_main_menu.c': _header_route(
+        '86875d370d52c52e8b2d7ebf14bbc3d94f4214eb18235c69b433a4eed2a96503',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_search.c': _header_route(
+        'a0ca964866689173619c640342bbbc8f15a75df3a46b59e171fda5533295e649',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_search_result.c': _header_route(
+        'c98936bc115463c477deb01b69420aa1df7677ed262141d75c9b20293d16f927',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_select_mon.c': _header_route(
+        '46adb503630a5a3ac8cd94e6764090c82c7c3c626e9a4cced39eff03a36b30d8',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_selector.c': _header_route(
+        '971ece182aad1b31a29e6983873e8d84e361163c09648bfcb3867b5cb45fadf5',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_server.c': _header_route(
+        '63407439ccffcb322f8ea2ca2f1fa8088dcc36dd9b12b1d1e5fdea6a7f8554d7',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_summary.c': _header_route(
+        '630d7b85d1d6b6927bec795b987151b836948e24dbc8a399b2c567257e36d34a',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_trade.c': _header_route(
+        '730a48c0822bd4ccd124f31a7e5178d9552047e9fa2c33286ea1076e46f6485d',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_transaction.c': _header_route(
+        'b457c789c3907629df4453ed215e957d79e9382d4e91995ba276d6b6e1891b42',
+        ['gts/gts_internal.h']),
+    'src/gts/gts_wanted.c': _header_route(
+        '6efe7d960d54600676f19f826b4e68b7582c20c11c41a9570462ef5c039dfe01',
+        ['gts/gts_internal.h']),
+    'src/gymmick_collision.c': _header_route(
+        '271e7eec6f372611a3c8e819af99edfab6f6968ecaa883ed7bd82d1ae8e711d4',
+        ['script.h', 'gymmick_collision.h', 'overlay_04.h', 'scrcmd.h']),
+    'src/gymmick_init.c': _header_route(
+        'b57b7db020c3fb7dfc9783c1ebe45fc53180ffa37eee5d1947d5974dbc0c4ec1',
+        ['field_system.h', 'gymmick_init.h']),
+    'src/hall_of_fame_showcase.c': _header_route(
+        'f2de260c3466e414157eb1a88562634a326c60271a1e19759cc5bbf749a7b3e8',
+        ['follow_mon.h']),
+    'src/hatch_egg_task.c': _header_route(
+        '32afc0c2e81bffc35da0be2b88011da382d09beb68e3326d43aee9db822625a5',
+        ['get_egg.h', 'naming_screen.h', 'hatch_egg_task.h', 'hatch_egg_task_data.h',
+         'field_overworld_transition.h', 'field_overworld_restore.h']),
+    'src/headbutt_tree.c': _header_route(
+        'de466a8ca2abdace54dc1bad1c3606662cd1465aa51a70cd44f1cd14bf7582cb',
+        ['headbutt_tree.h', 'field/map_load_manager.h']),
+    'src/launch_application.c': _header_route(
+        'ce04d08d92b9474536112b722c34021dcb193635e3c43b9359b72f1be290cc5a',
+        ['field_system.h', 'launch_application.h', 'field_bgm.h', 'get_egg.h', 'overlay_02.h',
+         'mailbox_app.h', 'record_mixing/record_mixing.h', 'save_local_field_data.h',
+         'global_terminal/global_terminal_app.h', 'field_time_events.h', 'union_room_talk.h',
+         'field_misc_events.h', 'gear_phone_ring_manager.h', 'launch_application_internal.h',
+         'naming_screen.h', 'party_menu.h', 'alph_puzzle.h', 'hatch_egg_task.h', 'start_menu.h',
+         'field_overworld_transition.h', 'field_overworld_restore.h', 'bag_view.h']),
+    'src/legendary_cinematic_task.c': _header_route(
+        'eec7b2d1c9e9af0fb330c05889c7cf9fc72636e5e5a6bfdce6181a20b40c05bc',
+        ['field_system.h', 'legendary_cinematic_task.h', 'field_time_events.h', 'task.h',
+         'field_overworld_restore.h', 'field_overworld_transition.h']),
+    'src/location_backup.c': _header_route(
+        '0c38736ef75381ffb199480bbc7fa9e6c06367874b4fc832de050e7bb53c0255',
+        ['field_system.h', 'location_backup.h', 'save_local_field_data.h']),
+    'src/magnet_train_ride.c': _header_route(
+        'e6bb86197e44e5f765bf6e52e2fa77c2be0158afd94a9bb9de00133419740fef',
+        ['field_system.h', 'magnet_train_ride.h', 'field_bgm.h', 'field_time_events.h',
+         'launch_application.h', 'task.h', 'field_overworld_transition.h', 'field_warp_tasks.h']),
+    'src/map_events.c': _header_route(
+        'ca7ae292989ee6ee51888b56acc73848a3842c83a86ac9da02e18c08a609fa3b',
+        ['map_object.h', 'field_system.h', 'map_events.h']),
+    'src/map_object.c': _header_route(
+        '36e6bff1d35b8f8015754b5d8f81fc58cb34421b2f2507f704d470110be714fa',
+        ['map_object.h', 'player_avatar.h', 'field/map_object_render.h',
+         'map_object_movement_utilities.h', 'script_manager.h']),
+    'src/map_object_behavior.c': _header_route(
+        '7de6b5e71bd3bd4dbf45b97f9adb129ff898de5c210c14dcc076c54f59bb4fe1',
+        ['field_effects.h', 'field_emote_mark.h', 'map_object.h', 'map_object_behavior_internal.h',
+         'player_avatar.h', 'field/field_effect_helpers.h', 'field/map_object_models.h',
+         'field/map_object_render.h', 'field_apricorn_regrowth.h', 'field_system.h',
+         'map_object_movement_commands_internal.h', 'map_object_movement_utilities.h',
+         'field_time_events.h', 'map_object_movement_commands.h',
+         'map_object_movement_utilities_internal.h', 'overlay_01.h', 'script_manager.h']),
+    'src/map_object_follow.c': _header_route(
+        '3566f840dd10f24c40c41014df846180591bc81537b9500e9b5900186fa5f48d',
+        ['field/field_effect_manager.h', 'map_object.h', 'map_object_behavior_internal.h',
+         'map_object_follow_internal.h', 'player_avatar.h', 'field_hidden_object_cover.h',
+         'field_system.h', 'field_tall_grass.h', 'field_very_tall_grass.h', 'follow_mon.h',
+         'map_object_movement_commands_internal.h', 'field/field_follow_mon.h', 'field_terrain.h',
+         'map_object_movement_utilities_internal.h', 'overlay_01.h']),
+    'src/map_object_movement.c': _header_route(
+        '0fbc14b8f9005aa1cf00f0c6891cdb130c6ae3558818a5735ab07179bc175c4e',
+        ['map_object.h', 'player_avatar.h', 'map_object_movement.h', 'field_system.h',
+         'map_object_movement_commands_internal.h', 'player_avatar_movement.h',
+         'map_object_movement_utilities_internal.h']),
+    'src/map_object_movement_commands.c': _header_route(
+        '860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a',
+        ['field_effects.h', 'field_emote_mark.h', 'map_object.h', 'map_object_follow_internal.h',
+         'field_trainer_reveal.h', 'map_object_movement_commands_internal.h',
+         'map_object_movement_utilities.h', 'map_object_movement_commands.h',
+         'map_object_movement_utilities_internal.h']),
+    'src/map_object_movement_utilities.c': _header_route(
+        '539afdd7c55800ff61e84f7ef29844134ca369ec1c21fbaa9a6bdf724a6da8b3',
+        ['map_object.h', 'field_system.h', 'field/field_follow_mon.h', 'field_terrain.h',
+         'map_object_movement_utilities_internal.h', 'overlay_01.h']),
+    'src/map_object_update.c': _header_route(
+        '6daa7ad3e7d76cf1348d0bc130686242e58f8506c8c41544614a5c6f0acf7ccb',
+        ['map_object.h', 'map_object_behavior_internal.h', 'map_object_follow_internal.h',
+         'field/map_object_models.h', 'field_footprints.h', 'field_ground_dust.h', 'field_mud_splash.h',
+         'field_puddle_splash.h', 'field_reflection.h', 'field_shadow.h',
+         'field_shallow_water_ripple.h', 'field_system.h', 'field_tall_grass.h',
+         'field_very_tall_grass.h', 'map_object_movement_commands_internal.h',
+         'field/field_follow_mon.h', 'field_terrain.h', 'map_object_movement_utilities_internal.h',
+         'overlay_01.h']),
+    'src/map_preview_graphic.c': _header_route(
+        '2c4a9c59d556faf3c8c505a14ff0c8dc337870169a572f097220d8d8c3bf74c3',
+        ['map_object.h', 'player_avatar.h', 'follow_mon.h', 'player_avatar_actions.h', 'overlay_01.h',
+         'map_object_movement_commands.h', 'map_preview_graphic.h']),
+    'src/mart_bag_task.c': _header_route(
+        'c8472cd62f95753cfc2f4dd8bbdf4569be2099ea4f864262712ce265ed0053df',
+        ['field/fieldmap.h', 'overlay_03.h', 'task.h', 'mart_bag_task.h', 'bag_view.h']),
+    'src/naming_screen.c': _header_route(
+        'b696ec482028ffee4f439e9802c7e5cf32aa97ba3571647dfa8fd55148f3c65c',
+        ['launch_application.h', 'naming_screen.h']),
+    'src/nintendo_wfc_connect_unused.c': _header_route(
+        '62b6feba01e42ffded4a81683557811eb172182e442b73f3b04bc0ea0d740d9c',
+        ['record_mixing/record_mixing.h']),
+    'src/npc_trade.c': _header_route(
+        'f331e080ef87eed6dccbb3e8d710fbf057db658d7c7e1201868fbd3ecb4af8f7',
+        ['field_system.h', 'npc_trade.h', 'field_time_events.h', 'field_misc_events.h']),
+    'src/npc_trade_task.c': _header_route(
+        'd8e5a22b52e4a6d6635ef2a480c144261aec91c2de7d25899f61b3239e6ac1fa',
+        ['field_warp_reset.h', 'npc_trade.h', 'task.h', 'field_overworld_restore.h',
+         'field_overworld_transition.h']),
+    'src/oaks_speech.c': _header_route(
+        '6e7be8ddc5c125d0b0af61b3044451e5fac88003264563a6f6b96e92529c37ab',
+        ['launch_application.h', 'naming_screen.h', 'oaks_speech.h', 'oaks_speech_internal.h']),
+    'src/oaks_speech_obj.c': _header_route(
+        '4c770e90a3e9088553693ecb225d5c6b1829a08cd30bc0558d656db63fa83d29',
+        ['oaks_speech_internal.h']),
+    'src/oaks_speech_yesnomenu.c': _header_route(
+        'a93adcb19518392d18c0a13a958c422888abfc80d45a068680a567c808d999ce',
+        ['oaks_speech_internal.h']),
+    'src/overlay_03/battle_regulation_menu.c': _header_route(
+        'c88a8db63753adbf513b095d7f03fecd8dba7e347e93c9d8ead888100e14573a',
+        ['field_system.h', 'overlay_03.h', 'task.h']),
+    'src/overlay_03/communication_club.c': _header_route(
+        '72b0ffe5e1dc38fe6f60d04b0422e2bd27787e2ca59bf31b2bf0e2c0ea4dd1e4',
+        ['field_system.h', 'overlay_01.h', 'overlay_03.h', 'communication_club_link.h', 'task.h']),
+    'src/overlay_03/custom_safari_zone.c': _header_route(
+        'be113735f0fcdf5626d2723794a85c9b15cbd7c7b0222fb06790a02d14da3644',
+        ['overlay_01.h', 'overlay_03.h', 'task.h']),
+    'src/overlay_03/overlay_03_scrcmds.c': _header_route(
+        '9372a32bd4b846b39439409521d4252c4b7a1da4349a2fccb4f0af8356ae6df0',
+        ['field_system.h', 'map_object_movement_utilities.h', 'field/map_load_manager.h',
+         'launch_application.h', 'overlay_01.h', 'overlay_02.h', 'overlay_03.h', 'scrcmd.h',
+         'safari_zone_encounters.h', 'safari_decoration_task.h']),
+    'src/overlay_03/pokeathlon_records.c': _header_route(
+        'f6ea83ad96f645b0b5cab804b4c46c11b729cb38d3fcb521b722d9787eb5cca4',
+        ['field_system.h', 'overlay_03.h', 'task.h']),
+    'src/overlay_03/shop_menu.c': _header_route(
+        'b20e95cbc70562ae7c5e988e87ca4c3e218ffefd513c1a8940f54e1ac14ae073',
+        ['field/fieldmap.h', 'launch_application.h', 'mart.h', 'overlay_01.h', 'overlay_03.h',
+         'scrcmd.h', 'communication_club_link.h', 'task.h', 'mart_bag_task.h', 'bag_view.h']),
+    'src/overlay_124.c': _header_route(
+        'ec13d7e447a15fc58472e6580aeb95906d7d5099a2b882f6521b7fb617172da5',
+        ['field_system.h', 'follow_mon.h', 'overlay_124.h', 'save_local_field_data.h',
+         'gear_phone_ring_manager.h', 'map_events.h']),
+    'src/overlay_22.c': _header_route(
+        '0725c1a1702a741f1bf72ded5bd59fa12fd51c8bd5a4dd92fc8c63ea42c95abe',
+        ['script.h', 'money_box.h', 'scrcmd.h', 'script_manager.h']),
+    'src/overlay_25.c': _header_route(
+        '95154a22b2e00b1d294b2ae59d52638029faf5a13ceb6ee4dad0b4261b5a5c9e',
+        ['encounter.h', 'script.h', 'overlay_25.h', 'overlay_01.h', 'scrcmd.h', 'script_manager.h']),
+    'src/overlay_36.c': _header_route(
+        '87af06021f54c29794beedbc28d66da080b8665d925f39a2ad1e4770b02e93e9',
+        ['field_system.h', 'apricorn_tree.h', 'location_backup.h', 'frontier_field_support.h']),
+    'src/overlay_94.c': _header_route(
+        '6d51e91d2d967504770dddb3b38654f37c8b4786adab26f6677dd2303c418bd0',
+        ['field_system.h', 'scrcmd.h', 'party_menu.h', 'overlay_94.h', 'party_context_menu.h',
+         'party_menu_list_items.h', 'party_menu_sprites.h']),
+    'src/overlay_bug_contest.c': _header_route(
+        'c34ed3a62938b6a105032a842abbbedc53535329da7013530bbc25f181f06c94',
+        ['field_system.h', 'bug_contest.h', 'field_time_events.h']),
+    'src/party_context_menu.c': _header_route(
+        'd122f632342fb3ac4a84661d62e9b4ad3316dd5ed38159082c7d85df5cf162e6',
+        ['party_context_menu.h', 'party_menu_items.h', 'party_menu_list_items.h']),
+    'src/party_menu.c': _header_route(
+        'f94feedd24b2e7b12ccb9df6542d4968f0350b78ed9b0508346d2b83bdbbb564',
+        ['frontier_field_support.h', 'party_menu.h', 'overlay_94.h', 'party_context_menu.h',
+         'party_menu_items.h', 'party_menu_list_items.h', 'party_menu_sprites.h']),
+    'src/party_menu_items.c': _header_route(
+        'e2b54af5d61a0a3e5710244ca0ae140d72428cd0f59b2167eb5f7552c0434edd',
+        ['field_system.h', 'party_menu_items.h', 'party_context_menu.h', 'party_menu_list_items.h',
+         'party_menu_sprites.h']),
+    'src/party_menu_list_items.c': _header_route(
+        'f052075b8703b4224d6c31d3c8d01eb426a95876bdd1d66023da62712fa4425d',
+        ['field_move.h', 'party_menu_list_items.h', 'overlay_94.h', 'party_context_menu.h',
+         'party_menu_sprites.h']),
+    'src/party_menu_sprites.c': _header_route(
+        '7a5877cbe582b593842c110c1487ef0eaef73dbcc693494eb942bf7cd445d389',
+        ['party_menu_sprites.h']),
+    'src/phone_rematch.c': _header_route(
+        'c399e2b34072be58adaa8c5e6eceec918e46f6112f4d2891b35d456dfe9aff40',
+        ['overlay_26.h']),
+    'src/player_avatar.c': _header_route(
+        '2ea71ad419bda58c0cd2e2c57fc0b96990bb5f03e88903aeb037c5fe939fab0c',
+        ['player_avatar.h', 'map_object.h', 'field_surf_mount.h', 'field_warp_arrow.h',
+         'map_object_movement_utilities.h', 'overlay_01.h', 'scrcmd.h']),
+    'src/player_avatar_movement.c': _header_route(
+        '0484badad86852a5580b985963e26f30c8f7ea9711a0c8b7cab2ceb5e3035681',
+        ['map_object.h', 'player_avatar.h', 'player_avatar_movement.h', 'follow_mon.h',
+         'map_object_movement_commands_internal.h', 'map_object_movement_utilities.h',
+         'player_avatar_actions.h', 'field/field_follow_mon.h', 'field_misc_events.h',
+         'field_terrain.h', 'gymmick_init.h', 'map_object_movement_commands.h', 'overlay_04.h']),
+    'src/pokeathlon/pokeathlon_course_flow.c': _header_route(
+        '5be06f8c14b2d78589441dbe9ef897d9ae3afec34e56be215cc77c7e75878b49',
+        ['follow_mon.h']),
+    'src/pokeathlon/pokeathlon_course_mon_gfx.c': _header_route(
+        '83efee76fbe6674138bf07487353b7e85f1b5d6b5042409a908d1ae37dc35e0c',
+        ['follow_mon.h']),
+    'src/pokeathlon_course_task.c': _header_route(
+        '6a4b37db90e28792e21227f2c08a9fcf74f17587a3082fd63691acd06a6a4014',
+        ['field_system.h', 'pokeathlon_course_task.h', 'launch_application.h', 'task.h']),
+    'src/pokemon.c': _header_route(
+        '1d784ece4650b84e426a437ee20e4a926475fc20ef761e67440d0c0136548fa3',
+        ['wifi_club.h']),
+    'src/pokemon_summary.c': _header_route(
+        '8d87396beab5f367f5d7db2cea875b53a938ebb464a9d0c380708b2ebfa72394',
+        ['party_menu.h']),
+    'src/record_mixing/record_mixing.c': _header_route(
+        'f8b884d025b2763ef07f2813fb13c57e83ff2424cad7e819da3eb44314ef7176',
+        ['union_room_objects.h', 'record_mixing/record_mixing.h', 'union_room_talk.h',
+         'record_mixing/record_mixing_internal.h']),
+    'src/record_mixing/record_mixing_link.c': _header_route(
+        'f674c498ba6a3224f63c4886dec64f84817f6b5b771db75f505494b537baad73',
+        ['record_mixing/record_mixing_internal.h']),
+    'src/register_hall_of_fame.c': _header_route(
+        'a671835c615d5b8664948b71f0d030033cbc2bb9b5d132d62b41409c19a8b2b7',
+        ['follow_mon.h', 'field_misc_events.h']),
+    'src/render_animation.c': _header_route(
+        'de759a7b1a153e7e7e10e0e5a020ec810147bb3a8946f011cf4a3448d531ce1a',
+        ['render_animation.h', 'render_model.h']),
+    'src/render_model.c': _header_route(
+        '6a7e86e4a37deac4ebfcb3aaee9e789b389d5a853be25ee269c5b8f47b115475',
+        ['render_model.h']),
+    'src/safari_decoration_task.c': _header_route(
+        '620339bade4dcd2bf51b439bffbf15ece7cf7de0080451b75dab5e3c31dbbe72',
+        ['launch_application.h', 'safari_decoration_task.h', 'field_overworld_restore.h']),
+    'src/safari_zone_encounters.c': _header_route(
+        '7242a8465aae453772b2aba40ebdae455fc592436260367efd58df6abb21610f',
+        ['safari_zone_encounters.h']),
+    'src/save_arrays.c': _header_route(
+        'dbdf0fb87f52b43f3099da261a4cecc0f10d64f59907d250d516f16e5626545e',
+        ['save_local_field_data.h']),
+    'src/save_local_field_data.c': _header_route(
+        '415745fc230fa219cc73661e342076bdfd1063be85d350b16cd621c1fd1eb5b5',
+        ['map_object.h', 'player_avatar.h', 'field_system.h', 'save_local_field_data.h', 'spawn_warp.h']),
+    'src/save_misc.c': _header_route(
+        'd32cff743c06b5c7d179577be5f1819f2d9913bf4bf33a84c0f533c83ff29681',
+        ['apricorn_tree.h']),
+    'src/save_pokegear.c': _header_route(
+        'fee5ea697a1da43cb7f469a3903ebaebca31c029921ac53925209ea0d28c86da',
+        ['overlay_2/gear_phone_calls.h']),
+    'src/scrcmd_12.c': _header_route(
+        '92627326748962b1ada18921802186a1b55ed44286362458b69b1936dc519f20',
+        ['field_system.h', 'catching_show.h', 'scrcmd.h', 'gear_phone_ring_manager.h']),
+    'src/scrcmd_17.c': _header_route(
+        '65050460d03bbe1575fe7e414fc25c559615e40edffe2b300f8617c16de3bce5',
+        ['field_system.h', 'save_local_field_data.h', 'scrcmd.h']),
+    'src/scrcmd_8.c': _header_route(
+        '094935d0a8ef3bc077acc0e083408472f3638c2b1bbca5f2857e6be6bf9742bb',
+        ['launch_application.h', 'scrcmd.h', 'script_manager.h']),
+    'src/scrcmd_9.c': _header_route(
+        'eced1902f1e1c540db578cbe50c6dfed10baea695c5570bb40473f4768dac2f3',
+        ['player_avatar.h', 'field_system.h', 'script.h', 'launch_application.h',
+         'save_local_field_data.h', 'scrcmd.h', 'script_manager.h', 'frontier_field_system.h',
+         'frontier_field_support.h']),
+    'src/scrcmd_apricorn.c': _header_route(
+        'f830a4861cceda0c410f74862c054499f338aac8aa66487e5f136f6f12c9fedb',
+        ['field_system.h', 'field/apricorn_tree_anim.h', 'scrcmd.h', 'field_time_events.h']),
+    'src/scrcmd_battle.c': _header_route(
+        'a6acb1efa0c45dbe05cee3301f3d6280deb617e0ece2cd4cd907627ef112e109',
+        ['map_object.h', 'encounter.h', 'blackout.h', 'field_bgm.h', 'scrcmd.h',
+         'map_object_behavior.h']),
+    'src/scrcmd_battle_arcade.c': _header_route(
+        'b693136257e6d914b76da585cb21d22ef79f9d6091e92dd360f53f18c8505df4',
+        ['player_avatar.h', 'field_system.h', 'script.h', 'launch_application.h', 'scrcmd.h',
+         'script_manager.h', 'frontier_field_system.h', 'party_menu.h', 'task.h']),
+    'src/scrcmd_battle_castle.c': _header_route(
+        '24cdc943f1bf0f6df12d0f0a4ce7579b4064131e961c3cc99fd1ea8929a4d3f3',
+        ['player_avatar.h', 'field_system.h', 'script.h', 'launch_application.h', 'scrcmd.h',
+         'script_manager.h', 'frontier_field_system.h', 'party_menu.h', 'task.h']),
+    'src/scrcmd_battle_hall.c': _header_route(
+        '0ed8e264d8f348ba03e064bec663eaf7f26cd2c2fb159cb8eaa30810d562eb7e',
+        ['player_avatar.h', 'field_system.h', 'script.h', 'launch_application.h', 'scrcmd.h',
+         'script_manager.h', 'party_menu.h', 'task.h']),
+    'src/scrcmd_c.c': _header_route(
+        'acbb13e9cbfe967d87e618224f46212d43ee8287c651126e30b1188872e396ca',
+        ['map_object.h', 'player_avatar.h', 'map_object_follow.h', 'encounter.h', 'field_system.h',
+         'follow_mon.h', 'player_avatar_actions.h', 'union_room_objects.h',
+         'map_object_movement_utilities.h', 'field/field_camera.h', 'field/legend_cutscene_camera.h',
+         'field/map_load_manager.h', 'field/rock_smash_item.h', 'field/signpost.h',
+         'frontier/frontier.h', 'overlay_2/event_cutscene.h', 'overlay_2/gear_phone_calls.h',
+         'blackout.h', 'choose_starter.h', 'field_bgm.h', 'field_take_photo.h', 'gymmick_init.h',
+         'launch_application.h', 'npc_trade.h', 'overlay_01.h', 'overlay_03.h', 'overlay_04.h',
+         'mailbox_app.h', 'overlay_26.h', 'save_local_field_data.h', 'scrcmd.h', 'field_terrain.h',
+         'field_time_events.h', 'comm_player_manager.h', 'communication_club_link.h', 'union_room.h',
+         'union_room_talk.h', 'map_object_movement_commands.h', 'field_warp_reset_suppress.h',
+         'trainer_card_data.h', 'field_misc_events.h', 'gear_phone_ring_manager.h',
+         'pokeathlon_course_task.h', 'spin_trade_flow.h', 'magnet_train_ride.h', 'ship_voyage.h',
+         'legendary_cinematic_task.h', 'map_events.h', 'party_menu.h', 'task.h',
+         'safari_zone_encounters.h', 'alph_puzzle.h', 'field_warp_tasks.h', 'game_clear.h',
+         'field_overworld_transition.h', 'field_overworld_restore.h', 'field_transition_tasks.h',
+         'scrcmd_link_sync.h', 'wifi_club.h', 'battle_greeting_task.h']),
+    'src/scrcmd_daycare.c': _header_route(
+        'd7377ab05f95223a232ac1f136773279004dbfd8cfabb75ec446049e12042e78',
+        ['map_object.h', 'field_system.h', 'get_egg.h', 'scrcmd.h']),
+    'src/scrcmd_dppl_prizes.c': _header_route(
+        'cdc98cf7c64b7e63d2e24ac8d9affa4e5678e1790efa6547817cada6af9dc4b5',
+        ['scrcmd.h']),
+    'src/scrcmd_fossils.c': _header_route(
+        '3e57880fb518846914d5912488a3e12864e86bd8b556fc43c7317cb4b3f983b1',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_items.c': _header_route(
+        '3dc0074f2f29cd571852f49066f3c6e2a550673dab51472f3a79068f00a904c7',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_link_sync.c': _header_route(
+        '247131eb266389351fb7abffc5d506158a94f9f80f476b22019017252dc7d31a',
+        ['player_avatar.h', 'script.h', 'launch_application.h', 'scrcmd.h', 'script_manager.h',
+         'party_menu.h', 'task.h', 'scrcmd_link_sync.h', 'field_overworld_transition.h',
+         'field_overworld_restore.h']),
+    'src/scrcmd_lottery.c': _header_route(
+        '7a85ed0dc28ba0f2eae6d721214c3c81628189a42ea764ec73db2cd7d545f870',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_mart.c': _header_route(
+        '4931aede80bab2b74c4cb961910550ddcbfb16308fae25bdf0e9a3a495444743',
+        ['field_system.h', 'mart.h', 'scrcmd.h']),
+    'src/scrcmd_money.c': _header_route(
+        '0556fd7978d76c73a1ba81a18f3b6d6b1e9985f4ff32bf491512ce4aac8c2823',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_move_relearner.c': _header_route(
+        '202f527d83177aa4df0f11213af8b75b4bc1f578a07e00188dfb1d3b51809b06',
+        ['launch_application.h', 'scrcmd.h']),
+    'src/scrcmd_mystery_gift.c': _header_route(
+        'd1acc5c6071ba6ff14be82b5cea35e903115bec121d1c6bcaf064cb59b68b067',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_party.c': _header_route(
+        'df64cfc7080caa0d4350dcb1aeb0f4790629f7a9c80fc04efc5c11e79312d8cd',
+        ['field_system.h', 'get_egg.h', 'npc_trade.h', 'scrcmd.h']),
+    'src/scrcmd_size_record.c': _header_route(
+        'd92dbbebd560bf6d23ae799279609ff64bbb5ad4250edf7026283fd958746cdf',
+        ['field_system.h', 'scrcmd.h']),
+    'src/scrcmd_sound.c': _header_route(
+        '72f9643cda5a64f0db483297555aef44495c394e2109ffbff07f629756e5e487',
+        ['field_system.h', 'field_bgm.h', 'scrcmd.h']),
+    'src/scrcmd_strbuf.c': _header_route(
+        '2c43e3b9959e10073e4ef85066343b7a326d1fc5e08e4fa0669e4d63892feded',
+        ['field_system.h', 'scrcmd.h']),
+    'src/script.c': _header_route(
+        '943601849c46d18b1d8e665d6f449b30307ba5de0dda7449a0b7941a839b6e76',
+        ['script.h']),
+    'src/script_manager.c': _header_route(
+        '51913f32248c70d3f38d7a5bd0407da7a8597c90d18fa0e306fe7b3984db6bd7',
+        ['map_object.h', 'field_system.h', 'script_manager.h', 'map_events.h', 'task.h', 'start_menu.h']),
+    'src/script_pokemon_util.c': _header_route(
+        '5cde9651d058236036df9ee9386d3199e8a1759c19b086443dc116770369f4fc',
+        ['render_animation.h', 'get_egg.h']),
+    'src/ship_voyage.c': _header_route(
+        '2930c2c78a21fd157864679cb6b322d60f6cad0d98d5897b7f8c4eb725292cbb',
+        ['field_system.h', 'ship_voyage.h', 'field_bgm.h', 'field_time_events.h',
+         'launch_application.h', 'task.h', 'field_overworld_transition.h', 'field_warp_tasks.h']),
+    'src/spawn_warp.c': _header_route(
+        'bc651cc174f9e96cb9140d2143a4941801a2358c6bd2bafea6f244e15eb6fc03',
+        ['field_system.h', 'spawn_warp.h', 'spawn_warp_lookup_internal.h']),
+    'src/spin_trade_flow.c': _header_route(
+        '12b50e50110c480cdc2637e45063df81b67a1e0df3855c7ad10bb29ef099da8d',
+        ['field_system.h', 'launch_application.h', 'task.h']),
+    'src/spin_trade_link.c': _header_route(
+        '382de3274669287782f61864fff9c8116bf45ec61dc29eee261b006b8e7bcbf6',
+        ['union_room_objects.h', 'union_room_talk.h']),
+    'src/start_menu.c': _header_route(
+        '746df88e2c47e3b911d0ba7225728de753859cb4ab65be8287c78665d9ecb542',
+        ['map_object.h', 'field_system.h', 'union_room_objects.h', 'player_avatar_movement.h',
+         'field/fieldmap.h', 'field_bgm.h', 'field_move.h', 'launch_application.h', 'overlay_01.h',
+         'field/bottom_screen_app.h', 'save_local_field_data.h', 'union_room_talk.h',
+         'frontier_field_support.h', 'trainer_card_data.h', 'gear_phone_ring_manager.h', 'start_menu.h',
+         'field_use_item.h', 'bag_view.h']),
+    'src/swarm.c': _header_route(
+        'f7b7546b1bc41ceb50e61993ae6a31edcc39ed4e2528eb53b4145a28a28764db',
+        ['map_events.h']),
+    'src/talked_trainer_movement.c': _header_route(
+        'a390fcb21b9c647803aa491e74351302609ab233e23d38647e0dcb76d8d2df6f',
+        ['map_object.h', 'field_system.h', 'overlay_26.h', 'map_events.h']),
+    'src/task.c': _header_route(
+        'f096e1a5ed66ccb9d21954ba1e641fd3dab66837781309e45aac52ba543108c5',
+        ['field_system.h', 'task.h']),
+    'src/terrain_attributes.c': _header_route(
+        '1201161ae43ab76c88e80f5e4850ce4441b0dd17c96facf11cd036fdcf6d726e',
+        ['field_system.h', 'terrain_attributes.h']),
+    'src/touch_save_app.c': _header_route(
+        'f2538d94c145ba6163131ed50d3415d96eff9f6d22bff03af901bfb6501271bc',
+        ['field_system.h', 'overlay_01.h', 'task.h', 'touch_save_app.h']),
+    'src/trade_communication.c': _header_route(
+        'f6f83982bbae6f1725b788ce3fec64e0a7573762ed0de8305c77cdaa67be6fe7',
+        ['trade_communication_internal.h']),
+    'src/trainer_card_data.c': _header_route(
+        '643aded3d2a7ca84b4622e1ccd1e88b5e1f24945977877902047404a66054284',
+        ['trainer_card_data.h', 'field_time_events.h', 'launch_application.h', 'union_room_talk.h',
+         'task.h']),
+    'src/trainer_rematch.c': _header_route(
+        '879c2acdaadabfc2ce3198be4d5fdf28337c0acd9d55995d58a71481a2f53c61',
+        ['overlay_26.h', 'script_manager.h']),
+    'src/union_chat_log.c': _header_route(
+        '07b37d3d145278edabe37a56485717001a14a383d0e1e0df64c6bfbaed4df39c',
+        ['union_chat_log.h', 'overlay_01.h', 'union_room_talk.h', 'task.h']),
+    'src/union_room.c': _header_route(
+        '06f3a16ad8357b8c2e96d4037d15d454dbd00e981c0b8754cdfabe7b0b10a1cf',
+        ['union_room_internal.h', 'union_room_talk.h']),
+    'src/union_room_objects.c': _header_route(
+        'ff5ccb6441dc9a65f95ebace386339b5aa48312b20c5a132cc5a98a8ad237dfa',
+        ['field_effects.h', 'map_object.h', 'player_avatar.h', 'union_room_objects.h', 'field_shadow.h',
+         'field_system.h', 'field_union_chat_marker.h', 'field_warp_reset.h',
+         'map_object_movement_commands.h', 'task.h']),
+    'src/union_room_talk.c': _header_route(
+        'e362282f15d8153275161230bd5baceb62bd4157b429c2e5a48a21b8720ce40a',
+        ['field_system.h', 'union_room_talk.h', 'trainer_card_data.h', 'union_room_internal.h']),
+    'src/union_room_talk_data.c': _header_route(
+        'b7dd3db0f1d02e67491b83ce92c430233db832bd4fe4d9b8b27ba61e7ccb2575',
+        ['union_room_talk.h']),
+    'src/view_rankings_task.c': _header_route(
+        'c5ba9ef1da3f7cbef22e428f383c93e47e15ffcc3b30ceec7abfbb4c52935dc0',
+        ['field_system.h', 'launch_application.h', 'task.h']),
+    'src/voltorb_flip/voltorb_flip_input.c': _header_route(
+        'ed3fa9e203b1deb6f6f2f7521ae159f806143f54d0cf697bd383ad8f83fbea02',
+        ['global_terminal/global_terminal_app.h']),
+    'src/vs_recorder_app.c': _header_route(
+        'b2a515a0993cff2885e9cb5f653e8fdaa717df8b659ed1ba6341cc58dbf0b0c6',
+        ['field_bgm.h', 'vs_recorder_app_internal.h', 'global_terminal/global_terminal_app_internal.h']),
+    'src/vs_recorder_menu_app.c': _header_route(
+        '5c4fcdfceb1c95b403c58e2d05a237e036a6e68967129e63ce441ee3ce3e2d8e',
+        ['field_bgm.h', 'vs_recorder_app_internal.h', 'global_terminal/global_terminal_app_internal.h']),
+    'src/wifi_club/wifi_club.c': _header_route(
+        '5ca57c111b69ea0d38fba215b877f91ec91a85f79ee9d74038e57b775c9eee7f',
+        ['encounter.h', 'field_system.h', 'launch_application.h', 'frontier_launch.h', 'task.h',
+         'wifi_club.h']),
+    'src/wifi_club/wifi_club_app.c': _header_route(
+        '952980cc552d24a1bf0e96b93d2d5bdc06f6db27d1aa072ed07489f24579da5d',
+        ['wifi_club.h']),
+    'src/wireless_trade_select_mon.c': _header_route(
+        'ce27523454f88f4f7267d180ab6be4157795e7659f39228e47dd0b26e4b0c8d7',
+        ['field_bgm.h', 'wireless_trade_select_mon_internal.h', 'launch_application_internal.h']),
+}
 
 RUNTIME_INPUTS = {'lib/MSL_C/asm/MSL_Common_ctype.s': '831ce69dfd62d66f137850e67560c7685a915ed2d24175f5ee37d1146ad0ba65',
  'lib/MSL_C/src/msl_qsort.c': 'd14b0045fe9f5bde62b13ea2a9d522c4e94658616a2ea5336e6005b05389bf64',

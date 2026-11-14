@@ -275,6 +275,15 @@ int main(void){
         if dest.exists(): dest.unlink()
         diagnostic = run([tool, ir, dest], expected=1)
         assert 'guest32: unsupported:' in diagnostic and not dest.exists()
+    # Flattening an empty aggregate must not erase its element-type gate.
+    empty = out/'empty-array.ll'
+    empty.write_text('target datalayout = "e-p:32:32"\n'
+                     'declare void @unused([0 x ptr addrspace(1)])\n'
+                     'define i32 @main(){ret i32 0}\n')
+    rejected = out/'empty-array.rejected.ll'
+    rejected.unlink(missing_ok=True)
+    diagnostic = run([tool,empty,rejected,'--guest-externals'],expected=1)
+    assert 'nondefault address space' in diagnostic and not rejected.exists()
     # Reproduce the next genuine original operation that this primitive cannot
     # yet admit. No DWC_Free or MI provider is replaced by an empty definition.
     clear_source = out/'original-clear.c'

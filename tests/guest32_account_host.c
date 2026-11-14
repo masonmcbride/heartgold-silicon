@@ -34,7 +34,7 @@ int main(void){
         assert(!guest32_DWC_CheckDirtyFlag(ram,u));assert(guest32_DWC_CheckUserData(ram,u));
         user[40]^=1;assert(!guest32_DWC_CheckUserData(ram,u));user[40]^=1;
     }
-    assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE);
+    assert(g32_stack_pointer(ram)==G32_MAIN_RAM_BASE+G32_MAIN_RAM_SIZE - 4096 /* reserved DS system RAM */);
     g32_destroy(ram);
     puts("PASS original account id/profile/dirty/CRC validation x64; CRC32 known vector; shared DS RAM");
 }
