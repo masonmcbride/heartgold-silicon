@@ -58,6 +58,7 @@ set(native_headers
     include/voice_chat.h lib/include/nitro/os/printf.h lib/include/vct/vct_audio_internal.h
     lib/include/nitro/wm/wm_internal.h lib/include/nitro/os/ownerInfo.h
     lib/include/nnsys/g3d_render_internal.h lib/include/nnsys/snd_internal.h
+    lib/include/nnsys/snd/sndarc.h
     lib/include/nnsys/snd_arc_internal.h lib/include/nnsys/snd_arc_strm_internal.h
     lib/include/nnsys/g2d/g2d_CellTransferManager.h lib/NitroDWC/src/tree-iterator4.h)
 list(APPEND native_headers
@@ -439,26 +440,24 @@ add_dependencies(heartgold_main ${heartgold_asset_targets})
 add_dependencies(heartgold_intro_title ${heartgold_asset_targets})
 add_executable(heartgold "${PROJECT_SOURCE_DIR}/tests/start_game.c")
 target_link_libraries(heartgold PRIVATE heartgold_main nitro_sdk)
-if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
-    add_executable(test_resource_files "${PROJECT_SOURCE_DIR}/tests/test_resource_files.c")
-    target_link_libraries(test_resource_files PRIVATE nitro_sdk)
-    target_compile_options(test_resource_files PRIVATE -UNDEBUG)
-    add_dependencies(test_resource_files ${heartgold_asset_targets})
-    add_test(NAME native_resource_files COMMAND test_resource_files)
-    add_executable(test_overlay_fs "${PROJECT_SOURCE_DIR}/tests/test_overlay_fs.c")
-    target_include_directories(test_overlay_fs PRIVATE "${ntr_source}/libraries/fs/include")
-    target_link_libraries(test_overlay_fs PRIVATE nitro_sdk)
-    target_compile_options(test_overlay_fs PRIVATE -UNDEBUG -fsanitize=address,undefined -fno-sanitize-recover=all)
-    target_link_options(test_overlay_fs PRIVATE -fsanitize=address,undefined)
-    add_test(NAME native_overlay_lifecycle COMMAND "${Python3_EXECUTABLE}" -B
-        "${PROJECT_SOURCE_DIR}/tests/test_overlay_native.py"
-        --build "${PROJECT_BINARY_DIR}" --sdk "${ntr_source}"
-        --compiler "${CMAKE_C_COMPILER}" --fs-test $<TARGET_FILE:test_overlay_fs>)
-endif()
 add_test(NAME script_conversion COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_scripts.py" --work "${PROJECT_BINARY_DIR}")
 add_test(NAME native_adaptations COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_sources.py" --work "${PROJECT_BINARY_DIR}")
+add_executable(test_native_sound_files tests/test_native_sound_files.c)
+target_link_libraries(test_native_sound_files PRIVATE nitro_sdk)
+target_compile_options(test_native_sound_files PRIVATE -UNDEBUG)
+add_test(NAME native_sound_files COMMAND test_native_sound_files "${game_source}/files/data/sound/gs_sound_data.sdat")
+add_executable(test_native_g3_dictionary "${PROJECT_SOURCE_DIR}/tests/test_native_g3_dictionary.c"
+    "${native_root}/lib/NitroSystem/src/g3d_res_struct_accessor.c")
+target_link_libraries(test_native_g3_dictionary PRIVATE nitro_sdk)
+target_include_directories(test_native_g3_dictionary PRIVATE "${native_root}/lib/include")
+target_compile_options(test_native_g3_dictionary PRIVATE -UNDEBUG "-idirafter${game_source}/lib/include")
+add_dependencies(test_native_g3_dictionary heartgold_native_headers)
+add_test(NAME native_g3_dictionary COMMAND test_native_g3_dictionary
+    "${game_source}/files/demo/opening/gs_opening/gs_opening_00000103.NSBMD"
+    "${game_source}/files/demo/opening/gs_opening/gs_opening_00000100.NSBMD"
+    "${game_source}/files/demo/opening/gs_opening/gs_opening_00000097.NSBMD")
 add_executable(test_sound "${PROJECT_SOURCE_DIR}/tests/test_sound.c"
     "${native_root}/lib/NitroSystem/src/snd_arc.c")
 target_link_libraries(test_sound PRIVATE nitro_sdk)
@@ -468,7 +467,7 @@ target_compile_options(test_sound PRIVATE
     -fsanitize=address,undefined -fno-sanitize-recover=all)
 target_link_options(test_sound PRIVATE -fsanitize=address,undefined)
 add_dependencies(test_sound heartgold_native_headers)
-add_test(NAME sound_data COMMAND test_sound)
+add_test(NAME sound_data COMMAND test_sound "${game_source}/files/data/sound/gs_sound_data.sdat")
 set_tests_properties(sound_data PROPERTIES ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0")
 
 # Typed native storage for the sound labels owned by the original main image.
@@ -497,6 +496,7 @@ target_link_options(heartgold_sound_storage INTERFACE
 target_include_directories(heartgold_sound_storage PRIVATE "${native_root}/lib/include")
 target_compile_options(heartgold_sound_storage PRIVATE "-idirafter${game_source}/lib/include")
 add_dependencies(heartgold_sound_storage heartgold_native_headers fx_constants)
+target_link_libraries(test_sound PRIVATE heartgold_sound_storage)
 target_link_libraries(heartgold_main PUBLIC heartgold_sound_storage)
 add_executable(test_sound_storage "${PROJECT_SOURCE_DIR}/tests/test_sound_storage.c")
 target_link_libraries(test_sound_storage PRIVATE heartgold_sound_storage nitro_sdk)

@@ -510,7 +510,7 @@ COMPILER_BOUNDED_OPERATIONS = {
 # Preserve low-64-bit multiplication and signed integer-to-f32 conversion.
 COMPILER_BOUNDED_OPERATIONS.update({'src/application/footprint_stamp_effects.c': ('aa6a4cadb2188647e22a671363806fcd10f6b29959c0abe6ba08c1b73f852f35', [('_ll_mul((s64)scaleX * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleX * 100 / FX32_ONE) * (u64)(s64)length))', 1), ('_ll_mul((s64)scaleY * 100 / FX32_ONE, length)', '((s64)((u64)((s64)scaleY * 100 / FX32_ONE) * (u64)(s64)length))', 1)]), 'src/application/plaza_game_mime_jr_top.c': ('43f55e7919ed4e80da2059e1d8fbbb228b39566fee8993fae72b8a4cfce506cf', [('_f_lltof(sinValue)', '((f32)sinValue)', 2), ('_f_lltof(cosValue)', '((f32)cosValue)', 2)])})
 
-MAIN_NATIVE_SOURCES = ('src/system_card.c', 'src/vs_recorder_menu_app.c', 'src/wireless_manager.c', 'src/comm_wireless.c', 'src/comm_state.c', 'src/party_menu_list_items.c', 'src/party_menu.c', 'src/code_entry.c', 'src/spin_trade_link.c', 'src/save_fashion.c', 'src/screen_fade_effects.c', 'lib/NitroSystem/src/fnd_expheap.c', 'lib/NitroSystem/src/fnd_frameheap.c', 'lib/NitroSystem/src/fnd_heapcommon.c', 'lib/NitroSystem/src/gfd_vram_transfer_manager.c', 'lib/NitroSystem/src/g3d_kernel.c', 'lib/NitroSystem/src/g2d_char_canvas_util.c', 'lib/NitroSystem/src/g2d_char_canvas.c', 'lib/NitroSystem/src/g2d_canvas_arrange.c', 'lib/NitroSystem/src/snd_arc_loader_wave.c', 'lib/NitroSystem/src/snd_arc_loader.c', 'lib/NitroSystem/src/snd_heap.c', 'lib/NitroSystem/src/snd_arc.c', 'lib/NitroSystem/src/snd_player.c', 'lib/NitroSystem/src/snd_system.c', 'lib/NitroSystem/src/snd_stream.c')
+MAIN_NATIVE_SOURCES = ('src/system_card.c', 'src/vs_recorder_menu_app.c', 'src/wireless_manager.c', 'src/comm_wireless.c', 'src/comm_state.c', 'src/party_menu_list_items.c', 'src/party_menu.c', 'src/code_entry.c', 'src/spin_trade_link.c', 'src/save_fashion.c', 'src/screen_fade_effects.c', 'lib/NitroSystem/src/fnd_expheap.c', 'lib/NitroSystem/src/fnd_frameheap.c', 'lib/NitroSystem/src/fnd_heapcommon.c', 'lib/NitroSystem/src/gfd_vram_transfer_manager.c', 'lib/NitroSystem/src/g3d_kernel.c', 'lib/NitroSystem/src/g3d_res_struct_accessor.c', 'lib/NitroSystem/src/g3d_gecom.c', 'lib/NitroSystem/src/g3d_sbc.c', 'lib/NitroSystem/src/g2d_char_canvas_util.c', 'lib/NitroSystem/src/g2d_char_canvas.c', 'lib/NitroSystem/src/g2d_canvas_arrange.c', 'lib/NitroSystem/src/snd_arc_loader_wave.c', 'lib/NitroSystem/src/snd_arc_loader.c', 'lib/NitroSystem/src/snd_heap.c', 'lib/NitroSystem/src/snd_arc.c', 'lib/NitroSystem/src/snd_player.c', 'lib/NitroSystem/src/snd_system.c', 'lib/NitroSystem/src/snd_stream.c')
 
 COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLBACKS) + tuple(COMPILER_OPERATIONS) + tuple(ARM_INLINE_OPERATIONS) + (
     "src/application/pokedex/pokedex_main_seq.c", "src/field/weather_manager.c")
@@ -738,6 +738,36 @@ def replace_regex_native(text, pattern, replacement, expected=1):
     return result
 
 def _adapt(relative, text, root):
+    if relative in ("lib/NitroSystem/src/g3d_gecom.c", "lib/NitroSystem/src/g3d_sbc.c"):
+        # Lower C lvalue writes to the same native GX ports as SDK inline calls.
+        # Command values, ordering, buffering and Nintendo's draw logic remain.
+        pins={"g3d_gecom.c":"624cb68e415d5fba7e83fcf5dfd1decd6eb96bb62bd832dfe668388a5019bbff",
+              "g3d_sbc.c":"93d2168671ec3d66d162e795415b4f299fce2921ec95a0b80de5724b38baedd3"}
+        name=Path(relative).name
+        if hashlib.sha256(text.encode()).hexdigest()!=pins[name]:
+            raise ValueError("Original GX port write source changed: "+relative)
+        if relative in coordinated.SOURCES:
+            text=coordinated.adapt(relative,text)
+        expected=([1,2,1,1,1,0,0] if name=="g3d_gecom.c" else [11,8,1,2,0,2,2])
+        for register,call,count in zip(
+                ("G3X_GXFIFO","G3_MTX_MODE","G3_MTX_PUSH","G3_MTX_IDENTITY","G3_MTX_POP","G3_MTX_STORE","G3_MTX_RESTORE"),
+                ("G3Native_FifoWrite","G3_MtxMode","G3_PushMtx","G3_Identity","G3_PopMtx","G3_StoreMtx","G3_RestoreMtx"),expected):
+            def lower(match):
+                value=match[1]
+                if register in ("G3_MTX_PUSH","G3_MTX_IDENTITY"):
+                    if value.strip()!="0":raise ValueError("Changed parameterless GX command")
+                    value=""
+                return call+"("+value+");"
+            text,n=re.subn(r"\breg_"+register+r"\s*=\s*([^;]+);",lower,text)
+            if n!=count:raise ValueError("GX port write count changed: "+register)
+        return '#include <simulator/g3_handler.h>\n'+text
+
+    if relative == "lib/NitroSystem/src/g3d_res_struct_accessor.c":
+        old="(u32)pNode"
+        if text.count(old) != 2:
+            raise ValueError("Original G3D Patricia child address changed")
+        return '#include <stdint.h>\n' + text.replace(old,"(uintptr_t)pNode")
+
     if relative == 'lib/NitroDWC/asm/dwc_lib_data.s':
         from native_assembly_data import emit_reviewed
         return emit_reviewed(dwc_status_string_blocks(root, text))
@@ -1622,6 +1652,16 @@ _Static_assert(__builtin_offsetof(MainMenuUtilWork,vblankCallback)==4032,"OVY_74
                     expression = f"({owner}.{member})"
                 text += f"\n#define {name} {expression}\n"
 
+        elif relative.endswith("snd/sndarc.h"):
+            # FAT records are 16 disk bytes. The two initially zero runtime
+            # words at +8 hold one native pointer; pointer alignment must not
+            # move the FAT's flexible table from its disk offset of 12.
+            text = replace(text, "    u32 reserved;\n} NNSSndArcFileInfo;",
+                           "} __attribute__((packed, aligned(4))) NNSSndArcFileInfo;")
+            text = '#include <stddef.h>\n' + text
+            text += ('\n_Static_assert(sizeof(NNSSndArcFileInfo) == 16, "SDAT FAT record stride");\n'
+                     '_Static_assert(offsetof(NNSSndArcFileInfo, mem) == 8, "SDAT runtime pointer slot");\n'
+                     '_Static_assert(offsetof(NNSSndArcFat, files) == 12, "SDAT FAT table offset");\n')
         elif relative.endswith("snd_arc_internal.h"):
             text = drop(text, "void SND_AssignWaveArc(void *bank, int index, void *waveArc);")
             text = replace(text, "} SndHeapBlock;", "} __attribute__((aligned(32))) SndHeapBlock;")
@@ -1694,6 +1734,7 @@ WAVE_DECLARATIONS = (
 # being widened. Serialized offsets and unrelated u32 fields stay untouched.
 SOUND_FILES = {
     "lib/include/nnsys/snd_internal.h": (4, 0),
+    "lib/include/nnsys/snd/sndarc.h": (0, 0),
     "lib/include/nnsys/snd_arc_internal.h": (18, 0),
     "lib/include/nnsys/snd_arc_strm_internal.h": (2, 0),
     "lib/NitroSystem/src/snd_heap.c": (2, 0),
@@ -2192,6 +2233,17 @@ def rc4_guest32(text, native=False):
     body.append('}')
     return ('#include <string.h>\n' if native else '')+text[:match.start()]+'\n'.join(body)+text[match.end():]
 
+# These existing pristine corrections repair declarations and object ownership,
+# not LP64 layouts. sizeof(LnkVramBlock) remains 16 in the original ARM32 ABI.
+GUEST32_PRISTINE_COMPAT = (
+    'src/colosseum.c',
+    'src/communication_club_link.c',
+    'src/union_room.c',
+    'lib/NitroSystem/src/gfd_linked_list_tex_vram_man.c',
+    'lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.c',
+)
+
+
 def guest32_frontend(relative, text, root):
     """Source-validated frontend spelling/declaration corrections, still ARM32.
 
@@ -2199,6 +2251,8 @@ def guest32_frontend(relative, text, root):
     Clang VFS keeps the original paths and ownership while these deterministic
     build-directory files repair mismatched declarations and finite ARM forms.
     """
+    if relative in GUEST32_PRISTINE_COMPAT:
+        return apply_pristine_compat(relative, text)
     if relative in PRIVATE_FUNCTIONS or any(relative==v[0] for v in PRIVATE_FUNCTIONS.values()):
         return private_declarations(relative,text)
     if relative in ('lib/NitroSDK/src/os/os_alarm_before_handler.c',
@@ -2262,6 +2316,8 @@ def guest32_frontend(relative, text, root):
             return replace(text,before,after)
     if relative == 'lib/src/nitrocrypto_rc4_fast.c':
         return rc4_guest32(text)
+    if relative == "lib/libVCT/src/vct_audio_send.c":
+        text = apply_pristine_compat(relative, text)
     spec = json.loads((Path(__file__).resolve().parents[1]/'compiler/guest32/sdk_asm_adaptations.json').read_text())
     for record in spec['adaptations']:
         if record['source'] != 'upstream/pokeheartgold/'+relative:

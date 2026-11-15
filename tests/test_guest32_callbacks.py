@@ -172,9 +172,9 @@ guest32_SysTaskQueue_RunTasks(ram,q);assert(!get16(q+ACTIVE));assert(!memcmp(g32
 g32_destroy(ram);puts("original cross-image SysTask callback/lifetime passed");return 0;}
 '''.replace('CROSS_ID',str(byname['PokewalkerApp_ScrollSubBgTask']['address'])).replace('LOCAL_ID',str(byname['LineMask_CommitTask']['address'])).replace('rejected(q,object,0); /* empty queue remains valid */','guest32_SysTaskQueue_RunTasks(ram,q); /* empty queue remains valid */'))
 
-    # SDK compile/link arguments come from the configured real FS regression.
+    # SDK compile/link arguments come from the configured SDK regression.
     commands = json.loads((b/'compile_commands.json').read_text())
-    command = next(c['command'] for c in commands if c['file'].endswith('/tests/test_overlay_fs.c'))
+    command = next(c['command'] for c in commands if c['file'].endswith('/tests/test_os.c'))
     tokens = shlex.split(command)[1:]
     sdkflags = []
     i = 0
@@ -186,7 +186,7 @@ g32_destroy(ram);puts("original cross-image SysTask callback/lifetime passed");r
         if not t.startswith('-fsanitize='):
             sdkflags.append(t)
         i += 1
-    link = shlex.split((b/'CMakeFiles/test_overlay_fs.dir/link.txt').read_text())
+    link = shlex.split((b/'CMakeFiles/test_os.dir/link.txt').read_text())
     libraries = link[link.index('libntr/libntr_os.a'):]
     libraries = [str(b/x) if x.endswith('.a') else x for x in libraries]
     results = []

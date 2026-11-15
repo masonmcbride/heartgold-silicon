@@ -4,12 +4,12 @@
       "canonical_owner": "CMakeLists.txt",
       "consumers": [
         "dependency()",
-        "tools/profile_build.py"
+        "cmake/profile_build.py"
       ],
       "duplicates": [],
       "evidence": [
         "CMakeLists.txt:6-10,24-91",
-        "tools/profile_build.py:171-183"
+        "cmake/profile_build.py:171-183"
       ],
       "id": "dependency-pins",
       "status": "read"
@@ -94,7 +94,7 @@
       "canonical_owner": "upstream/pokeheartgold/filesystem.mk",
       "consumers": [
         "cmake/source_cartridge.py",
-        "tools/generate_resource_map.py"
+        "cmake/generate_resource_map.py"
       ],
       "duplicates": [],
       "evidence": [
@@ -843,7 +843,7 @@
     },
     {
       "consumers": [
-        "tools/profile_build.py"
+        "cmake/profile_build.py"
       ],
       "evidence": [
         "build.sh:1-126"
@@ -5319,8 +5319,8 @@
       "status": "indexed"
     },
     {
-      "id": "tools/generate_resource_map.py",
-      "path": "tools/generate_resource_map.py",
+      "id": "cmake/generate_resource_map.py",
+      "path": "cmake/generate_resource_map.py",
       "range": [
         1,
         54
@@ -5334,9 +5334,9 @@
         "user"
       ],
       "evidence": [
-        "tools/profile_build.py:136-219"
+        "cmake/profile_build.py:136-219"
       ],
-      "id": "tools/profile_build.py",
+      "id": "cmake/profile_build.py",
       "inputs": [
         "root CMake pins",
         "existing cache",
@@ -5347,7 +5347,7 @@
         "<binary>/logs/*",
         "normal CMake/Ninja/CTest results"
       ],
-      "path": "tools/profile_build.py",
+      "path": "cmake/profile_build.py",
       "range": [
         1,
         191

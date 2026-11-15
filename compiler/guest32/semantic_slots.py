@@ -208,7 +208,17 @@ def census(build, lowerer):
         registry[row['key']] = row
     if digest(lowerer) != lowerer_hash:
         raise RuntimeError('compiler changed during pointer-slot application; rebuild required')
-    write(out / 'registry.json', json.dumps(registry, indent=2, sort_keys=True) + '\n')
+    registry_text = json.dumps(registry, indent=2, sort_keys=True) + '\n'
+    registry_path = out / 'registry.json'
+    changed = not registry_path.exists() or registry_path.read_text() != registry_text
+    for row in rows:
+        _, _, output = canonical(row['command'])
+        obj = Path(row['directory']) / output
+        depfile = Path(str(obj) + '.d')
+        if changed or (obj.exists() and
+                       (not depfile.exists() or str(registry_path) not in depfile.read_text())):
+            obj.unlink(missing_ok=True)
+    write(registry_path, registry_text)
     dependencies = sorted({p for row in rows for p in row['inputs']} | {str(contracts)})
     def escape(path):
         return str(path).replace('\\', '\\\\').replace(' ', '\\ ').replace('#', '\\#').replace('$', '$$')
@@ -227,12 +237,22 @@ def launch(registry_path, command):
         if any(r['source'] == source and r['transformed'] for r in registry.values()):
             raise RuntimeError('changed production command requires a fresh semantic-slot census: ' + source)
         return subprocess.call(command)
-    if not row['transformed']:
-        return subprocess.call(command)
-    if digest(row['native_ir']) != row['native_sha256']:
-        raise RuntimeError('promoted production IR receipt changed')
-    result = subprocess.call(codegen(command, row['native_ir']))
-    if result == 0:
+    if row['transformed']:
+        if digest(row['native_ir']) != row['native_sha256']:
+            raise RuntimeError('promoted production IR receipt changed')
+        result = subprocess.call(codegen(command, row['native_ir']))
+    else:
+        result = subprocess.call(command)
+    if result == 0 and '-MF' in command:
+        # This dependency belongs to this object, not to its shared source.
+        # Transformed IR codegen does not emit the original header depfile.
+        depfile = Path(command[command.index('-MF') + 1])
+        _, _, output = canonical(command)
+        def escape(path):
+            return str(path).replace('\\', '\\\\').replace(' ', '\\ ').replace('#', '\\#').replace('$', '$$')
+        dependencies = [registry_path, registry_path.with_name('plan.json'), *row['inputs']]
+        depfile.write_text(escape(output) + ': ' + ' '.join(map(escape, dependencies)) + '\n')
+    if result == 0 and row['transformed']:
         _, _, output = canonical(command)
         write(str(output) + '.semantic-slot.json', json.dumps(dict(
             source=row['source'], native_ir=row['native_ir'],

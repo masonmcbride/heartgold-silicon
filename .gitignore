@@ -50,3 +50,6 @@ __pycache__/
 *.swp
 *.swo
 *~
+
+# User-requested off-path source and build archives
+/data silo/

@@ -1,8 +1,8 @@
 """Production LLVM pointer-slot promotion and real original task-queue regression.
 
 The runtime fixture uses the original accessor and task queue, with controlled
-pointer producers/consumers in separate TUs. It does not execute the original
-missing-argument IsDone call or claim trainer movement/hardware validation.
+pointer producers/consumers in separate TUs. A test-only integer-slot fixture
+retains promotion coverage; production sources already carry the pointer ABI.
 """
 import argparse
 import hashlib
@@ -32,11 +32,25 @@ participating = [e for e in db if Path(e['file']).suffix in ('.c', '.cpp', '.cc'
                  and re.search(r'CMakeFiles/' + PRODUCTION_TARGET + r'\.dir/',
                                ' '.join(e.get('arguments') or shlex.split(e['command'])))]
 assert production['translation_units'] == len(participating)
-assert any(r['struct'] == 'struct.EngagedTrainer' and r['field'] == 6 for r in production['slots'])
+# The first census must wait for every generated participant, before objects
+# exist to carry compiler depfiles. A warmed binary directory hides this edge.
+census_rules = build / 'CMakeFiles/heartgold_semantic_slots.dir/build.make'
+if census_rules.exists():
+    rules = census_rules.read_text()
+    for entry in participating:
+        source = Path(entry['file'])
+        if source.is_relative_to(build):
+            assert str(source.relative_to(build)) in rules, source
+assert not any(r['struct'] == 'struct.EngagedTrainer' for r in production['slots'])
 registry_path = build / 'semantic-slots/registry.json'
 registry = json.loads(registry_path.read_text())
 assert {row['source'] for row in registry.values()} == {e['file'] for e in participating}
 for row in registry.values():
+    _, _, output = canonical(row['command'])
+    obj = Path(row['directory']) / output
+    dependencies = Path(str(obj) + '.d').read_text()
+    assert str(registry_path) in dependencies, obj
+    assert str(registry_path.with_name('plan.json')) in dependencies, obj
     if not row['transformed']:
         continue
     _, _, output = canonical(row['command'])
@@ -45,6 +59,11 @@ for row in registry.values():
     assert receipt['object_sha256'] == hashlib.sha256(obj.read_bytes()).hexdigest(), obj
     assert receipt['native_sha256'] == row['native_sha256'], obj
     assert receipt['registry_sha256'] == hashlib.sha256(registry_path.read_bytes()).hexdigest(), obj
+# Shared original heap sources must not inherit production-only plan edges.
+heap_rules = build / 'CMakeFiles/test_heap.dir'
+for rules in heap_rules.glob('*.make'):
+    assert 'semantic-slots/plan.json' not in rules.read_text(), rules
+
 if a.llvm_bin:
     llvm = a.llvm_bin.resolve()
 else:
@@ -76,25 +95,45 @@ plan = json.loads(plan_path.read_text())
 def has_task_slot(report):
     return any(r['struct'] == 'struct.EngagedTrainer' and r['field'] == 6 for r in report['slots'])
 
-assert has_task_slot(plan), plan['blocked']
+assert not has_task_slot(plan), 'the pinned source already declares a task pointer'
 for source in (battle, manager):
     run([lowerer, '--semantic-slots', 'apply', plan_path, source, source.with_suffix('.promoted.ll')])
 promoted = battle.with_suffix('.promoted.ll').read_text()
 produce = re.search(r'define [^\n]*@ScrCmd_GetTrainerPathToPlayer\(.*?^}', promoted, re.S | re.M)[0]
 consume = re.search(r'define [^\n]*@ScrCmd_TrainerStepTowardsPlayer\(.*?^}', promoted, re.S | re.M)[0]
 assert re.search(r'call ptr @TrainerApproach_Start', produce)
-assert 'i16 noundef zeroext' in produce, 'retain original integer argument extension ABI'
+assert re.findall(r'declare ptr @TrainerApproach_Start[^\n]*', promoted) == re.findall(r'declare ptr @TrainerApproach_Start[^\n]*', battle.read_text()), 'retain the original argument ABI'
 assert re.search(r'store ptr %[^,]+, ptr', produce)
 assert 'ptrtoint' not in produce
-assert re.search(r'load ptr, ptr .*slot|slot.pointer = load ptr', consume)
+assert re.search(r'load ptr, ptr', consume)
 assert re.search(r'call void @TrainerApproach_Delete\(ptr', consume)
-assert re.search(r'call i32 @TrainerApproach_IsDone\(\)', consume), 'must not invent missing ARM argument'
+assert re.search(r'call i32 @TrainerApproach_IsDone\(ptr', consume), 'preserve the pinned task argument'
 assert not re.search(r'load i32, ptr %\.0', consume)
 # Exact original accessor implementation, not a handwritten selector table.
 accessor = out / 'accessor.ll'
 run([llvm / 'llvm-extract', '-S', '--func=FieldSysGetAttrAddrInternal', manager.with_suffix('.promoted.ll'), '-o', accessor])
 original_accessor = out / 'original-accessor.ll'
 run([llvm / 'llvm-extract', '-S', '--func=FieldSysGetAttrAddrInternal', manager, '-o', original_accessor])
+
+# Test-only legacy representation: preserve the old promotion/negative corpus
+# without changing the now pointer-typed original production sources.
+header = ROOT / 'upstream/pokeheartgold/include/script.h'
+legacy_header = out / 'legacy-script.h'
+header_text = header.read_text()
+assert header_text.count('SysTask *approachTask;') == 1
+legacy_header.write_text(header_text.replace('SysTask *approachTask;', 'int approachTask;'))
+vfs = out / 'legacy-header-vfs.json'
+vfs.write_text(json.dumps(dict(version=0, roots=[
+    {'type': 'file', 'name': str(path), 'external-contents': str(legacy_header),
+     'use-external-name': False}
+    for path in (header, build / 'native/include/script.h')
+])))
+legacy_manager = out / 'legacy-manager.ll'
+manager_entry = next(e for e in db if e['file'].endswith('/src/script_manager.c'))
+manager_flags, manager_source, _ = canonical(manager_entry.get('arguments') or shlex.split(manager_entry['command']))
+run([*manager_flags, '-ivfsoverlay', vfs, '-O0', '-g0', '-Xclang', '-disable-O0-optnone',
+     '-Xclang', '-disable-llvm-passes', '-S', '-emit-llvm', manager_source, '-o', legacy_manager])
+run([llvm / 'llvm-extract', '-S', '--func=FieldSysGetAttrAddrInternal', legacy_manager, '-o', original_accessor])
 
 fixture = out / 'slots.c'
 fixture.write_text(r'''
@@ -196,7 +235,7 @@ int main(void) {
 
 def emit(source):
     ir = source.with_suffix('.ll')
-    run([*flags, '-O0', '-g0', '-Xclang', '-disable-O0-optnone', '-Xclang', '-disable-llvm-passes', '-S', '-emit-llvm', source, '-o', ir])
+    run([*flags, '-ivfsoverlay', vfs, '-O0', '-g0', '-Xclang', '-disable-O0-optnone', '-Xclang', '-disable-llvm-passes', '-S', '-emit-llvm', source, '-o', ir])
     return ir
 
 fixture_ir, provider_ir = emit(fixture), emit(provider)

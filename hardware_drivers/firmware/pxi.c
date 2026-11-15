@@ -7,7 +7,7 @@
 #include "wmsp_private.h"
 
 #include <ntr_host.h>
-#include <ntr_host.h>
+#include "../audio/native_audio.h"
 
 #ifdef SDK_TRACY_ENABLE
 #include "tracy/TracyC.h"
@@ -78,160 +78,38 @@ void SIM_procPXI(void)
 					{
 						break;
 					}
+					HG_SoundLock();
 					while( sndCommandList != NULL ){
 						switch( sndCommandList->id )
 						{
-							case SND_COMMAND_START_SEQ:
-								{
-
-									u8 playerNum = sndCommandList->arg[0];
-									u64 sseqDataPtr = sndCommandList->arg[1];
-									u32 sseqDataOffset = sndCommandList->arg[2];
-									u64 waveBankPtr = sndCommandList->arg[3];
-								}
-
-            				    break;
-
-            				case SND_COMMAND_STOP_SEQ:
-
-								SND_StopSeq7(sndCommandList->arg[0]);
-            				    break;
-
-            				case SND_COMMAND_PREPARE_SEQ:
-								{
-
-									u8 playerNum = sndCommandList->arg[0];
-									u64 sseqDataPtr = sndCommandList->arg[1];
-									u32 sseqDataOffset = sndCommandList->arg[2];
-									u64 waveBankPtr = sndCommandList->arg[3];
-
-									SND_PrepareSeq7(playerNum, (void *)sseqDataPtr, sseqDataOffset, (void *)waveBankPtr);
-								}
-
-            				    break;
-
-            				case SND_COMMAND_START_PREPARED_SEQ:
-
-								SND_StartPreparedSeq7( sndCommandList->arg[0] );
-            				    break;
-
-            				case SND_COMMAND_PAUSE_SEQ:
-								{
-									u8 playerNum = sndCommandList->arg[0];
-									BOOL flag = sndCommandList->arg[1];
-
-									SND_PauseSeq7(playerNum, flag);
-								}
-            				    break;
-
-            				case SND_COMMAND_SKIP_SEQ:
-
-            				    break;
-
-            				case SND_COMMAND_PLAYER_PARAM:
-
-            				    break;
-
-            				case SND_COMMAND_TRACK_PARAM:
-
-            				    break;
-
-            				case SND_COMMAND_MUTE_TRACK:
-
-            				    break;
-
-            				case SND_COMMAND_ALLOCATABLE_CHANNEL:
-
-            				    break;
-
-            				case SND_COMMAND_PLAYER_LOCAL_VAR:
-
-            				    break;
-
-            				case SND_COMMAND_PLAYER_GLOBAL_VAR:
-
-            				    break;
-
-            				case SND_COMMAND_START_TIMER:
-
-								{
-									u32 wav_len = 200;
-									u8 channelsEnabled[32] = {0};
-									
-									u8 * sdlAudioBuf;
-									unsigned int sdlAudioLen;
-									u32 audioLen;
-									for( int i=0; i<32; i++)
-									{
-										if( (sndCommandList->arg[0] >> i) & 1 )
-										{
-											channelsEnabled[i] = 1;
-										}
-									}
-
-									for( int i=0; i<32; i++)
-									{
-										if(channelsEnabled[i])
-										{
-
-											win_snd_channels[i].alarms_bitfield = sndCommandList->arg[2];
-
-											win_snd_channels[i].audio_len = wav_len;
-											win_snd_channels[i].total_audio_len = wav_len;
-										}
-									}
-
-									for( int i=0; i<32; i++)
-									{
-										if( (sndCommandList->arg[2] >> i) & 1 )
-										{
-
-											if( win_snd_alarms[i].isRunning )
-											{
-
-												win_snd_alarms[i].isRunning = 0;
-												pthread_join(win_snd_alarms[i].thread, NULL);
-											}
-
-											
-											pthread_create(  &win_snd_alarms[i].thread, NULL, SIM_sndAlarm, (void *)&win_snd_alarms[i]);
-											win_snd_alarms[i].isRunning = 1;
-
-										}
-									}
-								}
-            				    break;
-
-            				case SND_COMMAND_STOP_TIMER:
-
-								u8 channelsEnabled[32] = {0};
-								u8 alarmsEnabled[32] = {0};
-								for( int i=0; i<32; i++ )
-								{
-									if( (sndCommandList->arg[0] >> i) & 1 )
-									{
-										channelsEnabled[i] = 1;
-										win_snd_channels[i].audio_len = 0;
-										win_snd_channels[i].total_audio_len = 0;
-										win_snd_channel_bufs[i] = NULL;
-									}
-									if( (sndCommandList->arg[2] >> i) & 1 )
-									{
-										alarmsEnabled[i] = 1;
-										if( win_snd_alarms[i].isRunning )
-										{
-
-											win_snd_alarms[i].isRunning = 0;
-											pthread_join(win_snd_alarms[i].thread, NULL);
-										}
-									}
-								}								
-            				    break;
-
-            				case SND_COMMAND_SETUP_CAPTURE:
-
-            				    break;
-
+                        case SND_COMMAND_START_TIMER:
+                            if (sndCommandList->arg[1]) { fputs("Native sound capture is not implemented\n", stderr); abort(); }
+                            for (int i=0; i<16; ++i)
+                                if (sndCommandList->arg[0] & (1u<<i)) SND_StartChannel7(i);
+                            for (int i=0; i<32; ++i) {
+                                if (!(sndCommandList->arg[2] & (1u<<i))) continue;
+                                if (win_snd_alarms[i].isRunning) {
+                                    win_snd_alarms[i].isRunning=0;
+                                    pthread_join(win_snd_alarms[i].thread,NULL);
+                                }
+                                win_snd_alarms[i].isRunning=1;
+                                if (pthread_create(&win_snd_alarms[i].thread,NULL,SIM_sndAlarm,&win_snd_alarms[i])) abort();
+                            }
+                            break;
+                        case SND_COMMAND_STOP_TIMER:
+                            if (sndCommandList->arg[1]) { fputs("Native sound capture is not implemented\n", stderr); abort(); }
+                            for (int i=0; i<16; ++i)
+                                if (sndCommandList->arg[0] & (1u<<i)) SND_StopChannel7(i,sndCommandList->arg[3]);
+                            for (int i=0; i<32; ++i) {
+                                if (!(sndCommandList->arg[2] & (1u<<i))) continue;
+                                if (win_snd_alarms[i].isRunning) {
+                                    win_snd_alarms[i].isRunning=0;
+                                    pthread_join(win_snd_alarms[i].thread,NULL);
+                                }
+                            }
+                            break;
+                        case SND_COMMAND_SETUP_CAPTURE:
+                            fputs("Native sound capture is not implemented\n",stderr); abort();
             				case SND_COMMAND_SETUP_ALARM:
 
 								win_snd_alarms[sndCommandList->arg[0]].alarmNo = sndCommandList->arg[0];
@@ -240,78 +118,17 @@ void SIM_procPXI(void)
 								win_snd_alarms[sndCommandList->arg[0]].id = sndCommandList->arg[3];
             				    break;
 
-            				case SND_COMMAND_CHANNEL_TIMER:
-
-            				    break;
-
-            				case SND_COMMAND_CHANNEL_VOLUME:
-
-            				    break;
-
-            				case SND_COMMAND_CHANNEL_PAN:
-
-            				    break;
-
-            				case SND_COMMAND_SETUP_CHANNEL_PCM:
-								{
-
-									
-
-								}
-
-            				    break;
-
-            				case SND_COMMAND_SETUP_CHANNEL_PSG:
-            				    break;
-
-            				case SND_COMMAND_SETUP_CHANNEL_NOISE:
-            				    break;
-
-            				case SND_COMMAND_SURROUND_DECAY:
-            				    break;
-
-            				case SND_COMMAND_MASTER_VOLUME:
-            				    break;
-
-            				case SND_COMMAND_MASTER_PAN:
-            				    break;
-
-            				case SND_COMMAND_OUTPUT_SELECTOR:
-            				    break;
-
-            				case SND_COMMAND_LOCK_CHANNEL:
-            				    break;
-
-            				case SND_COMMAND_UNLOCK_CHANNEL:
-            				    break;
-
-            				case SND_COMMAND_STOP_UNLOCKED_CHANNEL:
-            				    break;
-
-            				case SND_COMMAND_INVALIDATE_SEQ:
-            				    break;
-
-            				case SND_COMMAND_INVALIDATE_BANK:
-            				    break;
-
-            				case SND_COMMAND_INVALIDATE_WAVE:
-            				    break;
-
-            				case SND_COMMAND_SHARED_WORK:
-            				    win_SNDi_SharedWork = (SNDSharedWork *)sndCommandList->arg[0];
-            				    break;
-
-            				case SND_COMMAND_READ_DRIVER_INFO:
-            				    break;
-							default:
-								break;
-						}
+                        default:
+                            HG_SoundCommand(sndCommandList);
+                            break;
+                        }
 						sndCommandList = sndCommandList->next;
 					} 
 						if( win_SNDi_SharedWork )
 						{
 							win_SNDi_SharedWork->finishCommandTag++;
 						}
+                        HG_SoundUnlock();
 					
 				}
 				break;

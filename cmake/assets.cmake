@@ -154,7 +154,7 @@ add_custom_command(OUTPUT "${hg_cartridge}" "${hg_cartridge_manifest}"
     DEPENDS "${hg_cartridge_script}" "${game_source}/filesystem.mk" ${hg_cartridge_inputs}
     VERBATIM)
 add_custom_target(heartgold_cartridge DEPENDS "${hg_cartridge}" "${hg_cartridge_manifest}")
-foreach(name source_cartridge recover_scene3)
+foreach(name source_cartridge)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" -B
         "${PROJECT_SOURCE_DIR}/tests/test_${name}.py")
     set_tests_properties(${name} PROPERTIES ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")

@@ -1,4 +1,7 @@
 #include <nitro.h>
+#include <simulator/g3_handler.h>
+#include <nnsys/g3d/gecom.h>
+#include <nnsys/g3d_util_internal.h>
 #include <nnsys/g3d_anm_mat_internal.h>
 #include <nnsys/g2d_renderer_internal.h>
 #include <nnsys/gfd_internal.h>
@@ -8,8 +11,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <dlfcn.h>
+#include "sprite.h"
 
-static void check(int value) { if (!value) abort(); }
+_Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteAnimationData), "sprite cell animation storage");
+_Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteAnimationDataWithTransfer), "sprite transfer animation storage");
+_Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteMultiAnimationData), "sprite multicell animation storage");
+_Static_assert(offsetof(Sprite, animationData) % _Alignof(SpriteMultiAnimationData) == 0, "sprite animation alignment");
+
+#define check(value) do { if (!(value)) { fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, #value); abort(); } } while (0)
 static void alias(const char *name, const void *owner) {
     check(dlsym(RTLD_DEFAULT, name) == owner);
 }
@@ -25,6 +34,44 @@ static BOOL record_transfer(NNS_GFD_DST_TYPE type, u32 dst, void *src, u32 size)
     return TRUE;
 }
 int main(void) {
+    /* Original animation initialization must preserve the adjacent image proxy.
+     * On ARM64 its pointer-bearing records overflowed the old 29-word buffer. */
+    Sprite sprite = {0};
+    memset(&sprite.imageProxy, 0xa5, sizeof(sprite.imageProxy));
+    NNSG2dImageProxy savedProxy = sprite.imageProxy;
+    u16 cellIndex = 0;
+    NNSG2dAnimFrameData frame = {.pContent=&cellIndex, .frames=1};
+    NNSG2dAnimSequenceData sequence = {.numFrames=1, .animType=0,
+        .playMode=NNS_G2D_ANIMATIONPLAYMODE_FORWARD_LOOP, .pAnmFrameArray=&frame};
+    NNSG2dCellData cell = {0};
+    NNSG2dCellDataBank bank = {.numCells=1, .pCellDataArrayHead=&cell};
+    SpriteAnimationData *animation = (SpriteAnimationData *)sprite.animationData;
+    NNS_G2dInitCellAnimation(&animation->animation, &sequence, &bank);
+    NNS_G2dTickCellAnimation(&animation->animation, FX32_ONE);
+    check(memcmp(&sprite.imageProxy, &savedProxy, sizeof(savedProxy)) == 0);
+    check(animation->animation.pCurrentCell == &cell);
+    /* Original NNS command emission, real FIFO receiver and production state. */
+    G3Native_Reset();
+    G3_MtxMode(GX_MTXMODE_PROJECTION);
+    G3_Identity();
+    u32 mode=GX_MTXMODE_POSITION_VECTOR,translation[3]={4096,8192,12288};
+    NNS_G3dGeBufferOP_N(G3OP_MTX_MODE,&mode,1);
+    NNS_G3dGeBufferOP_N(G3OP_MTX_IDENTITY,NULL,0);
+    NNS_G3dGeBufferOP_N(G3OP_MTX_TRANS,translation,3);
+    G3_PositionTest(0,0,0);
+    check(s_reg_G3X_POS_RESULT_X==4096&&s_reg_G3X_POS_RESULT_Y==8192&&s_reg_G3X_POS_RESULT_Z==12288);
+    MtxFx43 position;MtxFx33 direction;
+    NNS_G3dGetCurrentMtx(&position,&direction);
+    check(position._30==4096&&position._31==8192&&position._32==12288);
+    u32 buffered[193]={0};
+    gGeBufferState.pBuffer=buffered;gGeBufferState.isLocked=TRUE;
+    NNS_G3dGeBufferOP_N(G3OP_MTX_IDENTITY,NULL,0);
+    NNS_G3dGeBufferOP_N(G3OP_MTX_TRANS,translation,3);
+    gGeBufferState.isLocked=FALSE;
+    NNS_G3dGeFlushBuffer();check(buffered[0]==0);
+    G3_PositionTest(0,0,0);
+    check(s_reg_G3X_POS_RESULT_X==4096&&s_reg_G3X_POS_RESULT_Y==8192&&s_reg_G3X_POS_RESULT_Z==12288);
+    gGeBufferState.pBuffer=NULL;
     check(gAnmObjInitFuncCount == 5);
     check(sizeof(G3dAnmObjInitEntry) == 16);
     alias("gAnmObjInitFuncsFirstFunc", &gAnmObjInitFuncs[0].func);

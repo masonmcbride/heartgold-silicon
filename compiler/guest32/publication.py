@@ -39,7 +39,7 @@ def relocate(directory, old, new):
             continue
         if path.name.endswith('.receipt.json'):
             path.unlink()
-        elif path.suffix in ('.json', '.ll', '.c', '.d', '.log', '.txt'):
+        elif path.suffix in ('.json', '.ll', '.c', '.d', '.log', '.txt', '.rsp', '.tbd'):
             data = path.read_bytes()
             changed = data.replace(os.fsencode(old), os.fsencode(new))
             if changed != data:

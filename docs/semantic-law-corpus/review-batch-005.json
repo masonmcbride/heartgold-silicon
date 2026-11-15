@@ -526,14 +526,14 @@
       "evidence": [
         {
           "locator": "LobbyChat_RemoveChannel/MapNode/Root",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.cpp",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
         },
         {
           "locator": "MapNode and Root layout changes",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.patch",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
@@ -586,14 +586,14 @@
       "evidence": [
         {
           "locator": "MemberTable/Bound",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.cpp",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
         },
         {
           "locator": "Method typedef",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.patch",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
@@ -639,14 +639,14 @@
       "evidence": [
         {
           "locator": "Iterator",
-          "path": "native-adaptations/OVY_45/tree-iterator-native.h",
+          "path": "hardware_drivers/overlays/OVY_45/tree-iterator-native.h",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
         },
         {
           "locator": "original TU wrapper",
-          "path": "native-adaptations/OVY_45/ppw_lobby_get_work_native.c",
+          "path": "hardware_drivers/overlays/OVY_45/ppw_lobby_get_work_native.c",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
@@ -1332,14 +1332,14 @@
       "E": [
         {
           "locator": "LobbyChat_RemoveChannel/MapNode/Root",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.cpp",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
         },
         {
           "locator": "MapNode and Root layout changes",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.patch",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
@@ -1397,14 +1397,14 @@
       "E": [
         {
           "locator": "MemberTable/Bound",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.cpp",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.cpp",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"
         },
         {
           "locator": "Method typedef",
-          "path": "native-adaptations/OVY_45/lobby_chat_remove_channel.patch",
+          "path": "hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.patch",
           "provenance_category": "porting-history",
           "repository": ".",
           "revision": "ef61b8a876f3755b46a61844b13de85bfe97d28d"

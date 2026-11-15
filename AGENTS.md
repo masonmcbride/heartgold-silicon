@@ -12,15 +12,15 @@
 ## Build and validation
 
 ```
-cmake -S . -B build
-cmake --build build -j8
-ctest --test-dir build --output-on-failure
+./build.sh
 ```
 
-Game compilation is enabled by default (`HEARTGOLD_BUILD_GAME=ON`), including
-its necessary original asset/index dependencies. The source-only snapshot does not prove the default CMake target is equivalent
-to the runtime-tested dynamic-closure executable. Preserve that distinction. Do not hide that
-failure with SDK-only success or implement missing subsystems during cleanup.
+`build.sh` is the supported game build entrypoint (default `build/game`, Unix
+Makefiles). It selects the complete
+production CMake graph, required LLVM 23 compiler, original assets, native images,
+provider closure, and maintained tests. Do not add partial-game configurations or
+silently omit required compiler/image targets. A link or SDK-only test does not
+prove runtime behavior; preserve the distinction from an actual Scene 3 trace.
 For explicit SDK-only development use `-DHEARTGOLD_BUILD_GAME=OFF`; this also
 omits game asset tools, their external dependencies and their resource tests.
 Always compare build sizes using the same enabled targets and assets.
@@ -39,18 +39,15 @@ outputs use the project binary directory. See `docs/BUILD.md` for commands.
 
 ## Current verified limits and repository hygiene
 
-- A historical dynamic-closure executable entered the original intro and
-  reached Scene 3. It is not a playable game. The native IRQ VBlank callback
-  was restored in that executable; runtime then exposed an asynchronous CARD
-  transfer with a null destination. This is not proof that the current default
-  `heartgold` CMake target reproduces those results.
+- The source-owned production configuration has entered the original intro's
+  `IntroMovie_Scene3_Init` under LLDB. It is not a playable game. The subsequent
+  G3D pointer-width defect is outside the verified runtime milestone.
 - Linked macOS `OS_DisableInterrupts` and `OS_RestoreInterrupts` functions are
   no-ops. The CARD request/worker lifecycle requires evidence-based host
   synchronization work, not arbitrary sleeps, null handling, or skipped tasks.
-- `cmake/native_legacy_archives.cmake` inventories six historical WM/WVR/DWC
-  libraries without source-owned build rules. Native overlay integration is
-  opt-in. These inputs must be migrated before a clean cold build can be
-  claimed. Never copy checkpoint archives to disguise missing rules.
+- WM/WVR/DWC providers and native images belong to the production source-owned
+  graph. Never copy checkpoint archives to disguise missing rules or restore
+  the former partial-game path.
 - `museum/` is **not** an overflow folder. Retain only exceptional, source-
   verifiable historical milestones whose primary evidence is not adequately
   preserved by Git history. Prefer leaving it empty.

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ntr_host.h>
 #include "nvram.h"
+#include "../hardware_drivers/audio/native_audio.h"
 
 extern void NitroMain(void);
 extern void SIM_pxiInit(void);
@@ -37,6 +38,9 @@ int main(int argc, char **argv)
         HG_CartridgeShutdown();
         return 3;
     }
+
+    HG_SoundInitialize();
+    if (!HG_RuntimeInitialize(HG_SoundRenderPCM)) return 2;
 
     HG_Thread *arm7 = HG_CreateThread(
         SIM_procPxiThread, "PXI ARM7", NULL);

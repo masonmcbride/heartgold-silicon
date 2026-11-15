@@ -53,13 +53,17 @@ file(GLOB_RECURSE guest32_headers CONFIGURE_DEPENDS
     "${game_source}/include/*.h" "${game_source}/lib/include/*.h")
 set(guest32_image_dir "${PROJECT_BINARY_DIR}/guest32-ovy0-image")
 set(guest32_driver "${PROJECT_SOURCE_DIR}/compiler/guest32/image.py")
+set(guest32_frontend_inputs
+    "${PROJECT_SOURCE_DIR}/compiler/guest32/frontend.py"
+    "${PROJECT_SOURCE_DIR}/cmake/native_sources.py"
+    "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json")
 add_custom_command(OUTPUT "${guest32_image_dir}/complete.stamp"
     BYPRODUCTS "${guest32_image_dir}/frontend-coverage.json" "${guest32_image_dir}/inline-identities.json" "${guest32_image_dir}/ownership-conflicts.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${guest32_driver}" --game "${game_source}"
         --build "${PROJECT_BINARY_DIR}" --out "${guest32_image_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
     DEPENDS guest32-lower fx_constants "${game_source}/main.lsf" ${guest32_image_inputs} ${guest32_headers}
-        "${guest32_driver}" "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
+        "${guest32_driver}" ${guest32_frontend_inputs} "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/original_layout.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/original_data_layouts.json"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/ovy0_registers.json"
@@ -123,7 +127,7 @@ set_target_properties(heartgold_guest32_runtime PROPERTIES
     C_STANDARD_REQUIRED YES)
 
 add_test(NAME guest32_callback_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target guest32-lower test_overlay_fs heartgold_guest32_runtime -j8)
+    --target guest32-lower test_os heartgold_guest32_runtime -j8)
 set_tests_properties(guest32_callback_build PROPERTIES FIXTURES_SETUP guest32_callbacks)
 add_test(NAME guest32_original_callbacks COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_callbacks.py" --build "${PROJECT_BINARY_DIR}"
@@ -143,20 +147,6 @@ add_custom_target(heartgold_whole_program_plan
         "${PROJECT_SOURCE_DIR}/compiler/guest32/whole_program.py"
     VERBATIM)
 
-# Rebuild original CPS/VCT providers with validated ARM assembly lowering.
-# These archives are not automatically admitted across the guest32 ABI.
-add_custom_target(heartgold_guest32_sdk_providers
-    COMMAND "${Python3_EXECUTABLE}" -B
-        "${PROJECT_SOURCE_DIR}/compiler/guest32/build_sdk_providers.py"
-        --build "${PROJECT_BINARY_DIR}" --llvm-bin "${guest32_tools}"
-    BYPRODUCTS
-        "${PROJECT_BINARY_DIR}/guest32-sdk-providers/providers.json"
-        "${PROJECT_BINARY_DIR}/guest32-sdk-providers/libheartgold_libCPS_complete.a"
-        "${PROJECT_BINARY_DIR}/guest32-sdk-providers/libheartgold_libVCT_complete.a"
-    DEPENDS fx_constants heartgold_native_headers
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    VERBATIM
-)
 add_test(NAME guest32_incremental COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_incremental.py")
 set_tests_properties(guest32_incremental PROPERTIES
@@ -214,7 +204,7 @@ add_custom_command(OUTPUT "${guest38_dir}/complete.stamp"
         --build "${PROJECT_BINARY_DIR}" --out "${guest38_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
     DEPENDS guest32-lower fx_constants "${game_source}/main.lsf" ${guest38_inputs}
-        "${guest32_driver}" "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
+        "${guest32_driver}" ${guest32_frontend_inputs} "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/original_layout.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/original_data_layouts.json"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/ovy38_registers.json"
@@ -312,7 +302,7 @@ add_custom_command(OUTPUT "${guest32_shared_dir}/complete.stamp"
         --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_shared_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
     DEPENDS guest32-lower fx_constants heartgold_native_headers ${guest32_image_inputs} ${guest38_inputs} ${guest32_headers}
-        "${game_source}/main.lsf" "${guest32_driver}"
+        "${game_source}/main.lsf" "${guest32_driver}" ${guest32_frontend_inputs}
         "${PROJECT_SOURCE_DIR}/compiler/guest32/shared.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/archive.py"
         "${PROJECT_SOURCE_DIR}/compiler/guest32/incremental.py"
@@ -369,17 +359,8 @@ foreach(file IN LISTS guest32_shared_outputs)
     string(REPLACE "${guest32_shared_dir}" "${guest32_provider_dir}" file "${file}")
     list(APPEND guest32_provider_outputs "${file}")
 endforeach()
-# A recovery floor is optional for clean builds, authoritative when supplied.
-set(guest32_recovery_floor "${PROJECT_BINARY_DIR}/execution-boundary/main-provider-recovery.json")
-set(guest32_recovery_arguments)
-option(HEARTGOLD_GUEST32_RETRY_BLOCKERS
-    "Reattempt historical resident failures without publishing incomplete generations" OFF)
-if(HEARTGOLD_GUEST32_RETRY_BLOCKERS)
-    list(APPEND guest32_recovery_arguments --retry-blockers)
-endif()
-if(EXISTS "${guest32_recovery_floor}")
-    list(APPEND guest32_recovery_arguments --selection-floor "${guest32_recovery_floor}")
-endif()
+# Production admission always rebuilds the current source selection. Historical
+# recovery fixtures remain test inputs, never an implicit production build mode.
 # Track the source inputs that can affect original game provider closure.
 # CONFIGURE_DEPENDS discovers added and removed source files too.
 file(GLOB_RECURSE guest32_closure_source_inputs
@@ -393,12 +374,14 @@ file(GLOB_RECURSE guest32_closure_source_inputs
 file(GLOB_RECURSE guest32_closure_tool_inputs
     CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/compiler/guest32/*.py")
+list(APPEND guest32_closure_tool_inputs
+    "${PROJECT_SOURCE_DIR}/cmake/native_sources.py"
+    "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json"
+    "${PROJECT_SOURCE_DIR}/cmake/guest32_closure.py")
 
-set(guest32_closure_floor_inputs)
-if(EXISTS "${guest32_recovery_floor}")
-    list(APPEND guest32_closure_floor_inputs
-        "${guest32_recovery_floor}")
-endif()
+add_test(NAME guest32_provider_frontend COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_provider_frontend.py"
+    --build "${PROJECT_BINARY_DIR}" --llvm-bin "${guest32_tools}")
 
 add_custom_command(OUTPUT "${guest32_provider_dir}/complete.stamp"
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/finish.py"
@@ -406,7 +389,6 @@ add_custom_command(OUTPUT "${guest32_provider_dir}/complete.stamp"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
         --image-root "${guest32_shared_dir}" --compiler "${CMAKE_C_COMPILER}"
         --root-symbol NitroMain --root-symbol CodeEntryArgs_New --root-symbol ListMenuInit
-        ${guest32_recovery_arguments}
     BYPRODUCTS ${guest32_provider_outputs}
         "${guest32_provider_dir}/discovery.json" "${guest32_provider_dir}/closure.json"
         "${guest32_provider_dir}/thread-entry.json" "${guest32_provider_dir}/bindings.json"
@@ -419,7 +401,6 @@ add_custom_command(OUTPUT "${guest32_provider_dir}/complete.stamp"
         "${guest32_provider_dir}/links/OVY_38-global.dylib"
     DEPENDS ${guest32_closure_source_inputs}
         ${guest32_closure_tool_inputs}
-        ${guest32_closure_floor_inputs}
         guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
         heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_std_build
         heartgold_guest32_runtime heartgold_guest32_mi_manifest heartgold_guest32_scalar_bridges

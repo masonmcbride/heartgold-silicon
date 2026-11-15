@@ -15,7 +15,7 @@ def candidate(key):
 
 
 def allocate(functions, previous=()):
-    """Pin past addresses; reject signature changes and hash collisions."""
+    """Pin past addresses; deterministically probe new handles on hash collision."""
     prior, occupied = {}, {}
     for f in previous:
         k, addr = f['key'], f['address']
@@ -47,6 +47,13 @@ def allocate(functions, previous=()):
             addr = old['address']
         else:
             addr = candidate(k)
+            # Only unpublished identities may move. Reserve every prior handle,
+            # including identities absent from this generation, before probing.
+            initial = addr
+            while addr in occupied and occupied[addr] != k:
+                addr = START + (addr - START + 4) % (END - START)
+                if addr == initial:
+                    raise ValueError('guest code address space exhausted')
 
         if addr in occupied and occupied[addr] != k:
             raise ValueError(

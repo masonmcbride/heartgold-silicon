@@ -26,7 +26,7 @@ def cxx_flags(game, member):
 
 def private_overlay(game, out, records):
     """Reuse approved declaration-only adaptations without native layouts."""
-    from native_sources import PRIVATE_FUNCTIONS,guest32_frontend,write_if_changed
+    from native_sources import PRIVATE_FUNCTIONS,guest32_frontend,write_if_changed,GUEST32_PRISTINE_COMPAT
     paths=set()
     for record in records:
         if record['source'] in PRIVATE_FUNCTIONS:
@@ -37,6 +37,7 @@ def private_overlay(game, out, records):
         'lib/src/nitrocrypto_rc4_fast.c',
         'src/comm_state.c',
         'lib/include/nitro/os/thread.h',
+        *GUEST32_PRISTINE_COMPAT,
     }
     selected={r['source'] for r in records}
     paths.update(selected & approved)

@@ -1,4 +1,4 @@
-#include "../native-adaptations/g2d/nanr_decode.h"
+#include "../hardware_drivers/g2d/nanr_decode.h"
 
 #include <assert.h>
 #include <stdint.h>

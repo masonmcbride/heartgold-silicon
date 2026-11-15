@@ -30,7 +30,8 @@ def main():
         (out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n')
         assert (r.returncode==0)==ok,r.stdout+r.stderr
         return r.stdout+r.stderr
-    constants=overlay_id_constants(game,parse_manifest(game/'main.lsf'))
+    manifest_owners = parse_manifest(game / 'main.lsf')
+    constants=overlay_id_constants(game,manifest_owners)
     assert '-fno-exceptions' in cxx_flags(game,'src/lobby/lobby_chat_enter_channel.o')
     assert '-fexceptions' in cxx_flags(game,'lib/MSL_C/src/msl_vector_length_error.o')
     catalog=json.loads((ROOT/'compiler/guest32/original_data_layouts.json').read_text());checked=0
@@ -42,7 +43,21 @@ def main():
         assert set(got)==set(proof['sections']) and set(got)<=set(current[0]),source
         for section,record in proof['sections'].items():
             assert record['address']>=0x02000000 and record['size']==len(current[0][section])
-        planned=json.loads((b/'native-overlays/guest32-admission'/('OVY_'+str(proof['image_id']))/'plan.json').read_text())
+        owners = [name for name, image in manifest_owners.items()
+                  if image.get('id') == proof['image_id']]
+        assert len(owners) == 1, (source, owners)
+        owner = owners[0]
+        planned_path = b / 'native-overlays/guest32-admission' / owner / 'plan.json'
+        if not planned_path.exists():
+            # The admission batch intentionally does not produce every original
+            # image. This test owns the complete source plan it additionally uses.
+            planned_path = out / owner / 'plan.json'
+            if not planned_path.exists():
+                run([sys.executable, '-B', ROOT / 'compiler/guest32/image.py',
+                     '--game', game, '--build', b, '--out', planned_path.parent,
+                     '--llvm-bin', llvm, '--lowerer', a.lowerer,
+                     '--image', owner, '--plan-only'])
+        planned=json.loads(planned_path.read_text())
         for name,(section,offset) in current[1].items():
             if section not in got:continue
             span=proof['sections'][section]
@@ -110,6 +125,15 @@ def main():
     except ValueError:pass
     else:raise AssertionError('duplicate label accepted')
     spec=json.loads((ROOT/'compiler/guest32/ovy44_registers.json').read_text())
+    for owner in (44, 45):
+        current = json.loads((ROOT / f'compiler/guest32/ovy{owner}_registers.json').read_text())
+        for source, digest in current['source_hashes'].items():
+            assert hashlib.sha256((game / source).read_bytes()).hexdigest() == digest, source
+        for edge in current['edges']:
+            line = (game / edge['source']).read_text().splitlines()[edge['line'] - 1]
+            assert edge['target'] + '(' in line, (owner, edge)
+    assert all(e['target'] not in ('DWC_CheckHasProfile', 'DWC_CheckValidConsole')
+               for e in spec['edges']), 'typed calls must use ordinary argument checks'
     validate_machine_edges(game,spec)
     assert len({e['source'] for e in spec['edges']})>=2
     bad=copy.deepcopy(spec);bad['edges'][0]['evidence']=bad['edges'][0]['evidence'].replace('\n','\n\tmov r0, #0\n',1)

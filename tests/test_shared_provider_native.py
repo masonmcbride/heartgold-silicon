@@ -34,7 +34,8 @@ class ProviderTests(unittest.TestCase):
 
     def run_code(self,text,cpp=False,extras=()):
         source=self.work/('probe.cpp' if cpp else 'probe.c');source.write_text(text.replace("int main(", "#define CHECK(x) do { if (!(x)) __builtin_trap(); } while (0)\nint main("));exe=self.work/'probe'
-        command=[*self.flags,'-x','c++' if cpp else 'c','-std=c++17' if cpp else '-std=c11',str(source),'-x','none',*map(str,extras),'-o',str(exe),'-Wl,-dead_strip','-fsanitize=address,undefined','-fno-sanitize-recover=all']
+        # MI fixed-port sends reach native C++ geometry state even from C probes.
+        command=[*self.flags,'-x','c++' if cpp else 'c','-std=c++17' if cpp else '-std=c11',str(source),'-x','none',*map(str,extras),'-lc++','-o',str(exe),'-Wl,-dead_strip','-fsanitize=address,undefined','-fno-sanitize-recover=all']
         r=subprocess.run(command,cwd=self.build,capture_output=True,text=True)
         self.assertEqual(r.returncode,0,r.stderr)
         r=subprocess.run([str(exe)],capture_output=True,text=True)

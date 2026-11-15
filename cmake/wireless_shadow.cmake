@@ -10,7 +10,7 @@ if(HEARTGOLD_WIRELESS_SHADOW)
     endif()
 
     set(_hg_wireless_sources
-        "${PROJECT_SOURCE_DIR}/native-adaptations/wireless")
+        "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless")
     set(_hg_wireless_output
         "${PROJECT_BINARY_DIR}/wireless-shadow")
     set(_hg_shadow_targets)

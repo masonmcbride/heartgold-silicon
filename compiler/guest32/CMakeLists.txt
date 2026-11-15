@@ -18,6 +18,8 @@ target_compile_options(guest32-lower PRIVATE ${guest32_definitions})
 llvm_map_components_to_libnames(guest32_libraries Core IRReader TransformUtils Analysis)
 target_link_libraries(guest32-lower PRIVATE ${guest32_libraries})
 enable_testing()
+add_test(NAME guest32_stable_ids COMMAND "${Python3_EXECUTABLE}" -B
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/test_guest32_stable_ids.py")
 add_test(NAME guest32_rule_model COMMAND "${Python3_EXECUTABLE}" -B
     "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/test_guest32_rule_model.py"
     --build "${CMAKE_CURRENT_BINARY_DIR}" --lowerer "$<TARGET_FILE:guest32-lower>")

@@ -169,6 +169,21 @@ class PublicationTests(unittest.TestCase):
         old = next(self.out.parent.glob('closure.previous-*'))
         self.assertEqual(before, {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in old.iterdir()})
 
+    def test_published_link_inputs_rebase_without_changing_object_bytes(self):
+        def worker(stage):
+            inputs = stage / 'interfaces'
+            inputs.mkdir()
+            (inputs / 'main.tbd').write_text('install-name: ' + str(stage / 'image.dylib'))
+            (stage / 'image.rsp').write_text('"' + str(inputs / 'main.tbd') + '"\n')
+            # Even embedded staging strings in emitted objects remain byte exact.
+            (stage / 'native.o').write_bytes(str(stage).encode())
+        publish(self.out, worker)
+        self.assertEqual((self.out / 'image.rsp').read_text(),
+                         '"' + str(self.out / 'interfaces/main.tbd') + '"\n')
+        self.assertEqual((self.out / 'interfaces/main.tbd').read_text(),
+                         'install-name: ' + str(self.out / 'image.dylib'))
+        self.assertIn(b'.pending-', (self.out / 'native.o').read_bytes())
+
     def test_address_or_ownership_rejection_does_not_publish(self):
         before = self.snapshot()
         def worker(stage):

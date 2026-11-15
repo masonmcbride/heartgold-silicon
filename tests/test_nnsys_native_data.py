@@ -48,11 +48,19 @@ inputs,missing=lc.parse_link_command(build/'CMakeFiles/heartgold.dir/link.txt',b
 missing_archives = [path for path in missing if Path(path).suffix == '.a']
 assert not missing_archives, missing_archives
 libraries=list(dict.fromkeys(i.file for i in inputs if i.file.endswith('.a')))
+# Carry the system frameworks declared by the production graph as well as its
+# archives. Native host objects must retain their real platform dependencies.
+production_link=shlex.split((build/'CMakeFiles/heartgold.dir/link.txt').read_text())
+platform_flags=[]
+for i,token in enumerate(production_link[:-1]):
+    if token in ('-framework','-weak_framework','-isysroot'):
+        platform_flags.extend((token,production_link[i+1]))
+
 exports=work/'exports.txt'
 exports.write_text(''.join('_'+name+'\n' for name in sorted(set(re.findall(r'alias\("(\w+)"',source.read_text())))))
 run([args[0],'-arch','arm64','-fsanitize=address,undefined','-Wl,-dead_strip','-Wl,-export_dynamic',
      '-Wl,-exported_symbols_list,'+str(exports),
-     *objects,*libraries,'-lc++','-o',str(work/'test')])
+     *objects,*libraries,*platform_flags,'-lc++','-o',str(work/'test')])
 print(run([str(work/'test')]),end='')
 tables=build/'CMakeFiles/heartgold_runtime.dir/g3-probe/nnsys_tables.c.o'
 relocations=run(['otool','-rv',str(tables)])

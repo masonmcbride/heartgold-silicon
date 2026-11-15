@@ -7,10 +7,10 @@
     "sha256": "bc9f2839ba9d23de9b581c684253e29225d4f5f21d5d49e48f3bbfc1a1789ef4"
   },
   "source_hashes": {
-    "src/wifi_club/wifi_club_app.c": "7c5d8fcb6e8a728ea2828a0637237d690943c64ca38cfbd47adc956da763c45f",
-    "src/wifi_club/wifi_club_game_entry.c": "ff0e33d2386286466ddbd1635f8230e869a425d1f4faab6d9488c89e3d40212e",
-    "src/sound_system.c": "ee92341d2579aa467c216c5d4dda0b6af0810cedaf4341553cea02744a699a00",
-    "src/friend_roster.c": "6ff7f4386a5e80c6412f38ce659c225c481650b063136e218511a8365a0140c7",
+    "src/wifi_club/wifi_club_app.c": "952980cc552d24a1bf0e96b93d2d5bdc06f6db27d1aa072ed07489f24579da5d",
+    "src/wifi_club/wifi_club_game_entry.c": "166e3f0d5ba5152a5371e7b01ab9b7faf6734d878e6b0124c5f38f627dcaccd4",
+    "src/sound_system.c": "b738b6708c9dc3b62e238332122d30a50652ff8d23905b8baf4c3c5556b6bdcd",
+    "src/friend_roster.c": "f8902d33e4500ae3309b6b81a17eef3d08f9b12fda45fa8b941bb7feadaab2a6",
     "lib/NitroDWC/src/dwc_account.c": "28f0b35ba8b0dce4f95f3cb2d1da10bd0d34298cd44879ffddf73b2ab39e1ff1"
   },
   "original_functions": {
@@ -35,34 +35,12 @@
       "source": "src/wifi_club/wifi_club_game_entry.c",
       "function": "WifiClubGameEntry_EnableVoiceChat",
       "target": "Sound_ApplyVoiceChatVolumeForSeq",
-      "line": 828,
+      "line": 829,
       "mode": "previous-result",
       "previous": "GF_GetCurrentPlayingBGM",
       "argument": 0,
       "arm_target": "sub_02005448",
       "evidence": "\tbl GF_GetCurrentPlayingBGM\n\tbl sub_02005448"
-    },
-    {
-      "source": "src/wifi_club/wifi_club_app.c",
-      "function": "WifiClub_State_Start",
-      "target": "DWC_CheckHasProfile",
-      "line": 1512,
-      "mode": "previous-result",
-      "previous": "FriendRoster_GetUserData",
-      "arm_previous": "sub_0202C08C",
-      "argument": 0,
-      "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckHasProfile"
-    },
-    {
-      "source": "src/wifi_club/wifi_club_app.c",
-      "function": "WifiClub_State_Start",
-      "target": "DWC_CheckValidConsole",
-      "line": 1522,
-      "mode": "previous-result",
-      "previous": "FriendRoster_GetUserData",
-      "arm_previous": "sub_0202C08C",
-      "argument": 0,
-      "evidence": "\tbl sub_0202C08C\n\tbl DWC_CheckValidConsole"
     }
   ],
   "renames": [
@@ -87,5 +65,34 @@
       ]
     }
   ],
-  "owner": "OVY_44"
+  "owner": "OVY_44",
+  "source_review": {
+    "commit": "6d2947303134256e90144b6aaedc5c3cf6a593d2",
+    "changes": [
+      {
+        "source": "src/wifi_club/wifi_club_app.c",
+        "previous_commit": "5cbed562856990373f0905cea6a900ea767343cd",
+        "previous_sha256": "7c5d8fcb6e8a728ea2828a0637237d690943c64ca38cfbd47adc956da763c45f",
+        "review": "Profile/console calls now explicitly pass FriendRoster_GetUserData; normal ABI checks replace their obsolete implicit-r0 edges. Room BGM register edge is unchanged."
+      },
+      {
+        "source": "src/wifi_club/wifi_club_game_entry.c",
+        "previous_commit": "6214e7cc8bc5c817ee8b55813b3021039b41d148",
+        "previous_sha256": "ff0e33d2386286466ddbd1635f8230e869a425d1f4faab6d9488c89e3d40212e",
+        "review": "Voice-chat adjacent-call edge is unchanged and moves from line 828 to 829. Other changes are includes, named constants and a separate disconnect callback signature."
+      },
+      {
+        "source": "src/sound_system.c",
+        "previous_commit": "c2bf503d487fd1559e85281bc266d165fde66b27",
+        "previous_sha256": "ee92341d2579aa467c216c5d4dda0b6af0810cedaf4341553cea02744a699a00",
+        "review": "Only unrelated fade-in argument spelling changed from 0 to FALSE; reviewed volume callees are unchanged."
+      },
+      {
+        "source": "src/friend_roster.c",
+        "previous_commit": "df30994da4bb15f5b9e8615f8b95bce549125fc5",
+        "previous_sha256": "6ff7f4386a5e80c6412f38ce659c225c481650b063136e218511a8365a0140c7",
+        "review": "GetUserData is unchanged; other changes name the save array and correct a separate field setter signature."
+      }
+    ]
+  }
 }

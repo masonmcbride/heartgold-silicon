@@ -7,7 +7,7 @@
     "sha256": "34eb4d7faa16e2ac493b98a042d2679d66715b89d835de105fee95670febec64"
   },
   "source_hashes": {
-    "src/lobby/lobby_chat_initialize.cpp": "a3fca559c390cbf69efd4d0c2734cf0b2589385cf51b706d867be696a82b10fe",
+    "src/lobby/lobby_chat_initialize.cpp": "739c711bfc64185790fc76931e95cdbed96139b2cf42e4123a84df5f4f39b2eb",
     "src/lobby/lobby_mem.c": "f5265783de611e16bac49850cb48eee714779be7d51c0a4bb7749113f1159392",
     "src/lobby/lobby_sort_adaptive.cpp": "1d8d717c27f8b51d9622af68830480fd963a58916b728f7d550d643c91463912",
     "src/lobby/lobby_sort_rotate.c": "065ab67e2659e904f834843b36e547f7a0c0b9055405f93a91b00a2729d36c4f",
@@ -126,5 +126,16 @@
         "+\t.public gLobbyChatManager"
       ]
     }
-  ]
+  ],
+  "source_review": {
+    "commit": "6d2947303134256e90144b6aaedc5c3cf6a593d2",
+    "changes": [
+      {
+        "source": "src/lobby/lobby_chat_initialize.cpp",
+        "previous_commit": "d14e748240c09c8d07cf1bc194807e9bd436d497",
+        "previous_sha256": "a3fca559c390cbf69efd4d0c2734cf0b2589385cf51b706d867be696a82b10fe",
+        "review": "Only chatConnectSpecialA final argument spelling changed from 0 to FALSE; the reviewed handler and indirect-result edges are unchanged."
+      }
+    ]
+  }
 }

@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d2947303134256e90144b6aaedc5c3cf6a593d2)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT 0be2c2b46e93cc26b0f34fcf3c48c2c7844c94de)
+set(LIBNTR_COMMIT b1a1d3aad41973a65b323f3cbd834a287f9a85c4)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"
@@ -91,18 +91,6 @@ dependency(libntr "${LIBNTR_URL}" "${LIBNTR_COMMIT}")
 # --- 4. Source roots ---------------------------------------------------------
 file(REAL_PATH "${PROJECT_SOURCE_DIR}/upstream/pokeheartgold" game_source)
 file(REAL_PATH "${PROJECT_SOURCE_DIR}/upstream/libntr" ntr_source)
-# Explicit local fork review, without changing either managed checkout or pin.
-set(HEARTGOLD_LIBNTR_REVIEW_SOURCE "" CACHE PATH "Local libntr fork checkout for uncommitted native review")
-if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
-    get_filename_component(ntr_source "${HEARTGOLD_LIBNTR_REVIEW_SOURCE}" ABSOLUTE)
-    execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${ntr_source}" rev-parse HEAD
-        OUTPUT_VARIABLE review_head OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
-    if(NOT review_head STREQUAL LIBNTR_COMMIT)
-        message(FATAL_ERROR "The review checkout must start at the pinned libntr commit")
-    endif()
-    message(STATUS "Using explicitly selected local libntr review checkout: ${ntr_source}")
-endif()
-
 # --- 5. Fixed-point constants: original C generator, libntr's pinned CSV --------
 set(fx_tool "${game_source}/tools/gen_fx_consts")
 add_executable(gen_fx_consts "${fx_tool}/main.c" "${fx_tool}/fx_data.c" "${fx_tool}/fx_encode.c")
@@ -123,34 +111,13 @@ add_library(native_host STATIC hardware_drivers/cartridge.c hardware_drivers/os/
 target_include_directories(native_host PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless")
 target_include_directories(native_host PUBLIC "${ntr_source}/include")
 target_link_libraries(native_host PUBLIC "${COREFOUNDATION}")
-if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
-    target_sources(native_host PRIVATE hardware_drivers/os/overlay_native.c hardware_drivers/os/resources.c)
-    target_compile_definitions(native_host PRIVATE
-        HG_GENERATED_RESOURCE_ROOT="${PROJECT_BINARY_DIR}/generated/files"
-        HG_ORIGINAL_RESOURCE_ROOT="${game_source}/files")
-
-    # Generate numeric NitroFS archive aliases from the original build manifest.
-    set(hg_resource_map "${PROJECT_BINARY_DIR}/generated/include/hg_resource_map.h")
-    add_custom_command(
-        OUTPUT "${hg_resource_map}"
-        COMMAND "${Python3_EXECUTABLE}"
-            "${PROJECT_SOURCE_DIR}/tools/generate_resource_map.py"
-            --filesystem "${game_source}/filesystem.mk"
-            --output "${hg_resource_map}"
-        DEPENDS
-            "${game_source}/filesystem.mk"
-            "${PROJECT_SOURCE_DIR}/tools/generate_resource_map.py"
-        VERBATIM)
-    add_custom_target(hg_resource_map DEPENDS "${hg_resource_map}")
-    add_dependencies(native_host hg_resource_map)
-    target_include_directories(native_host PRIVATE
-        "${PROJECT_BINARY_DIR}/generated/include")
-endif()
-
 add_library(nitro_config INTERFACE)
 target_compile_features(nitro_config INTERFACE c_std_11)
 target_compile_definitions(nitro_config INTERFACE
     SDK_PORT SDK_AARCH64 SDK_BUILD_MACOS SDK_64BIT SDK_NATIVE_G3 SDK_VERSION_MAJOR=4
+    # Use the original source's sizeof-based sprite animation storage. The DS
+    # 29-word buffer cannot contain the native pointer-bearing records.
+    BUGFIX_SPRITE_ANIM_SIZE
     HG_LIBNTR_REVISION="${LIBNTR_COMMIT}"
     SDK_CW_FORCE_EXPORT_SUPPORT SDK_TS SDK_4M SDK_FINALROM NNS_FINALROM _NITRO)
 target_compile_options(nitro_config INTERFACE -fno-common)
@@ -162,6 +129,13 @@ target_include_directories(nitro_config INTERFACE "${PROJECT_SOURCE_DIR}/hardwar
 enable_language(OBJCXX)
 find_library(HG_METAL_FRAMEWORK Metal REQUIRED)
 find_library(HG_FOUNDATION_FRAMEWORK Foundation REQUIRED)
+find_library(HG_APPKIT_FRAMEWORK AppKit REQUIRED)
+find_library(HG_AUDIOTOOLBOX_FRAMEWORK AudioToolbox REQUIRED)
+add_library(hg_desktop STATIC hardware_drivers/os/desktop.mm)
+target_compile_options(hg_desktop PRIVATE -fobjc-arc)
+target_compile_features(hg_desktop PRIVATE cxx_std_17)
+target_include_directories(hg_desktop PUBLIC "${ntr_source}/include")
+target_link_libraries(hg_desktop PUBLIC "${HG_APPKIT_FRAMEWORK}" "${HG_AUDIOTOOLBOX_FRAMEWORK}")
 add_library(hg_metal_raster STATIC hardware_drivers/metal/metal_raster.mm)
 target_include_directories(hg_metal_raster PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/metal")
 target_compile_options(hg_metal_raster PRIVATE -fobjc-arc)
@@ -201,6 +175,9 @@ foreach(component os mi pxi ctrdg spi std card cp fx fs math dgt rtc gx snd)
         list(APPEND sources "${directory}/src/${name}")
     endforeach()
     ntr_library(ntr_${component} ${sources})
+    if(component STREQUAL "snd")
+        target_sources(ntr_snd PRIVATE "${ntr_source}/libraries/snd/src/snd_native_storage.c")
+    endif()
     if(component STREQUAL "mi")
         target_sources(ntr_mi PRIVATE hardware_drivers/os/mi.c)
     endif()
@@ -215,6 +192,12 @@ ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/native/g3_state.cpp"
     "${ntr_source}/libraries/sim/src/native/g3_commands.cpp"
     "${ntr_source}/libraries/sim/src/native/sim_frame.cpp"
+    "${ntr_source}/libraries/sim/src/native/g2_frame.cpp"
+    "${ntr_source}/libraries/sim/src/sim_g2.cpp"
+    "${ntr_source}/libraries/sim/src/sim_audio.cpp"
+    "${ntr_source}/libraries/sim/src/blip-buf/blip_buf.c"
+    hardware_drivers/audio/native_audio.cpp
+    "${ntr_source}/libraries/sim7/src/snd/snd_channel.c"
     # Preserve the command processor ABI and original strip assembly.
     "${ntr_source}/libraries/sim/src/sim_g3_CommandProcessor.cpp"
     "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware/pxi.c"
@@ -228,14 +211,31 @@ target_sources(ntr_sim_state PRIVATE
     "${ntr_source}/libraries/sim7/src/snd/snd_exchannel.c")
 target_sources(ntr_sim_state PRIVATE
     "${PROJECT_SOURCE_DIR}/hardware_drivers/audio/sim_sound_state.cpp")
+# The host compositor must meet the DS frame period; keep ordinary IEEE math.
+set_source_files_properties("${ntr_source}/libraries/sim/src/native/g2_frame.cpp"
+    PROPERTIES COMPILE_OPTIONS "-O2")
 target_compile_features(ntr_sim_state PRIVATE cxx_std_17)
 target_include_directories(ntr_sim_state PRIVATE "${ntr_source}/libraries/sim7/include")
-target_link_libraries(ntr_sim_state PUBLIC hg_g3_metal)
+target_include_directories(ntr_sim_state PRIVATE "${ntr_source}/libraries/sim/include")
+target_link_libraries(ntr_sim_state PUBLIC hg_g3_metal hg_desktop)
 target_link_libraries(nitro_sdk INTERFACE ntr_sim_state)
 target_link_options(nitro_sdk INTERFACE -Wl,-dead_strip)
 
 # --- 8. SDK correctness tests ------------------------------------------------
 enable_testing()
+add_executable(test_native_g2 tests/test_native_g2.cpp)
+target_link_libraries(test_native_g2 PRIVATE nitro_sdk)
+target_compile_options(test_native_g2 PRIVATE -UNDEBUG)
+add_test(NAME native_g2 COMMAND test_native_g2)
+add_executable(test_native_mixer tests/test_native_mixer.cpp)
+target_link_libraries(test_native_mixer PRIVATE nitro_sdk)
+target_compile_options(test_native_mixer PRIVATE -UNDEBUG)
+add_test(NAME native_mixer COMMAND test_native_mixer)
+add_executable(test_native_desktop tests/test_native_desktop.mm)
+target_compile_options(test_native_desktop PRIVATE -fobjc-arc -UNDEBUG)
+target_link_libraries(test_native_desktop PRIVATE hg_desktop)
+add_test(NAME native_desktop COMMAND test_native_desktop)
+set_tests_properties(native_desktop PROPERTIES TIMEOUT 20 RUN_SERIAL TRUE)
 add_executable(test_native_nvram_compact tests/test_native_nvram_compact.c hardware_drivers/firmware/nvram.c)
 target_compile_definitions(test_native_nvram_compact PRIVATE HG_NVRAM_UNIT_TEST)
 target_include_directories(test_native_nvram_compact PRIVATE "${PROJECT_SOURCE_DIR}/tests" "${PROJECT_SOURCE_DIR}/hardware_drivers/firmware")
@@ -292,48 +292,51 @@ add_test(NAME backward_decompression COMMAND test_uncompress $<TARGET_FILE:uncom
 set_tests_properties(backward_decompression PROPERTIES TIMEOUT 20 ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0")
 
 
-# The overlay graph is opt-in until all legacy archives are source-owned.
-# A pinned libntr checkout and an overlay-enabled build are separate concepts.
+# A game build always includes the complete source-owned image graph.
 option(HEARTGOLD_NATIVE_OVERLAYS "Build the original native overlay integration" ON)
 
 # --- 9. Original HeartGold (default), with its native build adaptations --------
 option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
 if(HEARTGOLD_BUILD_GAME)
+    if(NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        message(FATAL_ERROR "The production game uses Unix Makefiles. Run ./build.sh with an empty build directory.")
+    endif()
+    if(NOT HEARTGOLD_NATIVE_OVERLAYS)
+        message(FATAL_ERROR "heartgold requires the complete native image graph; HEARTGOLD_NATIVE_OVERLAYS must be ON")
+    endif()
     find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/heartgold.cmake")
-    set(HEARTGOLD_GUEST32_LLVM_DIR "" CACHE PATH "Opt-in LLVM 23 configuration for original OVY_0 guest compilation")
-    if(HEARTGOLD_GUEST32_LLVM_DIR)
-        if(NOT HEARTGOLD_NATIVE_OVERLAYS)
-            message(FATAL_ERROR
-                "Guest32 requires HEARTGOLD_NATIVE_OVERLAYS=ON: its provider closure and state proof consume the native overlay contract and semantic-slot registry.")
+    set(HEARTGOLD_GUEST32_LLVM_DIR "" CACHE PATH "LLVM 23 configuration required by the production game build")
+    if(NOT HEARTGOLD_GUEST32_LLVM_DIR)
+        find_program(hg_llvm_config NAMES llvm-config)
+        if(NOT hg_llvm_config)
+            find_program(hg_brew NAMES brew)
+            if(hg_brew)
+                execute_process(COMMAND "${hg_brew}" --prefix llvm
+                    OUTPUT_VARIABLE hg_llvm_prefix OUTPUT_STRIP_TRAILING_WHITESPACE
+                    RESULT_VARIABLE hg_llvm_missing ERROR_QUIET)
+                if(NOT hg_llvm_missing)
+                    find_program(hg_llvm_config NAMES llvm-config HINTS "${hg_llvm_prefix}/bin")
+                endif()
+            endif()
         endif()
-        include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
-    endif()
-    # Original-image integration is now an explicit build feature rather than
-    # an accidental side effect of selecting a local libntr review checkout.
-    if(HEARTGOLD_NATIVE_OVERLAYS)
-        include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
-        include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_nnsys_tables.cmake")
-        if(TARGET guest32-lower)
-            include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
+        if(NOT hg_llvm_config)
+            message(FATAL_ERROR "The production game requires LLVM 23. Run ./build.sh to install its build dependencies.")
         endif()
+        execute_process(COMMAND "${hg_llvm_config}" --cmakedir
+            OUTPUT_VARIABLE hg_llvm_cmake OUTPUT_STRIP_TRAILING_WHITESPACE
+            COMMAND_ERROR_IS_FATAL ANY)
+        set(HEARTGOLD_GUEST32_LLVM_DIR "${hg_llvm_cmake}" CACHE PATH
+            "LLVM 23 configuration required by the production game build" FORCE)
     endif()
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/guest32.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_overlays.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_nnsys_tables.cmake")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
 endif()
 
 # Optional source-built wireless archive comparison; never linked into heartgold.
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/wireless_shadow.cmake")
-
-# Standalone emission observation only; never linked into heartgold.
-option(HEARTGOLD_BUILD_G3_PROBE "Build the original NitroSystem emission probe" OFF)
-if(HEARTGOLD_BUILD_G3_PROBE)
-    find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
-    include("${CMAKE_CURRENT_LIST_DIR}/cmake/g3_probe.cmake")
-endif()
-
-option(HEARTGOLD_BUILD_MEMORY_RESEARCH "Build opt-in host memory observers" OFF)
-if(HEARTGOLD_BUILD_MEMORY_RESEARCH)
-    include("${CMAKE_CURRENT_LIST_DIR}/cmake/memory_research.cmake")
-endif()
 
 # Geometry arithmetic is independently sanitizer-tested without the renderer.
 add_executable(test_g3_native_math tests/test_g3_native_math.c
@@ -348,48 +351,6 @@ target_compile_options(test_g3_native PRIVATE -UNDEBUG)
 add_test(NAME native_g3_commands_metal COMMAND test_g3_native)
 set_tests_properties(native_g3_commands_metal PROPERTIES TIMEOUT 30)
 
-
-# HEARTGOLD_NATIVE_MIC_PROVIDER_V1
-option(HEARTGOLD_NATIVE_MIC "Use the experimental Core Audio MIC provider" OFF)
-if(TARGET ntr_spi AND APPLE AND HEARTGOLD_NATIVE_MIC)
-    get_target_property(_hg_spi_sources ntr_spi SOURCES)
-    if(NOT _hg_spi_sources)
-        message(FATAL_ERROR "ntr_spi has no source list")
-    endif()
-
-    set(_hg_spi_kept_sources "")
-    set(_hg_spi_removed 0)
-
-    foreach(_hg_source IN LISTS _hg_spi_sources)
-        if(_hg_source MATCHES "(^|/)libraries/spi/src/mic\\.c$")
-            math(EXPR _hg_spi_removed "${_hg_spi_removed} + 1")
-        else()
-            list(APPEND _hg_spi_kept_sources "${_hg_source}")
-        endif()
-    endforeach()
-
-    if(NOT _hg_spi_removed EQUAL 1)
-        message(FATAL_ERROR
-            "Expected one original ntr_spi mic.c source; found ${_hg_spi_removed}")
-    endif()
-
-    set_property(TARGET ntr_spi PROPERTY
-        SOURCES "${_hg_spi_kept_sources}")
-
-    target_sources(ntr_spi PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio/hg_mic_spi.c"
-        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio/hg_mic_capture.c")
-
-    target_include_directories(ntr_spi PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/hardware_drivers/audio")
-
-    target_link_libraries(ntr_spi PUBLIC
-        "-framework AudioToolbox"
-        "-framework CoreAudio"
-        "-framework CoreFoundation")
-
-    message(STATUS "HeartGold native Core Audio MIC provider selected")
-endif()
 
 # Native fixtures launch Clang directly; inherit the build's SDK without
 # replacing test-specific environments. Guest32 subdirectory tests stay separate.

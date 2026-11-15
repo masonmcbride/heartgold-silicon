@@ -2,7 +2,7 @@
 # Bootstrap only; the managed interpreter owns progress, logging and validation.
 set -eu
 source_dir=$(cd -- "$(dirname -- "$0")" && pwd)
-binary_dir="$source_dir/build/native"
+binary_dir="$source_dir/build/game"
 verbose=0
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -73,16 +73,18 @@ compatible() {
 }
 missing=()
 compatible cmake 3 30 || missing+=(cmake)
-compatible ninja 1 10 || missing+=(ninja)
 if [ "${#missing[@]}" -gt 0 ]; then run 'Native tools' brew install "${missing[@]}"; fi
-compatible cmake 3 30 && compatible ninja 1 10 || fail 'CMake >=3.30 and Ninja >=1.10 must be on PATH.'
-echo "Tools: $(cmake --version | head -1), Ninja $(ninja --version)"
-# LLVM supplies object utilities for original assets, never the host compiler.
+compatible cmake 3 30 || fail 'CMake >=3.30 must be on PATH.'
+echo "Tools: $(cmake --version | head -1), Make $(xcrun --find make)"
+# LLVM 23 supplies the required guest compiler libraries and asset utilities.
+# Apple Clang remains the native host compiler.
 llvm_prefix=$(brew --prefix llvm 2>/dev/null || :)
-if ! { command -v llvm-objcopy >/dev/null && command -v llvm-readelf >/dev/null; } &&
-   ! { [ -x "$llvm_prefix/bin/llvm-objcopy" ] && [ -x "$llvm_prefix/bin/llvm-readelf" ]; }; then
-    run 'Asset object tools' brew install llvm
+if [ ! -x "$llvm_prefix/bin/llvm-config" ]; then
+    run 'LLVM compiler and asset tools' brew install llvm
+    llvm_prefix=$(brew --prefix llvm)
 fi
+[ "$("$llvm_prefix/bin/llvm-config" --version | cut -d. -f1)" = 23 ] || fail 'The production game requires LLVM 23.'
+export PATH="$llvm_prefix/bin:$PATH"
 png_prefix=$(brew --prefix libpng 2>/dev/null || :)
 if [ ! -f "$png_prefix/include/png.h" ]; then run 'PNG asset tools' brew install libpng; fi
 uv_tool=$(command -v uv || :)
@@ -99,4 +101,4 @@ python=$("$uv_tool" python find --managed-python 3.12.12)
 echo "Python: $python"
 trap - INT TERM
 export HEARTGOLD_BOOTSTRAP_SECONDS=$SECONDS
-exec "$python" -B "$source_dir/tools/profile_build.py" --build "$binary_dir" --compiler "$cc" --cxx "$cxx" --verbose "$verbose"
+exec "$python" -B "$source_dir/cmake/profile_build.py" --build "$binary_dir" --compiler "$cc" --cxx "$cxx" --verbose "$verbose"

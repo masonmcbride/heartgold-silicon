@@ -113,12 +113,13 @@ def build(a):
     # Keep approved frontend-only corrections in their existing owning layer.
     # VFS preserves canonical original source/debug identities and quoted includes.
     sys.path.insert(0,str(ROOT/'cmake'))
-    from native_sources import guest32_frontend,write_if_changed
+    from native_sources import guest32_frontend,write_if_changed,GUEST32_PRISTINE_COMPAT
     adapted=[]
     for relative in ('lib/include/nitro/os/thread.h','lib/include/nitro/os/context.h','src/comm_state.c',
                      'lib/NitroSDK/src/os/os_alarm_before_handler.c','lib/NitroSDK/src/os/os_alarm_after_handler.c',
                      'lib/libCPS/src/cps_bignum.c','lib/libVCT/src/vct_audio_send.c',
-                     'lib/NitroSDK/src/mic.c','lib/NitroSDK/src/rtc/rtc_api.c','lib/src/nitrocrypto_rc4_fast.c'):
+                     'lib/NitroSDK/src/mic.c','lib/NitroSDK/src/rtc/rtc_api.c','lib/src/nitrocrypto_rc4_fast.c',
+                     *GUEST32_PRISTINE_COMPAT):
         source=a.game/relative;output=a.out/'frontend'/relative
         from trainer_approach_abi import adapt as adapt_trainer_approach_abi
         adapted_source=guest32_frontend(relative,source.read_text(),a.game)

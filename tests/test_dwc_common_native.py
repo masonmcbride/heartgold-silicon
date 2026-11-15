@@ -105,6 +105,7 @@ _Static_assert(offsetof(InitParam,skipNetCheck)==offsetof(NetStartParams,unk_0A)
                 r = subprocess.run([*flags, '-dynamiclib', *map(str, objects),
                     str(self.build / 'libntr/libntr_mi.a'),
                     str(self.build / 'libntr/libntr_sim_state.a'),
+                    '-lc++',
                     '-Wl,-dead_strip', *['-Wl,-exported_symbol,_' + s for s in ALLOC + ERROR],
                     '-Wl,-install_name,' + str(dylib), '-o', str(dylib)],
                     cwd=self.build, capture_output=True, text=True)

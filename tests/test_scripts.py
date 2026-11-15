@@ -2,6 +2,7 @@
 import argparse
 import importlib.util
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -18,12 +19,45 @@ converter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(converter)
 
 runner_spec = importlib.util.spec_from_file_location(
-    'build_progress', Path(__file__).resolve().parents[1] / 'tools/profile_build.py')
+    'build_progress', Path(__file__).resolve().parents[1] / 'cmake/profile_build.py')
 progress = importlib.util.module_from_spec(runner_spec)
 runner_spec.loader.exec_module(progress)
 
 
 class BuildProgress(unittest.TestCase):
+    def test_production_cmake_rejects_partial_or_unverified_game_graphs(self):
+        root = Path(__file__).resolve().parents[1]
+        cc = subprocess.check_output(['xcrun', '--find', 'clang'], text=True).strip()
+        cxx = subprocess.check_output(['xcrun', '--find', 'clang++'], text=True).strip()
+        cases = [('Unix Makefiles', ['-DHEARTGOLD_NATIVE_OVERLAYS=OFF'],
+                  'requires the complete native image graph')]
+        if shutil.which('ninja'):
+            cases.append(('Ninja', [], 'production game uses Unix Makefiles'))
+        for generator, options, diagnostic in cases:
+            with self.subTest(generator=generator), tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+                result = subprocess.run(['cmake', '-S', str(root), '-B', directory,
+                    '-G', generator, '-DCMAKE_C_COMPILER=' + cc,
+                    '-DCMAKE_CXX_COMPILER=' + cxx, '-DHEARTGOLD_BUILD_GAME=ON', *options],
+                    capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(diagnostic, result.stdout + result.stderr)
+
+    def test_entrypoint_configures_production_for_fresh_and_older_caches(self):
+        for cached in (False, True):
+            with self.subTest(cached=cached), tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+                build = Path(directory)
+                if cached:
+                    (build / 'CMakeCache.txt').write_text('HEARTGOLD_GUEST32_LLVM_DIR:PATH=\n')
+                with patch.object(progress, 'Runner') as runner, patch.object(sys, 'argv',
+                        ['profile_build.py', '--build', str(build), '--compiler', '/cc', '--cxx', '/cxx']):
+                    runner.return_value.run.side_effect = RuntimeError('configure reached')
+                    with self.assertRaisesRegex(RuntimeError, 'configure reached'):
+                        progress.main()
+                    command = runner.return_value.run.call_args.args[1]
+                    self.assertIn('-DHEARTGOLD_BUILD_GAME=ON', command)
+                    self.assertIn('-DHEARTGOLD_NATIVE_OVERLAYS=ON', command)
+                    self.assertEqual(command[command.index('-G') + 1], 'Unix Makefiles')
+
     def test_pipe_failure_keeps_stderr_status_and_full_log(self):
         with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
             runner = progress.Runner(directory)

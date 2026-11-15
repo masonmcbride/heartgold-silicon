@@ -7,11 +7,13 @@ foreach(id IN LISTS hg_selected_overlay_ids)
 endforeach()
 list(REMOVE_DUPLICATES hg_slot_targets)
 set(hg_slot_outputs)
+set(hg_slot_sources)
 foreach(target IN LISTS hg_slot_targets)
     get_target_property(sources ${target} SOURCES)
     foreach(source IN LISTS sources)
         if(source MATCHES "\\.(c|cpp|cc)$")
             get_filename_component(source_abs "${source}" ABSOLUTE BASE_DIR "${PROJECT_SOURCE_DIR}")
+            list(APPEND hg_slot_sources "${source_abs}")
             string(SHA256 member "${target}|${source_abs}")
             foreach(file original.ll original.d receipt.json frontend.log promoted.ll)
                 list(APPEND hg_slot_outputs "${hg_slot_dir}/members/${member}/${file}")
@@ -19,6 +21,7 @@ foreach(target IN LISTS hg_slot_targets)
         endif()
     endforeach()
 endforeach()
+list(REMOVE_DUPLICATES hg_slot_sources)
 add_custom_command(OUTPUT "${hg_slot_dir}/complete.stamp"
     BYPRODUCTS "${hg_slot_dir}/plan.json" "${hg_slot_dir}/registry.json"
         "${hg_slot_dir}/inputs.json" "${hg_slot_dir}/plan.pending.json"
@@ -26,6 +29,7 @@ add_custom_command(OUTPUT "${hg_slot_dir}/complete.stamp"
     COMMAND "${Python3_EXECUTABLE}" -B "${hg_slot_driver}"
         --build "${PROJECT_BINARY_DIR}" --lowerer $<TARGET_FILE:guest32-lower>
     DEPENDS guest32-lower "${hg_slot_driver}" "${PROJECT_BINARY_DIR}/compile_commands.json"
+        ${hg_slot_sources}
         "${PROJECT_SOURCE_DIR}/compiler/guest32/semantic_slot_lifetimes.json"
         heartgold_native_headers heartgold_overlay_native_sources
         fx_constants ${heartgold_asset_targets}
@@ -38,12 +42,6 @@ foreach(target IN LISTS hg_slot_targets)
         "${Python3_EXECUTABLE};-B;${hg_slot_driver};launch;${hg_slot_dir}/registry.json")
     set_property(TARGET ${target} PROPERTY CXX_COMPILER_LAUNCHER
         "${Python3_EXECUTABLE};-B;${hg_slot_driver};launch;${hg_slot_dir}/registry.json")
-    get_target_property(sources ${target} SOURCES)
-    foreach(source IN LISTS sources)
-        if(source MATCHES "\\.(c|cpp|cc)$")
-            set_property(SOURCE "${source}" APPEND PROPERTY OBJECT_DEPENDS "${hg_slot_dir}/plan.json")
-        endif()
-    endforeach()
 endforeach()
 add_test(NAME semantic_pointer_slots COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_semantic_slots.py" --build "${PROJECT_BINARY_DIR}"

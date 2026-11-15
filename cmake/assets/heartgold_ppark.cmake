@@ -12,7 +12,7 @@ set(hg_ppark_dep "${hg_ppark_work}/ppark.d")
 # original JSON -> generated C -> ARM object -> extracted binary.
 # The compiler depfile belongs to the object-producing edge.
 add_custom_command(OUTPUT "${hg_ppark_c}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_ppark_members}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_ppark_work}" "${hg_ppark_members}"
     COMMAND $<TARGET_FILE:hg_jsonproc>
         "${hg_ppark_source}/ppark.json" "${hg_ppark_source}/ppark.json.txt" "${hg_ppark_c}"
     DEPENDS hg_jsonproc

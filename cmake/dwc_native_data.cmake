@@ -42,8 +42,13 @@ add_custom_command(OUTPUT "${hg_dwc_data_dir}/main.S" "${hg_dwc_data_dir}/OVY_0.
         "${CMAKE_CURRENT_LIST_DIR}/native_assembly_data.py" "${CMAKE_CURRENT_LIST_DIR}/native_wifi_constants.py"
         "${game_source}/main.lsf"
     VERBATIM)
+add_custom_target(heartgold_dwc_data_sources DEPENDS
+    "${hg_dwc_data_dir}/main.S" "${hg_dwc_data_dir}/OVY_0.S"
+    "${hg_dwc_data_dir}/OVY_0_qr.S" "${hg_dwc_data_dir}/OVY_0_bulk.S"
+    "${hg_dwc_data_dir}/OVY_0_frontier.S" "${hg_dwc_data_dir}/manifest.json")
 foreach(owner main OVY_0)
     add_library(heartgold_dwc_data_${owner} OBJECT "${hg_dwc_data_dir}/${owner}.S")
+    add_dependencies(heartgold_dwc_data_${owner} heartgold_dwc_data_sources)
     add_custom_command(OUTPUT "${hg_dwc_data_dir}/${owner}-validated.json"
         COMMAND "${Python3_EXECUTABLE}" -B "${hg_dwc_data_driver}"
             --game "${game_source}" --out "${hg_dwc_data_dir}"
@@ -61,6 +66,7 @@ endforeach()
 # The full OVY_0 storage object is deliberately NOT attached.
 add_library(heartgold_dwc_data_OVY_0_qr OBJECT
     "${hg_dwc_data_dir}/OVY_0_qr.S")
+add_dependencies(heartgold_dwc_data_OVY_0_qr heartgold_dwc_data_sources)
 set_property(TARGET heartgold_dwc_data_OVY_0_qr
     PROPERTY HG_ORIGINAL_OWNER OVY_0)
 
@@ -95,6 +101,7 @@ add_dependencies(hg_dwc_main heartgold_dwc_data_OVY_0_qr_verified)
 # No complete OVY_0 object, duplicate QR storage, or owner reassignment.
 add_library(heartgold_dwc_data_OVY_0_bulk OBJECT
     "${hg_dwc_data_dir}/OVY_0_bulk.S")
+add_dependencies(heartgold_dwc_data_OVY_0_bulk heartgold_dwc_data_sources)
 set_property(TARGET heartgold_dwc_data_OVY_0_bulk
     PROPERTY HG_ORIGINAL_OWNER OVY_0)
 
@@ -128,6 +135,7 @@ add_dependencies(hg_dwc_main
 # Independent, source-owned OVY_0 frontier storage.
 add_library(heartgold_dwc_data_OVY_0_frontier OBJECT
     "${hg_dwc_data_dir}/OVY_0_frontier.S")
+add_dependencies(heartgold_dwc_data_OVY_0_frontier heartgold_dwc_data_sources)
 set_property(TARGET heartgold_dwc_data_OVY_0_frontier
     PROPERTY HG_ORIGINAL_OWNER OVY_0)
 

@@ -35,7 +35,7 @@ if("45" IN_LIST hg_selected_overlay_ids)
 # Retain pristine pinned source; compile this explicitly reviewed
 # native ABI adaptation for OVY_45 only.
 set(_hg_ovy45_adaptation
-    "${PROJECT_SOURCE_DIR}/native-adaptations/OVY_45/lobby_chat_remove_channel.cpp"
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/overlays/OVY_45/lobby_chat_remove_channel.cpp"
 )
 if(NOT EXISTS "${_hg_ovy45_adaptation}")
     message(FATAL_ERROR "OVY_45 native C++ adaptation is missing")
@@ -68,7 +68,7 @@ if("45" IN_LIST hg_selected_overlay_ids)
            "(^|/)src/lobby/ppw_lobby_get_work[.]c$")
             list(REMOVE_ITEM hg_overlay_45_sources "${_hg_ovy45_source}")
             list(APPEND hg_overlay_45_sources
-                "${PROJECT_SOURCE_DIR}/native-adaptations/OVY_45/ppw_lobby_get_work_native.c")
+                "${PROJECT_SOURCE_DIR}/hardware_drivers/overlays/OVY_45/ppw_lobby_get_work_native.c")
             set(_hg_ovy45_get_work_original_found TRUE)
         endif()
     endforeach()
@@ -752,7 +752,7 @@ if(TARGET heartgold_overlay_45)
         SOURCE "${game_source}/src/lobby/ppw_lobby_get_work.c"
         APPEND PROPERTY COMPILE_OPTIONS
         "-include"
-        "${PROJECT_SOURCE_DIR}/native-adaptations/OVY_45/tree-iterator-native.h"
+        "${PROJECT_SOURCE_DIR}/hardware_drivers/overlays/OVY_45/tree-iterator-native.h"
     )
 endif()
 
@@ -763,7 +763,7 @@ endif()
 # The pinned upstream sources and their DS assertions are unchanged.
 if(TARGET heartgold_overlay_45)
     target_compile_options(heartgold_overlay_45 PRIVATE
-        "$<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:SHELL:-include ${PROJECT_SOURCE_DIR}/native-adaptations/OVY_45/tree-iterator-native.h>"
+        "$<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:SHELL:-include ${PROJECT_SOURCE_DIR}/hardware_drivers/overlays/OVY_45/tree-iterator-native.h>"
     )
 endif()
 
@@ -773,14 +773,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/native_legacy_archives.cmake")
 
 # HG_PRODUCTION_NATIVE_RUNTIME_OWNERSHIP
 # Runtime providers are native host services, not original DS image members.
-# Select exactly one implementation owner independently of review settings.
-if(HEARTGOLD_LIBNTR_REVIEW_SOURCE)
-    # native_host already compiles overlay_native.c in this configuration.
-    target_link_libraries(heartgold PRIVATE native_host)
-else()
-    target_sources(heartgold PRIVATE
-        "${PROJECT_SOURCE_DIR}/hardware_drivers/os/overlay_native.c")
-endif()
+target_sources(heartgold PRIVATE
+    "${PROJECT_SOURCE_DIR}/hardware_drivers/os/overlay_native.c")
 
 if(TARGET heartgold_guest32_runtime)
     # The LLVM-enabled build already has a source-owned guest32 runtime.

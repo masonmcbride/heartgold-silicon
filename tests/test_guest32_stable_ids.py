@@ -99,13 +99,32 @@ class StableIDs(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'changed guest code ABI'):
             plan(changed,self.old)
 
-    def test_colliding_new_ids_rejected(self):
-        functions={
-            f['key']:f for f in self.catalogs['OVY_0']['codes']
-        }
+    def test_colliding_new_ids_probe_deterministically(self):
+        functions={f['key']:f for f in self.catalogs['OVY_0']['codes']}
         with patch('code_ids.candidate',return_value=0x21111110):
-            with self.assertRaisesRegex(ValueError,'collision'):
-                allocate(functions)
+            forward=allocate(functions)
+            self.assertEqual(forward, allocate(dict(reversed(list(functions.items())))))
+        self.assertEqual(sorted(forward.values()), [0x21111110, 0x21111114])
+
+    def test_real_main_overlay_collision_preserves_overlay_pin(self):
+        main=fn('gf_3d_render', 'G2_SetBG0Priority')
+        overlay=dict(fn('sb_server', 'ServerBrowserSendNatNegotiateCookieToServerA'),
+                     key='ServerBrowserSendNatNegotiateCookieToServerA')
+        address=candidate(overlay['key'])
+        self.assertEqual(address, 0x50d19f90)
+        self.assertEqual(candidate(main['key']), address)
+        pinned=dict(overlay, address=address)
+        result=allocate({main['key']:main, overlay['key']:overlay}, [pinned])
+        self.assertEqual(result[overlay['key']], address)
+        self.assertEqual(result[main['key']], address+4)
+        self.assertEqual(result, allocate({main['key']:main}, [pinned]) | {overlay['key']:address})
+        self.assertEqual(result, allocate({main['key']:main, overlay['key']:overlay},
+                         [dict(main,address=result[main['key']]), pinned]))
+
+    def test_conflicting_pins_still_rejected(self):
+        pins=[dict(f,address=0x21111110) for f in self.catalogs['OVY_0']['codes']]
+        with self.assertRaisesRegex(ValueError, 'previous code identity collision'):
+            allocate({},pins)
 
     def test_checkout_independent_address(self):
         self.assertEqual(

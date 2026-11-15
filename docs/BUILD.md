@@ -4,20 +4,20 @@ On macOS ARM64, with Homebrew and Git installed:
 
 ```sh
 ./build.sh
-./build.sh --build-dir build/native --verbose
+./build.sh --build-dir build/game-dev --verbose
 ```
 
-The entrypoint verifies Apple Clang and its SDK, installs missing CMake/Ninja
+The entrypoint verifies Apple Clang, Make and the SDK, installs missing CMake
 and asset utilities, and uses Astral uv with CPython 3.12.12. The standalone uv
 installer does not change shell profiles. Python, caches and logs stay in the
-selected binary directory (default `build/native`). Generators use only the
+selected binary directory (default `build/game`). Generators use only the
 Python standard library; no pip dependencies are needed. CMake owns the exact
 repository pins and refuses dirty managed checkouts. Existing user changes
 are preserved; use an isolated source checkout if your upstream tree is dirty.
 
 The build audits sources, compiles all default targets, checks ARM64 and
-121-image strong-symbol closure, then runs CTest. Ninja progress counts finished
-edges; redirected output contains milestones without terminal escapes. Complete
+121-image strong-symbol closure, then runs CTest. The production generator is
+Unix Makefiles; redirected output contains milestones without terminal escapes. Complete
 diagnostics and timings are in `<binary>/logs/`. Failures retain their exit
 status and build state. Set `HEARTGOLD_CARTRIDGE` (and, when required,
 `HEARTGOLD_FIRMWARE`) to attempt a bounded runtime diagnostic. A diagnostic exit
@@ -35,21 +35,22 @@ Use native Apple Clang on Apple Silicon, CMake 3.30 or later, and Git. Game asse
 also require Python 3.9+, PNG, ZLIB, `llvm-objcopy`, and `llvm-readelf`. Expose LLVM
 through `PATH` or `CMAKE_PROGRAM_PATH`; configuration can also discover an installed
 Homebrew LLVM prefix. No installation path is hardcoded. Meson, Ninja, SDL, NASM,
-Rosetta, and Nintendo toolchains are not required.
+Rosetta, and Nintendo toolchains are not required. LLVM 23 is required for the
+production game compiler; `build.sh` selects it automatically while retaining
+Apple Clang as the native compiler.
 
 ```sh
-cmake -S . -B build
-cmake --build build -j8
-ctest --test-dir build --output-on-failure
+./build.sh
 ```
 
-Game compilation is enabled by default. Native original overlay integration
-is explicitly selectable with `-DHEARTGOLD_NATIVE_OVERLAYS=ON` (and remains
-implicitly enabled by the legacy local libntr review path). It presently
-requires six non-source-owned WM/WVR/DWC archives; see [BUILD_GRAPH.md](BUILD_GRAPH.md).
-The historical working dynamic-closure executable has progressed into Scene 3
-of the original intro, but this does **not** establish that the default CMake
-`heartgold` target links or executes equivalently. To build original resource
+`build.sh` is the supported game build entrypoint. It always configures the
+complete production graph, including native images and guest provider compilation,
+and runs the maintained tests. Existing entrypoint caches are reconfigured so
+they cannot silently retain the former partial configuration. CMake also requires
+the complete graph whenever game compilation is enabled; disabling native images
+is an error. The source-owned build has been verified entering Scene 3 of the
+original intro under LLDB; the subsequent G3D pointer defect remains outside that
+verification. To build original resource
 archives independently:
 
 ```sh

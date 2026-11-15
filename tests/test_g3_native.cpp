@@ -38,6 +38,23 @@ static void frame()
 static const uint8_t *center(){return rgba+(96*256+128)*4;}
 int main()
 {
+    // CPU send has a fixed destination, unlike CPU copy.
+    u32 sendWords[3]={11,22,33},ports[5]={91,92,93,94,95};
+    MIi_CpuSend32(sendWords,ports+1,sizeof sendWords);
+    assert(ports[0]==91&&ports[1]==33&&ports[2]==93&&ports[3]==94&&ports[4]==95);
+    // Packed opcodes and matrix parameters retain state across transfer chunks.
+    init();s_reg_GX_DISPCNT=0x10108;s_reg_GX_MASTER_BRIGHT=0;
+    G3Native_FifoWrite(0x1c10); // MTX_MODE then TRANSLATE
+    u32 mode=GX_MTXMODE_POSITION_VECTOR,translation[3]={4096,8192,12288};
+    MIi_CpuSend32(&mode,&reg_G3X_GXFIFO,4);
+    MIi_CpuSend32(translation,&reg_G3X_GXFIFO,4);
+    MIi_CpuSend32(translation+1,&reg_G3X_GXFIFO,8);
+    G3_PositionTest(0,0,0);
+    assert(s_reg_G3X_POS_RESULT_X==4096&&s_reg_G3X_POS_RESULT_Y==8192&&s_reg_G3X_POS_RESULT_Z==12288);
+    assert(s_reg_GX_DISPCNT==0x10108&&s_reg_GX_MASTER_BRIGHT==0);
+    G3Native_FifoWrite(0x10);G3X_ClearFifo(); // flush pending parameters with original zero writes
+    G3Native_FifoWrite(0x15);
+    assert(s_reg_GX_DISPCNT==0x10108);
     init();
     G3_Scale(8192,12288,16384);
     MtxFx33 direction;assert(G3X_GetVectorMtx(&direction)==0);

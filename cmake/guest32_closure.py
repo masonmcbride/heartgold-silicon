@@ -9,6 +9,45 @@ import subprocess
 from native_overlay_link import generate_contracts,interface,symbols
 
 
+def hardware_identities(game, codes):
+    """Check current consumer ABI against pinned, main-owned SDK definitions."""
+    from native_image_graph import parse_manifest
+    manifest = parse_manifest(game / 'main.lsf')
+    original_root = game / 'lib/NitroSDK/src/os'
+    hardware_contract={
+        'os_system.c':(
+            '1a7a0943c47895f84168d6718fdf9a75ccdd4e8e612367d2850659b33eeaef28',
+            {
+                '_guest32_OS_DisableInterrupts':((), 'i32'),
+                '_guest32_OS_RestoreInterrupts':(('i32',), 'i32'),
+            },
+        ),
+        'os_cache.c':(
+            '2cebb06f7ac51377299cac72bbeb29e0f1d624e1854905314ac993d123d29ccc',
+            {'_guest32_DC_InvalidateRange':(('ptr','i32'), 'void')},
+        ),
+    }
+    required = set()
+    for filename, (digest, identities) in hardware_contract.items():
+        source = original_root / filename
+        member = 'lib/NitroSDK/src/os/' + Path(filename).with_suffix('.o').name
+        owners = [name for name, image in manifest.items() if member in image['objects']]
+        if owners != ['main']:
+            raise ValueError('hardware original ownership drift: ' + member)
+        if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise ValueError('hardware original source drift: ' + str(source))
+        for symbol, (params, result) in identities.items():
+            name = symbol.removeprefix('_guest32_')
+            entries = [f for f in codes if f['key'] == name]
+            if not entries:
+                raise ValueError('hardware identity absent from current catalog: ' + symbol)
+            if any((tuple(f['params']), f['return'], f['varargs']) != (params, result, False)
+                   or f.get('local') or f.get('native') != symbol[1:] for f in entries):
+                raise ValueError('hardware signature drift: ' + symbol)
+            required.add(symbol)
+    return required
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--build',type=Path,required=True);p.add_argument('--compiler',required=True)
     p.add_argument('--image-root',type=Path,help='Jointly planned image directories named OVY_<id>')
@@ -36,47 +75,19 @@ def main():
     for archive in hardware:
         if not archive.is_file():
             raise ValueError('required Guest32 hardware archive missing: '+str(archive))
-    # Source-verified, hardware-owned Guest32 identities. These are not
-    # claims of original ARM instruction compilation.
-    original_root=Path(__file__).resolve().parents[1]/'upstream/pokeheartgold/lib/NitroSDK/src/os'
-    hardware_contract={
-        'os_system.c':(
-            '1a7a0943c47895f84168d6718fdf9a75ccdd4e8e612367d2850659b33eeaef28',
-            {
-                '_guest32_OS_DisableInterrupts':((), 'i32'),
-                '_guest32_OS_RestoreInterrupts':(('i32',), 'i32'),
-            },
-        ),
-        'os_cache.c':(
-            '2cebb06f7ac51377299cac72bbeb29e0f1d624e1854905314ac993d123d29ccc',
-            {'_guest32_DC_InvalidateRange':(('ptr','i32'), 'void')},
-        ),
-    }
-    frontier_path=b/'guest32-greedy-163.json'
-    if not frontier_path.is_file():
-        raise ValueError('hardware admission requires original frontier manifest')
-    frontier=json.loads(frontier_path.read_text())
-    required=set()
-    for filename,(digest,identities) in hardware_contract.items():
-        source=original_root/filename
-        if hashlib.sha256(source.read_bytes()).hexdigest()!=digest:
-            raise ValueError('hardware original source drift: '+str(source))
-        required.update(identities)
-    if not required.issubset(set(frontier['frontier'])):
-        raise ValueError('hardware identities absent from original frontier')
-    owners={}
-    for member in frontier['members']:
-        for symbol in member.get('symbols',[]):
-            if symbol not in required:continue
-            if symbol in owners:raise ValueError('duplicate original hardware owner: '+symbol)
-            owners[symbol]=member
-    for filename,(_,identities) in hardware_contract.items():
-        for symbol,(params,result) in identities.items():
-            if symbol not in owners:
-                raise ValueError('missing original hardware owner: '+symbol)
-            signature=owners[symbol]['guest_signatures'][symbol]
-            if (tuple(signature['params']),signature['return'],signature['varargs'])!=(params,result,False):
-                raise ValueError('hardware signature drift: '+symbol)
+    # Current source and consumer catalogs own admission. A historical greedy
+    # frontier is neither a declared build input nor evidence for this build.
+    game = Path(__file__).resolve().parents[1] / 'upstream/pokeheartgold'
+    codes = [f for archive in archives
+             for f in json.loads((archive.parent / 'image.json').read_text())['codes']]
+    required = hardware_identities(game, codes)
+    demanded = set()
+    for archive in archives:
+        report = subprocess.run(['nm', '-u', str(archive)], capture_output=True,
+                                text=True, check=True).stdout
+        demanded.update(line.split()[-1] for line in report.splitlines() if line.split())
+    if not required <= demanded:
+        raise ValueError('hardware identities absent from current image imports')
     exported={}
     for archive in hardware:
         result=subprocess.run(['nm','-gU',str(archive)],capture_output=True,text=True,check=True)
