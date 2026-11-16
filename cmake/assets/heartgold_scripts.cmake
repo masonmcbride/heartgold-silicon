@@ -1,6 +1,16 @@
 # Original field and battle script bytecode, using one assembler pipeline.
 foreach(hg_script_archive fielddata/script/scr_seq battledata/script/move_script battledata/script/subscript)
 get_filename_component(hg_script_name "${hg_script_archive}" NAME)
+if(hg_script_name STREQUAL "scr_seq")
+    set(hg_script_label "World & story")
+    set(hg_script_description "NPC interactions, cutscenes, map events and story progression")
+elseif(hg_script_name STREQUAL "move_script")
+    set(hg_script_label "Pokemon battle moves")
+    set(hg_script_description "attack execution, damage and move-specific effects")
+elseif(hg_script_name STREQUAL "subscript")
+    set(hg_script_label "Shared battle mechanics")
+    set(hg_script_description "status conditions, abilities, held items, healing and battle messages")
+endif()
 
 set(hg_script_source
     "${game_source}/files/${hg_script_archive}")
@@ -47,6 +57,7 @@ foreach(source IN LISTS hg_script_sources)
     add_custom_command(
         OUTPUT "${bin}"
         BYPRODUCTS "${hg_script_work}/${stem}.o"
+        COMMENT "Generating ${hg_script_label} script: ${stem}"
 
         COMMAND "${Python3_EXECUTABLE}"
             "${CMAKE_CURRENT_LIST_DIR}/build_heartgold_script.py"
@@ -77,7 +88,7 @@ hg_narc(heartgold_${hg_script_name}_assets "${hg_script_archive}"
 add_dependencies(heartgold_${hg_script_name}_assets heartgold_msg_assets)
 
 message(STATUS
-    "HeartGold: ${hg_script_count} original scripts configured")
+    "HeartGold: ${hg_script_label} - ${hg_script_count} scripts configured (${hg_script_description})")
 
 endforeach()
 add_custom_target(heartgold_script_assets DEPENDS heartgold_scr_seq_assets heartgold_move_script_assets heartgold_subscript_assets)

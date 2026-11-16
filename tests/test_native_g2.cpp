@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
+#include <ntr_host.h>
+#include <simulator/g3_handler.h>
 extern const u8 *G2Native_ComposeFrame();
 static unsigned lines;
 static void hblank()
@@ -36,5 +38,34 @@ int main()
     s_reg_GX_DISPSTAT|=16;pixels=G2Native_ComposeFrame();
     assert(lines==192 && pixels[0]==0 && pixels[(120*256+200)*4]==255 && pixels[(120*256+20)*4]==0);
     assert(s_reg_GX_VCOUNT==192 && (s_reg_GX_DISPSTAT&1));
-    puts("PASS original tile decoding, two screens, display swap and master brightness");
+    // The intro portrait uses a wrapped WIN0 range (left=1, right=0).
+    // Decode must retain its pixels for the native compositor's window pass.
+    OS_DisableIrqMask(OS_IE_H_BLANK);
+    s_reg_G2_WIN0H=0x0100;s_reg_G2_WIN0V=192;
+    s_reg_G2_WININ=1;s_reg_G2_WINOUT=0;
+    for(int colors=0;colors<2;++colors) {
+        s_reg_G2_BG0CNT=4|(colors?128:0);
+        std::memset(s_HW_BG_VRAM+0x4000,colors?1:0x11,64);
+        pixels=G2Native_ComposeFrame();
+        assert(pixels[0]==0 && pixels[100*4]==255 && pixels[100*4+1]==0);
+    }
+    // Real translucent 3D over a blue BG1. Intro uses second targets only,
+    // with zero BLDALPHA coefficients; 3D alpha must still blend over BG1.
+    G3Native_Reset();G3_MtxMode(GX_MTXMODE_PROJECTION);G3_Identity();
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);G3_Identity();
+    s_reg_G3X_CLEAR_COLOR=0;s_reg_G3X_CLEAR_DEPTH=32767;s_reg_G3X_DISP3DCNT=8;
+    G3_Direct1(G3OP_TEXIMAGE_PARAM,0);
+    G3_PolygonAttr(0,GX_POLYGONMODE_MODULATE,GX_CULL_NONE,0,16,0);
+    G3_Color(GX_RGB(31,0,0));G3_Begin(GX_BEGIN_QUADS);
+    G3_Vtx(-4096,-4096,0);G3_Vtx(4096,-4096,0);
+    G3_Vtx(4096,4096,0);G3_Vtx(-4096,4096,0);G3_End();
+    G3_SwapBuffers(GX_SORTMODE_MANUAL,GX_BUFFERMODE_Z);G3Native_RenderFrame();
+    s_reg_GX_DISPCNT=(1<<16)|(1<<8)|(1<<9)|8;
+    s_reg_G2_BG0CNT=0;s_reg_G2_BG1CNT=5;s_reg_G2_BG1OFS=0;
+    std::memset(s_HW_BG_VRAM+0x4000,0x11,32);
+    ((u16 *)s_HW_BG_PLTT)[1]=GX_RGB(0,0,31);
+    s_reg_G2_BLDCNT=(1<<6)|(1<<9);s_reg_G2_BLDALPHA=0;
+    pixels=G2Native_ComposeFrame();const u8 *center=pixels+(96*256+128)*4;
+    assert(center[0]>=120 && center[0]<=140 && center[1]==0 && center[2]>=110 && center[2]<=140);
+    puts("PASS native layers, windows and translucent 3D over a second-target background");
 }

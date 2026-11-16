@@ -91,4 +91,4 @@ add_custom_command(
 add_custom_target(heartgold_msg_assets DEPENDS "${hg_narc}" "${hg_naix}")
 
 list(LENGTH hg_gmms hg_count)
-message(STATUS "HeartGold: ${hg_count} message sources configured")
+message(STATUS "HeartGold: Dialogue & interface - ${hg_count} text banks configured (NPC conversations, battle messages, menus, Pokedex and item descriptions)")

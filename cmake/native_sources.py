@@ -520,11 +520,12 @@ COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLB
 # no later coordinated or compiler adaptation. Selection must include them.
 PRISTINE_COMPAT = json.loads(Path(__file__).with_name("native_pristine_compat.json").read_text())
 
+MAIN_NATIVE_SOURCES += ("lib/src/spl_draw_ptcl.c",)
 OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c", "lib/libVCT/src/vct_packet_buffer.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
-OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c",)))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c", "src/intro_movie_scene_4.c")))
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in PRISTINE_COMPAT if not p.endswith(".h"))))
 
@@ -738,6 +739,22 @@ def replace_regex_native(text, pattern, replacement, expected=1):
     return result
 
 def _adapt(relative, text, root):
+    if relative == 'lib/src/spl_draw_ptcl.c':
+        if hashlib.sha256(text.encode()).hexdigest() != '751714974580317bbf57a9df491b5f531ed50adea59fa4bec580f44042ed8c5d':
+            raise ValueError('Original SPL GX port source changed')
+        # Repeated stores to a DS matrix port are one three-word command.
+        for register,opcode,count in [('MTX_SCALE','MTX_SCALE',1),('MTX_TRANS','MTX_TRANS',8)]:
+            pattern=(r'reg_G3_'+register+r' = ([^;]+);\s*reg_G3_'+register+
+                     r' = ([^;]+);\s*reg_G3_'+register+r' = ([^;]+);')
+            text=replace_regex_native(text,pattern,
+                lambda m:'G3_Direct3(G3OP_'+opcode+', '+', '.join(m.groups())+');',count)
+        for register,opcode,count in [('TEXCOORD','TEXCOORD',1),('VTX_10','VTX_10',1),
+                ('BEGIN_VTXS','BEGIN',2),('POLYGON_ATTR','POLYGON_ATTR',8),('COLOR','COLOR',8)]:
+            text=replace_regex_native(text,r'\breg_G3_'+register+r' = ([^;]+);',
+                lambda m:'G3_Direct1(G3OP_'+opcode+', '+m[1]+');',count)
+        for register,opcode,count in [('END_VTXS','END',2),('MTX_IDENTITY','MTX_IDENTITY',12)]:
+            text=replace(text,'reg_G3_'+register+' = 0;','G3_Direct0(G3OP_'+opcode+');',count)
+        return text
     if relative in ("lib/NitroSystem/src/g3d_gecom.c", "lib/NitroSystem/src/g3d_sbc.c"):
         # Lower C lvalue writes to the same native GX ports as SDK inline calls.
         # Command values, ordering, buffering and Nintendo's draw logic remain.
@@ -1158,6 +1175,14 @@ def native_socket_state(text):
 
 
 def adapt_original(relative, text, root):
+    if relative == 'src/intro_movie_scene_4.c':
+        if hashlib.sha256(text.encode()).hexdigest() != '3b35b82ba7a24d839848f1ff3742a52124fb6a52e8d38cd367a551293e41af3a':
+            raise ValueError('Original Scene 4 particle workspace source changed')
+        text=replace(text, '#include "global.h"', '#include "global.h"\n#include "particle_capacity.h"')
+        text=replace(text, 'Heap_Alloc(HEAP_ID_INTRO_MOVIE, 0x4800)',
+                     'Heap_Alloc(HEAP_ID_INTRO_MOVIE, HG_INTRO_PARTICLE_WORK_BYTES)')
+        return replace(text, 'sceneData->particleHeap, 0x4800, TRUE, HEAP_ID_INTRO_MOVIE)',
+                       'sceneData->particleHeap, HG_INTRO_PARTICLE_WORK_BYTES, TRUE, HEAP_ID_INTRO_MOVIE)')
     if relative == 'src/system_card.c':
         if hashlib.sha256(text.encode()).hexdigest() != 'cc107d94d9d33f6c55a92492ea971af13d8a0da2d4cef65deac7f2b7b2e4c3d7':
             raise ValueError('Original system-card source changed')

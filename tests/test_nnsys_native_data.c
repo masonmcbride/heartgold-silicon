@@ -12,6 +12,9 @@
 #include <string.h>
 #include <dlfcn.h>
 #include "sprite.h"
+#include "particle_capacity.h"
+#include "library/spl_internal.h"
+#include <ntr_host.h>
 
 _Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteAnimationData), "sprite cell animation storage");
 _Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteAnimationDataWithTransfer), "sprite transfer animation storage");
@@ -19,6 +22,69 @@ _Static_assert(sizeof(((Sprite *)0)->animationData) >= sizeof(SpriteMultiAnimati
 _Static_assert(offsetof(Sprite, animationData) % _Alignof(SpriteMultiAnimationData) == 0, "sprite animation alignment");
 
 #define check(value) do { if (!(value)) { fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, #value); abort(); } } while (0)
+static _Alignas(8) unsigned char particleWork[HG_INTRO_PARTICLE_WORK_BYTES + 32];
+static size_t particleUsed;
+static void *particle_alloc(u32 size) {
+    size_t extent=(size+3u)&~3u;
+    check(extent < HG_INTRO_PARTICLE_WORK_BYTES-particleUsed);
+    void *result=particleWork+particleUsed;
+    check(((uintptr_t)result&7)==0);
+    particleUsed+=extent;
+    return result;
+}
+static u32 le32(const unsigned char *p) {
+    return p[0]|(u32)p[1]<<8|(u32)p[2]<<16|(u32)p[3]<<24;
+}
+static void particle_workspace(const char *path) {
+    FILE *file=fopen(path,"rb");check(file);
+    check(!fseek(file,0,SEEK_END));long length=ftell(file);check(length>16);
+    rewind(file);unsigned char *archive=malloc(length);check(archive);
+    check(fread(archive,1,length,file)==(size_t)length);fclose(file);
+    check(!memcmp(archive,"NARC",4));
+    size_t fat=0,data=0;
+    for(size_t offset=16;offset<(size_t)length;) {
+        check(offset+8<=(size_t)length);u32 size=le32(archive+offset+4);
+        check(size>=8 && size<=(size_t)length-offset);
+        if(!memcmp(archive+offset,"BTAF",4)){check(size>=12+5*8);fat=offset+12;}
+        if(!memcmp(archive+offset,"GMIF",4))data=offset+8;
+        offset+=size;
+    }
+    check(fat && data);
+    u32 first=le32(archive+fat+4*8),last=le32(archive+fat+4*8+4);
+    check(first<last && last<=(size_t)length-data);
+    const unsigned char *resource=archive+data+first;
+    check(last-first==13368 && resource[8]==9 && resource[9]==0 && resource[10]==9 && resource[11]==0);
+    memset(particleWork,0xa5,sizeof particleWork);particleUsed=0;
+    SPLManager *manager=SPL_Init(particle_alloc,20,200,5,6,63);
+    // The original fixed reservation is already too small before SPL_Load.
+    check(particleUsed>0x4800);
+    check(manager->max_emtr_num==20 && manager->max_ptcl_num==200);
+    SPL_Load(manager,resource);
+    check(manager->res_num==9 && manager->tex_num==9);
+    check(particleUsed<HG_INTRO_PARTICLE_WORK_BYTES);
+    for(size_t i=HG_INTRO_PARTICLE_WORK_BYTES;i<sizeof particleWork;++i)check(particleWork[i]==0xa5);
+    printf("Original Scene 4 SPL init/load: %zu bytes used in %u-byte native workspace\n",particleUsed,(unsigned)HG_INTRO_PARTICLE_WORK_BYTES);
+    free(archive);
+}
+static void particle_quad(void) {
+    // Draw Nintendo's actual SPL quad through the native command receiver.
+    G3Native_Reset();
+    G3_MtxMode(GX_MTXMODE_PROJECTION);G3_Identity();
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);G3_Identity();
+    s_reg_G3X_CLEAR_DEPTH=32767;s_reg_G3X_CLEAR_COLOR=31u<<16;
+    s_reg_G3X_DISP3DCNT=0;
+    G3_Direct1(G3OP_TEXIMAGE_PARAM,0);
+    G3_PolygonAttr(0,GX_POLYGONMODE_MODULATE,GX_CULL_NONE,0,31,0);
+    G3_Color(GX_RGB(31,0,0));
+    drawXYPlane(0,0,0,0);
+    G3_SwapBuffers(GX_SORTMODE_MANUAL,GX_BUFFERMODE_Z);
+    G3Native_RenderFrame();
+    unsigned char *pixels=malloc(256*192*4);check(pixels);
+    check(HG_G3Readback(pixels,256*4));
+    unsigned char *center=pixels+(96*256+128)*4;
+    check(center[0]>=245 && center[1]==0 && center[2]==0);
+    free(pixels);
+}
 static void alias(const char *name, const void *owner) {
     check(dlsym(RTLD_DEFAULT, name) == owner);
 }
@@ -33,7 +99,9 @@ static BOOL record_transfer(NNS_GFD_DST_TYPE type, u32 dst, void *src, u32 size)
     queued++;
     return TRUE;
 }
-int main(void) {
+int main(int argc, char **argv) {
+    check(argc==2);particle_workspace(argv[1]);
+    particle_quad();
     /* Original animation initialization must preserve the adjacent image proxy.
      * On ARM64 its pointer-bearing records overflowed the old 29-word buffer. */
     Sprite sprite = {0};

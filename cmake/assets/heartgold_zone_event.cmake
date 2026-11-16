@@ -82,4 +82,4 @@ hg_narc(heartgold_zone_event_assets "fielddata/eventdata/zone_event"
     "${hg_zone_build}" ${hg_zone_binaries})
 
 message(STATUS
-    "HeartGold: ${hg_zone_count} original zone-event members configured")
+    "HeartGold: Map interactions - ${hg_zone_count} map-event layouts configured (NPC/object placement, door and stair warps, signs and coordinate triggers)")

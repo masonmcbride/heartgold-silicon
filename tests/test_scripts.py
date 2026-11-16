@@ -80,6 +80,51 @@ class BuildProgress(unittest.TestCase):
                     'import sys; sys.stdout.write("x"*100000); sys.stderr.write("y"*100000)'])
             self.assertEqual((runner.logs/'pipes.log').stat().st_size, 200000)
 
+    def test_make_progress_and_expensive_activity_are_visible_in_pipes(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            runner = progress.Runner(directory)
+            output = io.StringIO()
+            lines = ['[ 32%] Building C object main.o',
+                     '[ 79%] Generating provider-closure170/complete.stamp',
+                     'described 100 / 836',
+                     '[100%] Built target heartgold_guest32_provider_closure',
+                     '[100%] Linking CXX executable heartgold']
+            with contextlib.redirect_stdout(output):
+                runner.run('Native build', [sys.executable, '-c',
+                    'print(' + repr('\n'.join(lines)) + ')'])
+            text = output.getvalue()
+            self.assertIn('graph 32%', text)
+            self.assertIn('CPU-heavy: provider compilation', text)
+            self.assertIn('described 100 / 836', text)
+            self.assertIn('Executable linkage', text)
+            self.assertNotIn('\x1b', text)
+
+    def test_terminal_bar_uses_make_percent(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            runner = progress.Runner(directory)
+            runner.tty = True
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                runner.run('Native build', [sys.executable, '-c',
+                    'import time; print("[ 37%] Building C object main.o", flush=True); time.sleep(0.2)'])
+            self.assertIn('37%', output.getvalue())
+            self.assertIn('step ', output.getvalue())
+
+    def test_compact_terminal_keeps_recent_filenames_and_complete_log(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            runner = progress.Runner(directory)
+            runner.tty = True
+            output = io.StringIO()
+            lines = '\n'.join('[ 37%] Building C object CMakeFiles/game.dir/src/'+name+'.c.o'
+                              for name in ['old', 'battle', 'party', 'pokedex'])
+            with contextlib.redirect_stdout(output):
+                runner.run('Native build', [sys.executable, '-c',
+                    'import time; print('+repr(lines)+', flush=True); time.sleep(0.2)'])
+            for name in ['battle.c', 'party.c', 'pokedex.c']:
+                self.assertIn(name, output.getvalue())
+            self.assertIn('\x1b[3A', output.getvalue())
+            self.assertIn('old.c.o', (runner.logs/'native-build.log').read_text())
+
 
 class InitializerConversion(unittest.TestCase):
     def test_battle_equ_constants_preserve_values(self):

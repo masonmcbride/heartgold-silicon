@@ -7,10 +7,42 @@ import os
 from pathlib import Path
 import re
 import selectors
+import shutil
 import signal
 import subprocess
 import sys
 import time
+
+
+def build_activity(line):
+    """Recognize actual Make/compiler output without estimating CPU work."""
+    if 'semantic slots:' in line:
+        return 'CPU-heavy: pointer/ABI analysis'
+    if ('provider-closure170/complete.stamp' in line or
+            re.match(r'^(described|frontend)\s+\d+', line)):
+        return 'CPU-heavy: provider compilation'
+    if 'guest32-shared/complete' in line:
+        return 'CPU-heavy: native-image compiler'
+    if 'Linking ' in line:
+        return ('Native image linkage' if 'heartgold_image_' in line else
+                'Executable linkage' if line.endswith(' heartgold') else 'Linking')
+    if 'Native overlay preflight' in line:
+        return 'Image/import validation'
+    if 'Generating generated/' in line:
+        return 'Assets: conversion/archive'
+    if 'Generating ' in line:
+        return 'Source generation'
+    if 'Building ' in line:
+        return 'Compiling'
+    return None
+
+
+def build_file(line):
+    match = re.search(r'Building \S+ object .+?\.dir/(.+)\.o$', line)
+    if match:
+        return match[1]
+    match = re.search(r'(?:Generating|Linking (?:CXX|C|ASM) (?:executable|shared library|static library)) (.+)$', line)
+    return match[1] if match else None
 
 
 class Runner:
@@ -29,7 +61,17 @@ class Runner:
         errors = deque(maxlen=15)
         progress = None
         label = stage
+        activity_start = start
+        heavy = False
+        last_bucket = -1
         milestones = set()
+        recent_files = deque(maxlen=3)
+        panel_lines = 0
+        def clear_display():
+            nonlocal panel_lines
+            if panel_lines:
+                print('\r' + (f'\033[{panel_lines-1}A' if panel_lines > 1 else '') + '\033[J', end='', flush=True)
+                panel_lines = 0
         child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                  env=env, start_new_session=True)
         previous = {}
@@ -66,31 +108,64 @@ class Runner:
                                 errors.append(line)
                             if self.verbose:
                                 print(line, flush=True)
-                            ninja = re.search(r'\[HG:(\d+)/(\d+)\]', line)
+                            elif line.startswith('-- HeartGold:'):
+                                if self.tty:
+                                    clear_display()
+                                print(line, flush=True)
+                            filename = build_file(line) if stage == 'Native build' else None
+                            if filename and (not recent_files or recent_files[-1] != filename):
+                                recent_files.append(filename)
+                            counter = re.search(r'\[HG:(\d+)/(\d+)\]', line)
+                            make = re.search(r'\[\s*(\d+)%\]', line)
                             test = re.search(r'(\d+)/(\d+) Test\s*#', line)
-                            match = ninja or test
+                            match = counter or test
                             if match:
                                 progress = tuple(map(int, match.groups()))
-                            if ninja:
-                                if 'Linking ' in line:
-                                    label = ('Overlay linkage' if 'native-overlays/' in line else
-                                             'Executable linkage' if line.endswith(' heartgold') else 'Linking')
-                                elif 'Generating ' in line:
-                                    label = 'Source generation'
-                                elif 'Building ' in line:
-                                    label = 'Compiling'
-                                if not self.tty and not self.verbose and label != stage and label not in milestones:
-                                    print(label, flush=True)
+                            if make:
+                                percent = int(make[1])
+                                progress = (max(percent, progress[0] if progress else 0), 100)
+                            if 'Built target heartgold_guest32_provider_closure' in line:
+                                heavy = False
+                            activity = build_activity(line) if stage == 'Native build' else None
+                            if activity and (not heavy or activity.startswith('CPU-heavy:')):
+                                if activity != label:
+                                    if label.startswith('CPU-heavy:') and not self.verbose:
+                                        clear_display()
+                                        print(f'{label}: observed {time.monotonic()-activity_start:.1f}s wall time', flush=True)
+                                    label = activity
+                                    activity_start = time.monotonic()
+                                    if self.verbose and label.startswith('CPU-heavy:'):
+                                        print(f'{label} | {time.monotonic()-start:.1f}s elapsed', flush=True)
+                                heavy = activity.startswith('CPU-heavy:')
+                            if not self.tty and not self.verbose:
+                                bucket = (progress[0]*10//progress[1]) if progress and progress[1] else -1
+                                detail = re.match(r'^(semantic slots:|described\s+\d+|frontend\s+\d+)', line)
+                                if label not in milestones or bucket > last_bucket or detail:
+                                    percent = (f' | graph {progress[0]*100//progress[1]}%' if progress and stage == 'Native build'
+                                               else f' | tests {progress[0]}/{progress[1]}' if progress and stage == 'Testing' else '')
+                                    message = line if detail else label
+                                    print(f'{message}{percent} | {time.monotonic()-start:.1f}s elapsed', flush=True)
                                     milestones.add(label)
+                                last_bucket = max(last_bucket, bucket)
                     if self.tty:
                         elapsed = time.monotonic() - start
                         if progress and progress[1]:
                             done, total = progress
-                            width = min(24, 24 * done // total)
-                            display = f"[{'=' * width}{' ' * (24-width)}] {100*done//total:3}% {done}/{total}"
+                            bar = 14
+                            width = min(bar, bar * done // total)
+                            count = '' if stage == 'Native build' else f' {done}/{total}'
+                            display = f"[{'=' * width}{' ' * (bar-width)}] {100*done//total:3}%{count}"
                         else:
                             display = '|/-\\'[int(elapsed * 5) % 4]
-                        print(f'\r\033[2K{label:<18} {display} | {elapsed:.1f}s elapsed', end='', flush=True)
+                        kind = ' graph' if stage == 'Native build' else ''
+                        columns = max(40, shutil.get_terminal_size((110, 24)).columns) - 1
+                        rows = [f'{label} {display}{kind} | step {time.monotonic()-activity_start:.0f}s / stage {elapsed:.0f}s']
+                        rows += [('  `- ' if i == len(recent_files)-1 else '  |- ') + name
+                                 for i, name in enumerate(recent_files)]
+                        rows = [row if len(row) <= columns else row[:columns-4]+' ...' for row in rows]
+                        clear_display()
+                        print('\n'.join(rows), end='', flush=True)
+                        panel_lines = len(rows)
                 if pending:
                     tail.append(pending.decode(errors='replace'))
                     if self.verbose:
@@ -111,7 +186,7 @@ class Runner:
             for signum, handler in previous.items():
                 signal.signal(signum, handler)
             if self.tty:
-                print('\r\033[2K', end='', flush=True)
+                clear_display()
         self.timings[stage] = round(time.monotonic() - start, 3)
         (self.logs / 'timings.json').write_text(json.dumps(self.timings, indent=2) + '\n')
         print(f'{stage}: {"FAILED" if status else "complete"} ({self.timings[stage]:.1f}s)', flush=True)
@@ -167,13 +242,16 @@ def main():
     print('Dependencies: both exact pins verified; pristine working trees.', flush=True)
     runner.run('Source audit', [sys.executable, '-B', str(root / 'cmake/native_sources.py'),
         '--audit', '--root', str(root / 'upstream/pokeheartgold'), '--output', str(build / 'source-audit.json')])
+    print('Build percentages count graph actions, not CPU time; parallel work overlaps. Full output is retained in logs/native-build.log.', flush=True)
     runner.run('Native build', ['cmake', '--build', str(build), '--parallel', '8'])
     runner.run('Symbol closure', [sys.executable, '-B', str(root / 'cmake/native_dynamic_closure.py'),
         str(build / 'heartgold'), '--report', str(build / 'native-overlays/dynamic-closure.json')])
     closure = json.loads((build / 'native-overlays/dynamic-closure.json').read_text())
     if closure['application_images'] != 121 or closure['missing']:
         raise SystemExit('Expected 121 application images and zero missing strong bindings')
+    print(f"Bindings: {closure['application_images']} native images, {closure['strong_application_imports']} required application imports, 0 missing.", flush=True)
     runner.run('ARM64 executable', ['lipo', str(build / 'heartgold'), '-verify_arch', 'arm64'])
+    print('Tests include a brief red/blue desktop window after compilation.', flush=True)
     runner.run('Testing', ['ctest', '--test-dir', str(build), '--output-on-failure', '--parallel', '8'])
     if os.environ.get('HEARTGOLD_CARTRIDGE'):
         runner.run('Runtime diagnostic', [str(build / 'heartgold'),
@@ -181,6 +259,9 @@ def main():
         print('Runtime exited; Scene 3 requires diagnostic evidence in the runtime log.', flush=True)
     else:
         print('Runtime: not tested (HEARTGOLD_CARTRIDGE is absent).', flush=True)
+    print('Stage wall times (not CPU samples):', flush=True)
+    for stage, seconds in sorted(runner.timings.items(), key=lambda item: item[1], reverse=True):
+        print(f'  {stage}: {seconds:.1f}s', flush=True)
     print(f"Executable: {build / 'heartgold'}\nTotal: {time.monotonic()-start+bootstrap:.1f}s\nLogs: {runner.logs}", flush=True)
 
 

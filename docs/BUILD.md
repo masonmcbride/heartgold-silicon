@@ -19,7 +19,17 @@ The build audits sources, compiles all default targets, checks ARM64 and
 121-image strong-symbol closure, then runs CTest. The production generator is
 Unix Makefiles; redirected output contains milestones without terminal escapes. Complete
 diagnostics and timings are in `<binary>/logs/`. Failures retain their exit
-status and build state. Set `HEARTGOLD_CARTRIDGE` (and, when required,
+status and build state. Interactive builds show Make graph progress, elapsed
+activity/stage time, and labels for CPU-heavy ABI analysis and provider
+compilation. Graph percentages count build actions, not CPU work: a long compiler
+action can continue while the percentage stays fixed. Redirected output retains
+milestones. The normal terminal view updates in place with three recent filenames;
+up-to-date targets do not each produce a permanent line. `./build.sh --verbose`
+streams every compiler, linker, and test line instead; complete output is always
+retained in the logs.
+The final summary lists stage wall times; `logs/timings.json` stores them.
+The maintained desktop test briefly opens a red/blue window after compilation.
+Set `HEARTGOLD_CARTRIDGE` (and, when required,
 `HEARTGOLD_FIRMWARE`) to attempt a bounded runtime diagnostic. A diagnostic exit
 alone does not prove Scene 3 or playable gameplay. The known native pointer-width
 runtime problem remains unresolved. `heartgold_cartridge` is a separate source

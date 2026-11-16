@@ -28,9 +28,21 @@ def run(cmd):
     if r.returncode:raise RuntimeError(r.stderr[-7000:])
     return r.stdout
 source=root/'tests/test_nnsys_native_data.c';objects=[]
+# Both the allocation and the original particle allocator must use the same
+# capacity, and the production graph must compile that adapted owner.
+scene4=build/'native/src/intro_movie_scene_4.c'
+scene4_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
+                if e['file'].endswith('/src/intro_movie_scene_4.c')]
+assert scene4_entries and all(Path(e['file'])==scene4 for e in scene4_entries)
+assert scene4.read_text().count('HG_INTRO_PARTICLE_WORK_BYTES')==2
+particle_draw=build/'native/lib/src/spl_draw_ptcl.c'
+draw_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
+              if e['file'].endswith('/lib/src/spl_draw_ptcl.c')]
+assert draw_entries and all(Path(e['file'])==particle_draw for e in draw_entries)
 # Instrument actual original consumers. Data is the actual production archive,
 # preserving native relocations and aliases rather than reimplementing records.
 sources=[source,build/'native/lib/NitroSystem/src/g2d_cell_transfer_manager.c',
+         build/'native/lib/src/spl_draw_ptcl.c',
          root/'upstream/pokeheartgold/lib/NitroSystem/src/g2d_renderer_mtx_stack.c',
          root/'upstream/pokeheartgold/lib/NitroSystem/src/g2d_renderer_identity.c',
          build/'native/lib/NitroSystem/src/g3d_kernel.c']
@@ -61,7 +73,7 @@ exports.write_text(''.join('_'+name+'\n' for name in sorted(set(re.findall(r'ali
 run([args[0],'-arch','arm64','-fsanitize=address,undefined','-Wl,-dead_strip','-Wl,-export_dynamic',
      '-Wl,-exported_symbols_list,'+str(exports),
      *objects,*libraries,*platform_flags,'-lc++','-o',str(work/'test')])
-print(run([str(work/'test')]),end='')
+print(run([str(work/'test'),str(root/'upstream/pokeheartgold/files/a/0/5/9')]),end='')
 tables=build/'CMakeFiles/heartgold_runtime.dir/g3-probe/nnsys_tables.c.o'
 relocations=run(['otool','-rv',str(tables)])
 for name in ['_NNSi_G3dAnmObjInitNsBma','_NNSi_G3dAnmObjInitNsBtp',

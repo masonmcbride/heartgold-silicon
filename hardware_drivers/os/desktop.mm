@@ -119,6 +119,8 @@ extern "C" int HG_RuntimeInitialize(HG_PCMRender render)
         format.mBytesPerPacket=4;format.mFramesPerPacket=1;format.mBytesPerFrame=4;format.mChannelsPerFrame=2;format.mBitsPerChannel=16;
         OSStatus error=AudioQueueNewOutput(&format,consume,nullptr,nullptr,nullptr,0,&audio);
         if(error){fprintf(stderr,"HeartGold AudioQueue initialization failed: %d\n",(int)error);HG_RuntimeShutdown();return 0;}
+        error=AudioQueueSetParameter(audio,kAudioQueueParam_Volume,0.25f);
+        if(error){fprintf(stderr,"HeartGold AudioQueue volume failed: %d\n",(int)error);HG_RuntimeShutdown();return 0;}
         for(int i=0;i<3;++i){AudioQueueBufferRef buffer;error=AudioQueueAllocateBuffer(audio,2048,&buffer);if(error){HG_RuntimeShutdown();return 0;}consume(nullptr,audio,buffer);}
         error=AudioQueueStart(audio,nullptr);
         if(error){fprintf(stderr,"HeartGold AudioQueue start failed: %d\n",(int)error);HG_RuntimeShutdown();return 0;}
