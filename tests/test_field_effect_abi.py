@@ -19,7 +19,7 @@ for flag in args[1:]:
     if skip:skip=False;continue
     if flag in ('-o','-MF','-MT','-MQ'):skip=True;continue
     if flag not in ('-c','-MD','-MMD',entry['file']):flags.append(flag)
-# Keep Nintendo's release/assert configuration; test assertions are explicit.
+# Keep Nintendo's assertion configuration; fixture failures terminate the test.
 source=work/'test.c'
 source.write_text((build/'native/src/field_effects.c').read_text()+'''
 #include <stdlib.h>
@@ -30,10 +30,12 @@ source.write_text((build/'native/src/field_effects.c').read_text()+'''
 #include <map_object_follow_internal.h>
 #include <field/field_effect_manager_internal.h>
 #include <field/field_3d_object_task.h>
+#include <field/map_object_render_internal.h>
 #include <field/encounter_effect.h>
 #include <overlay_manager.h>
 #include <stddef.h>
 static void check(int good) { if (!good) abort(); }
+void GF_AssertFail(void) { abort(); }
 _Static_assert(sizeof(SavedMapObject)==80 && offsetof(SavedMapObject,movementData)==48,"fixed DS save format");
 _Static_assert(sizeof(FieldEffectBasicTemplate)==40 && offsetof(FieldEffectBasicTemplate,init)==8,"native effect template");
 _Static_assert(sizeof(FieldEffectRendererTemplate)==24 && offsetof(FieldEffectRendererTemplate,init)==8,"native renderer record");
@@ -52,6 +54,19 @@ _Static_assert(_Generic(&EmoteMark_Spawn, struct FieldEffect *(*)(LocalMapObject
 _Static_assert(_Generic(&SurfMountEffect_Create, struct FieldEffect *(*)(LocalMapObject *,u32,u32,u32,BOOL):1,default:0), "Surf result ABI");
 _Static_assert(sizeof(HiddenObjectMovementState)<=16,"hidden native state fits unchanged work buffer");
 int main(void) {
+    MapObjectManager *manager=calloc(1,sizeof(*manager));check(manager!=NULL);
+    LocalMapObject rendererObject={0};rendererObject.manager=manager;
+    FieldSystem *expectedField=(FieldSystem *)&rendererObject;
+    manager->objects=&rendererObject;manager->fieldSystem=expectedField;
+    _Static_assert(_Generic(((MapObjectManager *)0)->render,struct MapObjectRender:1,default:0),"renderer is an embedded native object");
+    MapObjectRender *render=MapObjectManager_GetRender(manager);
+    check(render==&manager->render && (uintptr_t)render%_Alignof(MapObjectRender)==0);
+    // Exercise the entire renderer footprint, including its final pointer.
+    // The former DS-sized reservation overwrote both following members.
+    memset(render,0x5a,sizeof(*render));render->manager=manager;
+    check(manager->objects==&rendererObject && manager->fieldSystem==expectedField);
+    check(MapObject_GetFieldSystem(&rendererObject)==expectedField);
+    free(manager);
     FieldEffect *effect=calloc(1,sizeof(*effect));
     check(effect && (uintptr_t)effect>UINT32_MAX);
     expected=effect;
@@ -95,6 +110,13 @@ def run(command):
 for i,path in enumerate(paths):
     obj=work/f'{i}.o';objects.append(str(obj))
     run([args[0],*flags,'-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-c',str(path),'-o',str(obj)])
+# Both direct and recursive inclusion must expose the same complete layout.
+for i,headers in enumerate([['map_object.h','field/map_object_render_internal.h'],
+                          ['field/map_object_render_internal.h','map_object.h']]):
+    probe=work/f'renderer_headers_{i}.c'
+    probe.write_text(''.join(f'#include <{h}>\n' for h in headers)+
+        '_Static_assert(sizeof(((MapObjectManager *)0)->render)==sizeof(struct MapObjectRender),"native embedded extent");\n')
+    run([args[0],*flags,'-fsyntax-only',str(probe)])
 run([args[0],'-arch','arm64','-fsanitize=address,undefined','-Wl,-dead_strip',*objects,'-o',str(work/'test')])
 print(run([str(work/'test')]),end='')
 # Check every original typed field-effect callback state against the native

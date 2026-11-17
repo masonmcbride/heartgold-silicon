@@ -183,6 +183,7 @@ provider.write_text(r'''
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+void GF_AssertFail(void) { abort(); }
 static SysTaskQueue *queue;
 static SysTask *created[2];
 static unsigned runs[2], removed;

@@ -13,6 +13,7 @@
 #include <dlfcn.h>
 #include "sprite.h"
 #include "particle_capacity.h"
+#include "timer_3.h"
 #include "library/spl_internal.h"
 #include <ntr_host.h>
 
@@ -99,8 +100,51 @@ static BOOL record_transfer(NNS_GFD_DST_TYPE type, u32 dst, void *src, u32 size)
     queued++;
     return TRUE;
 }
+extern void TestNativePalette(const char *, const char *);
+extern void TestNativeCharacter(const char *);
+extern void TestNativeCells(const char *, unsigned);
+extern void TestNativeMapProps(void);
+extern vu64 gTimer3Overflows;
+static void timer3_register_read(void) {
+    check((uintptr_t)&reg_OS_TM3CNT_L>UINT32_MAX);
+    volatile u16 *counts[]={&reg_OS_TM0CNT_L,&reg_OS_TM1CNT_L,&reg_OS_TM2CNT_L,&reg_OS_TM3CNT_L};
+    volatile u16 *controls[]={&reg_OS_TM0CNT_H,&reg_OS_TM1CNT_H,&reg_OS_TM2CNT_H,&reg_OS_TM3CNT_H};
+    reg_OS_IF=OS_IE_TIMER3;
+    for (unsigned i=0;i<4;++i) {
+        OS_SetTimerCount((OSTimer)i,0x1200+i);
+        OS_SetTimerControl((OSTimer)i,0x3400+i);
+    }
+    for (unsigned i=0;i<4;++i) {
+        check(*counts[i]==0x1200+i && *controls[i]==0x3400+i);
+        *controls[i]=0;
+    }
+    check(reg_OS_IF==OS_IE_TIMER3);
+    // Use the real mapped registers and original tick routine, without
+    // starting a game or substituting the clock with a host timestamp.
+    reg_OS_IF=0;
+    gTimer3Overflows=7;
+    OS_SetTimerCount(OS_TIMER_3,0x1234);
+    check(GetTimer3Ticks()==((UINT64_C(7)<<16)|0x1234));
+    reg_OS_IF=OS_IE_TIMER3;
+    check(GetTimer3Ticks()==((UINT64_C(8)<<16)|0x1234));
+    OS_SetTimerCount(OS_TIMER_3,0x8000);
+    check(GetTimer3Ticks()==((UINT64_C(7)<<16)|0x8000));
+    reg_OS_IF=0;
+    gTimer3Overflows=UINT64_C(0xffff000000000002);
+    check(GetTimer3Ticks()==((UINT64_C(2)<<16)|0x8000));
+    check(Timer3TicksToSeconds(OS_SYSTEM_CLOCK)==64);
+    gTimer3Overflows=0;
+    puts("Original Timer3 native register read, pending overflow correction and tick conversion passed");
+}
 int main(int argc, char **argv) {
-    check(argc==2);particle_workspace(argv[1]);
+    timer3_register_read();
+    check(argc==8);particle_workspace(argv[1]);
+    TestNativePalette(argv[2],argv[3]);
+    TestNativeCharacter(argv[4]);
+    TestNativeCells(argv[5],0);
+    TestNativeCells(argv[6],0);
+    TestNativeCells(argv[7],1);
+    TestNativeMapProps();
     particle_quad();
     /* Original animation initialization must preserve the adjacent image proxy.
      * On ARM64 its pointer-bearing records overflowed the old 29-word buffer. */

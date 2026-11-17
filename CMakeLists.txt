@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d2947303134256e90144b6aaedc5c3cf6a593d2)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT d7a007d9e5c0e9693b59a8e8ecd323e480b73004)
+set(LIBNTR_COMMIT 7e7f0b833f09556dce3cc6a9505cc337a96ea52d)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"

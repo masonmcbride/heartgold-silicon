@@ -503,6 +503,31 @@ ARM_INLINE_OPERATIONS = {
 # Bounded explicit soft-float calls: positive exact integers plus 0.5, then truncation.
 # Both long-multiply operands originate as s32, so their product fits s64.
 COMPILER_BOUNDED_OPERATIONS = {
+    'src/render_window_icons.c': ('8bd441e5829ed3f4ebce219feed4043cd388fb5c141979f1a3b0a54a507bf575', [
+        ('plttFile = AllocAndReadWholeNarcMemberByIdPair(NARC_a_0_3_6, 1, heapId);\n    NNS_G2dGetUnpackedPaletteData(plttFile, &pltt);',
+         'plttFile = GfGfxLoader_GetPlttData(NARC_a_0_3_6, 1, &pltt, heapId);', 1),
+    ]),
+    'src/touchscreen_list_menu.c': ('66a5c93dbd6febbfc8fb734ee459287a741045d5064f41a1342bd32937d834f1', [
+        ('ret->charDataRaw = GfGfxLoader_LoadFromNarc(NARC_data_sbox_gra, NARC_sbox_gra_sbox_gra_NCGR, FALSE, heapID, FALSE);\n    NNS_G2dGetUnpackedBGCharacterData(ret->charDataRaw, &ret->pCharData);',
+         'ret->charDataRaw = GfGfxLoader_GetCharData(NARC_data_sbox_gra, NARC_sbox_gra_sbox_gra_NCGR, FALSE, &ret->pCharData, heapID);', 1),
+        ('ret->plttDataRaw = GfGfxLoader_LoadFromNarc(NARC_data_sbox_gra, NARC_sbox_gra_sbox_gra_NCLR, FALSE, heapID, FALSE);\n    NNS_G2dGetUnpackedPaletteData(ret->plttDataRaw, &ret->pPlttData);',
+         'ret->plttDataRaw = GfGfxLoader_GetPlttData(NARC_data_sbox_gra, NARC_sbox_gra_sbox_gra_NCLR, &ret->pPlttData, heapID);', 1),
+    ]),
+    'src/field/map_prop_render.c': ('197727ae79acc92e5f4d2e0ba199408a2ed81d9d0ecb3a9195d45af90d5917df', [
+        ('    poolList->tail = 0;\n}', '    poolList->tail = 0;\n    return poolList;\n}', 1),
+        ('objectMax * 0x5C', 'objectMax * sizeof(*renderObjManager->objectHeap)', 1),
+        ('objectMax * 4', 'objectMax * sizeof(*renderObjManager->objects)', 1),
+        ('count << 5', 'count * sizeof(*ret->animations)', 2),
+        ('count << 2', 'count * sizeof(*ret->freeList)', 1),
+        ('((anim->numMapData * 2) + 0x1C) & ~3',
+         '(offsetof(NNSG3dAnmObj, mapData) + anim->numMapData * sizeof(u16) + _Alignof(NNSG3dAnmObj) - 1) & ~(_Alignof(NNSG3dAnmObj) - 1)', 1),
+    ]),
+    # SDK_PORT maps MMIO into native storage. Preserve its full address,
+    # matching OS_SetTimerCount, while retaining Nintendo's tick algorithm.
+    'src/timer3.c': ('69198a211cfea52a96df5f96323b18709bd1f98425edd272395253066a34cea0', [
+        ('*(REGType16 *)((u32)(REG_TM0CNT_L_ADDR + 4 * OS_TIMER_3))',
+         'reg_OS_TM3CNT_L', 1),
+    ]),
     'src/wifi_plaza/wifi_plaza_instrument.c': ('c1f69200ee45c6815bbefad19bf35249e495e59d5afb780465450628541e1a9f', [('s64 _ll_mul(s64 a, s64 b);', '', 1), ('u32 _fflt(s32 value);', '', 1), ('u32 _fadd(u32 a, u32 b);', '', 1), ('s32 _ffix(u32 value);', '', 1), ('_ll_mul((s64)(s32)(frame > 0 ? (float)(frame << 12) + 0.5f : (float)(frame << 12) - 0.5f), (s64)delta)', '(((s64)(s32)(frame > 0 ? (float)((s32)((u32)frame << 12)) + 0.5f : (float)((s32)((u32)frame << 12)) - 0.5f)) * (s64)delta)', 3), ('    u32 y;\n    u32 x;', '    f32 y;\n    f32 x;', 2), ('_fadd(0x3F000000, _fflt(11 << 14))', '(0.5f + (f32)(11 << 14))', 4), ('_fadd(0x3F000000, _fflt(14 << 12))', '(0.5f + (f32)(14 << 12))', 4), ('_fadd(0x3F000000, _fflt(14 << 14))', '(0.5f + (f32)(14 << 14))', 4), ('_fadd(0x3F000000, _fflt(15 << 14))', '(0.5f + (f32)(15 << 14))', 2), ('_fadd(0x3F000000, _fflt(2 << 12))', '(0.5f + (f32)(2 << 12))', 4), ('_fadd(0x3F000000, _fflt(2 << 14))', '(0.5f + (f32)(2 << 14))', 4), ('_fadd(0x3F000000, _fflt(3 << 16))', '(0.5f + (f32)(3 << 16))', 2), ('_ffix(x)', '((s32)x)', 12), ('_ffix(y)', '((s32)y)', 12), ('tween->duration << 12', '(s32)((u32)tween->duration << 12)', 6)]),
 }
 
@@ -1088,6 +1113,117 @@ def adapt(relative, text, root):
         if not (record or relative in PRISTINE_COMPAT or relative in SINIT_CALLBACKS or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS or relative == 'include/wifi_setup/wifi_setup_share.h') or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
+    if relative == 'src/gf_gfx_loader.c':
+        result=replace(result, '#include "gf_gfx_loader.h"',
+                       '#include "gf_gfx_loader.h"\n#include "g2d/resource_decode.h"')
+        for loader,arg in [('Narc','narcId'),('OpenNarc','narc')]:
+            result=replace(result,
+                f'data = GfGfxLoader_LoadFrom{loader}({arg}, memberNo, FALSE, heapID, FALSE);\n    return GfGfxLoader_GetPlttDataInternal(data, ppPlttData);',
+                f'u32 dataSize = 0;\n    data = GfGfxLoader_LoadFrom{loader}_GetSizeOut({arg}, memberNo, FALSE, heapID, FALSE, &dataSize);\n    return GfGfxLoader_GetPlttDataInternal(data, dataSize, heapID, ppPlttData);')
+        result=replace(result,
+            'GfGfxLoader_GetPlttDataInternal(void *data, NNSG2dPaletteData **ppPlttData)',
+            'GfGfxLoader_GetPlttDataInternal(void *data, u32 dataSize, enum HeapID heapID, NNSG2dPaletteData **ppPlttData)',count=2)
+        old='''    if (data != NULL) {
+        if (!NNS_G2dGetUnpackedPaletteData(data, ppPlttData)) {
+            Heap_Free(data);
+            return NULL;
+        }
+    }
+    return data;'''
+        new='''    HG_NCLR_View decoded;
+    *ppPlttData = NULL;
+    if (!hg_nclr_decode(data, dataSize, &decoded)) {
+        if (data) Heap_Free(data);
+        return NULL;
+    }
+    const size_t alignment = _Alignof(NNSG2dPaletteData);
+    size_t tail = ((size_t)dataSize + alignment - 1) & ~(alignment - 1);
+    if (tail > UINT32_MAX - sizeof(NNSG2dPaletteData)) {
+        Heap_Free(data);
+        return NULL;
+    }
+    size_t colors = decoded.colors - (const unsigned char *)data;
+    unsigned char *owner = Heap_Alloc(heapID, (u32)(tail + sizeof(NNSG2dPaletteData)));
+    if (!owner) { Heap_Free(data); return NULL; }
+    memcpy(owner, data, dataSize);
+    NNSG2dPaletteData *native = (NNSG2dPaletteData *)(owner + tail);
+    native->fmt = (GXTexFmt)decoded.format;
+    native->bExtendedPlt = (BOOL)decoded.extended;
+    native->szByte = decoded.size;
+    native->pRawData = owner + colors;
+    Heap_Free(data);
+    *ppPlttData = native;
+    return owner;'''
+        result=replace(result,old,new)
+        for loader,arg in [('Narc','narcId'),('OpenNarc','narc')]:
+            result=replace(result,
+                f'data = GfGfxLoader_LoadFrom{loader}({arg}, memberNo, isCompressed, heapID, FALSE);\n    return GfGfxLoader_GetCharDataInternal(data, ppCharData);',
+                f'u32 dataSize = 0;\n    data = GfGfxLoader_LoadFrom{loader}_GetSizeOut({arg}, memberNo, isCompressed, heapID, FALSE, &dataSize);\n    return GfGfxLoader_GetCharDataInternal(data, dataSize, heapID, ppCharData);')
+        result=replace(result,
+            'GfGfxLoader_GetCharDataInternal(void *data, NNSG2dCharacterData **ppCharData)',
+            'GfGfxLoader_GetCharDataInternal(void *data, u32 dataSize, enum HeapID heapID, NNSG2dCharacterData **ppCharData)',count=2)
+        # Both retained views have the same single-allocation ownership. Only
+        # the serialized metadata and native record type differ.
+        char_old=old.replace('NNS_G2dGetUnpackedPaletteData', 'NNS_G2dGetUnpackedBGCharacterData').replace('ppPlttData','ppCharData')
+        char_new=new.replace('HG_NCLR_View','HG_NCGR_View').replace('hg_nclr_decode','hg_ncgr_decode').replace('ppPlttData','ppCharData').replace('NNSG2dPaletteData','NNSG2dCharacterData').replace('decoded.colors','decoded.pixels')
+        char_new=char_new.replace('    native->fmt = (GXTexFmt)decoded.format;\n    native->bExtendedPlt = (BOOL)decoded.extended;',
+            '    native->H = decoded.height;\n    native->W = decoded.width;\n    native->pixelFmt = (GXTexFmt)decoded.pixel_format;\n    native->mapingType = (GXOBJVRamModeChar)decoded.mapping;\n    native->characterFmt = decoded.character_format;')
+        result=replace(result,char_old,char_new)
+    if relative == 'src/field/weather_manager.c':
+        result=replace(result,
+            'files.paletteFile = NARC_AllocAndReadWholeMember(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].paletteId, HEAP_ID_FIELD1);\n        NNS_G2dGetUnpackedPaletteData(files.paletteFile, &files.paletteData);',
+            'files.paletteFile = GfGfxLoader_GetPlttDataFromOpenNarc(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].paletteId, &files.paletteData, HEAP_ID_FIELD1);')
+        result=replace(result,
+            'files.charFile = NARC_AllocAndReadWholeMember(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].charId, HEAP_ID_FIELD1);\n        NNS_G2dGetUnpackedCharacterData(files.charFile, &files.charData);',
+            'files.charFile = GfGfxLoader_GetCharDataFromOpenNarc(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].charId, FALSE, &files.charData, HEAP_ID_FIELD1);')
+    if relative == 'lib/NitroSystem/src/g3d_model.c':
+        for old,new in [
+            ('*(u16 *)((u32)pDict + ofsEntry)', '*(u16 *)(pDict + ofsEntry)'),
+            ('(u8 *)((u32)pDict + ofsEntry + 4)', 'pDict + ofsEntry + 4'),
+            ('(u8 *)((u32)pData + sizeUnit * idx)', 'pData + sizeUnit * idx'),
+            ('idx = (u32)GetDictData2(idx, pResMat + 4); // the dictionary entry, through idx (needed for the match)\n        if (idx) {\n            return (G3dResMatData *)(pResMat + *(u32 *)idx);',
+             'u8 *entry = GetDictData2(idx, pResMat + 4);\n        if (entry) {\n            return (G3dResMatData *)(pResMat + *(u32 *)entry);'),
+        ]:
+            result=replace(result,old,new)
+    if relative == 'include/field/map_object_render_internal.h':
+        # Define the original renderer before its recursive includes, so the
+        # manager can embed it by value in either header inclusion order.
+        layout=span(result, 'struct MapObjectRender {', '\n};')
+        native_layout=layout
+        for name in ['Billboard', 'BillboardResource', 'GF_3DGfxRawResMan', 'ResourceBank', 'MapObjectManager']:
+            native_layout=re.sub(r'(?<!\w)'+name+r' \*', 'struct '+name+' *', native_layout)
+        result=replace(result,layout,'')
+        result=replace(result,'#include "global.h"', '#include "global.h"\n\n'+native_layout)
+    if relative == 'include/map_object.h':
+        result=replace(result,'#include "field_types_def.h"',
+                       '#include "field_types_def.h"\n#include <field/map_object_render_internal.h>')
+        result=replace(result,'    u32 render;\n    u8 unk1C[0x108];',
+                       '    struct MapObjectRender render;')
+    if relative == 'lib/NitroSystem/src/g2d_load.c':
+        result=replace(result,
+            '    return (const NNSG2dCellData *)((u8 *)pCellBank->pCellDataArrayHead + idx * 8);',
+            '    return &pCellBank->pCellDataArrayHead[idx];')
+    if relative == 'src/sprite_resource.c':
+        # NCER bit 0 selects the original 8-byte cell or 16-byte bounded
+        # cell. Their native strides are respectively 16 and 24 bytes.
+        for old,new in [
+            ('    HGNativeCellWithBR *cells;', '    u8 *cells;\n    u32 wireStride, nativeStride;'),
+            ('        attributes != 1 ||', '        (attributes & ~1u) ||'),
+            ('    if (cellsOffset < 24 ||',
+             '    wireStride = (attributes & 1) ? 16 : 8;\n    nativeStride = (attributes & 1) ? sizeof(HGNativeCellWithBR) : sizeof(NNSG2dCellData);\n\n    if (cellsOffset < 24 ||'),
+            ('count > (size - cellsOffset) / 16', 'count > (size - cellsOffset) / wireStride'),
+            ('    recordBytes = count * 16;', '    recordBytes = count * wireStride;'),
+            ('sizeof(*bank) + count * sizeof(*cells)', 'sizeof(*bank) + count * nativeStride'),
+            ('    cells = (HGNativeCellWithBR *)(bank + 1);', '    cells = (u8 *)(bank + 1);'),
+            ('        const u8 *wire = p + cellsOffset + i * 16;',
+             '        const u8 *wire = p + cellsOffset + i * wireStride;\n        NNSG2dCellData *cell = (NNSG2dCellData *)(cells + i * nativeStride);'),
+            ('cells[i].cell.', 'cell->'),
+            ('        memcpy(cells[i].bounds, wire + 8, 8);',
+             '        if (attributes & 1)\n            memcpy(((HGNativeCellWithBR *)cell)->bounds, wire + 8, 8);'),
+        ]:
+            count=result.count(old)
+            if not count: raise ValueError('NCER adaptation source drift: ' + old)
+            result=replace(result,old,new,count=count)
     if relative in SINIT_CALLBACKS:
         callback = SINIT_CALLBACKS[relative]
         original = ('#pragma define_section SINIT ".sinit" abs32 RWX\n'

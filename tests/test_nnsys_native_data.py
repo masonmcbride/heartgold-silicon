@@ -28,6 +28,9 @@ def run(cmd):
     if r.returncode:raise RuntimeError(r.stderr[-7000:])
     return r.stdout
 source=root/'tests/test_nnsys_native_data.c';objects=[]
+timer_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
+               if e['file'].endswith('/src/timer3.c')]
+assert timer_entries and all(Path(e['file'])==build/'native/src/timer3.c' for e in timer_entries)
 # Both the allocation and the original particle allocator must use the same
 # capacity, and the production graph must compile that adapted owner.
 scene4=build/'native/src/intro_movie_scene_4.c'
@@ -42,13 +45,46 @@ assert draw_entries and all(Path(e['file'])==particle_draw for e in draw_entries
 # Instrument actual original consumers. Data is the actual production archive,
 # preserving native relocations and aliases rather than reimplementing records.
 sources=[source,build/'native/lib/NitroSystem/src/g2d_cell_transfer_manager.c',
+         build/'native/src/timer3.c',
+         build/'native/lib/NitroSystem/src/g2d_load.c',
+         root/'tests/test_native_palette.c',
          build/'native/lib/src/spl_draw_ptcl.c',
          root/'upstream/pokeheartgold/lib/NitroSystem/src/g2d_renderer_mtx_stack.c',
          root/'upstream/pokeheartgold/lib/NitroSystem/src/g2d_renderer_identity.c',
          build/'native/lib/NitroSystem/src/g3d_kernel.c']
+# Isolate the private production owner routine verbatim; the fixture supplies
+# a real SDK expanding heap without pulling the entire game startup graph.
+palette_source=(build/'native/src/gf_gfx_loader.c').read_text()
+owners=[]
+for name,kind,param in [('Pltt','Palette','Pltt'),('Char','Character','Char')]:
+    signature=f'GfGfxLoader_Get{name}DataInternal(data, dataSize, heapID, pp{param}Data)'
+    assert palette_source.count(signature)==2, 'Both archive getters must use the native owner'
+    start=palette_source.index(f'static void *GfGfxLoader_Get{name}DataInternal(void *data, u32 dataSize, enum HeapID heapID, NNSG2d{kind}Data **pp{param}Data) {{')
+    end=palette_source.index('{',start)+1;depth=1
+    while depth:
+        depth+=(palette_source[end]=='{')-(palette_source[end]=='}');end+=1
+    owners.append(palette_source[start:end])
+cell_source=(build/'native/src/sprite_resource.c').read_text()
+start=cell_source.index('typedef struct HGNativeCellWithBR')
+end=cell_source.index('\n#endif',start)
+owners.append(cell_source[start:end])
+(work/'palette_owner_under_test.h').write_text('\n'.join(owners)+'\n')
+map_source=(build/'native/src/field/map_prop_render.c').read_text()
+map_functions=[]
+for signature in ['Field3dRenderObjManager *Field3dObjectList_New(',
+                  'MapPropAnimationPoolList *MapPropAnimationPoolList_New(',
+                  'MapPropAnimationPool *MapPropAnimationPoolList_AddPool(',
+                  'static int AreaMapAnimation_GetAnimObjSize(']:
+    start=map_source.index(signature)
+    end=map_source.index('{',start)+1;depth=1
+    while depth:
+        depth+=(map_source[end]=='{')-(map_source[end]=='}');end+=1
+    map_functions.append(map_source[start:end])
+(work/'map_props_under_test.h').write_text('\n'.join(map_functions)+'\n')
 for i,path in enumerate(sources):
     obj=work/f'{i}.o'
-    run([args[0],*flags,'-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-c',str(path),'-o',str(obj)])
+    extra=['-I',str(work),'-Werror=return-type'] if path.name=='test_native_palette.c' else []
+    run([args[0],*flags,*extra,'-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-c',str(path),'-o',str(obj)])
     objects.append(str(obj))
 sys.path.insert(0,str(root/'cmake'))
 import native_link_evidence as lc
@@ -73,7 +109,13 @@ exports.write_text(''.join('_'+name+'\n' for name in sorted(set(re.findall(r'ali
 run([args[0],'-arch','arm64','-fsanitize=address,undefined','-Wl,-dead_strip','-Wl,-export_dynamic',
      '-Wl,-exported_symbols_list,'+str(exports),
      *objects,*libraries,*platform_flags,'-lc++','-o',str(work/'test')])
-print(run([str(work/'test'),str(root/'upstream/pokeheartgold/files/a/0/5/9')]),end='')
+print(run([str(work/'test'),str(root/'upstream/pokeheartgold/files/a/0/5/9'),
+           str(root/'upstream/pokeheartgold/files/demo/intro/intro/intro_00000030.NCLR'),
+           str(root/'upstream/pokeheartgold/files/demo/intro/intro/intro_00000001.NCLR'),
+           str(root/'upstream/pokeheartgold/files/graphic/font/font_00000006.bin'),
+           str(root/'upstream/pokeheartgold/files/data/namein/namein_00000012.NCER'),
+           str(root/'upstream/pokeheartgold/files/data/namein/namein_00000013.NCER'),
+           str(root/'upstream/pokeheartgold/files/demo/intro/intro/intro_00000061.NCER')]),end='')
 tables=build/'CMakeFiles/heartgold_runtime.dir/g3-probe/nnsys_tables.c.o'
 relocations=run(['otool','-rv',str(tables)])
 for name in ['_NNSi_G3dAnmObjInitNsBma','_NNSi_G3dAnmObjInitNsBtp',

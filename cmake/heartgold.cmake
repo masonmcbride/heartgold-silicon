@@ -248,6 +248,19 @@ target_compile_options(test_coordinated PRIVATE -UNDEBUG -fsanitize=address,unde
 target_link_options(test_coordinated PRIVATE -fsanitize=address,undefined)
 add_dependencies(test_coordinated fx_constants heartgold_native_headers heartgold_runtime_sources heartgold_overlay_native_sources)
 add_test(NAME coordinated_native COMMAND test_coordinated)
+add_executable(test_native_vblank_loading
+    "${PROJECT_SOURCE_DIR}/tests/test_native_vblank_loading.cpp"
+    "${game_source}/src/sys_task.c")
+target_link_libraries(test_native_vblank_loading PRIVATE nitro_sdk)
+target_compile_definitions(test_native_vblank_loading PRIVATE PM_KEEP_ASSERTS)
+target_include_directories(test_native_vblank_loading PRIVATE "${native_root}/lib/include")
+add_dependencies(test_native_vblank_loading heartgold_native_headers)
+target_compile_options(test_native_vblank_loading PRIVATE -UNDEBUG
+    "-iquote${game_source}/include"
+    "-idirafter${game_source}/lib/include"
+    -fsanitize=address,undefined -fno-sanitize-recover=all)
+target_link_options(test_native_vblank_loading PRIVATE -fsanitize=address,undefined)
+add_test(NAME native_vblank_loading COMMAND test_native_vblank_loading)
 add_test(NAME lobby_tree_native COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_lobby_tree_native.py"
     --root "${PROJECT_SOURCE_DIR}" --build "${PROJECT_BINARY_DIR}"
@@ -409,7 +422,9 @@ add_dependencies(heartgold_intro_title
 )
 
 target_compile_options(heartgold_main PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:-include${hg_native_overlay_header}>")
-target_compile_definitions(heartgold_main PRIVATE HEARTGOLD ENGLISH
+# Match config.mk: GF_ASSERT expressions include required resource-registration
+# calls, so compiling them out changes the original game behavior.
+target_compile_definitions(heartgold_main PRIVATE HEARTGOLD ENGLISH PM_KEEP_ASSERTS
     HG_GAME_REVISION="${HEARTGOLD_COMMIT}" HG_USE_ORIGINAL_WM
     OS_IE_VBLANK=OS_IE_V_BLANK OS_IE_HBLANK=OS_IE_H_BLANK)
 target_include_directories(heartgold_main PRIVATE
@@ -449,6 +464,7 @@ target_link_libraries(test_native_sound_files PRIVATE nitro_sdk)
 target_compile_options(test_native_sound_files PRIVATE -UNDEBUG)
 add_test(NAME native_sound_files COMMAND test_native_sound_files "${game_source}/files/data/sound/gs_sound_data.sdat")
 add_executable(test_native_g3_dictionary "${PROJECT_SOURCE_DIR}/tests/test_native_g3_dictionary.c"
+    "${native_root}/lib/NitroSystem/src/g3d_model.c"
     "${native_root}/lib/NitroSystem/src/g3d_res_struct_accessor.c")
 target_link_libraries(test_native_g3_dictionary PRIVATE nitro_sdk)
 target_include_directories(test_native_g3_dictionary PRIVATE "${native_root}/lib/include")

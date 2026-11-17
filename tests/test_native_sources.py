@@ -66,6 +66,12 @@ class NativeSourceAdaptations(unittest.TestCase):
         for table in ('sSnowFallSpeeds', 'sSnowSlowdownIntervals'):
             expected = expected.replace('static const ' + table + '[]', 'static const int ' + table + '[]')
         expected = expected.replace('int table0[4];', 'const int *table0;').replace('int table1[4];', 'const int *table1;')
+        expected = expected.replace(
+            'files.paletteFile = NARC_AllocAndReadWholeMember(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].paletteId, HEAP_ID_FIELD1);\n        NNS_G2dGetUnpackedPaletteData(files.paletteFile, &files.paletteData);',
+            'files.paletteFile = GfGfxLoader_GetPlttDataFromOpenNarc(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].paletteId, &files.paletteData, HEAP_ID_FIELD1);')
+        expected = expected.replace(
+            'files.charFile = NARC_AllocAndReadWholeMember(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].charId, HEAP_ID_FIELD1);\n        NNS_G2dGetUnpackedCharacterData(files.charFile, &files.charData);',
+            'files.charFile = GfGfxLoader_GetCharDataFromOpenNarc(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].charId, FALSE, &files.charData, HEAP_ID_FIELD1);')
         self.assertEqual(semantic_adapt(relative, original), expected)
         for fragment in ('2, 2, 2, 2', '16, 32, 16, 10', 'int table0[4]', 'table1[index]', 'table0[index]'):
             with self.assertRaises(ValueError):

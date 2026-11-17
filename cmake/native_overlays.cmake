@@ -663,6 +663,8 @@ add_test(NAME native_dsprot_nsbta COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_dsprot_nsbta.py" --build "${PROJECT_BINARY_DIR}")
 add_test(NAME native_nnsys_data COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_nnsys_native_data.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME native_sprite_registration COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_sprite_registration.py" --build "${PROJECT_BINARY_DIR}")
 
 # OVY_39 private runtime views are checked against their actual source, not
 # duplicated host declarations. Link only the real data member and SDK services.
