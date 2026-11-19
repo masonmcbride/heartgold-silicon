@@ -1,14 +1,18 @@
 """Execute original main data loaders and source-faithful string consumers."""
-import argparse,json,subprocess,sys
+import argparse,atexit,json,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'compiler/guest32'))
 from original_layout import annotated_sections
+from incremental import snapshot_tools
+from provider_software_execution import compile_step
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  for n in ('build','llvm-bin','lowerer'):p.add_argument('--'+n,type=Path,required=True)
  a=p.parse_args();b=a.build.resolve();llvm=a.llvm_bin.resolve();out=b/'provider-experiments';data=out/'main-data';catalog=json.loads((data/'data.json').read_text());commands=[]
+ tools=snapshot_tools([str(llvm/'clang'),str(a.lowerer.resolve())])
+ atexit.register(lambda:(out/'data-runtime-commands.json').write_text(json.dumps(commands,indent=2)+'\n'))
  raw={'.bss':bytes(16)};labels={'first':('.bss',0),'second':('.bss',8)}
  assert annotated_sections('first: ; 0x02001000\nsecond: ; 0x02001008\n',raw,labels)['.bss']['address']==0x02001000
  assert annotated_sections('',raw,labels)=={}
@@ -17,7 +21,9 @@ def main():
   except ValueError:pass
   else:raise AssertionError('inconsistent or out-of-RAM original placement accepted')
  def run(args,ok=True):
-  r=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=20);commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr));(out/'data-runtime-commands.json').write_text(json.dumps(commands,indent=2)+'\n');assert (r.returncode==0)==ok,r.stdout+r.stderr;return r.stdout+r.stderr
+  r=compile_step(args,tools) if ok else None
+  if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=20)
+  commands.append(dict(command=list(map(str,args)),returncode=r.returncode,cache_hit=getattr(r,'cache_hit',False),stdout=r.stdout,stderr=r.stderr));assert (r.returncode==0)==ok,r.stdout+r.stderr;return r.stdout+r.stderr
  globals_=catalog['globals'];checks=[];declarations=[]
  for n in ('__lower_mapC','__upper_mapC','__msl_digit','errno','gSoclHostAddress'):
   declarations.append('extern const unsigned guest32_address_'+n+';');checks.append('assert(guest32_address_'+n+'=='+str(globals_[n]['offset'])+');')
@@ -41,11 +47,12 @@ g32_destroy(ram);return 0;}
   for sanitized in (False,True):
    tag='O'+opt+('.asan' if sanitized else '');san=['-fsanitize=address,undefined','-fno-sanitize-recover=all'] if sanitized else []
    exe=out/('data-test.'+tag)
-   member=out/'string-provider';lowered=out/('string.'+tag+'.ll');obj=lowered.with_suffix('.o')
-   run([a.lowerer.resolve(),member/'guest.ll',lowered,'--abi',member/'abi.json','--native-ir',member/'native-abi.ll','--image',out/'other/catalog.json','--guest-externals','--prefix','guest32_',*(['--asan'] if sanitized else [])])
+   member=out/'string-provider';lowered=out/('string'+('.asan' if sanitized else '')+'.ll');obj=out/('string.'+tag+'.o')
+   if opt=='0':run([a.lowerer.resolve(),member/'guest.ll',lowered,'--abi',member/'abi.json','--native-ir',member/'native-abi.ll','--image',out/'other/catalog.json','--guest-externals','--prefix','guest32_',*(['--asan'] if sanitized else [])])
    run([llvm/'clang','-O'+opt,*san,'-c',lowered,'-o',obj])
-   run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,ROOT/'hardware_drivers/guest32.c',data/'provider.a',obj,'-Wl,-dead_strip','-o',exe]);run([exe])
-   runtime=out/('runtime-test.'+tag);run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),ROOT/'tests/provider_runtime_host.c',ROOT/'hardware_drivers/guest32.c','-o',runtime]);run([runtime])
+   runtime_object=out/('runtime.'+tag+'.o')
+   run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,runtime_object,data/'provider.a',obj,'-Wl,-dead_strip','-o',exe]);run([exe])
+   runtime=out/('runtime-test.'+tag);run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),ROOT/'tests/provider_runtime_host.c',runtime_object,'-o',runtime]);run([runtime])
    for mode,reason in [('order','guest frame restoration order'),('stale','unmapped, freed, or out-of-bounds')]:assert reason in run([runtime,mode],False)
    results.append(dict(optimization=opt,sanitized=sanitized,main_data_and_string=True,frame_retirement=True,scheduler_out_of_order_rejected=True))
  (out/'data-runtime-results.json').write_text(json.dumps(results,indent=2)+'\n');print('PASS original main data/string execution; nested-frame retirement; scheduler/stale-pointer negative controls')

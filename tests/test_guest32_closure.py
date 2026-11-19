@@ -7,22 +7,26 @@ from pathlib import Path
 import subprocess
 import sys
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'cmake'))
+sys.path[:0]=[str(ROOT/'cmake'),str(ROOT/'compiler/guest32')]
 from native_data_ir import parse,raw_layout,integer
 
+
+from incremental import snapshot_tools
+from provider_software_execution import compile_step
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--build',type=Path,required=True);p.add_argument('--llvm-bin',type=Path,required=True);p.add_argument('--lowerer',type=Path,required=True)
     a=p.parse_args();b=a.build.resolve();llvm=a.llvm_bin.resolve();game=ROOT/'upstream/pokeheartgold'
     out=b/'guest32-closure-tests';out.mkdir(exist_ok=True);commands=[]
+    tools=snapshot_tools([str(llvm/'clang'),str(a.lowerer.resolve())])
     def run(args,ok=True):
-        r=subprocess.run(list(map(str,args)),capture_output=True,text=True)
+        r=compile_step(args,tools) if ok else None
+        if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True)
         commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
         (out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n')
         assert (r.returncode==0)==ok,r.stdout+r.stderr
         return r.stdout+r.stderr
-    run(['cmake','--build',b,'--target','heartgold_guest32_ovy38_archive','heartgold_guest32_account_build','heartgold_guest32_crc_build','-j8'])
     image=b/'guest32-ovy38-image';catalog=json.loads((image/'image.json').read_text());coverage=json.loads((image/'coverage.json').read_text())
     assert coverage['summary']['compiled']==8 and coverage['summary']['data_represented']==2 and coverage['summary']['complete_compilation']
     register=json.loads((ROOT/'compiler/guest32/ovy38_registers.json').read_text())

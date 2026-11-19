@@ -1,6 +1,8 @@
 // Source-preserving native pointer-slot legalization. SPDX-License-Identifier: MIT
 // Runs before optimization. Never supplies missing original call arguments.
 #include "llvm/ADT/PostOrderIterator.h"
+#include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/ADT/DenseMap.h"
 #include "llvm/Analysis/LazyValueInfo.h"
 #include "llvm/Analysis/AssumptionCache.h"
 #include "llvm/IR/ConstantRange.h"
@@ -23,13 +25,17 @@
 #include <set>
 #include <algorithm>
 #include <cstdlib>
+#include <chrono>
+#include <atomic>
+#include <thread>
+#include <sys/resource.h>
 #include <memory>
 #include <optional>
 #include <vector>
 using namespace llvm;
 namespace {
 [[noreturn]] void fail(const Twine &s) { errs()<<"semantic slots: "<<s<<'\n'; exit(1); }
-struct Unit { LLVMContext context; std::unique_ptr<Module> module; std::string path; };
+struct Unit { LLVMContext context; std::unique_ptr<Module> module; std::string path; json::Object profile; };
 void prepare(Module &m) {
   StripDebugInfo(m);
   for(auto &f:m) if(!f.isDeclaration()) {
@@ -39,12 +45,49 @@ void prepare(Module &m) {
     DominatorTree dt(f); PromoteMemToReg(allocas,dt);
   }
 }
+using ProfileClock=std::chrono::steady_clock;
+static double profileSeconds(ProfileClock::time_point start) {
+ return std::chrono::duration<double>(ProfileClock::now()-start).count();
+}
+static json::Object profilePhases;
+static uint64_t profileAddressCalls=0,profileAddressHits=0,profilePointerCalls=0,profileRangeCalls=0;
+static unsigned profileAddressDepth=0,profileReturnRounds=0,profileStoreRounds=0;
+static uint64_t profileCalleeBlocks=0,profileFlowEdges=0,profileRootVisits=0,profileSizeVisits=0;
 std::unique_ptr<Unit> readUnit(StringRef path) {
   auto u=std::make_unique<Unit>();u->path=path.str(); SMDiagnostic d;
+  auto parseStart=ProfileClock::now();
   u->module=parseIRFile(path,d,u->context);
+  double parseSeconds=profileSeconds(parseStart);
   if(!u->module) { d.print("semantic slots",errs());fail("cannot read input"); }
   if(u->module->getDataLayout().getPointerSize()!=8) fail("promotion requires a native 64-bit module; guest layout must remain separate");
-  prepare(*u->module);return u;
+  auto prepareStart=ProfileClock::now();
+  prepare(*u->module);
+  double prepareSeconds=profileSeconds(prepareStart);
+  uint64_t instructionsCount=0,functionsCount=0;
+  for(auto &f:*u->module)if(!f.isDeclaration()) {
+   ++functionsCount; for(auto &bb:f)instructionsCount+=bb.size();
+  }
+  uint64_t bytes=0; (void)sys::fs::file_size(path,bytes);
+  u->profile=json::Object{{"path",path.str()},{"ir_bytes",int64_t(bytes)},
+   {"functions",int64_t(functionsCount)},{"instructions",int64_t(instructionsCount)},
+   {"parse_seconds",parseSeconds},{"prepare_seconds",prepareSeconds}};
+  return u;
+}
+// Each module owns its LLVMContext and profile. Readers share no IR objects;
+// ordered result slots preserve deterministic analysis and report ordering.
+std::vector<std::unique_ptr<Unit>> readUnits(const json::Array &paths) {
+ std::vector<std::unique_ptr<Unit>> units(paths.size());
+ std::atomic<size_t> next{0};
+ unsigned count=std::min<size_t>(8,paths.size());
+ std::vector<std::thread> readers;readers.reserve(count);
+ for(unsigned j=0;j<count;++j)readers.emplace_back([&] {
+  for(;;) {
+   size_t i=next.fetch_add(1,std::memory_order_relaxed);if(i>=paths.size())break;
+   units[i]=readUnit(*paths[i].getAsString());
+  }
+ });
+ for(auto &reader:readers)reader.join();
+ return units;
 }
 json::Value readJSON(StringRef path) {
   auto b=MemoryBuffer::getFile(path);if(!b)fail("cannot read "+path);
@@ -56,8 +99,35 @@ void writeJSON(StringRef path,json::Value j) {
 std::string key(StructType *s,unsigned i) { return s->getName().str()+":"+std::to_string(i); }
 using Fields=std::set<std::string>;
 using Env=std::map<const Argument*,ConstantRange>;
-bool contains(Type *,const std::set<std::string> &,std::set<Type*> seen={});
+using AddressPath=SmallVector<Value*,32>;
+// A query is existential reachability over by-value type edges. Pointer
+// pointees deliberately are not edges: owning a pointer is not owning its data.
+// Type bodies stay immutable throughout analysis/validation. Cache complete
+// queries only, so a cycle's temporary visited state never becomes a false fact.
+class TypeReachability {
+ std::map<std::set<std::string>,DenseMap<Type*,bool>> completed;
+public:
+ uint64_t queries=0,hits=0,visitedNodes=0;
+ bool contains(Type *root,const std::set<std::string> &targets) {
+  ++queries;
+  auto &results=completed[targets];
+  if(auto found=results.find(root);found!=results.end()){++hits;return found->second;}
+  SmallVector<Type*,16> pending{root};SmallPtrSet<Type*,32> visited;
+  bool result=false;
+  while(!pending.empty()) {
+   auto *type=pending.pop_back_val();
+   if(!visited.insert(type).second)continue;
+   ++visitedNodes;
+   if(auto *record=dyn_cast<StructType>(type)) {
+    if(record->hasName() && targets.count(record->getName().str())){result=true;break;}
+    if(!record->isOpaque())for(auto *element:record->elements())pending.push_back(element);
+   }else if(auto *array=dyn_cast<ArrayType>(type))pending.push_back(array->getElementType());
+  }
+  results[root]=result;return result;
+ }
+};
 struct World {
+ TypeReachability typeReachability;
  std::vector<std::unique_ptr<Unit>> units;
  std::map<std::string,Function*> definitions;
  std::map<std::string,std::string> conflicts;
@@ -66,7 +136,7 @@ struct World {
  std::map<std::string,Fields> storageLinks;
  std::set<std::string> candidates;
  std::map<Function*,std::vector<CallBase*>> callers;
- std::map<Value*,Fields> addressCache;
+ DenseMap<Value*,Fields> addressCache;
  std::map<std::string,Fields> callCache;
  std::set<Function*> addressReturning;
  std::map<Function*,std::set<BasicBlock*>> reachable;
@@ -91,6 +161,7 @@ struct World {
   return full;
  }
  ConstantRange range(Value *v,const Env &env,Instruction *at,unsigned depth=0) {
+  ++profileRangeCalls;
   unsigned bits=v->getType()->getIntegerBitWidth();auto full=ConstantRange::getFull(bits);
   if(depth>32)return full;
   if(auto *c=dyn_cast<ConstantInt>(v))return ConstantRange(c->getValue());
@@ -126,16 +197,21 @@ struct World {
   auto r=range(v,env,nullptr);if(auto *n=r.getSingleElement())if(n->getSignificantBits()<=64)return n->getSExtValue();
   return {};
  }
- Fields addresses(Value *v,const Env &env={},unsigned depth=0,std::set<Value*> seen={}) {
+ Fields addresses(Value *v,const Env &env={},unsigned depth=0,AddressPath seen={}) {
+  ++profileAddressCalls;profileAddressDepth=std::max(profileAddressDepth,depth);
   if(!v->getType()->isPointerTy())return {};
   if(depth==0 && env.empty()) {
-   auto p=addressCache.find(v);if(p!=addressCache.end())return p->second;
+   auto p=addressCache.find(v);if(p!=addressCache.end()){++profileAddressHits;return p->second;}
    auto r=address(v,env,depth,std::move(seen));addressCache[v]=r;return r;
   }
   return address(v,env,depth,std::move(seen));
  }
- Fields address(Value *v,const Env &env,unsigned depth,std::set<Value*> seen) {
-  if(depth>32 || !seen.insert(v).second)return {"<unproved-alias>"};
+ Fields address(Value *v,const Env &env,unsigned depth,AddressPath seen) {
+  // This path is bounded by the same recursion limit as before. Copying its
+  // contiguous pointer span preserves branch-local cycle detection without
+  // allocating a tree node for every ancestor on every recursive call.
+  if(depth>32 || std::find(seen.begin(),seen.end(),v)!=seen.end())return {"<unproved-alias>"};
+  seen.push_back(v);
   if(auto *a=dyn_cast<Argument>(v)) {
    Fields r;
    auto *owner=definition(a->getParent());
@@ -213,6 +289,7 @@ struct World {
   return {};
  }
  bool pointerValue(Value *v,unsigned depth=0) {
+  ++profilePointerCalls;
   if(depth>20)return false;
   if(v->getType()->isPointerTy() && v->getType()->getPointerAddressSpace())return false;
   if(auto *c=dyn_cast<CallBase>(v)) {auto *f=definition(c->getCalledFunction());return f && f->getReturnType()->isPointerTy() && !f->getReturnType()->getPointerAddressSpace() && !conflicts.count(f->getName().str());}
@@ -273,6 +350,11 @@ struct World {
  }
  static bool matchZero(Value *v) {auto *c=dyn_cast<ConstantInt>(v);return c && c->isZero();}
  void analyze() {
+  auto phaseStart=ProfileClock::now();
+  auto checkpoint=[&](const char *name) {
+   double seconds=profileSeconds(phaseStart);profilePhases[name]=seconds;
+   errs()<<"ABI phase: "<<name<<" "<<seconds<<"s\n";phaseStart=ProfileClock::now();
+  };
   errs()<<"semantic slots: indexing "<<units.size()<<" native modules\n";
   for(auto &u:units) for(auto &f:*u->module)if(!f.isDeclaration() && !f.hasLocalLinkage()) {
    auto n=f.getName().str();auto p=definitions.find(n);
@@ -282,8 +364,10 @@ struct World {
   }
   for(auto &u:units)for(auto &f:*u->module)for(auto &i:instructions(f))if(auto *c=dyn_cast<CallBase>(&i))
    if(auto *d=definition(c->getCalledFunction()))callers[d].push_back(c);
+  checkpoint("definitions_and_callers");
   bool changed=true;
   while(changed) {
+   ++profileReturnRounds;
    changed=false;
    for(auto &u:units)for(auto &f:*u->module)if(!f.isDeclaration() && f.getReturnType()->isPointerTy() && !addressReturning.count(&f)) {
     SmallVector<Value*> pending;std::set<Value*> seen;bool found=false;
@@ -298,19 +382,23 @@ struct World {
     if(found){addressReturning.insert(&f);changed=true;}
    }
   }
+  checkpoint("address_returning_fixed_point");
   errs()<<"semantic slots: resolving pointer stores\n";
   changed=true;
   while(changed) {
+   ++profileStoreRounds;
    changed=false;
    for(auto &u:units)for(auto &f:*u->module)for(auto &i:instructions(f))if(auto *s=dyn_cast<StoreInst>(&i)) {
     if(!s->getValueOperand()->getType()->isIntegerTy(32) || !pointerValue(s->getValueOperand()))continue;
     auto a=addresses(s->getPointerOperand());for(auto &k:a)if(fieldTypes.count(k))changed|=candidates.insert(k).second;
    }
   }
+  checkpoint("pointer_store_fixed_point");
   for(auto &u:units)for(auto &f:*u->module)for(auto &i:instructions(f))if(auto *s=dyn_cast<StoreInst>(&i)) {
    auto from=valueFields(s->getValueOperand()),to=addresses(s->getPointerOperand());
    for(auto &a:from)for(auto &b:to)if(candidates.count(a)&&candidates.count(b)){storageLinks[a].insert(b);storageLinks[b].insert(a);}
   }
+  checkpoint("storage_links");
   for(auto &u:units)for(auto &f:*u->module)for(auto &i:instructions(f)) {
    if(auto *g=dyn_cast<GetElementPtrInst>(&i)) {
     auto a=addresses(g->getPointerOperand());bool zero=true;for(auto &idx:g->indices())zero&=matchZero(idx);
@@ -344,6 +432,7 @@ struct World {
     }
    }
   }
+  checkpoint("consumer_validation");
   // Constant/global slot-address aliases are not ordinary scalar SSA. Refuse
   // promotion rather than losing those aliases behind a pointer load.
   for(auto &u:units) {
@@ -356,25 +445,23 @@ struct World {
      // Clang folds constant field addresses to byte GEPs, so their source
      // element type no longer describes the original record member.
      if(auto *base=dyn_cast<GlobalVariable>(g->getPointerOperand()->stripPointerCasts()))
-      for(auto &k:candidates)if(contains(base->getValueType(),{fieldTypes[k].first}))rejected[k].insert("constant byte alias into promoted owner requires legalization");
+      for(auto &k:candidates)if(typeReachability.contains(base->getValueType(),{fieldTypes[k].first}))rejected[k].insert("constant byte alias into promoted owner requires legalization");
     }
     for(auto &v:c->operands())if(auto *child=dyn_cast<Constant>(v))pending.push_back(child);
    }
   }
+  checkpoint("constant_alias_validation");
   errs()<<"semantic slots: checked "<<candidates.size()<<" candidate fields\n";
  }
 };
 }
 namespace {
-bool contains(Type *t,const std::set<std::string> &types,std::set<Type*> seen) {
- if(!seen.insert(t).second)return false;
- if(auto *s=dyn_cast<StructType>(t)) {
-  if(s->hasName() && types.count(s->getName().str()))return true;
-  if(!s->isOpaque())for(auto *e:s->elements())if(contains(e,types,seen))return true;
- } else if(auto *a=dyn_cast<ArrayType>(t))return contains(a->getElementType(),types,seen);
- return false;
-}
 void validateLayouts(World &w) {
+ auto phaseStart=ProfileClock::now();
+ auto checkpoint=[&](const char *name) {
+  double seconds=profileSeconds(phaseStart);profilePhases[name]=seconds;
+  errs()<<"ABI layout phase: "<<name<<" "<<seconds<<"s\n";phaseStart=ProfileClock::now();
+ };
  for(auto &u:w.units) {
   auto &m=*u->module;const auto &dl=m.getDataLayout();
   for(auto &k:w.candidates) {
@@ -390,23 +477,25 @@ void validateLayouts(World &w) {
    for(unsigned i=0;i<s->getNumElements();i++)if(a->getElementOffset(i)!=b->getElementOffset(i))w.rejected[k].insert("native field offset change is not proved");
   }
  }
+ checkpoint("layout_struct_compatibility");
  // Whole-object byte observations and fixed-offset aliases must be identified
  // before admitting a field, even when its native extent fits existing padding.
  std::set<std::string> types;for(auto &k:w.candidates)types.insert(w.fieldTypes[k].first);
- std::map<Value*,std::set<std::string>> roots;
- std::map<Value*,std::set<uint64_t>> rootSizes;
+ DenseMap<Value*,std::set<std::string>> roots;
+ DenseMap<Value*,std::set<uint64_t>> rootSizes;
  for(auto &u:w.units)for(auto &f:*u->module)for(auto &i:instructions(f)) {
-  if(auto *g=dyn_cast<GetElementPtrInst>(&i))for(auto &name:types)if(contains(g->getSourceElementType(),{name})) {
+  if(auto *g=dyn_cast<GetElementPtrInst>(&i))for(auto &name:types)if(w.typeReachability.contains(g->getSourceElementType(),{name})) {
    roots[g->getPointerOperand()].insert(name);rootSizes[g->getPointerOperand()].insert(u->module->getDataLayout().getTypeAllocSize(g->getSourceElementType()));
   }
-  if(auto *a=dyn_cast<AllocaInst>(&i))for(auto &name:types)if(contains(a->getAllocatedType(),{name})) {
+  if(auto *a=dyn_cast<AllocaInst>(&i))for(auto &name:types)if(w.typeReachability.contains(a->getAllocatedType(),{name})) {
    roots[a].insert(name);rootSizes[a].insert(u->module->getDataLayout().getTypeAllocSize(a->getAllocatedType()));
   }
  }
- std::map<Value*,SmallVector<Value*>> flow;
+ checkpoint("layout_typed_roots");
+ DenseMap<Value*,SmallVector<Value*>> flow;
  const auto staticRoots=roots;
  const auto staticSizes=rootSizes;
- auto edge=[&](Value *from,Value *to){if(from->getType()->isPointerTy() && to->getType()->isPointerTy())flow[from].push_back(to);};
+ auto edge=[&](Value *from,Value *to){if(from->getType()->isPointerTy() && to->getType()->isPointerTy()){flow[from].push_back(to);++profileFlowEdges;}};
  std::map<Function*,std::set<unsigned>> returnedArguments;
  for(auto &u:w.units)for(auto &f:*u->module)if(!f.isDeclaration() && f.getReturnType()->isPointerTy()) {
   SmallVector<Value*> pending;std::set<Value*> seen;
@@ -418,6 +507,7 @@ void validateLayouts(World &w) {
    if(auto *sel=dyn_cast<SelectInst>(v)){pending.push_back(sel->getTrueValue());pending.push_back(sel->getFalseValue());}
   }
  }
+ checkpoint("layout_return_argument_summaries");
  for(auto &u:w.units)for(auto &f:*u->module)for(auto &i:instructions(f)) {
   if(auto *p=dyn_cast<PHINode>(&i))for(auto &v:p->incoming_values()){edge(v,p);edge(p,v);}
   if(auto *c=dyn_cast<CastInst>(&i)){edge(c->getOperand(0),c);edge(c,c->getOperand(0));}
@@ -431,7 +521,7 @@ void validateLayouts(World &w) {
     if(auto r=staticRoots.find(formal);r!=staticRoots.end())roots[arg].insert(r->second.begin(),r->second.end());
     if(auto r=staticSizes.find(formal);r!=staticSizes.end())rootSizes[arg].insert(r->second.begin(),r->second.end());
    }
-   if(c->getType()->isPointerTy())for(auto &bb:*d)if(auto *ret=dyn_cast<ReturnInst>(bb.getTerminator()))if(auto *rv=ret->getReturnValue()) {
+   if(c->getType()->isPointerTy())for(auto &bb:*d)if((++profileCalleeBlocks, true))if(auto *ret=dyn_cast<ReturnInst>(bb.getTerminator()))if(auto *rv=ret->getReturnValue()) {
     if(auto r=staticRoots.find(rv);r!=staticRoots.end())roots[c].insert(r->second.begin(),r->second.end());
     if(auto r=staticSizes.find(rv);r!=staticSizes.end())rootSizes[c].insert(r->second.begin(),r->second.end());
    }
@@ -440,18 +530,23 @@ void validateLayouts(World &w) {
    for(auto j:returnedArguments[d])if(j<c->arg_size())edge(c->getArgOperand(j),c);
   }
  }
+ checkpoint("layout_flow_graph");
  SmallVector<std::pair<Value*,std::string>> pending;
  for(auto &[value,names]:roots)for(auto &name:names)pending.emplace_back(value,name);
  while(!pending.empty()) {
+  ++profileRootVisits;
   auto [value,name]=pending.pop_back_val();auto found=flow.find(value);if(found==flow.end())continue;
   for(auto *to:found->second)if(roots[to].insert(name).second)pending.emplace_back(to,name);
  }
+ checkpoint("layout_root_propagation");
  SmallVector<std::pair<Value*,uint64_t>> sizes;
  for(auto &[value,extents]:rootSizes)for(auto extent:extents)sizes.emplace_back(value,extent);
  while(!sizes.empty()) {
+  ++profileSizeVisits;
   auto [value,extent]=sizes.pop_back_val();auto found=flow.find(value);if(found==flow.end())continue;
   for(auto *to:found->second)if(rootSizes[to].insert(extent).second)sizes.emplace_back(to,extent);
  }
+ checkpoint("layout_extent_propagation");
  for(auto &u:w.units)for(auto &f:*u->module)for(auto &i:instructions(f)) {
   auto rejectTypes=[&](const std::set<std::string> &ts,StringRef why){for(auto &k:w.candidates)if(ts.count(w.fieldTypes[k].first))w.rejected[k].insert(why.str());};
   if(auto *cast=dyn_cast<PtrToIntInst>(&i))rejectTypes(roots[cast->getPointerOperand()],"owner address carried as an integer requires logical-address proof");
@@ -472,15 +567,17 @@ void validateLayouts(World &w) {
     if(!fullZero)rejectTypes(roots[arg],"owner escapes to an unproved byte-observing boundary: "+(fn?n.str():std::string("<indirect>")));
    }
   }
-  if(auto *s=dyn_cast<StoreInst>(&i))if(contains(s->getValueOperand()->getType(),types))for(auto &k:w.candidates)w.rejected[k].insert("aggregate value copy requires field legalization");
-  if(auto *l=dyn_cast<LoadInst>(&i))if(contains(l->getType(),types))for(auto &k:w.candidates)w.rejected[k].insert("aggregate value load requires field legalization");
+  if(auto *s=dyn_cast<StoreInst>(&i))if(w.typeReachability.contains(s->getValueOperand()->getType(),types))for(auto &k:w.candidates)w.rejected[k].insert("aggregate value copy requires field legalization");
+  if(auto *l=dyn_cast<LoadInst>(&i))if(w.typeReachability.contains(l->getType(),types))for(auto &k:w.candidates)w.rejected[k].insert("aggregate value load requires field legalization");
  }
+ checkpoint("layout_byte_observation_checks");
  bool changed=true;
  while(changed) {
   changed=false;
   for(auto &[field,links]:w.storageLinks)if(!w.rejected[field].empty())for(auto &other:links)
    if(w.rejected[other].empty()){w.rejected[other].insert("connected pointer-storage component is blocked");changed=true;}
  }
+ checkpoint("layout_blocked_component_propagation");
 }
 json::Object signature(Function &f) {
  json::Array args;for(auto &a:f.args())args.push_back(a.getType()->isPointerTy());
@@ -597,8 +694,13 @@ int semanticSlotsMain(int argc,char **argv) {
     auto &r=*b.getAsObject();w.releases.insert({r.getString("function")->str(),unsigned(*r.getInteger("argument"))});lifetimes.push_back(b);
    }
   }
-  if(!paths)fail("missing native module list");for(auto &path:*paths)w.units.push_back(readUnit(*path.getAsString()));
-  w.analyze();validateLayouts(w);
+  if(!paths)fail("missing native module list");w.units=readUnits(*paths);
+  auto analysisStart=ProfileClock::now();
+  w.analyze();
+  profilePhases["analysis_total_seconds"]=profileSeconds(analysisStart);
+  auto layoutStart=ProfileClock::now();validateLayouts(w);
+  profilePhases["layout_validation_seconds"]=profileSeconds(layoutStart);
+  auto reportStart=ProfileClock::now();
   json::Array slots,blocked,modules,accessors,affected;json::Object signatures;
   for(auto &[name,f]:w.definitions)signatures[name]=signature(*f);
   for(auto &k:w.candidates) {
@@ -625,6 +727,26 @@ int semanticSlotsMain(int argc,char **argv) {
    if(touched)affected.push_back(u->path);
   }
   auto count=slots.size();writeJSON(argv[3],json::Object{{"schema",1},{"slots",std::move(slots)},{"blocked",std::move(blocked)},{"signatures",std::move(signatures)},{"modules",std::move(modules)},{"lifetimes",std::move(lifetimes)},{"accessor_modules",std::move(accessors)},{"affected_modules",std::move(affected)},{"layout_policy","preserve all native offsets, extents, alignment and array strides; guest32 input is excluded"}});
+  profilePhases["report_seconds"]=profileSeconds(reportStart);
+  json::Array profileModules;
+  for(auto &unit:w.units)profileModules.push_back(std::move(unit->profile));
+  struct rusage usage{};getrusage(RUSAGE_SELF,&usage);
+  writeJSON(std::string(argv[3])+".profile.json",json::Object{
+   {"phases",std::move(profilePhases)},{"modules",std::move(profileModules)},
+   {"address_calls",int64_t(profileAddressCalls)},{"address_cache_hits",int64_t(profileAddressHits)},
+   {"max_address_recursion",int64_t(profileAddressDepth)},{"pointer_value_calls",int64_t(profilePointerCalls)},
+   {"contains_type_queries",int64_t(w.typeReachability.queries)},
+   {"contains_type_cache_hits",int64_t(w.typeReachability.hits)},
+   {"contains_type_nodes_visited",int64_t(w.typeReachability.visitedNodes)},
+   {"callee_return_blocks_scanned",int64_t(profileCalleeBlocks)},
+   {"ownership_flow_edges",int64_t(profileFlowEdges)},
+   {"ownership_root_worklist_visits",int64_t(profileRootVisits)},
+   {"ownership_extent_worklist_visits",int64_t(profileSizeVisits)},
+   {"integer_range_calls",int64_t(profileRangeCalls)},{"functions_with_range_analysis",int64_t(w.ranges.size())},
+   {"return_fixed_point_rounds",int64_t(profileReturnRounds)},{"store_fixed_point_rounds",int64_t(profileStoreRounds)},
+   {"peak_rss_platform_units",int64_t(usage.ru_maxrss)},
+   {"cpu_user_seconds",double(usage.ru_utime.tv_sec)+usage.ru_utime.tv_usec/1e6},
+   {"cpu_system_seconds",double(usage.ru_stime.tv_sec)+usage.ru_stime.tv_usec/1e6}});
   outs()<<"admitted semantic pointer slots: "<<count<<'\n';return 0;
  }
  if(StringRef(argv[1])=="apply" && argc==5) {

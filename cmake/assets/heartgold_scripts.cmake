@@ -49,40 +49,17 @@ endforeach()
 
 set(hg_script_bins)
 
+set(hg_asset_batch_dependencies)
+hg_native_asset_data("${hg_script_label}" script "${hg_script_work}" "${hg_script_stage}" "${hg_script_sources}"
+    --game "${game_source}" --libntr "${ntr_source}"
+    --generated-files "${PROJECT_BINARY_DIR}/generated/files"
+    --clang "${CMAKE_C_COMPILER}" --objcopy "${HG_ASSET_OBJCOPY}" --readelf "${HG_ASSET_READELF}")
 foreach(source IN LISTS hg_script_sources)
     get_filename_component(stem "${source}" NAME_WE)
-    set(bin "${hg_script_stage}/${stem}.bin")
-    set(dep "${hg_script_work}/${stem}.d")
-
-    add_custom_command(
-        OUTPUT "${bin}"
-        BYPRODUCTS "${hg_script_work}/${stem}.o"
-        COMMENT "Generating ${hg_script_label} script: ${stem}"
-
-        COMMAND "${Python3_EXECUTABLE}"
-            "${CMAKE_CURRENT_LIST_DIR}/build_heartgold_script.py"
-            --source "${source}"
-            --binary "${bin}"
-            --work-dir "${hg_script_work}"
-            --game "${game_source}"
-            --libntr "${ntr_source}"
-            --generated-files "${PROJECT_BINARY_DIR}/generated/files"
-            --clang "${CMAKE_C_COMPILER}"
-            --objcopy "${HG_ASSET_OBJCOPY}"
-            --readelf "${HG_ASSET_READELF}"
-
-        DEPENDS
-            "${source}"
-            "${CMAKE_CURRENT_LIST_DIR}/build_heartgold_script.py"
-
-        DEPFILE "${dep}"
-        VERBATIM
-    )
-
-    list(APPEND hg_script_bins "${bin}")
+    list(APPEND hg_script_bins "${hg_script_stage}/${stem}.bin")
 endforeach()
 
-hg_narc(heartgold_${hg_script_name}_assets "${hg_script_archive}"
+hg_ordered_archive(heartgold_${hg_script_name}_assets "${hg_script_archive}"
     "${hg_script_stage}" ${hg_script_bins})
 
 add_dependencies(heartgold_${hg_script_name}_assets heartgold_msg_assets)

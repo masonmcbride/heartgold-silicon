@@ -40,7 +40,6 @@ add_custom_command(
         "${hg_item_csv}"
         "${hg_item_narc}"
         "${hg_item_manifest}"
-        -i "${PROJECT_BINARY_DIR}/include"
         -i "${game_source}/include"
         --pad 0xFF
         --naix

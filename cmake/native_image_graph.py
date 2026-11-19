@@ -221,6 +221,34 @@ def configure(game, out):
                     raise ValueError('Unsupported CMake path delimiter: '+source)
                 lines.append('"'+source+'"')
         lines.append(')')
+    # The Python model owns these facts. Export lists once rather than making
+    # CMake reparse the complete JSON model for every original member.
+    for name in ('main', 'OVY_0', 'OVY_38'):
+        objects = model['images'][name]['objects']
+        for suffix, values in (
+                ('objects', objects),
+                ('C_objects', [obj for obj in objects if model['members'][obj]['kind'] == 'C']),
+                ('inputs', [str(game / model['members'][obj]['source']) for obj in objects]
+                           if name != 'main' else [])):
+            lines.append('set(hg_original_image_'+name+'_'+suffix)
+            for value in values:
+                if any(c in value for c in (';', '"', '\n', '$', '\\')):
+                    raise ValueError('Unsupported CMake path delimiter: '+value)
+                lines.append('"'+value+'"')
+            lines.append(')')
+    provider_plan=json.loads((Path(__file__).resolve().parents[1]/'compiler/guest32/main_provider_plan.json').read_text())
+    lines.append('set(hg_declared_provider_objects')
+    for obj in provider_plan['compiled_members']:
+        if obj not in model['images']['main']['objects'] or model['members'][obj]['kind']!='C':
+            raise ValueError('Declared provider is not original main C: '+obj)
+        lines.append('"'+obj+'"')
+    lines.append(')')
+    lines.append('set(hg_declared_guest_ir_objects')
+    for obj in sorted(set(provider_plan['compiled_members'])|set(provider_plan['proof_ir_members'])):
+        if obj not in model['images']['main']['objects'] or model['members'][obj]['kind']!='C':
+            raise ValueError('Declared guest IR is not original main C: '+obj)
+        lines.append('"'+obj+'"')
+    lines.append(')')
     main_data=[obj for obj in model['images']['main']['objects']
                if model['members'][obj]['kind']=='assembly' and model['members'][obj]['status']=='available']
     commands,outputs=data_commands(game,out.parent/'native-data',main_data)

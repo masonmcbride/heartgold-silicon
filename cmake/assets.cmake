@@ -25,27 +25,48 @@ file(GLOB nitroarc_sources CONFIGURE_DEPENDS "${hg_tools}/nitroarc/src/*.c")
 add_executable(hg_nitroarc "${hg_tools}/nitroarc/lib/nitroarc.c" ${nitroarc_sources})
 target_include_directories(hg_nitroarc PRIVATE "${hg_tools}/nitroarc/lib/include")
 set_target_properties(hg_nitroarc PROPERTIES OUTPUT_NAME nitroarc)
-add_executable(hg_msgenc
-    "${hg_tools}/msgenc/msgenc.cpp" "${hg_tools}/msgenc/Options.cpp"
-    "${hg_tools}/msgenc/MessagesConverter.cpp" "${hg_tools}/msgenc/MessagesDecoder.cpp"
-    "${hg_tools}/msgenc/MessagesEncoder.cpp" "${hg_tools}/msgenc/Gmm.cpp"
-    "${hg_tools}/msgenc/pugixml.cpp")
+add_executable(hg_nitroarc_index "${CMAKE_CURRENT_LIST_DIR}/assets/nitroarc_index.c"
+    "${hg_tools}/nitroarc/src/common.c" "${hg_tools}/nitroarc/lib/nitroarc.c")
+target_include_directories(hg_nitroarc_index PRIVATE "${hg_tools}"
+    "${hg_tools}/nitroarc/lib/include")
+set_target_properties(hg_nitroarc_index PROPERTIES OUTPUT_NAME nitroarc-index)
+add_library(hg_msgenc_core OBJECT
+    "${hg_tools}/msgenc/Options.cpp" "${hg_tools}/msgenc/MessagesConverter.cpp"
+    "${hg_tools}/msgenc/MessagesDecoder.cpp" "${hg_tools}/msgenc/MessagesEncoder.cpp"
+    "${hg_tools}/msgenc/Gmm.cpp" "${hg_tools}/msgenc/pugixml.cpp")
+target_compile_features(hg_msgenc_core PRIVATE cxx_std_17)
+target_compile_options(hg_msgenc_core PRIVATE -O2)
+target_compile_definitions(hg_msgenc_core PRIVATE NDEBUG)
+add_executable(hg_msgenc "${hg_tools}/msgenc/msgenc.cpp" $<TARGET_OBJECTS:hg_msgenc_core>)
 target_compile_features(hg_msgenc PRIVATE cxx_std_17)
-target_compile_definitions(hg_msgenc PRIVATE NDEBUG) # Original Makefile default.
+target_compile_definitions(hg_msgenc PRIVATE NDEBUG)
 set_target_properties(hg_msgenc PROPERTIES OUTPUT_NAME msgenc)
 add_executable(hg_jsonproc "${hg_tools}/jsonproc/jsonproc.cpp")
 target_compile_features(hg_jsonproc PRIVATE cxx_std_11)
 target_include_directories(hg_jsonproc PRIVATE "${hg_tools}/jsonproc")
 set_target_properties(hg_jsonproc PROPERTIES OUTPUT_NAME jsonproc)
 set(gfx "${hg_tools}/nitrogfx")
-add_executable(hg_nitrogfx
+add_library(hg_nitrogfx_core OBJECT
     "${gfx}/main.c" "${gfx}/convert_png.c" "${gfx}/gfx.c" "${gfx}/jasc_pal.c"
     "${gfx}/lz.c" "${gfx}/rl.c" "${gfx}/util.c" "${gfx}/font.c"
     "${gfx}/huff.c" "${gfx}/json.c" "${gfx}/cJSON.c")
-target_compile_features(hg_nitrogfx PRIVATE c_std_17)
-target_compile_definitions(hg_nitrogfx PRIVATE PNG_SKIP_SETJMP_CHECK)
+target_compile_features(hg_nitrogfx_core PRIVATE c_std_17)
+target_compile_definitions(hg_nitrogfx_core PRIVATE PNG_SKIP_SETJMP_CHECK main=hg_nitrogfx_entry)
+target_compile_options(hg_nitrogfx_core PRIVATE -O2)
+target_link_libraries(hg_nitrogfx_core PRIVATE PNG::PNG ZLIB::ZLIB)
+add_executable(hg_nitrogfx "${PROJECT_SOURCE_DIR}/compiler/assets/gfx_entry.c" $<TARGET_OBJECTS:hg_nitrogfx_core>)
 target_link_libraries(hg_nitrogfx PRIVATE PNG::PNG ZLIB::ZLIB)
 set_target_properties(hg_nitrogfx PROPERTIES OUTPUT_NAME nitrogfx)
+add_executable(hg_asset_compiler "${PROJECT_SOURCE_DIR}/compiler/assets/compiler.cpp"
+    "${PROJECT_SOURCE_DIR}/compiler/assets/host.cpp" $<TARGET_OBJECTS:hg_nitrogfx_core>
+    $<TARGET_OBJECTS:hg_msgenc_core>)
+target_compile_features(hg_asset_compiler PRIVATE cxx_std_17)
+target_compile_options(hg_asset_compiler PRIVATE -O2)
+target_compile_definitions(hg_asset_compiler PRIVATE NDEBUG)
+target_include_directories(hg_asset_compiler PRIVATE "${hg_tools}/jsonproc" "${hg_tools}/msgenc")
+target_link_libraries(hg_asset_compiler PRIVATE PNG::PNG ZLIB::ZLIB)
+include("${CMAKE_CURRENT_LIST_DIR}/assets/asset_batches.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/assets/native_assets.cmake")
 
 set(elf_reader "${PROJECT_BINARY_DIR}/native-tools/o2narc/RelocElfReader.cpp")
 native_generate(o2narc-reader "${hg_tools}/o2narc/RelocElfReader.cpp" "${elf_reader}")
@@ -79,6 +100,36 @@ function(hg_narc target relative directory)
         DEPENDS hg_nitroarc ${ARGN} ${metadata}
         VERBATIM)
     add_custom_target(${target} DEPENDS "${archive}" "${index}")
+    set_property(GLOBAL APPEND PROPERTY HG_ASSET_ARCHIVE_TARGETS "${target}")
+endfunction()
+
+# Script/event indices depend on original member names, not payload bytes.
+# Both phases use one declared order and Nintendo's existing tool algorithms.
+function(hg_ordered_archive target relative directory)
+    if(NOT ARGN)
+        message(FATAL_ERROR "Empty original archive recipe: ${relative}")
+    endif()
+    set(order "${PROJECT_BINARY_DIR}/generated/${target}-order.txt")
+    set(contents "")
+    foreach(member IN LISTS ARGN)
+        get_filename_component(name "${member}" NAME)
+        string(APPEND contents "${name}\n")
+    endforeach()
+    file(GENERATE OUTPUT "${order}" CONTENT "${contents}")
+    set(archive "${PROJECT_BINARY_DIR}/generated/files/${relative}.narc")
+    set(index "${PROJECT_BINARY_DIR}/generated/files/${relative}.naix")
+    get_filename_component(parent "${archive}" DIRECTORY)
+    add_custom_command(OUTPUT "${index}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${parent}"
+        COMMAND $<TARGET_FILE:hg_nitroarc_index> "${archive}" "${order}"
+        DEPENDS hg_nitroarc_index "${order}" VERBATIM)
+    add_custom_target(${target}_index DEPENDS "${index}")
+    add_custom_command(OUTPUT "${archive}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${parent}"
+        COMMAND $<TARGET_FILE:hg_nitroarc> -cf "${archive}" -T "${order}" -E "*" "${directory}"
+        DEPENDS hg_nitroarc "${order}" ${ARGN} VERBATIM)
+    add_custom_target(${target} DEPENDS "${archive}")
+    add_dependencies(${target} ${target}_index)
 endfunction()
 
 set(matrix "${game_source}/files/fielddata/mapmatrix/map_matrix")
@@ -108,12 +159,7 @@ endif()
 string(REGEX REPLACE "^SDAT := files/" "" sound_relative "${sound_declaration}")
 set(sound_output "${PROJECT_BINARY_DIR}/generated/files/${sound_relative}")
 get_filename_component(sound_parent "${sound_output}" DIRECTORY)
-add_custom_command(OUTPUT "${sound_output}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${sound_parent}"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${game_source}/files/${sound_relative}" "${sound_output}"
-    COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${sound_output}"
-    DEPENDS "${game_source}/files/${sound_relative}" "${sound_manifest}"
-    VERBATIM)
+hg_asset_host_job(graphics copy "${game_source}/files/${sound_relative};${sound_manifest}" "${sound_output}")
 add_custom_target(heartgold_sound_archive_assets DEPENDS "${sound_output}")
 list(APPEND heartgold_asset_targets
     heartgold_sound_archive_assets
@@ -128,6 +174,12 @@ list(APPEND heartgold_asset_targets
 add_custom_target(heartgold_overlay_index_assets
     DEPENDS heartgold_zukan_enc_assets ${heartgold_overlay_index_targets})
 add_custom_target(assets DEPENDS ${heartgold_asset_targets})
+set(heartgold_compile_asset_targets ${heartgold_asset_targets})
+list(REMOVE_ITEM heartgold_compile_asset_targets heartgold_script_assets
+    heartgold_zone_event_assets heartgold_sound_archive_assets)
+list(APPEND heartgold_compile_asset_targets heartgold_scr_seq_assets_index
+    heartgold_move_script_assets_index heartgold_subscript_assets_index
+    heartgold_zone_event_assets_index)
 
 # Recover the proven native CARD image from original resource names and the
 # declared asset outputs. No checkpoint manifest or compiled input participates.
@@ -154,6 +206,9 @@ add_custom_command(OUTPUT "${hg_cartridge}" "${hg_cartridge_manifest}"
     DEPENDS "${hg_cartridge_script}" "${game_source}/filesystem.mk" ${hg_cartridge_inputs}
     VERBATIM)
 add_custom_target(heartgold_cartridge DEPENDS "${hg_cartridge}" "${hg_cartridge_manifest}")
+# Resource targets own their producer rules. Keep the file dependencies above
+# for invalidation, but do not copy every conversion into the cartridge target.
+add_dependencies(heartgold_cartridge ${heartgold_asset_targets})
 foreach(name source_cartridge)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" -B
         "${PROJECT_SOURCE_DIR}/tests/test_${name}.py")

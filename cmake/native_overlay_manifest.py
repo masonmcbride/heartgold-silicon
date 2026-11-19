@@ -8,7 +8,7 @@ import native_assembly_data as assembly_data
 from native_image_graph import parse_manifest, representation, ownership, data_commands, image_policy, original_membership
 
 
-def select(images, names, game, native_dir=None, adapted_dir=None):
+def select(images, names, game, native_dir=None, adapted_dir=None, representations=None):
     selected = []
     for name in names:
         if name not in images or images[name]['kind'] != 'Overlay':
@@ -24,9 +24,20 @@ def select(images, names, game, native_dir=None, adapted_dir=None):
         sources = []
         data_members = []
         for obj in image['objects']:
-            record = representation(game, obj, native_dir, adapted_dir)
+            record = (representations[obj] if representations is not None else
+                      representation(game, obj, native_dir, adapted_dir))
             if record['status'] != 'available':
                 raise ValueError(f"{name}: missing native C provider for {obj}; {record['reason']}")
+            if representations is not None:
+                import native_sources
+                if record['kind'] == 'assembly':
+                    expected = native_dir / (obj[:-2]+'.S')
+                else:
+                    relative = record['source']
+                    adapted = adapted_dir and relative in native_sources.OVERLAY_NATIVE_SOURCES
+                    expected = (adapted_dir if adapted else game) / relative
+                if record['native_source'] != str(expected):
+                    raise ValueError('Native model output roots differ: '+obj)
             source = Path(record['native_source']) if record['native_source'] else game/(obj[:-2]+'.S')
             if record['kind'] == 'assembly': data_members.append(obj)
             other = [i['name'] for i in images.values() if obj in i['objects'] and i['name'] != name]
@@ -42,14 +53,22 @@ def select(images, names, game, native_dir=None, adapted_dir=None):
     return sorted(selected, key=lambda i: i['id'])
 
 
-def generate(game, out, names, adapted_dir=None, supported=False):
+def generate(game, out, names, adapted_dir=None, supported=False, model=None):
     images = parse_manifest(game / 'main.lsf')
+    representations = None
+    if model is not None:
+        described = {name:{k:v for k,v in image.items() if k!='original_membership'}
+                     for name,image in model['images'].items()}
+        if described != images:
+            raise ValueError('Native model original image membership differs')
+        representations = model['members']
     if supported:
         # Keep every exclusion explicit; unsupported members never become empty objects.
         excluded = {}
         for name,image in images.items():
             if image['kind']!='Overlay' or name in names: continue
-            records = [representation(game,obj) for obj in image['objects']]
+            records = [representations[obj] if representations is not None else representation(game,obj)
+                       for obj in image['objects']]
             failures = [r for r in records if r['status']!='available']
             if not records:
                 excluded[name]=[dict(status='no original members', **original_membership(game,image))]
@@ -59,7 +78,7 @@ def generate(game, out, names, adapted_dir=None, supported=False):
         out.mkdir(parents=True,exist_ok=True)
         from native_image_graph import write
         write(out/'blocked-images.json',json.dumps(excluded,indent=2,sort_keys=True)+'\n')
-    selected = select(images, list(dict.fromkeys(names)), game, out / 'data', adapted_dir)
+    selected = select(images, list(dict.fromkeys(names)), game, out / 'data', adapted_dir, representations)
     out.mkdir(parents=True, exist_ok=True)
     def write(name, text):
         path = out / name
@@ -90,6 +109,8 @@ if __name__ == '__main__':
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--select', action='append', required=True)
     p.add_argument('--adapted-dir', type=Path)
+    p.add_argument('--model', type=Path, help='Model freshly produced by native_image_graph in this configuration')
     p.add_argument('--supported', action='store_true', help='Include every image with complete reviewed native representations')
     a = p.parse_args()
-    generate(a.game, a.out, a.select, a.adapted_dir, a.supported)
+    generate(a.game, a.out, a.select, a.adapted_dir, a.supported,
+             json.loads(a.model.read_text()) if a.model else None)

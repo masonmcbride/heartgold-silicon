@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import shlex
+import re
 import signal
 import subprocess
 import sys
@@ -20,6 +21,10 @@ def main():
     a = p.parse_args()
     a.lowerer = a.lowerer.resolve()
     build, llvm = a.build.resolve(), a.llvm_bin.resolve()
+    # A link command may start with CMake's diagnostic launcher. The configured
+    # C compiler owns C compilation, regardless of wrappers on the link rule.
+    compiler = re.search(r'^CMAKE_C_COMPILER:[^=]+=(.+)$',
+                         (build/'CMakeCache.txt').read_text(), re.M)[1]
     src, out = build/'wm-guest32', build/'wm-provider-tests'
     out.mkdir(parents=True, exist_ok=True)
     commands = []
@@ -107,7 +112,7 @@ int main(int argc, char **argv) {
 ''')
     for opt in ('0', '2'):
         command = shlex.split((build/'CMakeFiles/test_wm_guest32_services.dir/link.txt').read_text())
-        run([command[0], '-x', 'c', '-O'+opt, '-fsanitize=address,undefined',
+        run([compiler, '-x', 'c', '-O'+opt, '-fsanitize=address,undefined',
              '-I'+str(ROOT/'hardware_drivers'), '-I'+str(src), '-c', host, '-o', out/'main.o'])
         command[command.index('CMakeFiles/test_wm_guest32_services.dir/tests/test_wm_guest32_services.c.o')] = str(out/'main.o')
         command[command.index('-o')+1] = str(out/('test-O'+opt))
@@ -130,7 +135,6 @@ int main(int argc, char **argv) {
     for line in (build/'CMakeFiles/heartgold_wm_guest32_services.dir/flags.make').read_text().splitlines():
         if ' = ' in line:
             key, value = line.split(' = ',1); options[key] = shlex.split(value)
-    compiler = shlex.split((build/'CMakeFiles/test_wm_guest32_services.dir/link.txt').read_text())[0]
     failure = run([compiler, '-x', 'c', *options['C_DEFINES'], *options['C_INCLUDES'],
                    *options['C_FLAGS'], '-fsyntax-only', queue], expected=1)
     assert 'WM guest queue cannot use native ABI' in failure

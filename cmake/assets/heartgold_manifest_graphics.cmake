@@ -81,13 +81,7 @@ function(hg_manifest_graphics_archive
 
         if(EXISTS "${input}")
             # Preserve original binary resources without re-encoding.
-            add_custom_command(OUTPUT "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
-                COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-                    "${input}" "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
-                DEPENDS "${input}"
-                VERBATIM)
+            hg_asset_host_job(graphics copy "${input}" "${output}")
 
         elseif(name MATCHES "\\.lz$")
             # Original graphics_files_rules.mk: %.lz: %
@@ -97,11 +91,7 @@ function(hg_manifest_graphics_archive
                 message(FATAL_ERROR "Missing LZ source: ${raw}")
             endif()
 
-            add_custom_command(OUTPUT "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
-                COMMAND $<TARGET_FILE:hg_nitrogfx> "${raw}" "${output}"
-                DEPENDS hg_nitrogfx "${raw}"
-                VERBATIM)
+            hg_asset_gfx("${raw}" "${output}")
 
         elseif(name MATCHES "\\.NCGR$")
             # PNG -> NCGR flags come from graphics_files_rules.mk,
@@ -126,12 +116,7 @@ function(hg_manifest_graphics_archive
                 list(APPEND flags -bitdepth 8)
             endif()
 
-            add_custom_command(OUTPUT "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
-                COMMAND $<TARGET_FILE:hg_nitrogfx>
-                    "${png}" "${output}" ${flags}
-                DEPENDS hg_nitrogfx "${png}"
-                VERBATIM)
+            hg_asset_gfx("${png}" "${output}" ${flags})
 
         else()
             message(FATAL_ERROR
@@ -165,31 +150,40 @@ hg_manifest_graphics_archive(
 # Python only reads the inspected Make expressions; original tools emit resources
 # and their index headers. There is no independent index-header writer.
 set(hg_manifest_reader "${CMAKE_CURRENT_LIST_DIR}/asset_manifest.py")
+set(hg_manifest_cmake "${PROJECT_BINARY_DIR}/generated/overlay-asset-plan.cmake")
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_manifest_reader}"
-    --root "${game_source}"
+    --root "${game_source}" --cmake "${hg_manifest_cmake}"
     OUTPUT_VARIABLE hg_manifest_plan COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     "${hg_manifest_reader}" "${game_source}/graphics_files_rules.mk")
 file(CONFIGURE OUTPUT "${PROJECT_BINARY_DIR}/generated/overlay-asset-plan.json"
     CONTENT "${hg_manifest_plan}" @ONLY)
-string(JSON hg_archive_count LENGTH "${hg_manifest_plan}")
+include("${hg_manifest_cmake}")
 math(EXPR hg_archive_last "${hg_archive_count} - 1")
 set(heartgold_overlay_index_targets)
 foreach(a RANGE ${hg_archive_last})
-    string(JSON plan GET "${hg_manifest_plan}" ${a})
+    set(plan "${hg_manifest_header_${a}}")
     string(JSON relative GET "${plan}" relative)
     string(JSON manifest GET "${plan}" manifest)
     set(manifest "${game_source}/${manifest}")
     set(stage "${PROJECT_BINARY_DIR}/generated/files/${relative}")
     set(work "${PROJECT_BINARY_DIR}/generated/asset-work/${relative}")
+    # Original Nitroarc excludes .*keep. Keep directory creation out of the
+    # per-member conversion path while retaining missing-directory recovery.
+    set(stage_ready "${stage}/.buildkeep")
+    set(work_ready "${work}/.buildkeep")
+    add_custom_command(OUTPUT "${stage_ready}" "${work_ready}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}" "${work}"
+        COMMAND "${CMAKE_COMMAND}" -E touch "${stage_ready}" "${work_ready}"
+        VERBATIM)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${manifest}")
     # Track wildcard inventory changes without running Make or writing upstream.
     file(GLOB original_inventory CONFIGURE_DEPENDS "${game_source}/files/${relative}/*")
     set(recipe_deps "${manifest}" "${game_source}/graphics_files_rules.mk" "${hg_manifest_reader}")
-    string(JSON count LENGTH "${plan}" steps)
+    set(count "${hg_manifest_step_count_${a}}")
     math(EXPR last "${count} - 1")
     foreach(i RANGE ${last})
-        string(JSON step GET "${plan}" steps ${i})
+        set(step "${hg_manifest_step_${a}_${i}}")
         string(JSON name GET "${step}" name)
         string(JSON kind GET "${step}" kind)
         string(JSON input GET "${step}" input)
@@ -208,41 +202,17 @@ foreach(a RANGE ${hg_archive_last})
             endforeach()
         endif()
         if(kind STREQUAL "copy")
-            add_custom_command(OUTPUT "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
-                COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${input}" "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
-                DEPENDS "${input}" ${recipe_deps} VERBATIM)
+            hg_asset_host_job(graphics copy "${input}" "${output}")
         elseif(kind STREQUAL "gfx")
-            set(key)
-            if(EXISTS "${input}.key")
-                list(APPEND key "${input}.key")
-            endif()
-            add_custom_command(OUTPUT "${output}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}"
-                COMMAND $<TARGET_FILE:hg_nitrogfx> "${input}" "${output}" ${flags}
-                DEPENDS hg_nitrogfx "${input}" ${key} ${recipe_deps} VERBATIM)
+            hg_asset_gfx("${input}" "${output}" ${flags})
         elseif(kind STREQUAL "json-asm")
-            string(JSON template GET "${step}" template)
-            set(asm "${work}/${name}.s")
-            set(obj "${work}/${name}.o")
-            add_custom_command(OUTPUT "${output}"
-                BYPRODUCTS "${asm}" "${obj}"
-                COMMAND "${CMAKE_COMMAND}" -E make_directory "${stage}" "${work}"
-                COMMAND $<TARGET_FILE:hg_jsonproc> "${input}" "${template}" "${asm}"
-                COMMAND "${CMAKE_C_COMPILER}" --target=armv5te-none-eabi -x assembler-with-cpp
-                    -c "${asm}" -o "${obj}"
-                COMMAND "${HG_ASSET_OBJCOPY}" -O binary --only-section=.rodata "${obj}" "${output}"
-                DEPENDS hg_jsonproc "${input}" "${template}" ${recipe_deps} VERBATIM)
+            hg_native_asset_record("${input}" "${output}")
         else()
             message(FATAL_ERROR "Unsupported original resource kind: ${kind}")
         endif()
     endforeach()
     set(members)
-    string(JSON count LENGTH "${plan}" members)
-    math(EXPR last "${count} - 1")
-    foreach(i RANGE ${last})
-        string(JSON name GET "${plan}" members ${i})
+    foreach(name IN LISTS hg_manifest_members_${a})
         list(APPEND members "${stage}/${name}")
     endforeach()
     string(MAKE_C_IDENTIFIER "heartgold_${relative}_assets" target)

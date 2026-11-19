@@ -17,12 +17,20 @@ import time
 def build_activity(line):
     """Recognize actual Make/compiler output without estimating CPU work."""
     if 'semantic slots:' in line:
-        return 'CPU-heavy: pointer/ABI analysis'
+        return 'CPU-heavy: ABI census and analysis'
     if ('provider-closure170/complete.stamp' in line or
             re.match(r'^(described|frontend)\s+\d+', line)):
-        return 'CPU-heavy: provider compilation'
+        return 'CPU-heavy: provider pipeline'
     if 'guest32-shared/complete' in line:
-        return 'CPU-heavy: native-image compiler'
+        return 'CPU-heavy: guest image compilation'
+    for group, label in [('messages', 'text encoding'), ('graphics', 'graphics and resource staging'),
+                         ('data', 'scripts, map events and data records')]:
+        if f'Generating declared {group} assets' in line:
+            return 'Assets: ' + label
+    if 'Preparing declared native sources' in line:
+        return 'Source adaptations'
+    if 'guest32-lower.dir/' in line or 'guest32-codegen.dir/' in line:
+        return 'Compiler tool compilation'
     if 'Linking ' in line:
         return ('Native image linkage' if 'heartgold_image_' in line else
                 'Executable linkage' if line.endswith(' heartgold') else 'Linking')
@@ -37,12 +45,58 @@ def build_activity(line):
     return None
 
 
+def native_component_timings(build, since_ns):
+    """Only profiles written during this build; never display stale timings."""
+    build = Path(build)
+    result = {}
+    def fresh(relative):
+        path = build / relative
+        if not path.is_file() or path.stat().st_mtime_ns < since_ns:
+            return None
+        return json.loads(path.read_text())
+    for group, label in [('messages', 'Text encoding'), ('graphics', 'Graphics/resource staging'),
+                         ('data', 'Scripts/events/data records')]:
+        profile = fresh(f'asset-plans/{group}-profile.json')
+        if profile:
+            result[label] = dict(seconds=profile['seconds'], executed=profile['executed'], jobs=profile['jobs'])
+    profile = fresh('provider-closure170/backend-profile.json')
+    if profile:
+        result['Provider backend'] = dict(seconds=profile['total_seconds'],
+            lowering_seconds=profile['lower_batch_seconds'],
+            codegen_publication_seconds=profile['codegen_and_publication_seconds'])
+    profile = fresh('provider-closure170/finish-profile.json')
+    if profile:
+        result['Provider pipeline (includes backend)'] = dict(seconds=profile['total_seconds'])
+    return result
+
+
 def build_file(line):
     match = re.search(r'Building \S+ object .+?\.dir/(.+)\.o$', line)
     if match:
         return match[1]
     match = re.search(r'(?:Generating|Linking (?:CXX|C|ASM) (?:executable|shared library|static library)) (.+)$', line)
     return match[1] if match else None
+
+
+def configuration_command(root, build, compiler, cxx, python, tracing):
+    configure = ['cmake', '-S', str(root), '-B', str(build), '-G', 'Unix Makefiles',
+        '-DCMAKE_C_COMPILER=' + compiler, '-DCMAKE_CXX_COMPILER=' + cxx,
+        '-DPython3_EXECUTABLE=' + python,
+        '-DHEARTGOLD_TRACE_BUILD=' + ('ON' if tracing else 'OFF'),
+        '-DHEARTGOLD_BUILD_GAME=ON', '-DHEARTGOLD_NATIVE_OVERLAYS=ON']
+    cache = build / 'CMakeCache.txt'
+    if not cache.exists() or not (build / 'CMakeFiles/Makefile.cmake').exists():
+        return configure
+    values = dict(re.findall(r'^([^#/:\n][^:\n]*):\w+=(.*)$', cache.read_text(), re.M))
+    expected = dict(CMAKE_HOME_DIRECTORY=str(root), CMAKE_GENERATOR='Unix Makefiles',
+        CMAKE_C_COMPILER=compiler, CMAKE_CXX_COMPILER=cxx,
+        Python3_EXECUTABLE=python, HEARTGOLD_BUILD_GAME='ON', HEARTGOLD_NATIVE_OVERLAYS='ON',
+        HEARTGOLD_TRACE_BUILD='ON' if tracing else 'OFF')
+    if any(values.get(key) != value for key, value in expected.items()):
+        return configure
+    # Let CMake's own dependency and CONFIGURE_DEPENDS glob checks decide when
+    # regeneration is necessary. Keep that work timed in the configure stage.
+    return ['cmake', '--build', str(build), '--target', 'cmake_check_build_system']
 
 
 class Runner:
@@ -52,16 +106,37 @@ class Runner:
         self.verbose = verbose
         self.tty = sys.stdout.isatty() and not verbose
         self.timings = {}
+        self.stages = []
+        self.trace = None
+        if os.environ.get('HEARTGOLD_TRACE_BUILD') == '1':
+            self.trace = self.logs / ('run-trace-' + str(time.time_ns()))
+            (self.trace / 'subprocesses').mkdir(parents=True)
+            (self.trace / 'rules').mkdir()
+            (self.trace / 'initial-state.json').write_text(json.dumps(dict(
+                build=str(Path(build).resolve()),
+                existing_cmake_cache=(Path(build)/'CMakeCache.txt').exists(),
+                existing_executable=(Path(build)/'heartgold').exists(),
+                note='Existing outputs are retained. This run is not necessarily a fresh build.'), indent=2)+'\n')
+            print('Single-run diagnostic: ' + str(self.trace), flush=True)
 
     def run(self, stage, command, env=None, timeout=None):
         start = time.monotonic()
+        wall_start_ns = time.time_ns()
+        test_events = []
+        if self.trace:
+            env = dict(os.environ if env is None else env)
+            observer = Path(__file__).resolve().parent / 'build_trace'
+            env.update(HEARTGOLD_RUN_TRACE=str(self.trace), HEARTGOLD_TRACE_PHASE=stage,
+                       PYTHONDONTWRITEBYTECODE='1',
+                       PYTHONPATH=str(observer) + (os.pathsep + env['PYTHONPATH'] if env.get('PYTHONPATH') else ''))
+            if stage == 'Native build':
+                env['HEARTGOLD_COMMAND_TRACE'] = str(self.trace / 'rules')
         log_path = self.logs / (stage.lower().replace(' ', '-') + '.log')
         print(stage, flush=True)
         tail = deque(maxlen=30)
         errors = deque(maxlen=15)
         progress = None
         label = stage
-        activity_start = start
         heavy = False
         last_bucket = -1
         milestones = set()
@@ -103,6 +178,8 @@ class Runner:
                         pending = lines.pop()
                         for raw in lines:
                             line = raw.decode(errors='replace').rstrip('\r')
+                            if self.trace and stage == 'Testing' and re.search(r'Start\s+\d+:|\d+/\d+ Test\s*#', line):
+                                test_events.append(dict(observed=time.monotonic(), line=line))
                             tail.append(line)
                             if re.search(r'error:|Error:|FAILED:|Undefined symbols|missing include', line):
                                 errors.append(line)
@@ -129,11 +206,7 @@ class Runner:
                             activity = build_activity(line) if stage == 'Native build' else None
                             if activity and (not heavy or activity.startswith('CPU-heavy:')):
                                 if activity != label:
-                                    if label.startswith('CPU-heavy:') and not self.verbose:
-                                        clear_display()
-                                        print(f'{label}: observed {time.monotonic()-activity_start:.1f}s wall time', flush=True)
                                     label = activity
-                                    activity_start = time.monotonic()
                                     if self.verbose and label.startswith('CPU-heavy:'):
                                         print(f'{label} | {time.monotonic()-start:.1f}s elapsed', flush=True)
                                 heavy = activity.startswith('CPU-heavy:')
@@ -159,7 +232,7 @@ class Runner:
                             display = '|/-\\'[int(elapsed * 5) % 4]
                         kind = ' graph' if stage == 'Native build' else ''
                         columns = max(40, shutil.get_terminal_size((110, 24)).columns) - 1
-                        rows = [f'{label} {display}{kind} | step {time.monotonic()-activity_start:.0f}s / stage {elapsed:.0f}s']
+                        rows = [f'{label} {display}{kind} | stage {elapsed:.0f}s elapsed']
                         rows += [('  `- ' if i == len(recent_files)-1 else '  |- ') + name
                                  for i, name in enumerate(recent_files)]
                         rows = [row if len(row) <= columns else row[:columns-4]+' ...' for row in rows]
@@ -187,7 +260,35 @@ class Runner:
                 signal.signal(signum, handler)
             if self.tty:
                 clear_display()
-        self.timings[stage] = round(time.monotonic() - start, 3)
+        end = time.monotonic()
+        self.timings[stage] = round(end - start, 3)
+        self.stages.append(dict(name=stage, start=start, end=end, status=status, command=list(map(str,command))))
+        if stage == 'Native build' and not status:
+            components = native_component_timings(self.logs.parent, wall_start_ns)
+            (self.logs / 'native-components.json').write_text(json.dumps(dict(
+                caveat='Measured components overlap and nest; these are not an elapsed-time partition.',
+                components=components), indent=2) + '\n')
+            if components:
+                print('Measured native components (overlap; do not add):', flush=True)
+                for name, profile in components.items():
+                    detail = (f"; {profile['executed']}/{profile['jobs']} generated" if 'executed' in profile else
+                        f"; lowering {profile['lowering_seconds']:.2f}s, codegen/publication {profile['codegen_publication_seconds']:.2f}s"
+                        if 'lowering_seconds' in profile else '')
+                    print(f"  {name}: {profile['seconds']:.2f}s{detail}", flush=True)
+        if self.trace:
+            (self.trace/'stages.json').write_text(json.dumps(self.stages, indent=2)+'\n')
+            if stage == 'Testing':
+                (self.trace / 'test-events.json').write_text(json.dumps(test_events, indent=2)+'\n')
+            if stage in ('Testing', 'Runtime diagnostic') or status:
+                from build_trace.report import report as run_report
+                run_report(self.trace, self.stages)
+        if stage == 'Native build' and env and env.get('HEARTGOLD_COMMAND_TRACE'):
+            from trace_build import report
+            summary = report(env['HEARTGOLD_COMMAND_TRACE'], start, end)
+            print('Native wall-time partition (overlap shown explicitly):', flush=True)
+            for name, seconds in summary['wall_partition'].items():
+                print(f'  {seconds:.3f}s | {name}', flush=True)
+            print('Command trace: ' + env['HEARTGOLD_COMMAND_TRACE'], flush=True)
         (self.logs / 'timings.json').write_text(json.dumps(self.timings, indent=2) + '\n')
         print(f'{stage}: {"FAILED" if status else "complete"} ({self.timings[stage]:.1f}s)', flush=True)
         if stage == 'Testing':
@@ -214,13 +315,11 @@ def main():
     bootstrap = float(os.environ.get('HEARTGOLD_BOOTSTRAP_SECONDS', '0'))
     runner.timings['Bootstrap'] = bootstrap
     start = time.monotonic()
-    # CMake owns URLs, pins, checkout validation and fetching. No second inventory.
-    # Reconfigure existing caches too: old entrypoint builds omitted the
-    # production compiler and could silently retain a different game graph.
-    runner.run('Dependencies and configure', ['cmake', '-S', str(root), '-B', str(build), '-G', 'Unix Makefiles',
-        '-DCMAKE_C_COMPILER=' + args.compiler, '-DCMAKE_CXX_COMPILER=' + args.cxx,
-        '-DPython3_EXECUTABLE=' + sys.executable,
-        '-DHEARTGOLD_BUILD_GAME=ON', '-DHEARTGOLD_NATIVE_OVERLAYS=ON'])
+    configure = configuration_command(root, build,
+        args.compiler, args.cxx, sys.executable, os.environ.get('HEARTGOLD_TRACE_BUILD') == '1')
+    if runner.trace and '-S' in configure:
+        configure += ['--profiling-format=google-trace', '--profiling-output=' + str(runner.trace/'configure.json')]
+    runner.run('Dependencies and configure', configure)
     cache = (build / 'CMakeCache.txt').read_text()
     for key, expected in (('CMAKE_HOME_DIRECTORY', str(root)), ('CMAKE_GENERATOR', 'Unix Makefiles'),
                           ('CMAKE_C_COMPILER', args.compiler), ('CMAKE_CXX_COMPILER', args.cxx)):
@@ -243,7 +342,10 @@ def main():
     runner.run('Source audit', [sys.executable, '-B', str(root / 'cmake/native_sources.py'),
         '--audit', '--root', str(root / 'upstream/pokeheartgold'), '--output', str(build / 'source-audit.json')])
     print('Build percentages count graph actions, not CPU time; parallel work overlaps. Full output is retained in logs/native-build.log.', flush=True)
-    runner.run('Native build', ['cmake', '--build', str(build), '--parallel', '8'])
+    native_env = None
+    if runner.trace:
+        native_env = dict(os.environ, HEARTGOLD_COMMAND_TRACE=str(runner.trace/'rules'))
+    runner.run('Native build', ['cmake', '--build', str(build), '--parallel', '8'], env=native_env)
     runner.run('Symbol closure', [sys.executable, '-B', str(root / 'cmake/native_dynamic_closure.py'),
         str(build / 'heartgold'), '--report', str(build / 'native-overlays/dynamic-closure.json')])
     closure = json.loads((build / 'native-overlays/dynamic-closure.json').read_text())
@@ -252,7 +354,10 @@ def main():
     print(f"Bindings: {closure['application_images']} native images, {closure['strong_application_imports']} required application imports, 0 missing.", flush=True)
     runner.run('ARM64 executable', ['lipo', str(build / 'heartgold'), '-verify_arch', 'arm64'])
     print('Tests include a brief red/blue desktop window after compilation.', flush=True)
-    runner.run('Testing', ['ctest', '--test-dir', str(build), '--output-on-failure', '--parallel', '8'])
+    tests = ['ctest', '--test-dir', str(build), '--output-on-failure', '--parallel', '8']
+    if runner.trace:
+        tests += ['--output-junit', str(runner.trace/'tests.xml')]
+    runner.run('Testing', tests)
     if os.environ.get('HEARTGOLD_CARTRIDGE'):
         runner.run('Runtime diagnostic', [str(build / 'heartgold'),
             os.environ['HEARTGOLD_CARTRIDGE']], timeout=20)
@@ -263,6 +368,8 @@ def main():
     for stage, seconds in sorted(runner.timings.items(), key=lambda item: item[1], reverse=True):
         print(f'  {stage}: {seconds:.1f}s', flush=True)
     print(f"Executable: {build / 'heartgold'}\nTotal: {time.monotonic()-start+bootstrap:.1f}s\nLogs: {runner.logs}", flush=True)
+    if runner.trace:
+        print('Diagnostic report: ' + str(runner.trace/'summary.txt'), flush=True)
 
 
 if __name__ == '__main__':

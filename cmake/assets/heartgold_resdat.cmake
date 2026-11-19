@@ -32,28 +32,7 @@ foreach(json IN LISTS hg_resdat_jsons)
     set(obj "${hg_resdat_work}/${stem}.o")
     set(bin "${hg_resdat_members}/${stem}.bin")
     set(dep "${hg_resdat_work}/${stem}.d")
-    # Original JSON -> generated C -> original ARM data object -> binary.
-    # Each generated artifact has exactly one producing build edge.
-    add_custom_command(OUTPUT "${c}"
-        COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_resdat_work}"
-        COMMAND $<TARGET_FILE:hg_jsonproc> "${json}" "${hg_resdat_template}" "${c}"
-        DEPENDS hg_jsonproc "${json}" "${hg_resdat_template}"
-        VERBATIM)
-
-    add_custom_command(OUTPUT "${obj}"
-        COMMAND "${CMAKE_C_COMPILER}" --target=armv5te-none-eabi -std=gnu11 -fdata-sections
-            -DPOKEHEARTGOLD_GLOBAL_H -DPOKEHEARTGOLD_SPRITE_RESOURCE_HEADER_H -DNITRO_FS_FILE_H_
-            -include "${hg_resdat_types}" -I "${game_source}/include" -I "${game_source}/lib/include"
-            -MMD -MF "${dep}" -MQ "${obj}" -c "${c}" -o "${obj}"
-        DEPENDS "${c}" "${hg_resdat_types}"
-        DEPFILE "${dep}"
-        VERBATIM)
-
-    add_custom_command(OUTPUT "${bin}"
-        COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_resdat_members}"
-        COMMAND "${HG_ASSET_OBJCOPY}" -O binary --only-section=.rodata.data "${obj}" "${bin}"
-        DEPENDS "${obj}"
-        VERBATIM)
+    hg_native_asset_record("${json}" "${bin}")
     list(APPEND hg_resdat_bins "${bin}")
 endforeach()
 hg_narc(heartgold_resdat_assets "data/resdat" "${hg_resdat_members}" ${hg_resdat_bins})

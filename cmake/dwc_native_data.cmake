@@ -205,8 +205,6 @@ add_custom_target(heartgold_dwc_native_data DEPENDS
 add_test(NAME dwc_typed_data COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_dwc_typed_data.py" --build "${PROJECT_BINARY_DIR}"
     --game "${game_source}" --compiler "${CMAKE_C_COMPILER}")
-add_test(NAME dwc_typed_data_build COMMAND "${CMAKE_COMMAND}" --build
-    "${PROJECT_BINARY_DIR}" --target heartgold_dwc_native_data heartgold_main
-    hg_dwc_main hg_dwc_status_code -j8)
-set_tests_properties(dwc_typed_data_build PROPERTIES FIXTURES_SETUP dwc_typed_data_ready RUN_SERIAL TRUE)
-set_tests_properties(dwc_typed_data PROPERTIES FIXTURES_REQUIRED dwc_typed_data_ready RUN_SERIAL TRUE)
+heartgold_test_fixture(dwc_typed_data_ready heartgold_dwc_native_data heartgold_main
+    hg_dwc_main hg_dwc_status_code)
+set_tests_properties(dwc_typed_data PROPERTIES FIXTURES_REQUIRED dwc_typed_data_ready)

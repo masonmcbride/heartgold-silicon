@@ -120,7 +120,7 @@ def recipe(game, original, digest=None):
         raise ValueError('Original block count changed: '+original)
     if 'expected_relocations' in contract and len(raw_layout(records)[2]) != contract['expected_relocations']:
         raise ValueError('Original relocation count changed: '+original)
-    blocks=native_blocks(source,layouts,text,constants)
+    blocks=native_blocks(source,layouts,records=records)
     # Reviewed cross-member BSS coalescing retains one image-owned allocation.
     # Only zero storage can acquire interior symbol views; no initialized bytes
     # or relocations may be redistributed by this operation.

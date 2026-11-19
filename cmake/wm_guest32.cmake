@@ -61,9 +61,7 @@ target_compile_options(test_wm_guest32_services PRIVATE -UNDEBUG
     -fsanitize=address,undefined -fno-sanitize-recover=all)
 target_link_options(test_wm_guest32_services PRIVATE -fsanitize=address,undefined)
 add_dependencies(test_wm_guest32_services heartgold_wm_guest32_sources)
-add_test(NAME wm_guest32_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target heartgold_wm_guest32_audit test_wm_guest32_services -j8)
-set_tests_properties(wm_guest32_build PROPERTIES FIXTURES_SETUP wm_guest32)
+heartgold_test_fixture(wm_guest32 heartgold_wm_guest32_audit test_wm_guest32_services)
 add_test(NAME wm_guest32 COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_wm_guest32.py"
     --build "${PROJECT_BINARY_DIR}" --llvm-bin "${guest32_tools}"

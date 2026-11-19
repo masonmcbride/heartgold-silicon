@@ -40,15 +40,7 @@ add_custom_command(OUTPUT "${guest32_dir}/match_browse.o"
         -o "${guest32_dir}/match_browse.o"
     DEPENDS "${guest32_dir}/match_browse.native.ll" VERBATIM)
 # Whole-image admission is manifest complete. Never expose a partial archive.
-file(READ "${PROJECT_BINARY_DIR}/native-graph/images.json" guest32_model)
-string(JSON guest32_count LENGTH "${guest32_model}" images OVY_0 objects)
-math(EXPR guest32_last "${guest32_count}-1")
-set(guest32_image_inputs)
-foreach(i RANGE 0 ${guest32_last})
-    string(JSON obj GET "${guest32_model}" images OVY_0 objects ${i})
-    string(JSON relative GET "${guest32_model}" members "${obj}" source)
-    list(APPEND guest32_image_inputs "${game_source}/${relative}")
-endforeach()
+set(guest32_image_inputs ${hg_original_image_OVY_0_inputs})
 file(GLOB_RECURSE guest32_headers CONFIGURE_DEPENDS
     "${game_source}/include/*.h" "${game_source}/lib/include/*.h")
 set(guest32_image_dir "${PROJECT_BINARY_DIR}/guest32-ovy0-image")
@@ -59,6 +51,7 @@ set(guest32_frontend_inputs
     "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json")
 add_custom_command(OUTPUT "${guest32_image_dir}/complete.stamp"
     BYPRODUCTS "${guest32_image_dir}/frontend-coverage.json" "${guest32_image_dir}/inline-identities.json" "${guest32_image_dir}/ownership-conflicts.json"
+        "${guest32_image_dir}/compiler-catalog.json" "${guest32_image_dir}/compile-profile.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${guest32_driver}" --game "${game_source}"
         --build "${PROJECT_BINARY_DIR}" --out "${guest32_image_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
@@ -126,9 +119,7 @@ set_target_properties(heartgold_guest32_runtime PROPERTIES
     C_STANDARD 11
     C_STANDARD_REQUIRED YES)
 
-add_test(NAME guest32_callback_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target guest32-lower test_os heartgold_guest32_runtime -j8)
-set_tests_properties(guest32_callback_build PROPERTIES FIXTURES_SETUP guest32_callbacks)
+heartgold_test_fixture(guest32_callbacks guest32-lower test_os heartgold_guest32_runtime)
 add_test(NAME guest32_original_callbacks COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_callbacks.py" --build "${PROJECT_BINARY_DIR}"
     --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
@@ -151,6 +142,9 @@ add_test(NAME guest32_incremental COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_incremental.py")
 set_tests_properties(guest32_incremental PROPERTIES
     ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
+add_test(NAME guest32_provider_catalog COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_guest32_extra_roots.py"
+    --build "${PROJECT_BINARY_DIR}" --lowerer $<TARGET_FILE:guest32-lower>)
 add_test(NAME guest32_image_execution COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_image.py"
     --build "${PROJECT_BINARY_DIR}" --image-dir "${guest32_image_dir}"
@@ -190,16 +184,10 @@ heartgold_guest_provider(std lib/NitroSDK/src/std_string.o)
 target_link_libraries(heartgold PRIVATE heartgold_guest32_runtime)
 
 set(guest38_dir "${PROJECT_BINARY_DIR}/guest32-ovy38-image")
-set(guest38_inputs)
-string(JSON guest38_count LENGTH "${guest32_model}" images OVY_38 objects)
-math(EXPR guest38_last "${guest38_count}-1")
-foreach(i RANGE 0 ${guest38_last})
-    string(JSON obj GET "${guest32_model}" images OVY_38 objects ${i})
-    string(JSON relative GET "${guest32_model}" members "${obj}" source)
-    list(APPEND guest38_inputs "${game_source}/${relative}")
-endforeach()
+set(guest38_inputs ${hg_original_image_OVY_38_inputs})
 add_custom_command(OUTPUT "${guest38_dir}/complete.stamp"
     BYPRODUCTS "${guest38_dir}/frontend-coverage.json" "${guest38_dir}/inline-identities.json" "${guest38_dir}/ownership-conflicts.json"
+        "${guest38_dir}/compiler-catalog.json" "${guest38_dir}/compile-profile.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${guest32_driver}" --image OVY_38 --game "${game_source}"
         --build "${PROJECT_BINARY_DIR}" --out "${guest38_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
@@ -231,7 +219,8 @@ add_test(NAME guest32_closure_execution COMMAND "${Python3_EXECUTABLE}" -B
     --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
 add_custom_target(heartgold_guest32_link_diagnostics
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/guest32_closure.py"
-        --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}"
+        --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}" --lowerer $<TARGET_FILE:guest32-lower>
+        --diagnostic-stages
     DEPENDS heartgold_guest32_ovy0_archive heartgold_guest32_ovy38_archive
         heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_runtime
         heartgold_guest32_std_build
@@ -271,23 +260,25 @@ foreach(id IN ITEMS 0 38)
     list(APPEND guest32_shared_outputs "${dir}/libheartgold_overlay_${id}.a"
         "${dir}/plan.json" "${dir}/image.json" "${dir}/coverage.json" "${dir}/frontend-coverage.json" "${dir}/inline-identities.json" "${dir}/ownership-conflicts.json" "${dir}/data-relocations.json"
         "${dir}/cross-unit-abi.json" "${dir}/complete.stamp" "${dir}/image.d" "${dir}/native-abi.ll")
-    string(JSON count LENGTH "${guest32_model}" images OVY_${id} objects)
+    list(APPEND guest32_shared_outputs "${dir}/compiler-catalog.json" "${dir}/compile-profile.json")
+    set(objects ${hg_original_image_OVY_${id}_objects})
+    set(inputs ${hg_original_image_OVY_${id}_inputs})
+    list(LENGTH objects count)
     math(EXPR last "${count}-1")
     foreach(i RANGE 0 ${last})
-        string(JSON obj GET "${guest32_model}" images OVY_${id} objects ${i})
+        list(GET objects ${i} obj)
         list(APPEND guest32_shared_outputs "${dir}/${obj}/native.o")
-        string(JSON kind GET "${guest32_model}" members "${obj}" kind)
-        if(kind STREQUAL "C")
+        if(obj IN_LIST hg_original_image_OVY_${id}_C_objects)
             foreach(file IN ITEMS guest.ll guest.ll.d guest.ll.receipt.json frontend.log operations.json
-                    abi.json native.ll native.ll.receipt.json lower.log native.o.receipt.json object.log)
+                    abi.json compiler-catalog.json native.ll native.ll.receipt.json lower.log native.o.receipt.json object.log)
                 list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
             endforeach()
         else()
             foreach(file IN ITEMS data.c data.d native.o.receipt.json object.log)
                 list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
             endforeach()
-            string(JSON relative GET "${guest32_model}" members "${obj}" source)
-            file(STRINGS "${game_source}/${relative}" sections REGEX "^[ \t]*\\.(rodata|data|bss)[ \t]*$")
+            list(GET inputs ${i} input)
+            file(STRINGS "${input}" sections REGEX "^[ \t]*\\.(rodata|data|bss)[ \t]*$")
             foreach(section IN LISTS sections)
                 string(STRIP "${section}" section)
                 string(SUBSTRING "${section}" 1 -1 section)
@@ -318,19 +309,22 @@ add_custom_command(OUTPUT "${guest32_shared_dir}/complete.stamp"
 add_custom_target(heartgold_guest32_shared DEPENDS "${guest32_shared_dir}/complete.stamp")
 add_custom_target(heartgold_guest32_shared_link_diagnostics
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/guest32_closure.py"
-        --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}"
+        --build "${PROJECT_BINARY_DIR}" --compiler "${CMAKE_C_COMPILER}" --lowerer $<TARGET_FILE:guest32-lower>
+        --diagnostic-stages
         --image-root "${guest32_shared_dir}" --out "${guest32_shared_dir}/links"
     DEPENDS heartgold_guest32_shared heartgold_guest32_account_build heartgold_guest32_crc_build
         heartgold_guest32_std_build heartgold_guest32_runtime heartgold_guest32_mi_manifest
         heartgold_guest32_scalar_bridges heartgold_guest32_libc_memory heartgold_overlay_link_contract
     VERBATIM)
-add_test(NAME guest32_shared_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target heartgold_guest32_shared -j8)
-set_tests_properties(guest32_shared_build PROPERTIES FIXTURES_SETUP guest32_shared)
+heartgold_test_fixture(guest32_shared heartgold_guest32_shared heartgold_guest32_ovy38_archive
+        heartgold_guest32_account_build heartgold_guest32_crc_build
+        heartgold_guest32_std_build heartgold_guest32_mi_manifest)
 add_test(NAME guest32_shared_execution COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_shared.py" --build "${PROJECT_BINARY_DIR}"
     --image-root "${guest32_shared_dir}" --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
 set_tests_properties(guest32_shared_execution PROPERTIES FIXTURES_REQUIRED guest32_shared)
+set_tests_properties(guest32_closure_execution guest32_mi_execution guest32_std_execution
+    PROPERTIES FIXTURES_REQUIRED guest32_shared)
 
 # Deliberately bounded software experiments, not admission of complete images.
 add_test(NAME guest32_provider_experiments COMMAND "${Python3_EXECUTABLE}" -B
@@ -342,18 +336,18 @@ add_test(NAME guest32_provider_experiments COMMAND "${Python3_EXECUTABLE}" -B
 # It is intentionally separate from game admission and hardware validation.
 set(guest32_provider_dir "${PROJECT_BINARY_DIR}/provider-closure170")
 set(guest32_provider_outputs)
-string(JSON guest32_main_count LENGTH "${guest32_model}" images main objects)
-math(EXPR guest32_main_last "${guest32_main_count}-1")
-foreach(i RANGE 0 ${guest32_main_last})
-    string(JSON obj GET "${guest32_model}" images main objects ${i})
-    string(JSON kind GET "${guest32_model}" members "${obj}" kind)
-    if(kind STREQUAL "C")
-        foreach(file IN ITEMS guest.ll guest.ll.d guest.ll.receipt.json frontend.log
-                description.json description.json.receipt.json abi.json native.ll
-                native.ll.receipt.json lower.log native.o native.o.receipt.json object.log provider.a)
-            list(APPEND guest32_provider_outputs "${guest32_provider_dir}/${obj}/${file}")
-        endforeach()
-    endif()
+foreach(file IN ITEMS guest.ll frontend.log)
+    set(paths ${hg_declared_guest_ir_objects})
+    list(TRANSFORM paths PREPEND "${guest32_provider_dir}/")
+    list(TRANSFORM paths APPEND "/${file}")
+    list(APPEND guest32_provider_outputs ${paths})
+endforeach()
+foreach(file IN ITEMS abi.json native.ll
+        lower.log native.o object.log provider.a)
+    set(paths ${hg_declared_provider_objects})
+    list(TRANSFORM paths PREPEND "${guest32_provider_dir}/")
+    list(TRANSFORM paths APPEND "/${file}")
+    list(APPEND guest32_provider_outputs ${paths})
 endforeach()
 foreach(file IN LISTS guest32_shared_outputs)
     string(REPLACE "${guest32_shared_dir}" "${guest32_provider_dir}" file "${file}")
@@ -365,10 +359,7 @@ endforeach()
 # CONFIGURE_DEPENDS discovers added and removed source files too.
 file(GLOB_RECURSE guest32_closure_source_inputs
     CONFIGURE_DEPENDS
-    "${game_source}/*.c"
-    "${game_source}/*.h"
-    "${game_source}/*.s"
-    "${game_source}/*.S"
+    "${game_source}/*.[chsS]"
     "${game_source}/*.cpp")
 
 file(GLOB_RECURSE guest32_closure_tool_inputs
@@ -378,30 +369,59 @@ list(APPEND guest32_closure_tool_inputs
     "${PROJECT_SOURCE_DIR}/cmake/native_sources.py"
     "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json"
     "${PROJECT_SOURCE_DIR}/cmake/guest32_closure.py")
+list(APPEND guest32_closure_tool_inputs
+    "${PROJECT_SOURCE_DIR}/cmake/native_overlay_link.py"
+    "${PROJECT_SOURCE_DIR}/cmake/native_provider_registry.py")
 
 add_test(NAME guest32_provider_frontend COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_provider_frontend.py"
     --build "${PROJECT_BINARY_DIR}" --llvm-bin "${guest32_tools}")
+add_test(NAME guest32_discovery_reuse COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_provider_discovery.py"
+    --build "${PROJECT_BINARY_DIR}" --clang "${guest32_tools}/clang"
+    --lowerer $<TARGET_FILE:guest32-lower>)
+add_test(NAME guest32_provider_batch COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_provider_batch.py"
+    --build "${PROJECT_BINARY_DIR}" --clang "${guest32_tools}/clang"
+    --lowerer $<TARGET_FILE:guest32-lower> --codegen $<TARGET_FILE:guest32-codegen>)
+add_test(NAME guest32_provider_plan COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_provider_plan.py" --build "${PROJECT_BINARY_DIR}")
+add_test(NAME guest32_provider_abi COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_provider_abi.py" --build "${PROJECT_BINARY_DIR}"
+    --clang "${guest32_tools}/clang")
 
 add_custom_command(OUTPUT "${guest32_provider_dir}/complete.stamp"
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/compiler/guest32/finish.py"
         --game "${game_source}" --build "${PROJECT_BINARY_DIR}" --out "${guest32_provider_dir}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>
+        --codegen $<TARGET_FILE:guest32-codegen>
         --image-root "${guest32_shared_dir}" --compiler "${CMAKE_C_COMPILER}"
         --root-symbol NitroMain --root-symbol CodeEntryArgs_New --root-symbol ListMenuInit
+        --provider-plan "${PROJECT_SOURCE_DIR}/compiler/guest32/main_provider_plan.json"
     BYPRODUCTS ${guest32_provider_outputs}
         "${guest32_provider_dir}/discovery.json" "${guest32_provider_dir}/closure.json"
+        "${guest32_provider_dir}/execution-plan.json"
+        "${guest32_provider_dir}/provider-artifacts/symbol-inputs.json"
+        "${guest32_provider_dir}/provider-artifacts/symbols.json"
         "${guest32_provider_dir}/thread-entry.json" "${guest32_provider_dir}/bindings.json"
         "${guest32_provider_dir}/providers.json" "${guest32_provider_dir}/runtime-providers.json"
         "${guest32_provider_dir}/catalog.json" "${guest32_provider_dir}/thread-entry.c"
+        "${guest32_provider_dir}/compiler-catalog.json"
+        "${guest32_provider_dir}/direct-catalog.json"
+        "${guest32_provider_dir}/provider-profile.json" "${guest32_provider_dir}/finish-profile.json"
+        "${guest32_provider_dir}/backend-profile.json"
         "${guest32_provider_dir}/thread-entry.o" "${guest32_provider_dir}/thread-entry.a"
         "${guest32_provider_dir}/frontend/lib/NitroSDK/src/os/os_alarm_before_handler.c"
         "${guest32_provider_dir}/frontend/lib/NitroSDK/src/os/os_alarm_after_handler.c"
+        "${guest32_provider_dir}/links/symbol-inputs.json" "${guest32_provider_dir}/links/symbols.json"
         "${guest32_provider_dir}/links/OVY_0-global.dylib"
         "${guest32_provider_dir}/links/OVY_38-global.dylib"
     DEPENDS ${guest32_closure_source_inputs}
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/main_provider_plan.json"
+        "${PROJECT_SOURCE_DIR}/compiler/guest32/main_provider_abi.json.gz"
         ${guest32_closure_tool_inputs}
-        guest32-lower heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
+        guest32-lower guest32-codegen "${PROJECT_BINARY_DIR}/guest32-compiler/codegen-inputs.json"
+        heartgold_guest32_shared heartgold_guest32_context heartgold_guest32_cache
         heartgold_guest32_account_build heartgold_guest32_crc_build heartgold_guest32_std_build
         heartgold_guest32_runtime heartgold_guest32_mi_manifest heartgold_guest32_scalar_bridges
         heartgold_guest32_libc_memory heartgold_overlay_link_contract
@@ -448,26 +468,31 @@ add_custom_command(OUTPUT "${guest32_provider_dir}/data/provider.a"
         "${PROJECT_SOURCE_DIR}/cmake/native_data_ir.py"
     VERBATIM)
 add_custom_target(heartgold_guest32_execution_data DEPENDS "${guest32_provider_dir}/data/provider.a")
-add_test(NAME guest32_execution_data_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target heartgold_guest32_execution_data -j8)
-set_tests_properties(guest32_execution_data_build PROPERTIES FIXTURES_SETUP guest32_execution_data)
+heartgold_test_fixture(guest32_execution_data heartgold_guest32_execution_data)
 set_tests_properties(guest32_original_execution PROPERTIES FIXTURES_REQUIRED guest32_execution_data)
 
 # Bind proven byte-compatible resident storage; never allocate a guest copy.
 # This does not authorize image admission or entry wrappers for the blocked state.
 set(hg_execution_dir "${PROJECT_BINARY_DIR}/execution-boundary")
-add_custom_target(heartgold_guest32_state_proof
+add_custom_command(OUTPUT "${hg_execution_dir}/state/state.json"
+        "${hg_execution_dir}/state/bindings.c"
+        "${hg_execution_dir}/state/typed-bindings.c"
+        "${hg_execution_dir}/state/typed-plans.json"
     COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/guest32_state.py"
         --build "${PROJECT_BINARY_DIR}" --closure "${guest32_provider_dir}"
         --game "${game_source}" --lowerer $<TARGET_FILE:guest32-lower>
         --out "${hg_execution_dir}/state"
-    BYPRODUCTS "${hg_execution_dir}/state/state.json"
-        "${hg_execution_dir}/state/bindings.c"
-        "${hg_execution_dir}/state/typed-bindings.c"
-        "${hg_execution_dir}/state/typed-plans.json"
+    BYPRODUCTS "${hg_execution_dir}/state/state.d" "${hg_execution_dir}/state/storage-inputs.json"
+        "${hg_execution_dir}/state/storage-contracts.json"
     DEPENDS heartgold_main heartgold_guest32_provider_closure
         "${PROJECT_SOURCE_DIR}/cmake/guest32_state.py"
+        "${PROJECT_SOURCE_DIR}/cmake/guest32_sdk_storage.py"
+        "${PROJECT_SOURCE_DIR}/cmake/guest32_typed_state.py"
+    DEPFILE "${hg_execution_dir}/state/state.d"
     VERBATIM)
+add_custom_target(heartgold_guest32_state_proof DEPENDS "${hg_execution_dir}/state/state.json"
+    "${hg_execution_dir}/state/bindings.c" "${hg_execution_dir}/state/typed-bindings.c"
+    "${hg_execution_dir}/state/typed-plans.json")
 set_source_files_properties(
     "${hg_execution_dir}/state/bindings.c"
     "${hg_execution_dir}/state/typed-bindings.c"
@@ -479,14 +504,12 @@ add_library(heartgold_guest32_main_state STATIC
 target_include_directories(heartgold_guest32_main_state PRIVATE "${PROJECT_SOURCE_DIR}/hardware_drivers")
 add_dependencies(heartgold_guest32_main_state heartgold_guest32_state_proof)
 target_link_libraries(heartgold PRIVATE heartgold_guest32_main_state heartgold_guest32_runtime)
-add_test(NAME guest32_execution_boundary_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-    --target heartgold_guest32_main_state -j8)
-set_tests_properties(guest32_execution_boundary_build PROPERTIES RUN_SERIAL TRUE FIXTURES_SETUP execution_boundary)
+heartgold_test_fixture(execution_boundary heartgold_guest32_main_state)
 add_test(NAME guest32_execution_boundary COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_guest32_execution_boundary.py"
     --build "${PROJECT_BINARY_DIR}" --game "${game_source}"
     --lowerer $<TARGET_FILE:guest32-lower> --llvm-bin "${guest32_tools}")
-set_tests_properties(guest32_execution_boundary PROPERTIES RUN_SERIAL TRUE FIXTURES_REQUIRED execution_boundary)
+set_tests_properties(guest32_execution_boundary PROPERTIES FIXTURES_REQUIRED execution_boundary)
 
 # Private address-identity hooks on the source-faithful u32 save marker.
 set_property(SOURCE "${native_root}/src/system.c" APPEND PROPERTY

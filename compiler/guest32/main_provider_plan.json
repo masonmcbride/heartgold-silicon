@@ -1,0 +1,3838 @@
+{
+  "version": 2,
+  "source_commit": "6d2947303134256e90144b6aaedc5c3cf6a593d2",
+  "source_manifest_sha256": "fb91a386cb18560c63434b14dc435d92a800481ad848d6a0d011a815286e6753",
+  "provenance": "Declared original main-image providers from the source-owned production closure. Contains source ownership only; no compiled artifacts.",
+  "entrypoints": {
+    "NitroMain": "src/main.o",
+    "CodeEntryArgs_New": "src/code_entry.o",
+    "ListMenuInit": "src/list_menu.o"
+  },
+  "root_demands": [
+    "CPS_Resolve",
+    "CPS_SetRootCa",
+    "CPS_SocRead",
+    "CPS_SocRegister",
+    "CPS_SocWrite",
+    "CPS_SslAddRandomSeed",
+    "CRYPTO_RC4FastEncrypt",
+    "CRYPTO_RC4FastInit",
+    "CommState_GetLinkMode",
+    "CommState_SetError",
+    "CommState_SetWifiError",
+    "Comm_CountConnected",
+    "Comm_IsLinkMode19To23Or34",
+    "Comm_IsWifiPeerLinkMode",
+    "DC_InvalidateRange",
+    "DGT_Hash1GetDigest_R",
+    "DGT_Hash1Reset",
+    "DGT_Hash1SetSource",
+    "DWCi_AUTH_MakeWiFiID",
+    "DWCi_AUTH_RemakeWiFiID",
+    "DWCi_AUTH_UpDateWiFiID",
+    "DWCi_BM_GetApInfo",
+    "DWCi_BM_GetWiFiInfo",
+    "FriendRoster_GetDwcFriendData",
+    "FriendRoster_GetUserData",
+    "FriendRoster_MergeFriend",
+    "FrontierSave_ClearRow",
+    "Heap_Alloc",
+    "Heap_Free",
+    "Heap_FreeExplicit",
+    "MATH_CalcSHA1",
+    "MD5Final",
+    "MD5Init",
+    "MD5Update",
+    "MIC_GetLastSamplingAddress",
+    "MIC_Init",
+    "MIC_StartAutoSamplingAsync",
+    "MIC_StopAutoSampling",
+    "NNS_FndAllocFromExpHeapEx",
+    "NNS_FndCreateExpHeapEx",
+    "NNS_FndDestroyExpHeap",
+    "NNS_FndFreeToExpHeap",
+    "NNS_FndGetGroupIDForMBlockExpHeap",
+    "NNS_FndGetTotalFreeSizeForExpHeap",
+    "NNS_FndSetGroupIDForExpHeap",
+    "NNS_SndInit",
+    "NNS_SndStrmAllocChannel",
+    "NNS_SndStrmFreeChannel",
+    "NNS_SndStrmInit",
+    "NNS_SndStrmSetVolume",
+    "NNS_SndStrmSetup",
+    "NNS_SndStrmStart",
+    "NNS_SndStrmStop",
+    "OS_CreateThread",
+    "OS_DisableInterrupts",
+    "OS_GetLowEntropyData",
+    "OS_GetMacAddress",
+    "OS_GetOwnerInfo",
+    "OS_GetThreadPriority",
+    "OS_GetTick",
+    "OS_InitMessageQueue",
+    "OS_InitMutex",
+    "OS_IsThreadAvailable",
+    "OS_IsThreadTerminated",
+    "OS_IsTickAvailable",
+    "OS_JoinThread",
+    "OS_LockMutex",
+    "OS_ReceiveMessage",
+    "OS_RestoreInterrupts",
+    "OS_SNPrintf",
+    "OS_SPrintf",
+    "OS_SendMessage",
+    "OS_Sleep",
+    "OS_Terminate",
+    "OS_UnlockMutex",
+    "OS_WakeupThreadDirect",
+    "OSi_ThreadInfo",
+    "PM_Init",
+    "PM_SetAmp",
+    "PM_SetAmpGain",
+    "RTC_ConvertDateTimeToSecond",
+    "RTC_ConvertSecondToDateTime",
+    "RTC_GetDateTime",
+    "SOCL_CalmDown",
+    "SOCL_EnableSsl",
+    "SOCL_GetHostID",
+    "SOCL_Resolve",
+    "SOC_Accept",
+    "SOC_Bind",
+    "SOC_Cleanup",
+    "SOC_Close",
+    "SOC_Connect",
+    "SOC_Fcntl",
+    "SOC_GetHostByName",
+    "SOC_GetHostID",
+    "SOC_GetSockName",
+    "SOC_InetAtoN",
+    "SOC_InetNtoA",
+    "SOC_Listen",
+    "SOC_Poll",
+    "SOC_Recv",
+    "SOC_RecvFrom",
+    "SOC_Send",
+    "SOC_SendTo",
+    "SOC_SetResolver",
+    "SOC_Shutdown",
+    "SOC_Socket",
+    "SOC_Startup",
+    "SOC_U32to4U8",
+    "Save_FriendRoster_Get",
+    "Save_Frontier_GetStatic",
+    "VCT_AddConferenceClient",
+    "VCT_Cleanup",
+    "VCT_CreateSession",
+    "VCT_DeleteSession",
+    "VCT_EnableEchoCancel",
+    "VCT_EnableVAD",
+    "VCT_GetVADInfo",
+    "VCT_HandleData",
+    "VCT_Init",
+    "VCT_Main",
+    "VCT_ReceiveAudio",
+    "VCT_Request",
+    "VCT_Response",
+    "VCT_SendAudio",
+    "VCT_SetCodec",
+    "VCT_StartStreaming",
+    "VCT_StopStreaming",
+    "WCM_Bssid_Any",
+    "WCM_CleanupAsync",
+    "WCM_ConnectAsync",
+    "WCM_DisconnectAsync",
+    "WCM_EndSearchAsync",
+    "WCM_Essid_Any",
+    "WCM_Finish",
+    "WCM_GetApEssid",
+    "WCM_GetApMacAddress",
+    "WCM_GetLinkLevel",
+    "WCM_GetPhase",
+    "WCM_Init",
+    "WCM_SearchAsync",
+    "WCM_StartupAsync",
+    "WCM_TerminateAsync",
+    "WM_End",
+    "WM_EndScan",
+    "WM_GetAllowedChannel",
+    "WM_GetDispersionScanPeriod",
+    "WM_Initialize",
+    "WM_StartScanEx",
+    "__lower_mapC",
+    "__msl_assertion_failed",
+    "__msl_digit",
+    "__upper_mapC",
+    "abs",
+    "atod",
+    "atol",
+    "errno",
+    "fclose",
+    "fread",
+    "fseek",
+    "ftell",
+    "gSoclHostAddress",
+    "gSoclState",
+    "qsort",
+    "rand",
+    "rewind",
+    "snprintf",
+    "sprintf",
+    "srand",
+    "sscanf",
+    "strncat",
+    "strnicmp",
+    "strspn",
+    "strtol",
+    "strtoul",
+    "wcslen"
+  ],
+  "members": [
+    {
+      "object": "lib/MSL_C/src/arith.o",
+      "source": "lib/MSL_C/src/arith.c",
+      "source_sha256": "5b0f03dabeff5e0a3022ad640a62d44e6b69180294cedb0860f47b54a71d5714"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_abort_exit.o",
+      "source": "lib/MSL_C/src/msl_abort_exit.c",
+      "source_sha256": "f42e4e3ac4d81078ec24a9a32dfb1bc19194036ec8733673d447bc5f6cc088e3"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_abort_exit_core.o",
+      "source": "lib/MSL_C/src/msl_abort_exit_core.c",
+      "source_sha256": "24a003934565cb20dade21515a6c610bdd1e3b2c1e405043da5e42a77805e315"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_ansi_files.o",
+      "source": "lib/MSL_C/src/msl_ansi_files.c",
+      "source_sha256": "08fb886ac6c29fa031efe8f0cfdbef6d27507ceaaebecc09f8440f2405ddd1e4"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_arm_math.o",
+      "source": "lib/MSL_C/src/msl_arm_math.c",
+      "source_sha256": "0f51b73995ef711c5ef9a8847ae78c5a3eb832fe39945911b951c18270ec56af"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_assert.o",
+      "source": "lib/MSL_C/src/msl_assert.c",
+      "source_sha256": "2ea46cad5517816051ef2178e6aab6abdbcb86bb30bb29986e1e2acd0cd6cc1b"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_buffer_io.o",
+      "source": "lib/MSL_C/src/msl_buffer_io.c",
+      "source_sha256": "d66ad22d6a032f55c709a565e27d35b9bcd076f877e7611065940726c2baa543"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_direct_io_fread.o",
+      "source": "lib/MSL_C/src/msl_direct_io_fread.c",
+      "source_sha256": "3702544add5bc29ab75afb644a33a52b5c45487889edc85806e5cab6dc81ce18"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_direct_io_read.o",
+      "source": "lib/MSL_C/src/msl_direct_io_read.c",
+      "source_sha256": "20ff40ec0bf216ef965f85284119bcdb0b8e5aa2cac11a5538cbb8968a5bdff3"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_direct_io_write.o",
+      "source": "lib/MSL_C/src/msl_direct_io_write.c",
+      "source_sha256": "d0f09690df264f7caa7a1582b30ed7d8484fa80b5d1f6d6b825a7b2a7d78b74f"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_e_pow.o",
+      "source": "lib/MSL_C/src/msl_e_pow.c",
+      "source_sha256": "52a3991066e9fac5fa3de693dd391ce35c0321e277994ee00d24069b85e04170"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_exit_process.o",
+      "source": "lib/MSL_C/src/msl_exit_process.c",
+      "source_sha256": "2394b78a7130e73b8cc6a16daf73c818a569ca84c0e89aab7fb2e99288c8daa0"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_file_io.o",
+      "source": "lib/MSL_C/src/msl_file_io.c",
+      "source_sha256": "90989763e4663f3dbbc5ca31693292b6bcda30316eaddda0c339c5b9e5e28150"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_filepos_fseek.o",
+      "source": "lib/MSL_C/src/msl_filepos_fseek.c",
+      "source_sha256": "9d84b2e3512c2c214b3d9640644db27647e400c830af21ea4140e4b50d58f9aa"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_filepos_fseek_core.o",
+      "source": "lib/MSL_C/src/msl_filepos_fseek_core.c",
+      "source_sha256": "dddbce34453184d6dcb1ce1918aaf80ece9c8cdabdcd842a1e9bbba8ebd20355"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_filepos_ftell.o",
+      "source": "lib/MSL_C/src/msl_filepos_ftell.c",
+      "source_sha256": "ed4a799fc034967c66b15fc10b1d914ae83c783c0e7895285ba9503d962f58cd"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_filepos_ftell_core.o",
+      "source": "lib/MSL_C/src/msl_filepos_ftell_core.c",
+      "source_sha256": "22bdaaa4a2b4eb28342c0f9430dec119f1ecef7e869583392578b6b7e1623e48"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_filepos_rewind.o",
+      "source": "lib/MSL_C/src/msl_filepos_rewind.c",
+      "source_sha256": "202d4de179127b4dba1ce07af12073d4d48b6717f5a539a5cb6040232d0fd144"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_compare_dec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_compare_dec.c",
+      "source_sha256": "f30cf01ce03c6d2e06a61ecdca1bb3fc53c8c17d6536493a7ea002b13b5c9278"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_dec2num.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_dec2num.c",
+      "source_sha256": "0588645ca70f6cf0558160b824de9e5248c78e043e2cc065c3fc4f9fac93d3e8"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_minus_dec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_minus_dec.c",
+      "source_sha256": "151f98f9262a98c02a8e131b24d5f8242f8437adae12aa6b36d451b56ec0b70d"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_num2dec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_num2dec.c",
+      "source_sha256": "ad0e533de13f9b3ac7147a253fcbcce39d9a86312c42387d322de06274c88c0f"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_num2dec_internal.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_num2dec_internal.c",
+      "source_sha256": "1bf9606cce6d0d420095a1874b91a5128e24cc6bb0d32bff849044398accecdb"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_rounddec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_rounddec.c",
+      "source_sha256": "467ba21b27202cad248238f739cbb15f1b5f60453ec1248eddc94628b9b8b984"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_str2dec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_str2dec.c",
+      "source_sha256": "2d63f80387c3734bea952478fb6bc3aaf8ea8fac8224a532ed3d0a09b484f81e"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_timesdec.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_timesdec.c",
+      "source_sha256": "cf4849c4db5f21b4e44d42bc285dc04dcafc7a5393faafa30b4f45408e795bb4"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_fp_ansi_two_exp.o",
+      "source": "lib/MSL_C/src/msl_fp_ansi_two_exp.c",
+      "source_sha256": "5e179a005790fe45e470eaab8f3bc88af5e196daf1afc0bb44afb21bf5c01ad5"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_math.o",
+      "source": "lib/MSL_C/src/msl_math.c",
+      "source_sha256": "66ec25b2a7897dbdfa84ec3921656df26e0c031c2beec0b52fbdc111b1dd657d"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_mbstring.o",
+      "source": "lib/MSL_C/src/msl_mbstring.c",
+      "source_sha256": "00925aa3fc95faba856aac053d1399859cdc6f57ba217c41e9012bd7df4a9aa1"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_mbstring_wcstombs.o",
+      "source": "lib/MSL_C/src/msl_mbstring_wcstombs.c",
+      "source_sha256": "59d5ff7768ec843c0ffe5f82e5e3c51c55ea0eb4287d84000dcff900de1f7698"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_mem.o",
+      "source": "lib/MSL_C/src/msl_mem.c",
+      "source_sha256": "29c44d9605febd38d8194da5e446679678cb1be1c13995dc2ae0bfb7b9279c3c"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_mem_funcs.o",
+      "source": "lib/MSL_C/src/msl_mem_funcs.c",
+      "source_sha256": "4a821cb4b05830608b27c09b80feb842212bdf38b6426fe1d0b81a13ea7d6e80"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_printf_formatter.o",
+      "source": "lib/MSL_C/src/msl_printf_formatter.c",
+      "source_sha256": "53b56eda6e14dd3818117948923a3430884f2930f70260403c1dd43774f768ca"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_qsort.o",
+      "source": "lib/MSL_C/src/msl_qsort.c",
+      "source_sha256": "d14b0045fe9f5bde62b13ea2a9d522c4e94658616a2ea5336e6005b05389bf64"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_s_copysign.o",
+      "source": "lib/MSL_C/src/msl_s_copysign.c",
+      "source_sha256": "6f9771c0f06a278020432c7ad51094aeb4f836968dfc197b6005b5d3e42414fa"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_s_fabs.o",
+      "source": "lib/MSL_C/src/msl_s_fabs.c",
+      "source_sha256": "69430d749a3b6639e54acb8222a1f2a1040d7a1c84a5f028634e1e964d20e7b8"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_s_frexp.o",
+      "source": "lib/MSL_C/src/msl_s_frexp.c",
+      "source_sha256": "538c5c1b6eee1a6021f44e150f7405b9a28de95eca479c731048956d9c4c306c"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_s_ldexp.o",
+      "source": "lib/MSL_C/src/msl_s_ldexp.c",
+      "source_sha256": "1451a11fa63133bf8d5185b371b8d5576bbb9acced3cf70bc1be816698dfabd8"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_scanf_sformatter.o",
+      "source": "lib/MSL_C/src/msl_scanf_sformatter.c",
+      "source_sha256": "16050e13f2089e792742662018c1e4c2661be87189d16a9398ea151a550547d5"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_scanf_sscanf.o",
+      "source": "lib/MSL_C/src/msl_scanf_sscanf.c",
+      "source_sha256": "0eaeea039f4cda9904cb393b887095bcdeed898949c4c9389a32d25ec6ffd8d9"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_scanf_string_read.o",
+      "source": "lib/MSL_C/src/msl_scanf_string_read.c",
+      "source_sha256": "d1369ccef2406f1cb4765a88f4251f5fd62991958017a82414ec8904df7f5574"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_scanf_vsscanf.o",
+      "source": "lib/MSL_C/src/msl_scanf_vsscanf.c",
+      "source_sha256": "d588144cd0b7cec61284a542496b056ba24c12523ddec187432715d471f81e85"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_signal.o",
+      "source": "lib/MSL_C/src/msl_signal.c",
+      "source_sha256": "b7897a25394b8a48220b567199717ae578d8b5eb648be17df37c39c2e4c3cff0"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_static_init.o",
+      "source": "lib/MSL_C/src/msl_static_init.c",
+      "source_sha256": "d731fee4ae6926bc0c03f893f5121fd5d1dae82bc3debc0a0d1b829c0bc74599"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_extras.o",
+      "source": "lib/MSL_C/src/msl_string_extras.c",
+      "source_sha256": "25cb1802752c1f37b928564dbf9142da1a89bedf47ca5ed1721cca2a1bd855ce"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_strcmp.o",
+      "source": "lib/MSL_C/src/msl_string_strcmp.c",
+      "source_sha256": "8a2a64e46063f64a0c612cd4eb0e09e9c580e08bb1e9e98a7e90847db4697cb8"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_strcpy.o",
+      "source": "lib/MSL_C/src/msl_string_strcpy.c",
+      "source_sha256": "b44e93c8b62b2884cd58fdc2248857c3ba2f49027fccb2dd7c7233bd7819acbd"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_strlen.o",
+      "source": "lib/MSL_C/src/msl_string_strlen.c",
+      "source_sha256": "16680700d87959cc000d97144d277582d645776dbb72ac7fcc167e4487687be9"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_strncmp_strchr.o",
+      "source": "lib/MSL_C/src/msl_string_strncmp_strchr.c",
+      "source_sha256": "a90be624d74834128666fa2e513a0d42a791d014fd02ede182c1f2e748e74fae"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_string_strncpy_strcat.o",
+      "source": "lib/MSL_C/src/msl_string_strncpy_strcat.c",
+      "source_sha256": "e4c9bf1a9ba69434dcf21a975c15ef792f8998af2e9e8371105a6830a21a6196"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtol.o",
+      "source": "lib/MSL_C/src/msl_strtol.c",
+      "source_sha256": "f724afa6d0aae67a8b52a8553ee22ba8e131a3234ce9373890ded519054365ad"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtold.o",
+      "source": "lib/MSL_C/src/msl_strtold.c",
+      "source_sha256": "c1f99a3d8029c11eb83050770ba9bf03b45a291fcd976c7ba8e7713856dd1e7c"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtold_core.o",
+      "source": "lib/MSL_C/src/msl_strtold_core.c",
+      "source_sha256": "28b1edcb35a7a74a5a3171941927dc09bb59d1eccc649e205e7091cb87c8c00e"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtoul.o",
+      "source": "lib/MSL_C/src/msl_strtoul.c",
+      "source_sha256": "7d26547fedb3c4716e9ba2f4a92f4f18f88c07cf7bbe1b553cc86d6170dbf1f8"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtoul_core.o",
+      "source": "lib/MSL_C/src/msl_strtoul_core.c",
+      "source_sha256": "00a4fd872ddc93e0f28ff017fd5ebe792a54eb24017e0ad657e1531976139079"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_strtoull_core.o",
+      "source": "lib/MSL_C/src/msl_strtoull_core.c",
+      "source_sha256": "615eab42ab192be641b99da63edfd10965d93888d27f94812958e594748956d2"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_w_pow.o",
+      "source": "lib/MSL_C/src/msl_w_pow.c",
+      "source_sha256": "d641b026e4371ae23fad6da03c6a085549f7db03636cf0df5e4cc1f737be8be6"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_wchar_io.o",
+      "source": "lib/MSL_C/src/msl_wchar_io.c",
+      "source_sha256": "ed842904c14b7519e4fbe7fb10e8c9087671d84182bc0175ff2744ed6ac86b1c"
+    },
+    {
+      "object": "lib/MSL_C/src/msl_wstring_wcslen.o",
+      "source": "lib/MSL_C/src/msl_wstring_wcslen.c",
+      "source_sha256": "a99b37453db7e5ea2b10181b785c8acad20ec15bee936d092e69342f05f7a6ed"
+    },
+    {
+      "object": "lib/MSL_C/src/rand.o",
+      "source": "lib/MSL_C/src/rand.c",
+      "source_sha256": "6dbcda800db18aa0055795e4b830e11aeaa4629fead758575e14acfc556b3b53"
+    },
+    {
+      "object": "lib/NitroDWC/src/dwc_account.o",
+      "source": "lib/NitroDWC/src/dwc_account.c",
+      "source_sha256": "28f0b35ba8b0dce4f95f3cb2d1da10bd0d34298cd44879ffddf73b2ab39e1ff1"
+    },
+    {
+      "object": "lib/NitroDWC/src/dwc_auth_wifi_id.o",
+      "source": "lib/NitroDWC/src/dwc_auth_wifi_id.c",
+      "source_sha256": "59a2fe514ca0599829f0153310fbb1ff5c30cf12c780760967e90f1f40109d57"
+    },
+    {
+      "object": "lib/NitroDWC/src/dwc_bm.o",
+      "source": "lib/NitroDWC/src/dwc_bm.c",
+      "source_sha256": "f1f9989acb1a9ffbdbe4f9771e75aaa11c7aa1bfc176900b9b08cc19cb0d2129"
+    },
+    {
+      "object": "lib/NitroDWC/src/dwc_bm_init.o",
+      "source": "lib/NitroDWC/src/dwc_bm_init.c",
+      "source_sha256": "b04aff56c542c54c825350d230a5a4341ab271107e582200c0c8bd97cd74191c"
+    },
+    {
+      "object": "lib/NitroDWC/src/dwc_nvram.o",
+      "source": "lib/NitroDWC/src/dwc_nvram.c",
+      "source_sha256": "5f48e26a2ce2c2af068b1cfb22514cf54399413b6ffd891bd82fad068b40fad1"
+    },
+    {
+      "object": "lib/NitroSDK/src/card/card_cache_flush_threshold.o",
+      "source": "lib/NitroSDK/src/card/card_cache_flush_threshold.c",
+      "source_sha256": "4ace3cb8b0b17dd164f424a1f783be19eef4e8bd4c63dbd48d9412f64d306c62"
+    },
+    {
+      "object": "lib/NitroSDK/src/dgt_hash.o",
+      "source": "lib/NitroSDK/src/dgt_hash.c",
+      "source_sha256": "5c467ce2f66fd612e8d45b053f284e43d6174bd47e1959c0635f3afcab630f1c"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_archive_prefix.o",
+      "source": "lib/NitroSDK/src/fs/FS_archive_prefix.c",
+      "source_sha256": "d359268374ed97b359e4344a820c892382fd23f8923d2895a828175662ae3f2d"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_archive_suffix.o",
+      "source": "lib/NitroSDK/src/fs/FS_archive_suffix.c",
+      "source_sha256": "ffbe5fe8c98c0042bf3f56964d17cef81b3047565c21ba8b69ae0bad8d0d2baf"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_command.o",
+      "source": "lib/NitroSDK/src/fs/FS_command.c",
+      "source_sha256": "07333027376e89d3ecc243b0022d089f9c3153cfe4226ef433e086cbe9777e60"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_command_default.o",
+      "source": "lib/NitroSDK/src/fs/FS_command_default.c",
+      "source_sha256": "040f053d87d157231bcd051731eee8bf27768a9103940b6c4016f9cf703ca513"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_file.o",
+      "source": "lib/NitroSDK/src/fs/FS_file.c",
+      "source_sha256": "7b54df220e89b6786743c2996e1e085bd29a9774a96af3551c84e600086e8e8f"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_overlay.o",
+      "source": "lib/NitroSDK/src/fs/FS_overlay.c",
+      "source_sha256": "6a7bbb9e0c8711843f829e395a085336828d336e060ae089afc32edf674339db"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/FS_rom.o",
+      "source": "lib/NitroSDK/src/fs/FS_rom.c",
+      "source_sha256": "98b89af2a028792a9a5f611e448df738ce29aaf3aad2758f143dde8d5e09b228"
+    },
+    {
+      "object": "lib/NitroSDK/src/fs/fs_send_command.o",
+      "source": "lib/NitroSDK/src/fs/fs_send_command.c",
+      "source_sha256": "4cc68728ca70d26fb620e996493b7b7ef259d07d8150aab607957851a502e587"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx.o",
+      "source": "lib/NitroSDK/src/fx/fx.c",
+      "source_sha256": "0d527dc01f38dcd9c0537c2dd6d4cd945b120e17eb7d17b6a55969d93dff6659"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_atanidx.o",
+      "source": "lib/NitroSDK/src/fx/fx_atanidx.c",
+      "source_sha256": "735402d2cd6176d77bc873e7a4d97d9cba06cac1805df2676213cc7e25b1fe14"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_cp.o",
+      "source": "lib/NitroSDK/src/fx/fx_cp.c",
+      "source_sha256": "324160547f360e28c607202253e7cdf57d09d992d83851632c5af505cb14bcc5"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx33_inverse_concat.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx33_inverse_concat.c",
+      "source_sha256": "0770d0456dc0467040f137073bd885a83902e096f49e15962396be91ce11a6e7"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx33_scale_rot_x.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx33_scale_rot_x.c",
+      "source_sha256": "fdf8357f252d1b0a427c4e0187ec61b9bb0e61b7022f490987977833b4ffcf4b"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx43_inverse_concat.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx43_inverse_concat.c",
+      "source_sha256": "a09e916bf8efe5e84df651b3de03c2bed64f87462f93ff8a1ed62198322ca48f"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx43_scale_apply.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx43_scale_apply.c",
+      "source_sha256": "1b74b8a0c92b4434f2246dad9ee0f4404409b7a85454eab1738e5ba455050a7a"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx44_concat.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx44_concat.c",
+      "source_sha256": "794c29312c5abf85603e76d296733c10fabf4e30003535fc6de7f05984039cc7"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx44_ortho.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx44_ortho.c",
+      "source_sha256": "5f6e6bac402d5550e5a7ae710ae4b3e50b54013c13cda238d8e9848ff7acc3df"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_mtx44_perspective.o",
+      "source": "lib/NitroSDK/src/fx/fx_mtx44_perspective.c",
+      "source_sha256": "892146f723bf5821f9527f9be3963cd74ab9421970a1b203ac955b879b7d1e98"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_vec.o",
+      "source": "lib/NitroSDK/src/fx/fx_vec.c",
+      "source_sha256": "dabe307c77eebca4b5460bed8beb26db3eb450fd523dbef8a33b6d1fa0a559dd"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_vec_mult_add.o",
+      "source": "lib/NitroSDK/src/fx/fx_vec_mult_add.c",
+      "source_sha256": "3d350a0396d2bdb56ad771393cd6db3b3143c9854cfebd9ebed8677b2fecc26c"
+    },
+    {
+      "object": "lib/NitroSDK/src/fx/fx_vec_normalize.o",
+      "source": "lib/NitroSDK/src/fx/fx_vec_normalize.c",
+      "source_sha256": "d6926b6c71bcbcd7dc36f1c59aa9e534c07b4c33aa8605750015fc791aa05a1a"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/g2.o",
+      "source": "lib/NitroSDK/src/gx/g2.c",
+      "source_sha256": "67509b1f90fbcd2eda775b273db0355bec22e9769d1c7a846566e8955460fc1d"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/g3_util.o",
+      "source": "lib/NitroSDK/src/gx/g3_util.c",
+      "source_sha256": "d8ada3547b6d5de38629ee641226662c4aec9e61a336306bd8626a5c397ba425"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/g3imm.o",
+      "source": "lib/NitroSDK/src/gx/g3imm.c",
+      "source_sha256": "6008cb7ef447b83a53ca68db25cc15eda6c4348143e0dcd22f85f0bab8d7e54a"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/g3x.o",
+      "source": "lib/NitroSDK/src/gx/g3x.c",
+      "source_sha256": "1879a19e30b16029c282af03d554da5e9aa15c40275f04f9ba2469dbf107fa01"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gx.o",
+      "source": "lib/NitroSDK/src/gx/gx.c",
+      "source_sha256": "ccfc86a964782ada80840fae01aff84e084001bae51215883aad1f4b368d0af4"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gx_bgcnt.o",
+      "source": "lib/NitroSDK/src/gx/gx_bgcnt.c",
+      "source_sha256": "e78334aefc1b5bcd05c63c0015da73d647ac5841b5760e890e07977c241f8397"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gx_load2d.o",
+      "source": "lib/NitroSDK/src/gx/gx_load2d.c",
+      "source_sha256": "e3de578f43bca782ab8d310ea4acabf7bb963b361d4648500313affa4e35ae60"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gx_load3d.o",
+      "source": "lib/NitroSDK/src/gx/gx_load3d.c",
+      "source_sha256": "0cbce23d1fa87be0296c7e8b8a469c996f7c49a9afe708d47bfe511333041e10"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gx_vramcnt.o",
+      "source": "lib/NitroSDK/src/gx/gx_vramcnt.c",
+      "source_sha256": "32d4452a9f4b29179d2339fce64fdd6a937e8d42a2a82eb55c4ed521c9193ea7"
+    },
+    {
+      "object": "lib/NitroSDK/src/gx/gxstate.o",
+      "source": "lib/NitroSDK/src/gx/gxstate.c",
+      "source_sha256": "a77c0d03940482515a789db02bd84db27c9fbe32935b20e6bdf8f2c695170937"
+    },
+    {
+      "object": "lib/NitroSDK/src/math/MATH_crc.o",
+      "source": "lib/NitroSDK/src/math/MATH_crc.c",
+      "source_sha256": "6a029a82abd9f4ca089a1a1959ad7470fe0bde9674922c5f5befb2f1bd16fd52"
+    },
+    {
+      "object": "lib/NitroSDK/src/math/MATH_dgt.o",
+      "source": "lib/NitroSDK/src/math/MATH_dgt.c",
+      "source_sha256": "233c07c34bfec35cb25ce37980548bdcae456e7dc387214018871c7864151ccc"
+    },
+    {
+      "object": "lib/NitroSDK/src/math/MATH_pop.o",
+      "source": "lib/NitroSDK/src/math/MATH_pop.c",
+      "source_sha256": "a78c586829a227bf4f6c8412b135984b9d1ddb51a34d17a34815c457bf3e8ff3"
+    },
+    {
+      "object": "lib/NitroSDK/src/mi/mi_dma.o",
+      "source": "lib/NitroSDK/src/mi/mi_dma.c",
+      "source_sha256": "e39bf84c044a0dfecd626fcd30a97137a70f49942c412e8c945e541dd60f966d"
+    },
+    {
+      "object": "lib/NitroSDK/src/mi/mi_dma_gxcommand.o",
+      "source": "lib/NitroSDK/src/mi/mi_dma_gxcommand.c",
+      "source_sha256": "ee12657cf4ad1cb22e77a670d0832c82e8ab41a4959744caf6df9e96aaf27449"
+    },
+    {
+      "object": "lib/NitroSDK/src/mi/mi_init.o",
+      "source": "lib/NitroSDK/src/mi/mi_init.c",
+      "source_sha256": "6fb2b040532cdd1ed03e0bcb2e974d210d146a2bc079be4205e4ec060ab36199"
+    },
+    {
+      "object": "lib/NitroSDK/src/mi/mi_wram.o",
+      "source": "lib/NitroSDK/src/mi/mi_wram.c",
+      "source_sha256": "70bcf20915d400d5f9fb632135115b84b4476313f4b80741b7c5d82ccc4f359d"
+    },
+    {
+      "object": "lib/NitroSDK/src/mic.o",
+      "source": "lib/NitroSDK/src/mic.c",
+      "source_sha256": "79a613c2f959a6c57a4a0b80b39b2a7e367279a432b9fc0d5b91afc2d2507fc1"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_alarm_before_handler.o",
+      "source": "lib/NitroSDK/src/os/os_alarm_before_handler.c",
+      "source_sha256": "eebd4fb17080c7ec9fee39760782e2d2649f3d01525ca3bb2a32a540d4d6d779"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_alloc.o",
+      "source": "lib/NitroSDK/src/os/os_alloc.c",
+      "source_sha256": "d9eaa2cd56e82edab904936513e76800082e4d12d38da8821411276188923153"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_arena.o",
+      "source": "lib/NitroSDK/src/os/os_arena.c",
+      "source_sha256": "a91e84c4a0d08a6f7d404ae9e1de50514980906fbce396c6eb56c89ef807b2ed"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_cache.o",
+      "source": "lib/NitroSDK/src/os/os_cache.c",
+      "source_sha256": "2cebb06f7ac51377299cac72bbeb29e0f1d624e1854905314ac993d123d29ccc"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_emulator.o",
+      "source": "lib/NitroSDK/src/os/os_emulator.c",
+      "source_sha256": "5149600e89a200e8374f2312823df0de94b7cebde6d4ba718743fd77006fce97"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_entropy.o",
+      "source": "lib/NitroSDK/src/os/os_entropy.c",
+      "source_sha256": "09dc971bb558e4d022eaec2c01e5a35a925d34dc2be82d1b17610d3b02126343"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_exception_init.o",
+      "source": "lib/NitroSDK/src/os/os_exception_init.c",
+      "source_sha256": "aaf8618a6d11a0ff7a083f4dcd5402d30bf794e086cdbe1d0415e915e689fa28"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_init_system.o",
+      "source": "lib/NitroSDK/src/os/os_init_system.c",
+      "source_sha256": "e67e17fde4f6a3da5328d4ab2abf67ea25ec89fd5c7edc4fee13e3a7479dde96"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_interrupt.o",
+      "source": "lib/NitroSDK/src/os/os_interrupt.c",
+      "source_sha256": "b34dcb4c80ac6f2cdb9ce92e87c29d6f7bff6fbd9353d8f9231c7bc5fc63f956"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_irqTable.o",
+      "source": "lib/NitroSDK/src/os/os_irqTable.c",
+      "source_sha256": "ed0b2a0155040400ac612e077710826552ba55b0509d2ee45152d4db1441f1f9"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_message.o",
+      "source": "lib/NitroSDK/src/os/os_message.c",
+      "source_sha256": "a75a2c49155698bf7897c97da695e8078eda3d4f806e62fe9d2bfa189610d74d"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_mutex.o",
+      "source": "lib/NitroSDK/src/os/os_mutex.c",
+      "source_sha256": "a189c1f138220972c983dfe36f1b0541352fccd45b2eb047f327e2fb39a50f7d"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_ownerInfo.o",
+      "source": "lib/NitroSDK/src/os/os_ownerInfo.c",
+      "source_sha256": "7afa672f14bc860783ae6d67755f81aa31d8e7c4d7d8c3ad132bacb9d58fa5ef"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_printf.o",
+      "source": "lib/NitroSDK/src/os/os_printf.c",
+      "source_sha256": "7e86fb02ae604b9c115b689c13ece4258213c21116fbe54f673c537d926f1301"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_reset_core.o",
+      "source": "lib/NitroSDK/src/os/os_reset_core.c",
+      "source_sha256": "acaa42f34a1f88ed62512e9e8ed6668611e57994ece260228ef79b45e754f221"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_spinLock.o",
+      "source": "lib/NitroSDK/src/os/os_spinLock.c",
+      "source_sha256": "124858c4dd88240d2c4111c53180fa73ad1a2556d4c3a276bb62b68892a252ef"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_spin_lock_card.o",
+      "source": "lib/NitroSDK/src/os/os_spin_lock_card.c",
+      "source_sha256": "ddba52d328aa141157b56e24620780cd9d013e4a22278f27220ee3896efe62a6"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_spin_lock_cartridge.o",
+      "source": "lib/NitroSDK/src/os/os_spin_lock_cartridge.c",
+      "source_sha256": "ebfb8275677f212cca39599ad72a4e87d42194e0dfca43545b3df1f77e501a90"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_spin_lock_word.o",
+      "source": "lib/NitroSDK/src/os/os_spin_lock_word.c",
+      "source_sha256": "b7fb4cdc809132e8d7074ea8df625280fb551bc1f0d4197fe60e99082e1f5227"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_system.o",
+      "source": "lib/NitroSDK/src/os/os_system.c",
+      "source_sha256": "1a7a0943c47895f84168d6718fdf9a75ccdd4e8e612367d2850659b33eeaef28"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_terminate_arm9.o",
+      "source": "lib/NitroSDK/src/os/os_terminate_arm9.c",
+      "source_sha256": "d1faf6049010f5ce16efab54031653abe23cec40878e9dce1c5fb2b5d536076e"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_thread.o",
+      "source": "lib/NitroSDK/src/os/os_thread.c",
+      "source_sha256": "eb91f80067f2aa05ef0e17d31c3c5c77aec256e7ce1e4e3e2211da1572723ed5"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_thread_available.o",
+      "source": "lib/NitroSDK/src/os/os_thread_available.c",
+      "source_sha256": "86e2b70cbcf9fa1a987b52c46312776c599f8d1f6de471f89440275c93bd6e45"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_tick.o",
+      "source": "lib/NitroSDK/src/os/os_tick.c",
+      "source_sha256": "d09e9dcc6cd0f678a6ad7d87dcf69054d8e310181588890100698fe43aeb3866"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_timer.o",
+      "source": "lib/NitroSDK/src/os/os_timer.c",
+      "source_sha256": "4cd4db8283e3fc39e31818c373e4595b8479257d33feafe473345fbe4700b1d4"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_vramExclusive.o",
+      "source": "lib/NitroSDK/src/os/os_vramExclusive.c",
+      "source_sha256": "770e1dee9fddcb1bc18c6cc7332f6c40a4f936769c13a547e031db7b1e45d768"
+    },
+    {
+      "object": "lib/NitroSDK/src/os/os_wait_irq.o",
+      "source": "lib/NitroSDK/src/os/os_wait_irq.c",
+      "source_sha256": "340926bb4c5ea011f2df400b70bba5dcd83f835dd11dfa59cecc2389432adb2f"
+    },
+    {
+      "object": "lib/NitroSDK/src/pm.o",
+      "source": "lib/NitroSDK/src/pm.c",
+      "source_sha256": "6e300dbc70cbef4be14255f6ba8935d1bbf9f363ed6ad57fc5aaba346ce7cef0"
+    },
+    {
+      "object": "lib/NitroSDK/src/pxi/PXI_fifo.o",
+      "source": "lib/NitroSDK/src/pxi/PXI_fifo.c",
+      "source_sha256": "802bb4a8ac0a17283dc6b84b7e80a0c2c748fa8d9a4023eb15a8214c90167059"
+    },
+    {
+      "object": "lib/NitroSDK/src/pxi/PXI_init.o",
+      "source": "lib/NitroSDK/src/pxi/PXI_init.c",
+      "source_sha256": "df9be823a6d0057bd953f9e81b59d0741e2d1e35dd6c0c6d2388f776d1aff27c"
+    },
+    {
+      "object": "lib/NitroSDK/src/rtc/rtc_api.o",
+      "source": "lib/NitroSDK/src/rtc/rtc_api.c",
+      "source_sha256": "b757796619050ebfa36e3521d6023e2985f914c0564229137bb7c793d3d6c6f9"
+    },
+    {
+      "object": "lib/NitroSDK/src/rtc/rtc_convert_date_time_to_second.o",
+      "source": "lib/NitroSDK/src/rtc/rtc_convert_date_time_to_second.c",
+      "source_sha256": "998a220306521afcb179f70d9a1be725cbf87e648dac6273bc3c0b0b9f6497fa"
+    },
+    {
+      "object": "lib/NitroSDK/src/rtc/rtc_convert_post.o",
+      "source": "lib/NitroSDK/src/rtc/rtc_convert_post.c",
+      "source_sha256": "f23953fbd30cb2daed4b5d345f5d3567ab51e77366cde8e605b9cdfa6b118579"
+    },
+    {
+      "object": "lib/NitroSDK/src/rtc/rtc_convert_pre.o",
+      "source": "lib/NitroSDK/src/rtc/rtc_convert_pre.c",
+      "source_sha256": "8fd1c9ed1392911bfc16ae2e9e7c231908342a108a50666550bafd170f5aab97"
+    },
+    {
+      "object": "lib/NitroSDK/src/rtc/rtc_internal.o",
+      "source": "lib/NitroSDK/src/rtc/rtc_internal.c",
+      "source_sha256": "597e8e904a2b237db198022d8b7fa5c3d5c001b64f31ce59690b3c1e2a5f354a"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_destroy_bank.o",
+      "source": "lib/NitroSDK/src/snd/snd_destroy_bank.c",
+      "source_sha256": "980362d581f794cfb59b8829cb0f355eef16eaa24d9ad342fcb1a99ed19c662e"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_flush_command.o",
+      "source": "lib/NitroSDK/src/snd/snd_flush_command.c",
+      "source_sha256": "a9016ad5f023eaa77de3abfd23d929a4d6ab320a83861c8202a649d63cf8d92a"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_master_volume.o",
+      "source": "lib/NitroSDK/src/snd/snd_master_volume.c",
+      "source_sha256": "6700f841b5d266072c12ff4bd4da7e96c72cc28337a9dc8ae2304bb1ee7d4cf2"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_next_inst_data.o",
+      "source": "lib/NitroSDK/src/snd/snd_next_inst_data.c",
+      "source_sha256": "945a4548a06575373ad722cec15eb8e14c274f999cfebaec1f69215c7fcacce8"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_player_local_variable.o",
+      "source": "lib/NitroSDK/src/snd/snd_player_local_variable.c",
+      "source_sha256": "e0b18599dd2c6a9a0c1f282c152e702c18e9212c9dfcbc64a85d990eb5d8d26d"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_player_tempo_ratio.o",
+      "source": "lib/NitroSDK/src/snd/snd_player_tempo_ratio.c",
+      "source_sha256": "e203627ac8d9014d6153ec5cc24a9e08c14f83fb4cd4db5349534c04dc814aa0"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_read_channel_info.o",
+      "source": "lib/NitroSDK/src/snd/snd_read_channel_info.c",
+      "source_sha256": "16f36f3d2aa0e8f801d74fe9879d9cd331607956790ac410ee37afd3d6f17154"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_read_driver_info.o",
+      "source": "lib/NitroSDK/src/snd/snd_read_driver_info.c",
+      "source_sha256": "551e228c258ab292c383731d7e0a482774805a0ea3c6ade0186055253f011ce1"
+    },
+    {
+      "object": "lib/NitroSDK/src/snd/snd_read_track_info.o",
+      "source": "lib/NitroSDK/src/snd/snd_read_track_info.c",
+      "source_sha256": "cd174af7bc56a1ecd0132653bb9b0ac6c0876b20f95b4f3d5dbac495b0eb8e11"
+    },
+    {
+      "object": "lib/NitroSDK/src/std_sprintf.o",
+      "source": "lib/NitroSDK/src/std_sprintf.c",
+      "source_sha256": "dd873f3af01921ea0a29324a9096ba59233f4f229bfc13c454e0eaa87a404f6c"
+    },
+    {
+      "object": "lib/NitroSDK/src/std_sprintf_writer.o",
+      "source": "lib/NitroSDK/src/std_sprintf_writer.c",
+      "source_sha256": "c370742c922db57801993f726778b6c1c21a2e091d5b9b7d01f55b438fb5a970"
+    },
+    {
+      "object": "lib/NitroSDK/src/std_string.o",
+      "source": "lib/NitroSDK/src/std_string.c",
+      "source_sha256": "2bd70841c0ccde8bee31f3d8084d01772b2e528340716ab99a9ece8a97d5aaf2"
+    },
+    {
+      "object": "lib/NitroSDK/src/tp.o",
+      "source": "lib/NitroSDK/src/tp.c",
+      "source_sha256": "f8d73d68e13c91f0d5c9c624f502a59cc88302da0a050b2a018e6f86a7dedbb3"
+    },
+    {
+      "object": "lib/NitroSDK/src/wm_core.o",
+      "source": "lib/NitroSDK/src/wm_core.c",
+      "source_sha256": "2eda06dc03fecfe37b07c2ac89d2b8b11a63973c3a50f32dfbfabcd40a384bed"
+    },
+    {
+      "object": "lib/NitroSDK/src/wm_data_sharing.o",
+      "source": "lib/NitroSDK/src/wm_data_sharing.c",
+      "source_sha256": "5335769aebbd30a9ba5356a74c79aecb05e81c1db5e2752b94ba0b812c960879"
+    },
+    {
+      "object": "lib/NitroSDK/src/wm_requests.o",
+      "source": "lib/NitroSDK/src/wm_requests.c",
+      "source_sha256": "224be3a3adef3221a15676f8f54325fbc3b5c0b737155f7221b7b97ef3495c94"
+    },
+    {
+      "object": "lib/NitroSDK/src/wm_settings.o",
+      "source": "lib/NitroSDK/src/wm_settings.c",
+      "source_sha256": "691f80c8687f09320e39c41aee0132cf919f0f52bf6f227a5b37942108db6843"
+    },
+    {
+      "object": "lib/NitroSDK/src/wvr.o",
+      "source": "lib/NitroSDK/src/wvr.c",
+      "source_sha256": "fdd578306d0fafb61029c2b026ca46be8a95b532a83aef087d3b274aa3fb2a68"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_allocator.o",
+      "source": "lib/NitroSystem/src/fnd_allocator.c",
+      "source_sha256": "644195dc5b5526875b6d3af9538fb4ecf0ab0b6b3f1b2d014691df7a844f207c"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_expheap.o",
+      "source": "lib/NitroSystem/src/fnd_expheap.c",
+      "source_sha256": "061ef0c5417a0a73316e8603745c55a74eced798e1b2db91a6a4fecac566579c"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_frameheap.o",
+      "source": "lib/NitroSystem/src/fnd_frameheap.c",
+      "source_sha256": "8e8a639cf0f77984f2ebebc6b0e0bce826972bbb80542a964b90b6404837cc42"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_heapcommon.o",
+      "source": "lib/NitroSystem/src/fnd_heapcommon.c",
+      "source_sha256": "83094fea9a0502f7d786a83867024ef9bd53697562d4cc680fbe98f3f8df81c8"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_list.o",
+      "source": "lib/NitroSystem/src/fnd_list.c",
+      "source_sha256": "353a7e052d2ff4e88ceb952f0f7ade9f3070d2407698d4f7518fa5d9b600c736"
+    },
+    {
+      "object": "lib/NitroSystem/src/fnd_unitheap.o",
+      "source": "lib/NitroSystem/src/fnd_unitheap.c",
+      "source_sha256": "9781189d71711e1ebd38f70b7eac7e4830d7fc9f1cd5023664c677a7cf2a8dd6"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_animation.o",
+      "source": "lib/NitroSystem/src/g2d_animation.c",
+      "source_sha256": "af34134d74ff20d4f804201dd258344f4fa7054615f5b4b1c119f8fd0dfac4d5"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_cell_animation.o",
+      "source": "lib/NitroSystem/src/g2d_cell_animation.c",
+      "source_sha256": "c6ba88a812f56013beff1bb149d28a2e50d321d77408f7fe63e0b9925237c03e"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_cell_transfer_manager.o",
+      "source": "lib/NitroSystem/src/g2d_cell_transfer_manager.c",
+      "source_sha256": "ca555c1dceab145c91f6011ec0d750de22432769e612e6ac6dc9357f983bbaa9"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_image.o",
+      "source": "lib/NitroSystem/src/g2d_image.c",
+      "source_sha256": "5999d8f6bf0a8ea642497bc6960fe4e34c90baead2468f2a296d20bbefac1e2a"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_load.o",
+      "source": "lib/NitroSystem/src/g2d_load.c",
+      "source_sha256": "b407d09b3d091d24d1d98f0ae831cc49e1a3d204c49f820b67db394d11ac9a15"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_mc_animation.o",
+      "source": "lib/NitroSystem/src/g2d_mc_animation.c",
+      "source_sha256": "d22cab49946ced2774a206a03b7279819d5ce5f676225c68a494b4548280f767"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_node.o",
+      "source": "lib/NitroSystem/src/g2d_node.c",
+      "source_sha256": "1f8ad0aa68620990b5d79b184d6c540edb0e766f07c851466ef4b926500b78d5"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_oam.o",
+      "source": "lib/NitroSystem/src/g2d_oam.c",
+      "source_sha256": "23a6d1cf8b44458bdce5f8eb7a223c4e64474fa2f35f10e5818daddb0c2e1a34"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_oam_soft_emu.o",
+      "source": "lib/NitroSystem/src/g2d_oam_soft_emu.c",
+      "source_sha256": "7cd871bae73449b73115aac9c748b9fd8149bd6f48d980c8acf86e97f0c4722b"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_palette_table.o",
+      "source": "lib/NitroSystem/src/g2d_palette_table.c",
+      "source_sha256": "fdf66df8b5a009d5a77f76b6e06bbbe0d66fb1a8ab6d806032d388bfe60230e7"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer.o",
+      "source": "lib/NitroSystem/src/g2d_renderer.c",
+      "source_sha256": "6559cb8f92f69e7ab93daece65ecfa33649b8a979a97dbef7d73a925e60ffeea"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer_core.o",
+      "source": "lib/NitroSystem/src/g2d_renderer_core.c",
+      "source_sha256": "19870334ead19616bdb03dd6573051a8d00110d952a3b347f3abffbb90aecc2b"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer_identity.o",
+      "source": "lib/NitroSystem/src/g2d_renderer_identity.c",
+      "source_sha256": "52d93649e56c2e88d27eb5f59f0e20ebc3144d15dbe1a6d93744873f6f16a4d0"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer_mtx_cache.o",
+      "source": "lib/NitroSystem/src/g2d_renderer_mtx_cache.c",
+      "source_sha256": "1892b346d400dfd60bc8a3f5eff2990efb19770d040160721a28821abbc7ee0a"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer_mtx_stack.o",
+      "source": "lib/NitroSystem/src/g2d_renderer_mtx_stack.c",
+      "source_sha256": "3bc505e9ad384a19cf6b597d91b0cb78495ed0f69315de15d40b25655edae829"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_renderer_transform.o",
+      "source": "lib/NitroSystem/src/g2d_renderer_transform.c",
+      "source_sha256": "ca132a479b9b3e1e465f328b229e1006b62f0a5c0ad582b6673c0066c8cf9021"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_softsprite.o",
+      "source": "lib/NitroSystem/src/g2d_softsprite.c",
+      "source_sha256": "1f3adbc4bcde2c50a968a29895315c597d9fb1bb76b5b80cd8e44e671b502770"
+    },
+    {
+      "object": "lib/NitroSystem/src/g2d_srt_control.o",
+      "source": "lib/NitroSystem/src/g2d_srt_control.c",
+      "source_sha256": "93a84b2b1f66c60b174a2a6a429cbf897301610f68115dfd7846cc37a92a7fe9"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_draw.o",
+      "source": "lib/NitroSystem/src/g3d_draw.c",
+      "source_sha256": "d6d24c66174b0b962f9c2ca7f973f44dffa171a1d320f4aa71a99d67ec17e883"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_gecom.o",
+      "source": "lib/NitroSystem/src/g3d_gecom.c",
+      "source_sha256": "624cb68e415d5fba7e83fcf5dfd1decd6eb96bb62bd832dfe668388a5019bbff"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_glb.o",
+      "source": "lib/NitroSystem/src/g3d_glb.c",
+      "source_sha256": "c572073d5b0bee2e6dd8be14b41661eca94c3706dfe9f7954582c28a2770f90c"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_glb_state.o",
+      "source": "lib/NitroSystem/src/g3d_glb_state.c",
+      "source_sha256": "4c26dc6db3de47bbda87cce82a0dc9799c8adbc967479266a88dd3fa9556e1c9"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_kernel.o",
+      "source": "lib/NitroSystem/src/g3d_kernel.c",
+      "source_sha256": "b17970eef2a45f0fdc4c3d0ea9418199ac03e43727a00c56e43447e66a1a0711"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_mdl_bind.o",
+      "source": "lib/NitroSystem/src/g3d_mdl_bind.c",
+      "source_sha256": "78da69c3d98220982aa3089207e484cfb7704017882afe66c58c6064fb8a06d0"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_res_struct_accessor.o",
+      "source": "lib/NitroSystem/src/g3d_res_struct_accessor.c",
+      "source_sha256": "1043cfb28f38d2a6dca3d960403365810d540f500384eaaa05d8f9888d985b39"
+    },
+    {
+      "object": "lib/NitroSystem/src/g3d_util.o",
+      "source": "lib/NitroSystem/src/g3d_util.c",
+      "source_sha256": "ffa9582d171cd99e9191d84b8d59f762d7fb451691ada6da804c498c7cdd5635"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_frame_pltt_vram_man.o",
+      "source": "lib/NitroSystem/src/gfd_frame_pltt_vram_man.c",
+      "source_sha256": "391bd38d91aeafdf1d79276383adab0bc3ff65d838f1234ab46e60d27ca8d054"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_frame_tex_vram_man.o",
+      "source": "lib/NitroSystem/src/gfd_frame_tex_vram_man.c",
+      "source_sha256": "a761f560748dda94773b67e2fe67c8379e48ca844a8cf7365dbd013385fc3c81"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man.o",
+      "source": "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man.c",
+      "source_sha256": "f8c8dcc8f206f148c046ff9661d9720d377e0abaf2f41d6c6048f033ed413cb2"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man_reset.o",
+      "source": "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man_reset.c",
+      "source_sha256": "59c0f0801619e4189889d886c6923c3770bbc4db002e074c6d1d135bab5e480e"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_linked_list_tex_vram_man.o",
+      "source": "lib/NitroSystem/src/gfd_linked_list_tex_vram_man.c",
+      "source_sha256": "d66977292fe2203d72576f6ad568975b723a1b061dc7a5ffe6baaf630a2de860"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.o",
+      "source": "lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.c",
+      "source_sha256": "1e56e4d01987abbb7f6bfe9841142e985b81ed3ac45342b03fe7c6c3529c0359"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_linked_list_vram_man.o",
+      "source": "lib/NitroSystem/src/gfd_linked_list_vram_man.c",
+      "source_sha256": "6f3747196ecb4f96cbbe8b50011554fb0825d8cb37e2503e5240c72f52a69397"
+    },
+    {
+      "object": "lib/NitroSystem/src/gfd_vram_transfer_manager.o",
+      "source": "lib/NitroSystem/src/gfd_vram_transfer_manager.c",
+      "source_sha256": "8b077e3e5630bd4dfa55c5adf26f8a9cd6ec7da142c7b3fc76f74011143503f6"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_arc.o",
+      "source": "lib/NitroSystem/src/snd_arc.c",
+      "source_sha256": "b3cda1dc40efbe71f3587bbb2654a2cf191de5208e40a2b7555975d0cf3e2eb4"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_arc_loader.o",
+      "source": "lib/NitroSystem/src/snd_arc_loader.c",
+      "source_sha256": "28942e35f8f173a8a66a77d366768da8878753c98084a0136ce0ab89b8d31dbc"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_arc_loader_wave.o",
+      "source": "lib/NitroSystem/src/snd_arc_loader_wave.c",
+      "source_sha256": "5cc08f33de9b8aa6bc1e6a2fb0c21e18b256f6a4fbc8b1fc7b66c8a20e87e43e"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_arc_player.o",
+      "source": "lib/NitroSystem/src/snd_arc_player.c",
+      "source_sha256": "0775464b076c0d018544f1899f0025cb6c8ee54ef31b8f0951f03195d068b33b"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_arc_strm.o",
+      "source": "lib/NitroSystem/src/snd_arc_strm.c",
+      "source_sha256": "fbe7f8e0ffaa5a7314825229965a50aa86ed2d998fd6b8b49098e3d58579eca1"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_capture.o",
+      "source": "lib/NitroSystem/src/snd_capture.c",
+      "source_sha256": "7bc16969d783a75b30c4f6d4e93a0d2293767914fb2c6f1811691134bfb958f8"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_fader.o",
+      "source": "lib/NitroSystem/src/snd_fader.c",
+      "source_sha256": "f7aba68b4e60e0e3091e87cf1e2d9da92f6aee2c3dc864c2df5ad9491b3f56e6"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_heap.o",
+      "source": "lib/NitroSystem/src/snd_heap.c",
+      "source_sha256": "0d3cf83bfca7c12933d88404f727ef4c1f1a2dc59c659f07e2b847938bfc8158"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_player.o",
+      "source": "lib/NitroSystem/src/snd_player.c",
+      "source_sha256": "60287a32f8edc3d38ecc40b96ebfb7f42493aedb3e3f44e632a601654de0cb64"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_resource_mgr.o",
+      "source": "lib/NitroSystem/src/snd_resource_mgr.c",
+      "source_sha256": "687226257cc7678cb4f304050d5d66dc39b6c3c496a10f09027d178f45b6577d"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_seqarc.o",
+      "source": "lib/NitroSystem/src/snd_seqarc.c",
+      "source_sha256": "08a661cc57dfa41834db40df1980adae2ef2294f2188db9d190dc49c02e8a574"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_stream.o",
+      "source": "lib/NitroSystem/src/snd_stream.c",
+      "source_sha256": "139231d0dc08ac0314c1093128cad351094f5f9042d4aa80779707f86506acae"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_system.o",
+      "source": "lib/NitroSystem/src/snd_system.c",
+      "source_sha256": "1c23dc08ead8425ed0f793395306d5423f5dda6ea770645b026480e5b8ba0af5"
+    },
+    {
+      "object": "lib/NitroSystem/src/snd_waveout.o",
+      "source": "lib/NitroSystem/src/snd_waveout.c",
+      "source_sha256": "edf3bc48684e345b6f49bda983256afd9982fce6f0a1420f53a550655df1a7ee"
+    },
+    {
+      "object": "lib/NitroWiFi/src/soc.o",
+      "source": "lib/NitroWiFi/src/soc.c",
+      "source_sha256": "1bc63b2311035d84a0ed06db2910ad4f735a6e8990952a0dd638132d3b7e7514"
+    },
+    {
+      "object": "lib/NitroWiFi/src/soc_gethostbyname.o",
+      "source": "lib/NitroWiFi/src/soc_gethostbyname.c",
+      "source_sha256": "337e9315dce7093746baeb19bde704eee4a9ca13348c3b204c6345a4c7bcbcfd"
+    },
+    {
+      "object": "lib/NitroWiFi/src/soc_inet.o",
+      "source": "lib/NitroWiFi/src/soc_inet.c",
+      "source_sha256": "f96a2cce2d0559a931a6c898e5f85e1a4cf80a6574467efccaf17f7cdb60d897"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_close.o",
+      "source": "lib/NitroWiFi/src/socl_close.c",
+      "source_sha256": "203d8009294faadd6c6ff17e8722c54dc99810197ff8d22aabdea144e5a58fba"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_command.o",
+      "source": "lib/NitroWiFi/src/socl_command.c",
+      "source_sha256": "6f3a16f88b6ad3ee446b9380bf0cce18c414470f0ad6d21def2d5ed4d587763e"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_list.o",
+      "source": "lib/NitroWiFi/src/socl_list.c",
+      "source_sha256": "e036785209aeb0ca8737d61fbf6885a7ff84dfb5cd43bac6a7ac3d0d08b83117"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_read.o",
+      "source": "lib/NitroWiFi/src/socl_read.c",
+      "source_sha256": "897203bb7fd4a2916d7d6dfc1e8137bd3502849288b555ab38ad9f856a455920"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_resolver.o",
+      "source": "lib/NitroWiFi/src/socl_resolver.c",
+      "source_sha256": "f7bf0202f7fcee485dc94c916fda75220f3bbb8fc1f8324b858100c87466de91"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_socket.o",
+      "source": "lib/NitroWiFi/src/socl_socket.c",
+      "source_sha256": "8bbff74118077ddcda8f12bc16ecfe093b6502121ac471506cdb915c563bb95f"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_ssl.o",
+      "source": "lib/NitroWiFi/src/socl_ssl.c",
+      "source_sha256": "e39d880562d176fd903700a0a00c4edb6b0400fdcf1fbbe661203bfd15e006a7"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_startup.o",
+      "source": "lib/NitroWiFi/src/socl_startup.c",
+      "source_sha256": "c3b0cd7aa9d24b5fa0af1602a2fa62350a72a5b00804f041413a16a4fc80af06"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_status.o",
+      "source": "lib/NitroWiFi/src/socl_status.c",
+      "source_sha256": "573cec034cac29e6d9c809faf13adf1302de1c738408a12d73eb2b2e9cc32ce9"
+    },
+    {
+      "object": "lib/NitroWiFi/src/socl_write.o",
+      "source": "lib/NitroWiFi/src/socl_write.c",
+      "source_sha256": "8720e7cb2bf3cd287cb9c4d45acb085830c5ef734e87279761ac4f7c5aed7898"
+    },
+    {
+      "object": "lib/NitroWiFi/src/stubsmd5.o",
+      "source": "lib/NitroWiFi/src/stubsmd5.c",
+      "source_sha256": "b4fb98d3b84e463e9dfecb620b74ce4a5c2c6137ecad765e3d3792a5c71bd0e8"
+    },
+    {
+      "object": "lib/NitroWiFi/src/wcm.o",
+      "source": "lib/NitroWiFi/src/wcm.c",
+      "source_sha256": "ba809f54bee69a10f819a03e0bffc35902f4aba89af6ac9e80caa175a4555922"
+    },
+    {
+      "object": "lib/NitroWiFi/src/wcm_aplist.o",
+      "source": "lib/NitroWiFi/src/wcm_aplist.c",
+      "source_sha256": "15cb9a82b753ef818edce05df95093816d499ee3ac390cb6b9d113df0001289f"
+    },
+    {
+      "object": "lib/NitroWiFi/src/wcm_callback.o",
+      "source": "lib/NitroWiFi/src/wcm_callback.c",
+      "source_sha256": "6047dd8d2a863b6b1ae8e5686a83b69cf739b4598cd1de603af87b184ce43259"
+    },
+    {
+      "object": "lib/NitroWiFi/src/wcm_cpsif.o",
+      "source": "lib/NitroWiFi/src/wcm_cpsif.c",
+      "source_sha256": "0374a8441c13227489bfffe64234af95e96d81e8767e410d3e79ee735d9a27e1"
+    },
+    {
+      "object": "lib/libCPS/src/cps_arp.o",
+      "source": "lib/libCPS/src/cps_arp.c",
+      "source_sha256": "484ac12d67a98033395dcd2ba79fbc8ce01521851c8ef0de9c6fd1bcb64303bc"
+    },
+    {
+      "object": "lib/libCPS/src/cps_bignum.o",
+      "source": "lib/libCPS/src/cps_bignum.c",
+      "source_sha256": "32e9d64dce1461277bab736ae11b05790907d49af90d8ac71d8cf7e118ddebb8"
+    },
+    {
+      "object": "lib/libCPS/src/cps_bignum_char.o",
+      "source": "lib/libCPS/src/cps_bignum_char.c",
+      "source_sha256": "ad3704d33e3906c5c079587c8681699b9ff89048bbdfc621d63921ed26771553"
+    },
+    {
+      "object": "lib/libCPS/src/cps_control.o",
+      "source": "lib/libCPS/src/cps_control.c",
+      "source_sha256": "ff9d86e13667d75998f278fce89019012057706eea8595ba8e2df7a3a2a934c2"
+    },
+    {
+      "object": "lib/libCPS/src/cps_dhcp.o",
+      "source": "lib/libCPS/src/cps_dhcp.c",
+      "source_sha256": "4afd0558a4c52ca08e09dc6c057b8a05e719734fd4e2f7b31155abcb8627b8a2"
+    },
+    {
+      "object": "lib/libCPS/src/cps_dns.o",
+      "source": "lib/libCPS/src/cps_dns.c",
+      "source_sha256": "5a28b5eea3a3203f8af906ee3763dcca16681300ecf730cf9b94745f3e71dd06"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ip.o",
+      "source": "lib/libCPS/src/cps_ip.c",
+      "source_sha256": "9cc3d47d547c18769874f88f0372183833329fa25e380452690d4808ee30e4c2"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ip_frag.o",
+      "source": "lib/libCPS/src/cps_ip_frag.c",
+      "source_sha256": "7bc1d7c662e4855f371a1e1ec2ef903bdcb5e8bf9f82d5634b7415236e158214"
+    },
+    {
+      "object": "lib/libCPS/src/cps_link.o",
+      "source": "lib/libCPS/src/cps_link.c",
+      "source_sha256": "1c074898e4238fab1fa15a86037f08c871d7a5ddecaecfd5f44619801ce16f65"
+    },
+    {
+      "object": "lib/libCPS/src/cps_md5.o",
+      "source": "lib/libCPS/src/cps_md5.c",
+      "source_sha256": "835184f9687c360bea59d2ca0f08922e311d747cd184c57353a7f57bfa2ba40d"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ping.o",
+      "source": "lib/libCPS/src/cps_ping.c",
+      "source_sha256": "ea30c229c8dd97f3472fdb8213c94f21425c67f7588deee0d4b79f4aad2bd89b"
+    },
+    {
+      "object": "lib/libCPS/src/cps_rc4.o",
+      "source": "lib/libCPS/src/cps_rc4.c",
+      "source_sha256": "76469f9d8031deb9e6d30ec60d6c2f8028dbc2373db6f1b867ce3781aa2b83f3"
+    },
+    {
+      "object": "lib/libCPS/src/cps_recv.o",
+      "source": "lib/libCPS/src/cps_recv.c",
+      "source_sha256": "23c261034d513b5f20f47d82a289a5eaaf94423a5713512089304ef57730e696"
+    },
+    {
+      "object": "lib/libCPS/src/cps_reset.o",
+      "source": "lib/libCPS/src/cps_reset.c",
+      "source_sha256": "1e2b37cd4fe2631700aa9621e44a626a4d1624a35b55a5264e26bc8e8b1a5904"
+    },
+    {
+      "object": "lib/libCPS/src/cps_resolve.o",
+      "source": "lib/libCPS/src/cps_resolve.c",
+      "source_sha256": "90fae7509385238d6c0ab2767c3c4752ba82b680a3241515ce7489c83eb84770"
+    },
+    {
+      "object": "lib/libCPS/src/cps_scavenger.o",
+      "source": "lib/libCPS/src/cps_scavenger.c",
+      "source_sha256": "695b8c9a78324f345bc6fd984d71ffdce67af9fa28f6a1b9efc2d7c04c055e99"
+    },
+    {
+      "object": "lib/libCPS/src/cps_send.o",
+      "source": "lib/libCPS/src/cps_send.c",
+      "source_sha256": "7a122b399b9beb65df77191b274825f34a82b5e1a3de307ff1fd21a2c7e0bc94"
+    },
+    {
+      "object": "lib/libCPS/src/cps_send_transport.o",
+      "source": "lib/libCPS/src/cps_send_transport.c",
+      "source_sha256": "c57f2c63f0a98a4c97fdc5c60cecd9e3d2c9a188888055d4f2ad088130e9e098"
+    },
+    {
+      "object": "lib/libCPS/src/cps_sha1.o",
+      "source": "lib/libCPS/src/cps_sha1.c",
+      "source_sha256": "6f6ee8cdafaab88b4560e453648ede8d027ce47a532a492e18d179f0fc42ea13"
+    },
+    {
+      "object": "lib/libCPS/src/cps_socket.o",
+      "source": "lib/libCPS/src/cps_socket.c",
+      "source_sha256": "294dc4f6df5c2666e271ddad1e97d9ea63be339de6f78c4bafcfc6c299b62ecb"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl.o",
+      "source": "lib/libCPS/src/cps_ssl.c",
+      "source_sha256": "90f18ac75eae4cb428086c329262ac8be56acd1a4335798e5e4a902dfaaf424f"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_cert.o",
+      "source": "lib/libCPS/src/cps_ssl_cert.c",
+      "source_sha256": "27997f6cef58790f7c0602a01d1f60200f6c099d850b69839fda8e521388d1ae"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_handshake.o",
+      "source": "lib/libCPS/src/cps_ssl_handshake.c",
+      "source_sha256": "e69246af28326c41a8ec696be2f6e7ec966a5b6ff432c6eae38af8064e09fffc"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_hello.o",
+      "source": "lib/libCPS/src/cps_ssl_hello.c",
+      "source_sha256": "bf3ee548f62d336d0c6d2d242d04b509943532b8e20259f7788f8c036328a3d4"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_keys.o",
+      "source": "lib/libCPS/src/cps_ssl_keys.c",
+      "source_sha256": "620d86cdb3527136f86f54ae54dbbdb5e6b62927d144ea898a64e0d234813ddc"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_random.o",
+      "source": "lib/libCPS/src/cps_ssl_random.c",
+      "source_sha256": "a88f44193fc273d0c0855ac33385841f2a2ab971bf518bb8e2f411b61a1a0a24"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_record.o",
+      "source": "lib/libCPS/src/cps_ssl_record.c",
+      "source_sha256": "890b6d9d624aaf36539848abd68349465cfe251f341a47b9b0fa7faf81592f41"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_session.o",
+      "source": "lib/libCPS/src/cps_ssl_session.c",
+      "source_sha256": "330ce5eda73d3a3b532b888d7201b3dc3650c7d278d764be451dc89698f7f909"
+    },
+    {
+      "object": "lib/libCPS/src/cps_ssl_util.o",
+      "source": "lib/libCPS/src/cps_ssl_util.c",
+      "source_sha256": "3b451b62aafe3235829a3bca94ffc4ba1b56acbafb01b9a84270cc192b42ff54"
+    },
+    {
+      "object": "lib/libCPS/src/cps_startup.o",
+      "source": "lib/libCPS/src/cps_startup.c",
+      "source_sha256": "ddf11f4d819712b17586ac608f26b0b68acd3275becce32d6e436a571630b671"
+    },
+    {
+      "object": "lib/libCPS/src/cps_tcp.o",
+      "source": "lib/libCPS/src/cps_tcp.c",
+      "source_sha256": "173fb300940e2fa14edad921fb942421c4507ab11913fcc55b7c996166a30f10"
+    },
+    {
+      "object": "lib/libCPS/src/cps_tcp_write.o",
+      "source": "lib/libCPS/src/cps_tcp_write.c",
+      "source_sha256": "796e618a478d936c68e1709088a43a054f5a710edbeff2f75596afdd41375e79"
+    },
+    {
+      "object": "lib/libCPS/src/cps_udp.o",
+      "source": "lib/libCPS/src/cps_udp.c",
+      "source_sha256": "b75359043b36ade9fdc936b5efd71b8862fd8f2bab36c37b71bd1bcd8fc06dc3"
+    },
+    {
+      "object": "lib/libCPS/src/cps_util.o",
+      "source": "lib/libCPS/src/cps_util.c",
+      "source_sha256": "d5010ef224af27564d82821e6252d89b5cbdcd6adea309ef392d0abbb908f856"
+    },
+    {
+      "object": "lib/libVCT/src/vct_adpcm.o",
+      "source": "lib/libVCT/src/vct_adpcm.c",
+      "source_sha256": "861f2ce161bb1e145be7fb54e79c7c8b03b79119bda0b826528270ec784b271b"
+    },
+    {
+      "object": "lib/libVCT/src/vct_audio.o",
+      "source": "lib/libVCT/src/vct_audio.c",
+      "source_sha256": "218f336119fe79569f1f805cd0ee1a9c0b3a8b44e3cde4c72650bdc603cc24bc"
+    },
+    {
+      "object": "lib/libVCT/src/vct_audio_queue.o",
+      "source": "lib/libVCT/src/vct_audio_queue.c",
+      "source_sha256": "693c97808ea81043abc22686fe80854c9c1aa7ee139bd15010eb6322e7a11355"
+    },
+    {
+      "object": "lib/libVCT/src/vct_audio_send.o",
+      "source": "lib/libVCT/src/vct_audio_send.c",
+      "source_sha256": "925b1058ca37e30a683064296d33b7b6c8e78c565e3bd6e163a39c0631806122"
+    },
+    {
+      "object": "lib/libVCT/src/vct_codec.o",
+      "source": "lib/libVCT/src/vct_codec.c",
+      "source_sha256": "be5fca355bee58351e33f485e239061face9c5c221de3abfc511173351f0bd77"
+    },
+    {
+      "object": "lib/libVCT/src/vct_decoder.o",
+      "source": "lib/libVCT/src/vct_decoder.c",
+      "source_sha256": "b9322919e5ce53f2b30d1a0293e736a9e597b4dd2119090de1be0ca32570d4df"
+    },
+    {
+      "object": "lib/libVCT/src/vct_fir.o",
+      "source": "lib/libVCT/src/vct_fir.c",
+      "source_sha256": "de55e3caf104013b0011755f3df01976652e8aec93f3ab686b67ea60b5fdc4cc"
+    },
+    {
+      "object": "lib/libVCT/src/vct_main.o",
+      "source": "lib/libVCT/src/vct_main.c",
+      "source_sha256": "02120e7a5c09a97520e9a037e1343abec569272068ea8adff1705396240ee21d"
+    },
+    {
+      "object": "lib/libVCT/src/vct_mix.o",
+      "source": "lib/libVCT/src/vct_mix.c",
+      "source_sha256": "853204b952f69915e25abb076b43d3ecafa24a7074c3f8c8501100f395457189"
+    },
+    {
+      "object": "lib/libVCT/src/vct_packet_buffer.o",
+      "source": "lib/libVCT/src/vct_packet_buffer.c",
+      "source_sha256": "c7788d610db1c84aa061aaae0a003d44d501b71ffa36c2facab234ff847c54d3"
+    },
+    {
+      "object": "lib/libVCT/src/vct_ssp.o",
+      "source": "lib/libVCT/src/vct_ssp.c",
+      "source_sha256": "1dc2ab85220f667575627b3b4455b2399011fe34cc41fca3fc6dd53fdc424a1c"
+    },
+    {
+      "object": "lib/libVCT/src/vct_vad.o",
+      "source": "lib/libVCT/src/vct_vad.c",
+      "source_sha256": "53951299032d28c65cf8e58333a0ab4bf1e65ea9c4103cf90bf132f6a17064f3"
+    },
+    {
+      "object": "lib/src/nitrocrypto_rc4_fast.o",
+      "source": "lib/src/nitrocrypto_rc4_fast.c",
+      "source_sha256": "21c109973cd24847da150c828b013c28e261bbc9ecf6c8e660c89f35f6a115f2"
+    },
+    {
+      "object": "lib/src/nitrocrypto_rc4_init.o",
+      "source": "lib/src/nitrocrypto_rc4_init.c",
+      "source_sha256": "7923bad477527b0055ae9a269b963d9ce7ef9cdb1ed9a6eb34917cd30fdae61a"
+    },
+    {
+      "object": "lib/src/spl_anim.o",
+      "source": "lib/src/spl_anim.c",
+      "source_sha256": "c56ca7d8ebbc68b2bbd0f24e36d7d004c2d03c801d2336d96b6e51d3f73e1316"
+    },
+    {
+      "object": "lib/src/spl_draw.o",
+      "source": "lib/src/spl_draw.c",
+      "source_sha256": "7143828d18cf9c3bc259f51b7e9bd26f5b0f4bf403abc4c4bfb7264012acd15d"
+    },
+    {
+      "object": "lib/src/spl_draw_ptcl.o",
+      "source": "lib/src/spl_draw_ptcl.c",
+      "source_sha256": "751714974580317bbf57a9df491b5f531ed50adea59fa4bec580f44042ed8c5d"
+    },
+    {
+      "object": "lib/src/spl_emitter.o",
+      "source": "lib/src/spl_emitter.c",
+      "source_sha256": "080e8026b1afabdfea25559b164b12a97812e183b73dede191be8c49d97ed393"
+    },
+    {
+      "object": "lib/src/spl_field.o",
+      "source": "lib/src/spl_field.c",
+      "source_sha256": "eff27af35c156a1dd402d40bf423e5fc12418e049a464ba7906b74a3fe06941a"
+    },
+    {
+      "object": "lib/src/spl_generate.o",
+      "source": "lib/src/spl_generate.c",
+      "source_sha256": "b0336e578e5dd07b6ed92c6487ab550f4b304fb477f054b3dcb975bbbc99c02a"
+    },
+    {
+      "object": "lib/src/spl_list.o",
+      "source": "lib/src/spl_list.c",
+      "source_sha256": "0bd9a70245ab560f47705b58dc8783326fedd1ae359ffcb072fd8317e7c1b731"
+    },
+    {
+      "object": "lib/src/spl_manager.o",
+      "source": "lib/src/spl_manager.c",
+      "source_sha256": "cb20ca2344170e30831aedc36f57a90a2304f3f5d7b6d5edaa8351f5ac0d5099"
+    },
+    {
+      "object": "lib/src/spl_random.o",
+      "source": "lib/src/spl_random.c",
+      "source_sha256": "42916b4e43d08614b24999092c103cd1ef97a8f9072f28a38b45fa8a62741bca"
+    },
+    {
+      "object": "src/alph_checks.o",
+      "source": "src/alph_checks.c",
+      "source_sha256": "5301542027b6ddb28ebd173516ea8e4830e920f69eabb0da2cfb5c6634f5fa85"
+    },
+    {
+      "object": "src/apricorn_box.o",
+      "source": "src/apricorn_box.c",
+      "source_sha256": "9bf34a78154f4fe2fb345897e0784a8985740be28e1e0e8fd0628fe8966568a8"
+    },
+    {
+      "object": "src/apricorn_tree_sys.o",
+      "source": "src/apricorn_tree_sys.c",
+      "source_sha256": "545215087fa7cd939f8e2681617fc387e694546cb4d6daadf367c69c83a9fc7a"
+    },
+    {
+      "object": "src/ascii_util.o",
+      "source": "src/ascii_util.c",
+      "source_sha256": "b1492707f56eb833770984a9ff55a5f5f78196d9b5b7c687a04697147fa7c3e8"
+    },
+    {
+      "object": "src/bag.o",
+      "source": "src/bag.c",
+      "source_sha256": "9f4e668cf9df3553c5ad5335814e00c0cb4ba688dbb4895fe34e2a7adba5d5b5"
+    },
+    {
+      "object": "src/bag_view.o",
+      "source": "src/bag_view.c",
+      "source_sha256": "8f42e519f5461f753ed14b9ebe48082931a80e871f25bc94e4a4b73dde87a46c"
+    },
+    {
+      "object": "src/battle/battle_setup.o",
+      "source": "src/battle/battle_setup.c",
+      "source_sha256": "f8db703f5676bfc4a97825f2601b4ac37a81c75e2f301481049d2b2f61316c31"
+    },
+    {
+      "object": "src/battle_frontier_communication.o",
+      "source": "src/battle_frontier_communication.c",
+      "source_sha256": "904ce777144f0b84babcc76d0e558343002c50da96d441ed608de0ed42923e5f"
+    },
+    {
+      "object": "src/battle_greeting_task.o",
+      "source": "src/battle_greeting_task.c",
+      "source_sha256": "0c5437ca5a18581f26da173940c9c1a6fbeb7725bc17309bc7de0b6a52a6c36e"
+    },
+    {
+      "object": "src/battle_intro_config.o",
+      "source": "src/battle_intro_config.c",
+      "source_sha256": "4654d07cefde640d250f5da0021cd44194d1da522b71231973c41551cd81fcd2"
+    },
+    {
+      "object": "src/battle_record.o",
+      "source": "src/battle_record.c",
+      "source_sha256": "7e9dc089affc8fa9a4f447fd3c981c62547f8718afb92b5df16c35a4e56047e9"
+    },
+    {
+      "object": "src/battle_regulation.o",
+      "source": "src/battle_regulation.c",
+      "source_sha256": "3fb80bbe26650299e3668bf928404ba24d81db5b5d167e12dd1a25d2642a363a"
+    },
+    {
+      "object": "src/battle_transition_task.o",
+      "source": "src/battle_transition_task.c",
+      "source_sha256": "f370dd84521309d7659b3a12002f67369e9d219d5a81c4e35308e938d9c79c43"
+    },
+    {
+      "object": "src/bg_cell_manager.o",
+      "source": "src/bg_cell_manager.c",
+      "source_sha256": "21dd03920f0519bc7c93b90b80335f62c2b7a6b7eadee389e49417ad3de3acd9"
+    },
+    {
+      "object": "src/bg_window.o",
+      "source": "src/bg_window.c",
+      "source_sha256": "6178416960681f9926ad5459ea31e8e1a52f9eb796aa8650ad4e86d47eeb8cab"
+    },
+    {
+      "object": "src/billboard_gfx_sequence.o",
+      "source": "src/billboard_gfx_sequence.c",
+      "source_sha256": "cdd6ef3ca7f5ae815478143020a1648807afb7e1965eface253d5b0ad1289cb8"
+    },
+    {
+      "object": "src/billboard_lists.o",
+      "source": "src/billboard_lists.c",
+      "source_sha256": "4a83dc7c2776cdd40d488a004e1feff5e3693de55c67f6ce127e52bda1e45a7b"
+    },
+    {
+      "object": "src/blackout.o",
+      "source": "src/blackout.c",
+      "source_sha256": "7622e2c90e8045a177a749c59d9a5dd0104904759d9c75b54a23ef3e263b33ee"
+    },
+    {
+      "object": "src/brightness.o",
+      "source": "src/brightness.c",
+      "source_sha256": "7c45c1c684b2942c3a15539dd735a7a106e93854ff3a93a12f7c7d2223255680"
+    },
+    {
+      "object": "src/camera.o",
+      "source": "src/camera.c",
+      "source_sha256": "2dbeab0b2fef746b82729381d3e1944ae584e5703f1546da9a92eed7f1dba335"
+    },
+    {
+      "object": "src/catching_show.o",
+      "source": "src/catching_show.c",
+      "source_sha256": "789e82b499e21b6ff1d21dbf30ba2262bfdb9932daa52519e6d260ec0539e7b6"
+    },
+    {
+      "object": "src/char_tiles.o",
+      "source": "src/char_tiles.c",
+      "source_sha256": "54a634a6e2a5442d07c0a6ec86695715f3bae34478f68e00c576097c2d21fd82"
+    },
+    {
+      "object": "src/choose_starter.o",
+      "source": "src/choose_starter.c",
+      "source_sha256": "5cc4951372b7921da3abc19b93a578c78661838a696a409683480e15b744e4c0"
+    },
+    {
+      "object": "src/code_entry.o",
+      "source": "src/code_entry.c",
+      "source_sha256": "5ff4f7404c56b15ee1314b7e4ab4c6be08c6b58b33359c8a6475120f3ab8a4f3"
+    },
+    {
+      "object": "src/code_entry_gfx.o",
+      "source": "src/code_entry_gfx.c",
+      "source_sha256": "b4de6b2291bb5dc115e1c1adb1fecf88af61c312dc581425dad31cc268e0427a"
+    },
+    {
+      "object": "src/code_entry_states.o",
+      "source": "src/code_entry_states.c",
+      "source_sha256": "42ce7307d47f10cdd7efc0df437d650d574bf5ef93671c17ae8d1632d9be68ee"
+    },
+    {
+      "object": "src/coins.o",
+      "source": "src/coins.c",
+      "source_sha256": "f877400023e000b0da8fecd6005a4a362f64a10590712d0f76a109f1a4d73cba"
+    },
+    {
+      "object": "src/colosseum.o",
+      "source": "src/colosseum.c",
+      "source_sha256": "e460d48c7fbce73e41ff9f5f30eea79183a31b5da145f7e0f39326a3945965b4"
+    },
+    {
+      "object": "src/comm_player_manager.o",
+      "source": "src/comm_player_manager.c",
+      "source_sha256": "38441d333bb2138576e7d4cf00d75990b287bb7873bf41cce7019bc17cabd92c"
+    },
+    {
+      "object": "src/comm_player_sync.o",
+      "source": "src/comm_player_sync.c",
+      "source_sha256": "b5e1a3ff438a2a77df92989e2877bdd1dc9c3cd63ae1836e2f33f613e4a62266"
+    },
+    {
+      "object": "src/comm_state.o",
+      "source": "src/comm_state.c",
+      "source_sha256": "be3dc60a0c9c826802cc24ad16572faf835d866f851d1b7b6f864ea8e814dc6d"
+    },
+    {
+      "object": "src/comm_wireless.o",
+      "source": "src/comm_wireless.c",
+      "source_sha256": "c8bd28700c0a71e1d8b8b178e0bfb9e8446344a7b2c4a12e11cd5b076c8d673a"
+    },
+    {
+      "object": "src/communication_club_link.o",
+      "source": "src/communication_club_link.c",
+      "source_sha256": "0adcbcc0fc9f915ae6f8eec18e2d6444645dad167b70e92e786115513dd0e869"
+    },
+    {
+      "object": "src/communication_command.o",
+      "source": "src/communication_command.c",
+      "source_sha256": "09f61765dc9b95edb4180a832a313fb0630265c81d139513a4c15c0d25ff2a80"
+    },
+    {
+      "object": "src/communication_core.o",
+      "source": "src/communication_core.c",
+      "source_sha256": "6c8ccaf9f46d47f5f25e8404f627e988cbdcf5c140698eb57587221c140be151"
+    },
+    {
+      "object": "src/communication_error.o",
+      "source": "src/communication_error.c",
+      "source_sha256": "81ad5f8e019b00f2d5a18ee45045aef8e3d47c18e93ed7422254647732934911"
+    },
+    {
+      "object": "src/communication_player_state.o",
+      "source": "src/communication_player_state.c",
+      "source_sha256": "a596cc4084c98ce2055d61451846cbbbe1add771733621c6c0869ec1e6e4918d"
+    },
+    {
+      "object": "src/daycare.o",
+      "source": "src/daycare.c",
+      "source_sha256": "077948145972cbad55c28f835d4a61d59b75fd9ffb5d50fe358606a7feb30375"
+    },
+    {
+      "object": "src/dex_mon_measures.o",
+      "source": "src/dex_mon_measures.c",
+      "source_sha256": "bd5dcc14c16e8268e867d108a46151ddbcb0d1f6cb68d615a284e597721cf855"
+    },
+    {
+      "object": "src/dialog_box.o",
+      "source": "src/dialog_box.c",
+      "source_sha256": "f6a3ba64d9cf7ae3c9e386977311feffff0488d6d6d095a2bbd3cd8e9375458b"
+    },
+    {
+      "object": "src/dpad_menu_box.o",
+      "source": "src/dpad_menu_box.c",
+      "source_sha256": "5f27c30a4dd3ffa2c92b607fcee6d4978be7fbd57d3a481f6348364bdfbe0aa4"
+    },
+    {
+      "object": "src/drawing_session_link.o",
+      "source": "src/drawing_session_link.c",
+      "source_sha256": "b32f800740e12d38641bb8f60b1be9ebf64b005d0a0a1059b3437f565cd68ee1"
+    },
+    {
+      "object": "src/easy_chat.o",
+      "source": "src/easy_chat.c",
+      "source_sha256": "47cf7044e1230c19da675ac5ad6a647fc6365a2ce33ad8bc91358664e99074b9"
+    },
+    {
+      "object": "src/encounter.o",
+      "source": "src/encounter.c",
+      "source_sha256": "f485ebaee76424affe8a9a89de4e6cf66a3d7675ff9f55b4ecc564f9d2265f05"
+    },
+    {
+      "object": "src/error_message_reset.o",
+      "source": "src/error_message_reset.c",
+      "source_sha256": "c074d48728cbfafd82a28037bcc2e5995e71f8f3ae3ee41cab3f483fe3881e4a"
+    },
+    {
+      "object": "src/evolution_scene.o",
+      "source": "src/evolution_scene.c",
+      "source_sha256": "8bb1c3c6bebd201ca6aee83d3011b5281a279c0b5f9cbbb03ab7e0c840c5dee1"
+    },
+    {
+      "object": "src/field_bgm.o",
+      "source": "src/field_bgm.c",
+      "source_sha256": "62b1c3543e83a6f59f4a9da032d37ba558f06ba5dd827a346b9ddab67d83d082"
+    },
+    {
+      "object": "src/field_comm_cmds.o",
+      "source": "src/field_comm_cmds.c",
+      "source_sha256": "24e417ddba928b03ac82686bacadac8323af46a4261d0d0719f18669f5f24269"
+    },
+    {
+      "object": "src/field_effects.o",
+      "source": "src/field_effects.c",
+      "source_sha256": "9838d62de0c0db4bebb242cac579922a477d6eb7423efe25f0eaf71e50bb59c8"
+    },
+    {
+      "object": "src/field_interaction.o",
+      "source": "src/field_interaction.c",
+      "source_sha256": "a0cf30e3e65075f41dcb3feed5b2abf9a1472d979769c8e71147a13dd58e55d9"
+    },
+    {
+      "object": "src/field_misc_events.o",
+      "source": "src/field_misc_events.c",
+      "source_sha256": "3eb3f943a77e39a6a89b51ab4725208afb9dcfff116eeb88b47359d58fa7124f"
+    },
+    {
+      "object": "src/field_misc_util.o",
+      "source": "src/field_misc_util.c",
+      "source_sha256": "aa28ebdda0382b146a1983bce9fca1eab444eadbb0f153a01e91de65b4d37cbb"
+    },
+    {
+      "object": "src/field_move.o",
+      "source": "src/field_move.c",
+      "source_sha256": "8f8941ae4c7cb136a37c6997d3ce71857814f2cd6629b7755767e3ade33776de"
+    },
+    {
+      "object": "src/field_move_environment.o",
+      "source": "src/field_move_environment.c",
+      "source_sha256": "8404443de721dd18297d638733b98ce14f6bfbfa35050cf320470187c0e8c58e"
+    },
+    {
+      "object": "src/field_overworld_transition.o",
+      "source": "src/field_overworld_transition.c",
+      "source_sha256": "b31de0105054508516ebfe4071d795a277ca14b523f1cf22d589993d85edc55b"
+    },
+    {
+      "object": "src/field_roamer.o",
+      "source": "src/field_roamer.c",
+      "source_sha256": "a413683ab55d410ddcf57e13d0931a1db5f700829e92d4e557c1d080f017b19d"
+    },
+    {
+      "object": "src/field_system.o",
+      "source": "src/field_system.c",
+      "source_sha256": "ff89e8f9143642e77409745e38c959d23d23fd360321ca9d5fdb55d9f73aca71"
+    },
+    {
+      "object": "src/field_system_rtc_weather.o",
+      "source": "src/field_system_rtc_weather.c",
+      "source_sha256": "faacdf6208d83c87736f3d2d1a5f8db33cc3f5f196bcbdb5d25ce9f3abac8041"
+    },
+    {
+      "object": "src/field_take_photo.o",
+      "source": "src/field_take_photo.c",
+      "source_sha256": "97ba4f0f7470ff9b95e372c80a46415cfcbd461a6a332159cc435b5e1b53046a"
+    },
+    {
+      "object": "src/field_terrain.o",
+      "source": "src/field_terrain.c",
+      "source_sha256": "0a64f7f36df3f68c228b8b27c1ec96fa8811301f0da76ea0fbc485b9bdcbdc87"
+    },
+    {
+      "object": "src/field_time_events.o",
+      "source": "src/field_time_events.c",
+      "source_sha256": "3ac2644971d4550d920ebce442ef8aa831e6f3243f1edd6bdfec6ae139eac15c"
+    },
+    {
+      "object": "src/field_transition_tasks.o",
+      "source": "src/field_transition_tasks.c",
+      "source_sha256": "b29259dea2c8957fac4d2e8ffa9e67679b9a1017a28dfea14da5afba5f6b2061"
+    },
+    {
+      "object": "src/field_use_item.o",
+      "source": "src/field_use_item.c",
+      "source_sha256": "a2611d982fe744231e2778ab9842af17dcfd4794868e2a539730cf0ac454c597"
+    },
+    {
+      "object": "src/field_warp_state.o",
+      "source": "src/field_warp_state.c",
+      "source_sha256": "872b74144f989ca7e3088550d08148a1bfe41209e4d37835bd877158394448eb"
+    },
+    {
+      "object": "src/field_warp_tasks.o",
+      "source": "src/field_warp_tasks.c",
+      "source_sha256": "e858778f929cf4d9d019e88a5026e7703995c6aa86684e98f823272cc9e858c9"
+    },
+    {
+      "object": "src/filesystem.o",
+      "source": "src/filesystem.c",
+      "source_sha256": "ee526fc2835b2c2259dd393087fb1a5ca036dbf467bcfbd7735b1476819c869d"
+    },
+    {
+      "object": "src/follow_mon.o",
+      "source": "src/follow_mon.c",
+      "source_sha256": "9e3d91b81948dc0e5734417eedee5264c0d5a907d1765160f290058b463d4db7"
+    },
+    {
+      "object": "src/font.o",
+      "source": "src/font.c",
+      "source_sha256": "43c7616ceba37f7bf86364c75c7236d9dee28781429465b4fc301f14f34e79ff"
+    },
+    {
+      "object": "src/font_data.o",
+      "source": "src/font_data.c",
+      "source_sha256": "308e5083177eb936e1eb342ea191e3accdcc46fcc58fbb0bdeb86eaa84773ce5"
+    },
+    {
+      "object": "src/font_sprite.o",
+      "source": "src/font_sprite.c",
+      "source_sha256": "c1f1219c3a721889d7b09fdcc279417528d100031cade6cc781fe9acea22a045"
+    },
+    {
+      "object": "src/friend_group.o",
+      "source": "src/friend_group.c",
+      "source_sha256": "96489a2ca762f3f6bb8711abf194dd7bdb197a1df6893ca082d154ee16bae7f3"
+    },
+    {
+      "object": "src/friend_roster.o",
+      "source": "src/friend_roster.c",
+      "source_sha256": "f8902d33e4500ae3309b6b81a17eef3d08f9b12fda45fa8b941bb7feadaab2a6"
+    },
+    {
+      "object": "src/frontier_data.o",
+      "source": "src/frontier_data.c",
+      "source_sha256": "f24dd6fdbe2663f3f9d16e25d9f1525eb34aae587599cff44ca50fd4957b0670"
+    },
+    {
+      "object": "src/frontier_field_support.o",
+      "source": "src/frontier_field_support.c",
+      "source_sha256": "ec3f20526faa8df1f6046420953ea9ed20f5e2a8e0fce74ff0bcb26bbd37baea"
+    },
+    {
+      "object": "src/frontier_field_system.o",
+      "source": "src/frontier_field_system.c",
+      "source_sha256": "356ddabf94dd5eb494f9d42df764897012eabe9d1661b0a8ff590b2163c5b199"
+    },
+    {
+      "object": "src/frontier_launch.o",
+      "source": "src/frontier_launch.c",
+      "source_sha256": "4ec0adebf9ad595a73a589862aa9bde55ba826a9f3d36767a0f3b9f89cf7c7f9"
+    },
+    {
+      "object": "src/frontier_opponents.o",
+      "source": "src/frontier_opponents.c",
+      "source_sha256": "79f48bb9de180b00874b4da28c39b32a4894dffc98fc7725bcbb95bf0f76d7e3"
+    },
+    {
+      "object": "src/frontier_runtime.o",
+      "source": "src/frontier_runtime.c",
+      "source_sha256": "e2d147b9cbf537bd0fc12ffcb57d6d9f6391366ac6adb2f99d8b3b8d2a1f350b"
+    },
+    {
+      "object": "src/frontier_save.o",
+      "source": "src/frontier_save.c",
+      "source_sha256": "ef78e2c7a0bf1ae06ff0e3c33cb8d58061402d0a30393794f4bd9e31bc43458e"
+    },
+    {
+      "object": "src/frontier_stat_ids.o",
+      "source": "src/frontier_stat_ids.c",
+      "source_sha256": "fdf9a06c948c6dd5deda8a245af12050796376b4690ad267d8bc33954c1b78c1"
+    },
+    {
+      "object": "src/frontier_state.o",
+      "source": "src/frontier_state.c",
+      "source_sha256": "84198469bfee1892725550a5f5ed89fa42414c6ae6f549ec243ae07602863415"
+    },
+    {
+      "object": "src/g2d_cell_culling.o",
+      "source": "src/g2d_cell_culling.c",
+      "source_sha256": "0c56273f6290bfc963cffe65815e7d33cd6749c2ec1fe4356361d9a0d9a1bc5d"
+    },
+    {
+      "object": "src/game_clear.o",
+      "source": "src/game_clear.c",
+      "source_sha256": "bae8ee590132cce892336fa39216c2ceb6a375aa8100b14c1cd3224159138978"
+    },
+    {
+      "object": "src/game_stats.o",
+      "source": "src/game_stats.c",
+      "source_sha256": "463885f7e27fca7482b4cd416e7a309940afc087447a77731a129d4c4e0b0b72"
+    },
+    {
+      "object": "src/gear_phone_ring_manager.o",
+      "source": "src/gear_phone_ring_manager.c",
+      "source_sha256": "f8188f0ab9218f0c55ef62518e6242e2c80324488f8795e43ae8b2272b438655"
+    },
+    {
+      "object": "src/geometry_math.o",
+      "source": "src/geometry_math.c",
+      "source_sha256": "40a3e5479bcab807a0272b127d0001ac6488bb414233594074ddfd399dc4f773"
+    },
+    {
+      "object": "src/get_egg.o",
+      "source": "src/get_egg.c",
+      "source_sha256": "0908b443c2ea2c94893c4c073bceada92a7f7382011838ce989fcba8daa8cf40"
+    },
+    {
+      "object": "src/gf_3d_loader.o",
+      "source": "src/gf_3d_loader.c",
+      "source_sha256": "9e5d43612ccff831c27be55e6188f21fe486a2e20b283df80790835f92025638"
+    },
+    {
+      "object": "src/gf_3d_render.o",
+      "source": "src/gf_3d_render.c",
+      "source_sha256": "5d1be455c119e63c7ddcafd363794f238b84c5e60d24bc794b4863d0f3342663"
+    },
+    {
+      "object": "src/gf_3d_vramman.o",
+      "source": "src/gf_3d_vramman.c",
+      "source_sha256": "83ceb736dd47d737ac055d6cc63977324d83d7985b2c8edd188d6f140cf39100"
+    },
+    {
+      "object": "src/gf_g2d_renderer.o",
+      "source": "src/gf_g2d_renderer.c",
+      "source_sha256": "2ce29ac2f92166d9aa4dfcf3e2b71c78093c866b6d9887b3fbdaa375c3a5af17"
+    },
+    {
+      "object": "src/gf_gfx_loader.o",
+      "source": "src/gf_gfx_loader.c",
+      "source_sha256": "221f321a6c86a3f2e3e8a30f9305597c5942e6b51b48d30748c0a6877a70ec07"
+    },
+    {
+      "object": "src/gf_gfx_planes.o",
+      "source": "src/gf_gfx_planes.c",
+      "source_sha256": "456e87040b5118b4a7e6664ec0bddbf749dcfe131d73d561fa4f42a62445ba8b"
+    },
+    {
+      "object": "src/gf_rtc.o",
+      "source": "src/gf_rtc.c",
+      "source_sha256": "817b085ed44dfd8462caf93ef3cc4a37f8c4b86f79eba88bb2dbc1ee5ee5dfae"
+    },
+    {
+      "object": "src/global_terminal/global_terminal_app.o",
+      "source": "src/global_terminal/global_terminal_app.c",
+      "source_sha256": "e3b6fbde98f23731ecab15c2e28ead1e3621a04097d2972cf79eea4a12b69c46"
+    },
+    {
+      "object": "src/graphics_object_manager.o",
+      "source": "src/graphics_object_manager.c",
+      "source_sha256": "4321935356a3e24a57845b0408c733f60d4e2b65e5486766107c42c04c6cfb33"
+    },
+    {
+      "object": "src/gymmick_collision.o",
+      "source": "src/gymmick_collision.c",
+      "source_sha256": "271e7eec6f372611a3c8e819af99edfab6f6968ecaa883ed7bd82d1ae8e711d4"
+    },
+    {
+      "object": "src/gymmick_init.o",
+      "source": "src/gymmick_init.c",
+      "source_sha256": "b57b7db020c3fb7dfc9783c1ebe45fc53180ffa37eee5d1947d5974dbc0c4ec1"
+    },
+    {
+      "object": "src/hall_of_fame.o",
+      "source": "src/hall_of_fame.c",
+      "source_sha256": "3054d21ef8bd91e7eb15ccba8901c344b15469395936c4e07d6179457b5a73f2"
+    },
+    {
+      "object": "src/hatch_egg_task.o",
+      "source": "src/hatch_egg_task.c",
+      "source_sha256": "32afc0c2e81bffc35da0be2b88011da382d09beb68e3326d43aee9db822625a5"
+    },
+    {
+      "object": "src/headbutt_tree.o",
+      "source": "src/headbutt_tree.c",
+      "source_sha256": "de466a8ca2abdace54dc1bad1c3606662cd1465aa51a70cd44f1cd14bf7582cb"
+    },
+    {
+      "object": "src/heap.o",
+      "source": "src/heap.c",
+      "source_sha256": "9657a0f8402d578286b681bb19cb7617f0ee13ac922c36177f7dbd4b32aadc28"
+    },
+    {
+      "object": "src/igt.o",
+      "source": "src/igt.c",
+      "source_sha256": "8d7e99f3574ec682a3c00e4906add5b7f5e9e4e50fbf7a9ca63f3bb36e224da8"
+    },
+    {
+      "object": "src/igt_counter.o",
+      "source": "src/igt_counter.c",
+      "source_sha256": "cdfe34791cd6d8d3e59eb8e700f4060d4869756b26fa85a4f550f98f48080a2f"
+    },
+    {
+      "object": "src/item.o",
+      "source": "src/item.c",
+      "source_sha256": "6a42fbd23243992fe565d3dfb674aa7d2b3b2cb427fecac9fe26fe5fcbaffff9"
+    },
+    {
+      "object": "src/launch_application.o",
+      "source": "src/launch_application.c",
+      "source_sha256": "ce04d08d92b9474536112b722c34021dcb193635e3c43b9359b72f1be290cc5a"
+    },
+    {
+      "object": "src/legendary_cinematic_manager.o",
+      "source": "src/legendary_cinematic_manager.c",
+      "source_sha256": "855cd9042542443b4368eea0764b064af5ed5b195f0edd7a60beb0cf1073769a"
+    },
+    {
+      "object": "src/legendary_cinematic_task.o",
+      "source": "src/legendary_cinematic_task.c",
+      "source_sha256": "eec7b2d1c9e9af0fb330c05889c7cf9fc72636e5e5a6bfdce6181a20b40c05bc"
+    },
+    {
+      "object": "src/link_ruleset_data.o",
+      "source": "src/link_ruleset_data.c",
+      "source_sha256": "b94d4afcf785dd5aee4ecfdb0564b7b8a7dd340b0b4e87eec051ad91c40d7680"
+    },
+    {
+      "object": "src/link_synchronization.o",
+      "source": "src/link_synchronization.c",
+      "source_sha256": "99ae9d1ddee8573fba3b4305d18ac467672494de3e4cdd5cd6a4cf5b053e6448"
+    },
+    {
+      "object": "src/list_menu.o",
+      "source": "src/list_menu.c",
+      "source_sha256": "e92315662ff20ceba77bbe19a5dc0c7dadc0da2b87a5eee5e57f99fc39f4e067"
+    },
+    {
+      "object": "src/list_menu_2d.o",
+      "source": "src/list_menu_2d.c",
+      "source_sha256": "00d5176f6ed4b5241aa19614f8fc230843613da38bd1d7cfd56dcb6cddcc13a8"
+    },
+    {
+      "object": "src/list_menu_cursor.o",
+      "source": "src/list_menu_cursor.c",
+      "source_sha256": "a7996fe3f7e31d9ce995cf4c29397915b3c002a43086e1ce9b50ca5fed1a58c2"
+    },
+    {
+      "object": "src/list_menu_items.o",
+      "source": "src/list_menu_items.c",
+      "source_sha256": "b317f4bea9fe36876ef018bbae37d31c7d5edecaa8708f00fe182903319e0a77"
+    },
+    {
+      "object": "src/location_backup.o",
+      "source": "src/location_backup.c",
+      "source_sha256": "0c38736ef75381ffb199480bbc7fa9e6c06367874b4fc832de050e7bb53c0255"
+    },
+    {
+      "object": "src/location_gmm_dat.o",
+      "source": "src/location_gmm_dat.c",
+      "source_sha256": "cdfff9ebadf11909e51e064c052e6eee71b53e553d4a7b0d3634f0e995c53e65"
+    },
+    {
+      "object": "src/magnet_train_ride.o",
+      "source": "src/magnet_train_ride.c",
+      "source_sha256": "e6bb86197e44e5f765bf6e52e2fa77c2be0158afd94a9bb9de00133419740fef"
+    },
+    {
+      "object": "src/mail.o",
+      "source": "src/mail.c",
+      "source_sha256": "99f939b9620cabdc12ec04ae6094f4594a11673cc7dbb97272ada2fdbb074b82"
+    },
+    {
+      "object": "src/mail_message.o",
+      "source": "src/mail_message.c",
+      "source_sha256": "0eecc864b66bdb44adb9952d2b4c2550210e157f9d929b860e72234164180057"
+    },
+    {
+      "object": "src/mail_misc.o",
+      "source": "src/mail_misc.c",
+      "source_sha256": "025c9786db33db623d1e5acccbd625127a7c2c9220bf335257fc41a51486ac9e"
+    },
+    {
+      "object": "src/main.o",
+      "source": "src/main.c",
+      "source_sha256": "863e25fcc674429f89637f4773e08301ad3755ff79a43572c7facdbc2ca6254b"
+    },
+    {
+      "object": "src/map_events.o",
+      "source": "src/map_events.c",
+      "source_sha256": "ca7ae292989ee6ee51888b56acc73848a3842c83a86ac9da02e18c08a609fa3b"
+    },
+    {
+      "object": "src/map_header.o",
+      "source": "src/map_header.c",
+      "source_sha256": "d99890d2ed3a58b04a6e561ebabe89e6e182862e131b8bafec1cb1372a3adc15"
+    },
+    {
+      "object": "src/map_landmark_name.o",
+      "source": "src/map_landmark_name.c",
+      "source_sha256": "e3018b6d2ac8ce27142caec62bad3fb3151de04c8fe0d6b84f0a4176edee1ba2"
+    },
+    {
+      "object": "src/map_matrix.o",
+      "source": "src/map_matrix.c",
+      "source_sha256": "c6093f992616995bfbefc01b0ea3af5b2ebef6f5fc8e708069b26c59604f5506"
+    },
+    {
+      "object": "src/map_object.o",
+      "source": "src/map_object.c",
+      "source_sha256": "36e6bff1d35b8f8015754b5d8f81fc58cb34421b2f2507f704d470110be714fa"
+    },
+    {
+      "object": "src/map_object_behavior.o",
+      "source": "src/map_object_behavior.c",
+      "source_sha256": "7de6b5e71bd3bd4dbf45b97f9adb129ff898de5c210c14dcc076c54f59bb4fe1"
+    },
+    {
+      "object": "src/map_object_follow.o",
+      "source": "src/map_object_follow.c",
+      "source_sha256": "3566f840dd10f24c40c41014df846180591bc81537b9500e9b5900186fa5f48d"
+    },
+    {
+      "object": "src/map_object_movement_commands.o",
+      "source": "src/map_object_movement_commands.c",
+      "source_sha256": "860befa52ea59df4265f469c5a4a8ed37b442d793cea265dd3551b82d515f75a"
+    },
+    {
+      "object": "src/map_object_movement_utilities.o",
+      "source": "src/map_object_movement_utilities.c",
+      "source_sha256": "539afdd7c55800ff61e84f7ef29844134ca369ec1c21fbaa9a6bdf724a6da8b3"
+    },
+    {
+      "object": "src/map_object_update.o",
+      "source": "src/map_object_update.c",
+      "source_sha256": "6daa7ad3e7d76cf1348d0bc130686242e58f8506c8c41544614a5c6f0acf7ccb"
+    },
+    {
+      "object": "src/map_section.o",
+      "source": "src/map_section.c",
+      "source_sha256": "df89b30b4793e9f9f917c4071d2e3a74d72b0527235183b9297f1772c768fbcd"
+    },
+    {
+      "object": "src/math_util.o",
+      "source": "src/math_util.c",
+      "source_sha256": "ed76da9a0792494d7b22a029d903db402f5c2cec06212870e0337205be747612"
+    },
+    {
+      "object": "src/menu_input_state.o",
+      "source": "src/menu_input_state.c",
+      "source_sha256": "a36cea98eb73d6aa38b9fdd2e7c58d0c71eb5b359adca48c267828c6a66613d9"
+    },
+    {
+      "object": "src/message_format.o",
+      "source": "src/message_format.c",
+      "source_sha256": "d2d25495a73e3936c98da69cf2a91a1a06649a863164236203e428408cf3066c"
+    },
+    {
+      "object": "src/message_printer.o",
+      "source": "src/message_printer.c",
+      "source_sha256": "0e4535641f413f12329c4b4ac0621b114dbfc08e81769be1d21d5e88757c1c97"
+    },
+    {
+      "object": "src/message_printer_number.o",
+      "source": "src/message_printer_number.c",
+      "source_sha256": "6bb262e968df9dd4c68108cd5629e1132ec3c5c75277dd272551049e5b011958"
+    },
+    {
+      "object": "src/metatile_behavior.o",
+      "source": "src/metatile_behavior.c",
+      "source_sha256": "9ea1d4f7ddd6a0308d745a782fbaf2564f35bb97889506279b1066be909b66c0"
+    },
+    {
+      "object": "src/mom_gift.o",
+      "source": "src/mom_gift.c",
+      "source_sha256": "0c529ba0c77003fa95c4559b617249df7edc2cb96189e54f0f47811b5ef37f24"
+    },
+    {
+      "object": "src/move.o",
+      "source": "src/move.c",
+      "source_sha256": "e9adae2d57511a89ec5cc52ebb5741172a5d90123d02d33be66143ddf210e7b2"
+    },
+    {
+      "object": "src/move_relearner.o",
+      "source": "src/move_relearner.c",
+      "source_sha256": "c8fd7ae7878c3b13cd2631c6469ff270dfadeb683e9c979d34c6521b2a77000d"
+    },
+    {
+      "object": "src/msgdata.o",
+      "source": "src/msgdata.c",
+      "source_sha256": "2fcd674561c88d39615407f204d21fab4420b5de9506e4fc78651b1c67a1c8d2"
+    },
+    {
+      "object": "src/mystery_gift.o",
+      "source": "src/mystery_gift.c",
+      "source_sha256": "c227c815da26a43450abed53b785c1cf15c569df9fdf99abb631d2f1262c4762"
+    },
+    {
+      "object": "src/naming_screen.o",
+      "source": "src/naming_screen.c",
+      "source_sha256": "b696ec482028ffee4f439e9802c7e5cf32aa97ba3571647dfa8fd55148f3c65c"
+    },
+    {
+      "object": "src/network_overlay_loader.o",
+      "source": "src/network_overlay_loader.c",
+      "source_sha256": "e0a93b63223a22677b299c582e503039071216efeb0f5857f5485f8b1853b341"
+    },
+    {
+      "object": "src/npc_trade_task.o",
+      "source": "src/npc_trade_task.c",
+      "source_sha256": "d8e5a22b52e4a6d6635ef2a480c144261aec91c2de7d25899f61b3239e6ac1fa"
+    },
+    {
+      "object": "src/oam_manager.o",
+      "source": "src/oam_manager.c",
+      "source_sha256": "1efdda4ed6bcd166815e80c1d50a50ba9a607dbe2eb319195ee1115499f3cbc7"
+    },
+    {
+      "object": "src/obj_char_transfer.o",
+      "source": "src/obj_char_transfer.c",
+      "source_sha256": "e5bd364a19350f34bf8e04f45b9e75210056b1b3840c560686e3428b2cb93abd"
+    },
+    {
+      "object": "src/obj_pltt_transfer.o",
+      "source": "src/obj_pltt_transfer.c",
+      "source_sha256": "51ea0ccbc93c4f9a623654bd3886fe94ab21ef6f54d41bca334817a4506255c5"
+    },
+    {
+      "object": "src/options.o",
+      "source": "src/options.c",
+      "source_sha256": "0612b17ab43e8ec43cb640e675e81992ac79b35eb042a39c97c5dcb5f99c60d1"
+    },
+    {
+      "object": "src/orbit_cursor.o",
+      "source": "src/orbit_cursor.c",
+      "source_sha256": "9c7495423a7cbcd79967640fa771d3a87c68486e855bcb65d5f5d10665c1cc26"
+    },
+    {
+      "object": "src/overlay_manager.o",
+      "source": "src/overlay_manager.c",
+      "source_sha256": "8ecff2ce6a942049d9254c4ed368c9a34113d2a6ec3a701d38a51ab492e281c9"
+    },
+    {
+      "object": "src/palPark_migration.o",
+      "source": "src/palPark_migration.c",
+      "source_sha256": "cc868a66d9e85454da6d38e1474682f3539980ed986c572147fdb87097c7192b"
+    },
+    {
+      "object": "src/palette.o",
+      "source": "src/palette.c",
+      "source_sha256": "1c6c70bb2dc70c9675c34ffa31e46ae5fe1fc730995b0e964060a3643cb7342a"
+    },
+    {
+      "object": "src/palette_blink.o",
+      "source": "src/palette_blink.c",
+      "source_sha256": "d60a2425844f78fd727d9e9fa0e1f2398ab9287aecdb145450f3f0f0c3850d55"
+    },
+    {
+      "object": "src/palette_vram_addr.o",
+      "source": "src/palette_vram_addr.c",
+      "source_sha256": "19d68fc5103a5bae4b8cf842cb797439d51b55d7de37e0b128f80db4a7a26113"
+    },
+    {
+      "object": "src/particle_scene.o",
+      "source": "src/particle_scene.c",
+      "source_sha256": "35754c7580d11f99031e1511065d7a4a36db7b9b994f4c2d6905cb3290a26d5f"
+    },
+    {
+      "object": "src/particle_system.o",
+      "source": "src/particle_system.c",
+      "source_sha256": "f8d6342032acaf1b507cbd064a303a188df9a48bb5d4b988138da5e5cab96145"
+    },
+    {
+      "object": "src/party.o",
+      "source": "src/party.c",
+      "source_sha256": "db230106eb6b9d1e030a8bfd50719b4764e26196a3b360dc7ff2598880cbbd15"
+    },
+    {
+      "object": "src/party_context_menu.o",
+      "source": "src/party_context_menu.c",
+      "source_sha256": "d122f632342fb3ac4a84661d62e9b4ad3316dd5ed38159082c7d85df5cf162e6"
+    },
+    {
+      "object": "src/party_menu.o",
+      "source": "src/party_menu.c",
+      "source_sha256": "f94feedd24b2e7b12ccb9df6542d4968f0350b78ed9b0508346d2b83bdbbb564"
+    },
+    {
+      "object": "src/party_menu_items.o",
+      "source": "src/party_menu_items.c",
+      "source_sha256": "e2b54af5d61a0a3e5710244ca0ae140d72428cd0f59b2167eb5f7552c0434edd"
+    },
+    {
+      "object": "src/party_menu_list_items.o",
+      "source": "src/party_menu_list_items.c",
+      "source_sha256": "f052075b8703b4224d6c31d3c8d01eb426a95876bdd1d66023da62712fa4425d"
+    },
+    {
+      "object": "src/party_menu_sprites.o",
+      "source": "src/party_menu_sprites.c",
+      "source_sha256": "7a5877cbe582b593842c110c1487ef0eaef73dbcc693494eb942bf7cd445d389"
+    },
+    {
+      "object": "src/phone_rematch.o",
+      "source": "src/phone_rematch.c",
+      "source_sha256": "c399e2b34072be58adaa8c5e6eceec918e46f6112f4d2891b35d456dfe9aff40"
+    },
+    {
+      "object": "src/phonebook_dat.o",
+      "source": "src/phonebook_dat.c",
+      "source_sha256": "7f58ef3995bf02d0412906d136fb42582a792354a2199ab7d3e0f36114f0fd21"
+    },
+    {
+      "object": "src/photo_album.o",
+      "source": "src/photo_album.c",
+      "source_sha256": "5c47d6865b23e97d7cdf4bdf62fc02b8549af4e0be80349ae7bbe3da2f659475"
+    },
+    {
+      "object": "src/player_avatar.o",
+      "source": "src/player_avatar.c",
+      "source_sha256": "2ea71ad419bda58c0cd2e2c57fc0b96990bb5f03e88903aeb037c5fe939fab0c"
+    },
+    {
+      "object": "src/player_avatar_movement.o",
+      "source": "src/player_avatar_movement.c",
+      "source_sha256": "0484badad86852a5580b985963e26f30c8f7ea9711a0c8b7cab2ceb5e3035681"
+    },
+    {
+      "object": "src/player_data.o",
+      "source": "src/player_data.c",
+      "source_sha256": "7fb2c673e134a7ad075241681bdd40eaf3847529e562dfd89f33338fbf89c814"
+    },
+    {
+      "object": "src/pm_string.o",
+      "source": "src/pm_string.c",
+      "source_sha256": "051bd1380bec7d261c8d5772a0ae77cdb46a7531d74c5d0be4a5f6cb90433e82"
+    },
+    {
+      "object": "src/pm_version.o",
+      "source": "src/pm_version.c",
+      "source_sha256": "fdfe5de98e7bff261361802c9d6bcfb56c1ee2a73e4249b5c267c4d611574204"
+    },
+    {
+      "object": "src/poke_overlay.o",
+      "source": "src/poke_overlay.c",
+      "source_sha256": "04988ea2158957761f0e225e58ef646da5500a2f55f23dcf34bad3d7e68b4742"
+    },
+    {
+      "object": "src/pokeathlon/pokeathlon_save.o",
+      "source": "src/pokeathlon/pokeathlon_save.c",
+      "source_sha256": "b8be26a996c1906a9e32a64bba375c2c99516b50de97f525151af70738c3414d"
+    },
+    {
+      "object": "src/pokeathlon_course_task.o",
+      "source": "src/pokeathlon_course_task.c",
+      "source_sha256": "6a4b37db90e28792e21227f2c08a9fcf74f17587a3082fd63691acd06a6a4014"
+    },
+    {
+      "object": "src/pokedex.o",
+      "source": "src/pokedex.c",
+      "source_sha256": "61132812717ac60513b5540a570d5bd7f91dcdcb63be4276cced94832a94d0a9"
+    },
+    {
+      "object": "src/pokedex_language.o",
+      "source": "src/pokedex_language.c",
+      "source_sha256": "b21e92124a75761887ccbac4af16af4dddaeaf859d91c05f56d62027ada2c541"
+    },
+    {
+      "object": "src/pokedex_resume_state.o",
+      "source": "src/pokedex_resume_state.c",
+      "source_sha256": "928202507aad97da48e224c9358acb14c3f02316fa561693ee65d792dce96289"
+    },
+    {
+      "object": "src/pokedex_util.o",
+      "source": "src/pokedex_util.c",
+      "source_sha256": "972e2efcb84e4b84654319bc09e419b0ca844c12b9b37a2a51c59f40328afb5b"
+    },
+    {
+      "object": "src/pokemon.o",
+      "source": "src/pokemon.c",
+      "source_sha256": "1d784ece4650b84e426a437ee20e4a926475fc20ef761e67440d0c0136548fa3"
+    },
+    {
+      "object": "src/pokemon_icon_idx.o",
+      "source": "src/pokemon_icon_idx.c",
+      "source_sha256": "c394377eded3353079550669f1a809ef8eed8f3bcec6840019920a02a75827ec"
+    },
+    {
+      "object": "src/pokemon_mood.o",
+      "source": "src/pokemon_mood.c",
+      "source_sha256": "9d327b7f111adffe589d60bbb159160ad9779abcfe51a44aae6af877ec36f33f"
+    },
+    {
+      "object": "src/pokemon_storage_system.o",
+      "source": "src/pokemon_storage_system.c",
+      "source_sha256": "2b38cacaf9410dc29b8c350cce921d969a92a5c59e0da38f19f69fafd44ca5f1"
+    },
+    {
+      "object": "src/pokemon_summary.o",
+      "source": "src/pokemon_summary.c",
+      "source_sha256": "8d87396beab5f367f5d7db2cea875b53a938ebb464a9d0c380708b2ebfa72394"
+    },
+    {
+      "object": "src/pokemon_summary_scene.o",
+      "source": "src/pokemon_summary_scene.c",
+      "source_sha256": "48f628b32499d882874c2ad707b0ffd57958f5737e9d9db1ef0b9ea058383c59"
+    },
+    {
+      "object": "src/pokemon_summary_text.o",
+      "source": "src/pokemon_summary_text.c",
+      "source_sha256": "1c11aaa7fa3589a55583a27e22b89b97ad21b030c827dd9808905801a696bbd6"
+    },
+    {
+      "object": "src/pokepic.o",
+      "source": "src/pokepic.c",
+      "source_sha256": "7aa2896647f0f229717d3c4e2a2c2f8e43e2f26ffa0aba8d54c4786b9c933879"
+    },
+    {
+      "object": "src/pokepic_anim.o",
+      "source": "src/pokepic_anim.c",
+      "source_sha256": "7df5bbf39f7478ff6af900a6fd89ef6cb73b4d5f27be024e20e818609dc5fbd7"
+    },
+    {
+      "object": "src/pokewalker.o",
+      "source": "src/pokewalker.c",
+      "source_sha256": "46c1ef4e9a7cf4604db69c90b521d8df29da7ea51d41701b866fc7d61ffa0b24"
+    },
+    {
+      "object": "src/render_text.o",
+      "source": "src/render_text.c",
+      "source_sha256": "66092b85bbb399e4bb292c28443506ea0d6469b8e9c196f155ace1b6513abfc0"
+    },
+    {
+      "object": "src/render_window.o",
+      "source": "src/render_window.c",
+      "source_sha256": "e26c47dba479dd3eef2d9cbac53dfb6805521166115c742f5663bab02362c83b"
+    },
+    {
+      "object": "src/render_window_frame_icon.o",
+      "source": "src/render_window_frame_icon.c",
+      "source_sha256": "7a3edcc324f37e358d21d9577e857955b4ffd2733c2c4d04b9afaf67f8c9ac4c"
+    },
+    {
+      "object": "src/render_window_icons.o",
+      "source": "src/render_window_icons.c",
+      "source_sha256": "8bd441e5829ed3f4ebce219feed4043cd388fb5c141979f1a3b0a54a507bf575"
+    },
+    {
+      "object": "src/ribbon.o",
+      "source": "src/ribbon.c",
+      "source_sha256": "9f2cfe648cd0d228954d057574813571138a38965fd76047f326d90577bbbb84"
+    },
+    {
+      "object": "src/roamer.o",
+      "source": "src/roamer.c",
+      "source_sha256": "9726b9a3655dda291818007340393038751c474f30a7379c0a29092ceaeba459"
+    },
+    {
+      "object": "src/safari_zone.o",
+      "source": "src/safari_zone.c",
+      "source_sha256": "6b070132527ec16330b30b5c18551475dc035cf46fb3bc1691bac282eb41cbba"
+    },
+    {
+      "object": "src/safari_zone_encounters.o",
+      "source": "src/safari_zone_encounters.c",
+      "source_sha256": "7242a8465aae453772b2aba40ebdae455fc592436260367efd58df6abb21610f"
+    },
+    {
+      "object": "src/sav_chatot.o",
+      "source": "src/sav_chatot.c",
+      "source_sha256": "aec1467cb7a75edd301d532b1998c631c035c70c607410226d3a7d407b2b4f90"
+    },
+    {
+      "object": "src/sav_system_info.o",
+      "source": "src/sav_system_info.c",
+      "source_sha256": "0a814338a75bf4d7c639ab8b27d781c15ff8038c9bcd75b06a09cd52bdf9be92"
+    },
+    {
+      "object": "src/save.o",
+      "source": "src/save.c",
+      "source_sha256": "4eed1844a349b1b761f51ee41b53922c1edf0095de2d88c8ed1a31108e545584"
+    },
+    {
+      "object": "src/save_arrays.o",
+      "source": "src/save_arrays.c",
+      "source_sha256": "dbdf0fb87f52b43f3099da261a4cecc0f10d64f59907d250d516f16e5626545e"
+    },
+    {
+      "object": "src/save_block_23.o",
+      "source": "src/save_block_23.c",
+      "source_sha256": "ccea0df265ee48a01e6f395f30f6f97257cc44a94e7d9fc942277864a1c27427"
+    },
+    {
+      "object": "src/save_data_read_error.o",
+      "source": "src/save_data_read_error.c",
+      "source_sha256": "83e446effa59c85133d5582dbcc83f25889314115ca4249fc8187e998a4e4483"
+    },
+    {
+      "object": "src/save_data_write_error.o",
+      "source": "src/save_data_write_error.c",
+      "source_sha256": "a2e60236ee854fec8df2d1c3be713cfd9329b42c453e46298a28cd1660119401"
+    },
+    {
+      "object": "src/save_fashion.o",
+      "source": "src/save_fashion.c",
+      "source_sha256": "b8c75fbfe90f65923f0ea6a48e958c2a453f58278594ffbe0bcb348303f186ea"
+    },
+    {
+      "object": "src/save_follow_mon.o",
+      "source": "src/save_follow_mon.c",
+      "source_sha256": "9e6218b243ab8abf60231047ec16432e39dadc4bd2b6cdb3a9d85227165a8dac"
+    },
+    {
+      "object": "src/save_gts.o",
+      "source": "src/save_gts.c",
+      "source_sha256": "faacb90b3f5956b50b700753b7496a730593b67c7677d78aeb6e517338fc1698"
+    },
+    {
+      "object": "src/save_gymmick.o",
+      "source": "src/save_gymmick.c",
+      "source_sha256": "52f83c6519b9b03835d3684fab0e7cf27c4634840f8ffe4402354bbbfc2a8b09"
+    },
+    {
+      "object": "src/save_link_ruleset.o",
+      "source": "src/save_link_ruleset.c",
+      "source_sha256": "c72658dd9f2ac491befa35f8daa97a7d496a8ae7cbf865420818aede3dbe7900"
+    },
+    {
+      "object": "src/save_local_field_data.o",
+      "source": "src/save_local_field_data.c",
+      "source_sha256": "415745fc230fa219cc73661e342076bdfd1063be85d350b16cd621c1fd1eb5b5"
+    },
+    {
+      "object": "src/save_misc.o",
+      "source": "src/save_misc.c",
+      "source_sha256": "d32cff743c06b5c7d179577be5f1819f2d9913bf4bf33a84c0f533c83ff29681"
+    },
+    {
+      "object": "src/save_palpad.o",
+      "source": "src/save_palpad.c",
+      "source_sha256": "7fb8d5001fb6f640b45145d1b4c40876086f67866c168f521f08da71496cb579"
+    },
+    {
+      "object": "src/save_plaza_survey.o",
+      "source": "src/save_plaza_survey.c",
+      "source_sha256": "6829963c269c0a97f949bc1a2b5d168f346dcf4e60acd7be4df37dcaa194731e"
+    },
+    {
+      "object": "src/save_pokegear.o",
+      "source": "src/save_pokegear.c",
+      "source_sha256": "fee5ea697a1da43cb7f469a3903ebaebca31c029921ac53925209ea0d28c86da"
+    },
+    {
+      "object": "src/save_rankings.o",
+      "source": "src/save_rankings.c",
+      "source_sha256": "ad00a6d8a52762eaeadac55f128e8c86753eb264736ace89baf4430aa0884772"
+    },
+    {
+      "object": "src/save_special_ribbons.o",
+      "source": "src/save_special_ribbons.c",
+      "source_sha256": "bb9cc643a7dbfecf5f999604e962f98b947fd950fa0c828ad53c046ba981c0fe"
+    },
+    {
+      "object": "src/save_trainer_card.o",
+      "source": "src/save_trainer_card.c",
+      "source_sha256": "fe6f2f053c7cddd6c33df9360fee52f988bf9915a380850cf1ae296751585b61"
+    },
+    {
+      "object": "src/save_trainer_house.o",
+      "source": "src/save_trainer_house.c",
+      "source_sha256": "50746a99694913915f7a64f751fc6bc39dec5ccc8f85adf5bc707aac960cbf9a"
+    },
+    {
+      "object": "src/save_vars_flags.o",
+      "source": "src/save_vars_flags.c",
+      "source_sha256": "a9aeb111bf1d8fbe6c35db1e738e811aa6da527e62fda826ea7e24ae6912016d"
+    },
+    {
+      "object": "src/save_wifi_history.o",
+      "source": "src/save_wifi_history.c",
+      "source_sha256": "677f15e36ac9444eec23efd94609388a8e965e85d88b78ee3deea44e7386ae23"
+    },
+    {
+      "object": "src/save_wii_message.o",
+      "source": "src/save_wii_message.c",
+      "source_sha256": "f5862339ac6509256551bbc9564cba11885380e299baa68b03eb15b10cea04ff"
+    },
+    {
+      "object": "src/scrcmd_12.o",
+      "source": "src/scrcmd_12.c",
+      "source_sha256": "92627326748962b1ada18921802186a1b55ed44286362458b69b1936dc519f20"
+    },
+    {
+      "object": "src/scrcmd_17.o",
+      "source": "src/scrcmd_17.c",
+      "source_sha256": "65050460d03bbe1575fe7e414fc25c559615e40edffe2b300f8617c16de3bce5"
+    },
+    {
+      "object": "src/scrcmd_8.o",
+      "source": "src/scrcmd_8.c",
+      "source_sha256": "094935d0a8ef3bc077acc0e083408472f3638c2b1bbca5f2857e6be6bf9742bb"
+    },
+    {
+      "object": "src/scrcmd_9.o",
+      "source": "src/scrcmd_9.c",
+      "source_sha256": "eced1902f1e1c540db578cbe50c6dfed10baea695c5570bb40473f4768dac2f3"
+    },
+    {
+      "object": "src/scrcmd_apricorn.o",
+      "source": "src/scrcmd_apricorn.c",
+      "source_sha256": "f830a4861cceda0c410f74862c054499f338aac8aa66487e5f136f6f12c9fedb"
+    },
+    {
+      "object": "src/scrcmd_battle.o",
+      "source": "src/scrcmd_battle.c",
+      "source_sha256": "a6acb1efa0c45dbe05cee3301f3d6280deb617e0ece2cd4cd907627ef112e109"
+    },
+    {
+      "object": "src/scrcmd_battle_arcade.o",
+      "source": "src/scrcmd_battle_arcade.c",
+      "source_sha256": "b693136257e6d914b76da585cb21d22ef79f9d6091e92dd360f53f18c8505df4"
+    },
+    {
+      "object": "src/scrcmd_battle_castle.o",
+      "source": "src/scrcmd_battle_castle.c",
+      "source_sha256": "24cdc943f1bf0f6df12d0f0a4ce7579b4064131e961c3cc99fd1ea8929a4d3f3"
+    },
+    {
+      "object": "src/scrcmd_battle_hall.o",
+      "source": "src/scrcmd_battle_hall.c",
+      "source_sha256": "0ed8e264d8f348ba03e064bec663eaf7f26cd2c2fb159cb8eaa30810d562eb7e"
+    },
+    {
+      "object": "src/scrcmd_c.o",
+      "source": "src/scrcmd_c.c",
+      "source_sha256": "acbb13e9cbfe967d87e618224f46212d43ee8287c651126e30b1188872e396ca"
+    },
+    {
+      "object": "src/scrcmd_daycare.o",
+      "source": "src/scrcmd_daycare.c",
+      "source_sha256": "d7377ab05f95223a232ac1f136773279004dbfd8cfabb75ec446049e12042e78"
+    },
+    {
+      "object": "src/scrcmd_dppl_prizes.o",
+      "source": "src/scrcmd_dppl_prizes.c",
+      "source_sha256": "cdc98cf7c64b7e63d2e24ac8d9affa4e5678e1790efa6547817cada6af9dc4b5"
+    },
+    {
+      "object": "src/scrcmd_items.o",
+      "source": "src/scrcmd_items.c",
+      "source_sha256": "3dc0074f2f29cd571852f49066f3c6e2a550673dab51472f3a79068f00a904c7"
+    },
+    {
+      "object": "src/scrcmd_link_sync.o",
+      "source": "src/scrcmd_link_sync.c",
+      "source_sha256": "247131eb266389351fb7abffc5d506158a94f9f80f476b22019017252dc7d31a"
+    },
+    {
+      "object": "src/scrcmd_lottery.o",
+      "source": "src/scrcmd_lottery.c",
+      "source_sha256": "7a85ed0dc28ba0f2eae6d721214c3c81628189a42ea764ec73db2cd7d545f870"
+    },
+    {
+      "object": "src/scrcmd_mart.o",
+      "source": "src/scrcmd_mart.c",
+      "source_sha256": "4931aede80bab2b74c4cb961910550ddcbfb16308fae25bdf0e9a3a495444743"
+    },
+    {
+      "object": "src/scrcmd_money.o",
+      "source": "src/scrcmd_money.c",
+      "source_sha256": "0556fd7978d76c73a1ba81a18f3b6d6b1e9985f4ff32bf491512ce4aac8c2823"
+    },
+    {
+      "object": "src/scrcmd_move_relearner.o",
+      "source": "src/scrcmd_move_relearner.c",
+      "source_sha256": "202f527d83177aa4df0f11213af8b75b4bc1f578a07e00188dfb1d3b51809b06"
+    },
+    {
+      "object": "src/scrcmd_mystery_gift.o",
+      "source": "src/scrcmd_mystery_gift.c",
+      "source_sha256": "d1acc5c6071ba6ff14be82b5cea35e903115bec121d1c6bcaf064cb59b68b067"
+    },
+    {
+      "object": "src/scrcmd_party.o",
+      "source": "src/scrcmd_party.c",
+      "source_sha256": "df64cfc7080caa0d4350dcb1aeb0f4790629f7a9c80fc04efc5c11e79312d8cd"
+    },
+    {
+      "object": "src/scrcmd_sound.o",
+      "source": "src/scrcmd_sound.c",
+      "source_sha256": "72f9643cda5a64f0db483297555aef44495c394e2109ffbff07f629756e5e487"
+    },
+    {
+      "object": "src/scrcmd_strbuf.o",
+      "source": "src/scrcmd_strbuf.c",
+      "source_sha256": "2c43e3b9959e10073e4ef85066343b7a326d1fc5e08e4fa0669e4d63892feded"
+    },
+    {
+      "object": "src/screen_fade.o",
+      "source": "src/screen_fade.c",
+      "source_sha256": "5472e70179c7d2227ce7d325300a920fedf48842ed0fe4a3bccae30883c6dc5e"
+    },
+    {
+      "object": "src/screen_fade_effects.o",
+      "source": "src/screen_fade_effects.c",
+      "source_sha256": "55166d26c585ca4275422bce4b7ae821dead3f5db3fbabf7a5c28aeb396381b7"
+    },
+    {
+      "object": "src/screen_window_wipe.o",
+      "source": "src/screen_window_wipe.c",
+      "source_sha256": "2b41c6172a908592887310cd2c02867121525653aa88da46c167f884dae8d730"
+    },
+    {
+      "object": "src/screen_wipe_effects.o",
+      "source": "src/screen_wipe_effects.c",
+      "source_sha256": "f3ef19bdb1757636fc037b257bb239d1baa960af160c7147ba60f0019d25eb99"
+    },
+    {
+      "object": "src/script.o",
+      "source": "src/script.c",
+      "source_sha256": "943601849c46d18b1d8e665d6f449b30307ba5de0dda7449a0b7941a839b6e76"
+    },
+    {
+      "object": "src/script_manager.o",
+      "source": "src/script_manager.c",
+      "source_sha256": "51913f32248c70d3f38d7a5bd0407da7a8597c90d18fa0e306fe7b3984db6bd7"
+    },
+    {
+      "object": "src/script_pokemon_util.o",
+      "source": "src/script_pokemon_util.c",
+      "source_sha256": "5cde9651d058236036df9ee9386d3199e8a1759c19b086443dc116770369f4fc"
+    },
+    {
+      "object": "src/seal_case.o",
+      "source": "src/seal_case.c",
+      "source_sha256": "f3c1533c57bf168a9e3f92eb32e8b9e8ff2fd717ee57456d816c949bbe8131ad"
+    },
+    {
+      "object": "src/seal_data.o",
+      "source": "src/seal_data.c",
+      "source_sha256": "c1f14c5db2fbebcbe38b04f4110895c4046985b2c94f2223daea5b27f38c0b9b"
+    },
+    {
+      "object": "src/ship_voyage.o",
+      "source": "src/ship_voyage.c",
+      "source_sha256": "2930c2c78a21fd157864679cb6b322d60f6cad0d98d5897b7f8c4eb725292cbb"
+    },
+    {
+      "object": "src/sound.o",
+      "source": "src/sound.c",
+      "source_sha256": "dbb6dd417b5f19fdad44c9648bf1ca0371d5b24e3b9392d4393349b4127733fe"
+    },
+    {
+      "object": "src/sound_chatot.o",
+      "source": "src/sound_chatot.c",
+      "source_sha256": "e81c6548ca18583cdcddfb0c3c2437dcec3ecb0415c65624648047a2e518232d"
+    },
+    {
+      "object": "src/sound_gb.o",
+      "source": "src/sound_gb.c",
+      "source_sha256": "e594b58e4488afb9f640530b1a7a0a010add4beb5e8b446b48f87ea4f000cbdd"
+    },
+    {
+      "object": "src/sound_playback.o",
+      "source": "src/sound_playback.c",
+      "source_sha256": "0410412cba83113b7cd2c3a6bf9c7ca75d9e8586d3124dd19a41898db4da1e60"
+    },
+    {
+      "object": "src/sound_player_volume.o",
+      "source": "src/sound_player_volume.c",
+      "source_sha256": "6cf95aac97530143858254b61e3da47e086d30f1a29ee6a8dae367668a60b2a8"
+    },
+    {
+      "object": "src/sound_radio_sys.o",
+      "source": "src/sound_radio_sys.c",
+      "source_sha256": "483868b2aaf1458d286cd9be2c827d594cc48e90442d4ab140f12a6d0689c8b4"
+    },
+    {
+      "object": "src/sound_system.o",
+      "source": "src/sound_system.c",
+      "source_sha256": "b738b6708c9dc3b62e238332122d30a50652ff8d23905b8baf4c3c5556b6bdcd"
+    },
+    {
+      "object": "src/spawn_warp.o",
+      "source": "src/spawn_warp.c",
+      "source_sha256": "bc651cc174f9e96cb9140d2143a4941801a2358c6bd2bafea6f244e15eb6fc03"
+    },
+    {
+      "object": "src/spin_trade_flow.o",
+      "source": "src/spin_trade_flow.c",
+      "source_sha256": "12b50e50110c480cdc2637e45063df81b67a1e0df3855c7ad10bb29ef099da8d"
+    },
+    {
+      "object": "src/spin_trade_link.o",
+      "source": "src/spin_trade_link.c",
+      "source_sha256": "382de3274669287782f61864fff9c8116bf45ec61dc29eee261b006b8e7bcbf6"
+    },
+    {
+      "object": "src/sprite.o",
+      "source": "src/sprite.c",
+      "source_sha256": "0f370d6f780abe5cc039e22cba22f0c7dc873b61ad028e7565078b2230912be3"
+    },
+    {
+      "object": "src/sprite_resource.o",
+      "source": "src/sprite_resource.c",
+      "source_sha256": "b987dd046b626281946b3a8be9e91c71d28fca33c4a24c97951c6f82c01d545b"
+    },
+    {
+      "object": "src/sprite_resource_header.o",
+      "source": "src/sprite_resource_header.c",
+      "source_sha256": "71ec3640cd988ec1930995a637466cdbe8c77abf74738d3de8170b3320c2e1ef"
+    },
+    {
+      "object": "src/sprite_system.o",
+      "source": "src/sprite_system.c",
+      "source_sha256": "5ed2a1e5ffa01830967ca78a7f4370ba1058983c0df7e6fa41783ed7fb08489c"
+    },
+    {
+      "object": "src/sprite_transfer.o",
+      "source": "src/sprite_transfer.c",
+      "source_sha256": "a654629ee480dc9f50667988353194bcc1bab6c1902dc53005d7afedb920a914"
+    },
+    {
+      "object": "src/start_menu.o",
+      "source": "src/start_menu.c",
+      "source_sha256": "746df88e2c47e3b911d0ba7225728de753859cb4ab65be8287c78665d9ecb542"
+    },
+    {
+      "object": "src/string_control_code.o",
+      "source": "src/string_control_code.c",
+      "source_sha256": "c93abcedbc4b9149f64f9caab1ced682deb3c21c4fb87743934ffca6887da694"
+    },
+    {
+      "object": "src/string_util.o",
+      "source": "src/string_util.c",
+      "source_sha256": "c303949daa7fa544253e80773bca9667eff502e9112c77aeec20ad400d8d6721"
+    },
+    {
+      "object": "src/swap_3d_buffers.o",
+      "source": "src/swap_3d_buffers.c",
+      "source_sha256": "d4dfa2a157214206673a34a3917ad5423ecbd4918ebe5fcbe08e37e57ae09ba5"
+    },
+    {
+      "object": "src/swarm.o",
+      "source": "src/swarm.c",
+      "source_sha256": "f7b7546b1bc41ceb50e61993ae6a31edcc39ed4e2528eb53b4145a28a28764db"
+    },
+    {
+      "object": "src/sys_flags.o",
+      "source": "src/sys_flags.c",
+      "source_sha256": "6435c785e1bff61dd328de34f1668eb7cfdb793ed33947f0c71fead3872b2539"
+    },
+    {
+      "object": "src/sys_task.o",
+      "source": "src/sys_task.c",
+      "source_sha256": "9ef0caac3b9c0f869e50e5df5278e4de50f65b0b76813ea4ecd533acc5bc767a"
+    },
+    {
+      "object": "src/sys_task_api.o",
+      "source": "src/sys_task_api.c",
+      "source_sha256": "4fcfc35c1c7bbd143ece5d1c1a48873c5009c8a5f34817a8fabc622031b5e31e"
+    },
+    {
+      "object": "src/sys_vars.o",
+      "source": "src/sys_vars.c",
+      "source_sha256": "5114f2df2b28ff223288e63d16ae2b6faeebae7ff9cc3875bdef5ade03b056a0"
+    },
+    {
+      "object": "src/systask_environment.o",
+      "source": "src/systask_environment.c",
+      "source_sha256": "b784887c7aa2fd124ab8ccf0591bde98d6c29d25ad5102cb83f5d5d9cfc4185f"
+    },
+    {
+      "object": "src/system.o",
+      "source": "src/system.c",
+      "source_sha256": "55dda8ee474dc20d89cc92335915d0619f0cca0d94d0c2d8ac2c25a941a988b4"
+    },
+    {
+      "object": "src/system_card.o",
+      "source": "src/system_card.c",
+      "source_sha256": "cc107d94d9d33f6c55a92492ea971af13d8a0da2d4cef65deac7f2b7b2e4c3d7"
+    },
+    {
+      "object": "src/task.o",
+      "source": "src/task.c",
+      "source_sha256": "f096e1a5ed66ccb9d21954ba1e641fd3dab66837781309e45aac52ba543108c5"
+    },
+    {
+      "object": "src/terrain_attributes.o",
+      "source": "src/terrain_attributes.c",
+      "source_sha256": "1201161ae43ab76c88e80f5e4850ce4441b0dd17c96facf11cd036fdcf6d726e"
+    },
+    {
+      "object": "src/text.o",
+      "source": "src/text.c",
+      "source_sha256": "bd21839cb0d414a2fbe0b9f3c3ca29e3b101375ed3bf756f8e1fb9c95a24ce65"
+    },
+    {
+      "object": "src/texture_animation.o",
+      "source": "src/texture_animation.c",
+      "source_sha256": "0fd013a116701362e20065a96a957fc6d8bbb9955ce68bd404d0b8fa501fae29"
+    },
+    {
+      "object": "src/timer3.o",
+      "source": "src/timer3.c",
+      "source_sha256": "69198a211cfea52a96df5f96323b18709bd1f98425edd272395253066a34cea0"
+    },
+    {
+      "object": "src/touch_hitbox_controller.o",
+      "source": "src/touch_hitbox_controller.c",
+      "source_sha256": "3a600fadbc851501a1de82f4f0aedb19a3821f731573375e6b77db10be49049e"
+    },
+    {
+      "object": "src/touchpad.o",
+      "source": "src/touchpad.c",
+      "source_sha256": "def41f460c5410d0a6a1479bb4b5a5dde0b34fd9286863ac249e6435bd8b95e8"
+    },
+    {
+      "object": "src/touchscreen.o",
+      "source": "src/touchscreen.c",
+      "source_sha256": "6412456799ae344d81786ac0f2d88eef7f7497654e1bc291887c7e5eadb65986"
+    },
+    {
+      "object": "src/trainer_card_data.o",
+      "source": "src/trainer_card_data.c",
+      "source_sha256": "643aded3d2a7ca84b4622e1ccd1e88b5e1f24945977877902047404a66054284"
+    },
+    {
+      "object": "src/trainer_data.o",
+      "source": "src/trainer_data.c",
+      "source_sha256": "2e5232c4989f6f2752087bf46579e8207b90b2e5abf65f04dac72e2b03496803"
+    },
+    {
+      "object": "src/trainer_memo.o",
+      "source": "src/trainer_memo.c",
+      "source_sha256": "c68f7f7da5fb3c0ea7df00404a873a29864899a6025c081151d36f05eb050f9c"
+    },
+    {
+      "object": "src/type_icon_resources.o",
+      "source": "src/type_icon_resources.c",
+      "source_sha256": "c36eaa66f51d91cf1007d508801ebd04d412c881aeff5ee422485e379c3e352f"
+    },
+    {
+      "object": "src/ui_util.o",
+      "source": "src/ui_util.c",
+      "source_sha256": "598abf8a0da89169d4e1b4dc2ec8e30a63cbe1d3b496aafaea51773c4f2dc6dc"
+    },
+    {
+      "object": "src/union_room.o",
+      "source": "src/union_room.c",
+      "source_sha256": "0ae3194d23e84222bfd8305fa4b0ed7618d24b7e5509f294e0e5ec4c9258e059"
+    },
+    {
+      "object": "src/union_room_avatar.o",
+      "source": "src/union_room_avatar.c",
+      "source_sha256": "61d868d264358aa7311234773c577a0a23a06d87606ef4478cd4e1f542b7afc2"
+    },
+    {
+      "object": "src/union_room_objects.o",
+      "source": "src/union_room_objects.c",
+      "source_sha256": "ff5ccb6441dc9a65f95ebace386339b5aa48312b20c5a132cc5a98a8ad237dfa"
+    },
+    {
+      "object": "src/union_room_talk.o",
+      "source": "src/union_room_talk.c",
+      "source_sha256": "e362282f15d8153275161230bd5baceb62bd4157b429c2e5a48a21b8720ce40a"
+    },
+    {
+      "object": "src/union_room_talk_data.o",
+      "source": "src/union_room_talk_data.c",
+      "source_sha256": "b7dd3db0f1d02e67491b83ce92c430233db832bd4fe4d9b8b27ba61e7ccb2575"
+    },
+    {
+      "object": "src/update_dex_received.o",
+      "source": "src/update_dex_received.c",
+      "source_sha256": "9887760396d381082395a9cd2cbb16e44417d9abc695604f5db269a0eaadb9e2"
+    },
+    {
+      "object": "src/use_item_on_mon.o",
+      "source": "src/use_item_on_mon.c",
+      "source_sha256": "84979fda21cfd001bb1d76c609181965c20b1ddad79ba3e8d49c3f1ac9988a6f"
+    },
+    {
+      "object": "src/view_rankings_task.o",
+      "source": "src/view_rankings_task.c",
+      "source_sha256": "c5ba9ef1da3f7cbef22e428f383c93e47e15ffcc3b30ceec7abfbb4c52935dc0"
+    },
+    {
+      "object": "src/vram_transfer_manager.o",
+      "source": "src/vram_transfer_manager.c",
+      "source_sha256": "e750968e1c313df04e438dfa6c24a830444cbc4a111a5d7e45497ce9a1fdba3e"
+    },
+    {
+      "object": "src/vs_recorder_app.o",
+      "source": "src/vs_recorder_app.c",
+      "source_sha256": "b2a515a0993cff2885e9cb5f653e8fdaa717df8b659ed1ba6341cc58dbf0b0c6"
+    },
+    {
+      "object": "src/vs_recorder_menu_app.o",
+      "source": "src/vs_recorder_menu_app.c",
+      "source_sha256": "5c4fcdfceb1c95b403c58e2d05a237e036a6e68967129e63ce441ee3ce3e2d8e"
+    },
+    {
+      "object": "src/wfc_user_info_warning.o",
+      "source": "src/wfc_user_info_warning.c",
+      "source_sha256": "f879b90acf57e577c2f3bf7df8f8c195a003cb66aa628cb4564b043712a6906a"
+    },
+    {
+      "object": "src/wifi_club/wifi_club.o",
+      "source": "src/wifi_club/wifi_club.c",
+      "source_sha256": "5ca57c111b69ea0d38fba215b877f91ec91a85f79ee9d74038e57b775c9eee7f"
+    },
+    {
+      "object": "src/wireless_manager.o",
+      "source": "src/wireless_manager.c",
+      "source_sha256": "49972eb29bdf9bb3ed07213cd83b63c4fe724deb1781f12c012073dd8568959c"
+    },
+    {
+      "object": "src/wireless_status_icon.o",
+      "source": "src/wireless_status_icon.c",
+      "source_sha256": "1c2b67770128c0c1c7c2cea2603e6921a1606d879a141838ae47c227628ad355"
+    },
+    {
+      "object": "src/yes_no_prompt.o",
+      "source": "src/yes_no_prompt.c",
+      "source_sha256": "fc194ef785914d6c0fd9c4fcf754c080373e99332e0e13e5a5e29d3829afbf81"
+    }
+  ],
+  "compiled_members": [
+    "lib/MSL_C/src/arith.o",
+    "lib/MSL_C/src/msl_abort_exit.o",
+    "lib/MSL_C/src/msl_abort_exit_core.o",
+    "lib/MSL_C/src/msl_ansi_files.o",
+    "lib/MSL_C/src/msl_arm_math.o",
+    "lib/MSL_C/src/msl_assert.o",
+    "lib/MSL_C/src/msl_buffer_io.o",
+    "lib/MSL_C/src/msl_direct_io_fread.o",
+    "lib/MSL_C/src/msl_direct_io_read.o",
+    "lib/MSL_C/src/msl_direct_io_write.o",
+    "lib/MSL_C/src/msl_e_pow.o",
+    "lib/MSL_C/src/msl_exit_process.o",
+    "lib/MSL_C/src/msl_file_io.o",
+    "lib/MSL_C/src/msl_filepos_fseek.o",
+    "lib/MSL_C/src/msl_filepos_fseek_core.o",
+    "lib/MSL_C/src/msl_filepos_ftell.o",
+    "lib/MSL_C/src/msl_filepos_ftell_core.o",
+    "lib/MSL_C/src/msl_filepos_rewind.o",
+    "lib/MSL_C/src/msl_fp_ansi_compare_dec.o",
+    "lib/MSL_C/src/msl_fp_ansi_dec2num.o",
+    "lib/MSL_C/src/msl_fp_ansi_minus_dec.o",
+    "lib/MSL_C/src/msl_fp_ansi_num2dec.o",
+    "lib/MSL_C/src/msl_fp_ansi_num2dec_internal.o",
+    "lib/MSL_C/src/msl_fp_ansi_rounddec.o",
+    "lib/MSL_C/src/msl_fp_ansi_str2dec.o",
+    "lib/MSL_C/src/msl_fp_ansi_timesdec.o",
+    "lib/MSL_C/src/msl_fp_ansi_two_exp.o",
+    "lib/MSL_C/src/msl_math.o",
+    "lib/MSL_C/src/msl_mbstring.o",
+    "lib/MSL_C/src/msl_mbstring_wcstombs.o",
+    "lib/MSL_C/src/msl_mem.o",
+    "lib/MSL_C/src/msl_mem_funcs.o",
+    "lib/MSL_C/src/msl_printf_formatter.o",
+    "lib/MSL_C/src/msl_qsort.o",
+    "lib/MSL_C/src/msl_s_copysign.o",
+    "lib/MSL_C/src/msl_s_fabs.o",
+    "lib/MSL_C/src/msl_s_frexp.o",
+    "lib/MSL_C/src/msl_s_ldexp.o",
+    "lib/MSL_C/src/msl_scanf_sformatter.o",
+    "lib/MSL_C/src/msl_scanf_sscanf.o",
+    "lib/MSL_C/src/msl_scanf_string_read.o",
+    "lib/MSL_C/src/msl_scanf_vsscanf.o",
+    "lib/MSL_C/src/msl_signal.o",
+    "lib/MSL_C/src/msl_static_init.o",
+    "lib/MSL_C/src/msl_string_extras.o",
+    "lib/MSL_C/src/msl_string_strcmp.o",
+    "lib/MSL_C/src/msl_string_strcpy.o",
+    "lib/MSL_C/src/msl_string_strlen.o",
+    "lib/MSL_C/src/msl_string_strncmp_strchr.o",
+    "lib/MSL_C/src/msl_string_strncpy_strcat.o",
+    "lib/MSL_C/src/msl_strtol.o",
+    "lib/MSL_C/src/msl_strtold.o",
+    "lib/MSL_C/src/msl_strtold_core.o",
+    "lib/MSL_C/src/msl_strtoul.o",
+    "lib/MSL_C/src/msl_strtoul_core.o",
+    "lib/MSL_C/src/msl_strtoull_core.o",
+    "lib/MSL_C/src/msl_w_pow.o",
+    "lib/MSL_C/src/msl_wchar_io.o",
+    "lib/MSL_C/src/msl_wstring_wcslen.o",
+    "lib/MSL_C/src/rand.o",
+    "lib/NitroDWC/src/dwc_account.o",
+    "lib/NitroDWC/src/dwc_auth_wifi_id.o",
+    "lib/NitroDWC/src/dwc_bm.o",
+    "lib/NitroDWC/src/dwc_bm_init.o",
+    "lib/NitroDWC/src/dwc_nvram.o",
+    "lib/NitroSDK/src/card/card_cache_flush_threshold.o",
+    "lib/NitroSDK/src/dgt_hash.o",
+    "lib/NitroSDK/src/fs/FS_archive_prefix.o",
+    "lib/NitroSDK/src/fs/FS_archive_suffix.o",
+    "lib/NitroSDK/src/fs/FS_command.o",
+    "lib/NitroSDK/src/fs/FS_command_default.o",
+    "lib/NitroSDK/src/fs/FS_file.o",
+    "lib/NitroSDK/src/fs/FS_overlay.o",
+    "lib/NitroSDK/src/fs/FS_rom.o",
+    "lib/NitroSDK/src/fs/fs_send_command.o",
+    "lib/NitroSDK/src/fx/fx.o",
+    "lib/NitroSDK/src/fx/fx_atanidx.o",
+    "lib/NitroSDK/src/fx/fx_cp.o",
+    "lib/NitroSDK/src/fx/fx_mtx33_inverse_concat.o",
+    "lib/NitroSDK/src/fx/fx_mtx33_scale_rot_x.o",
+    "lib/NitroSDK/src/fx/fx_mtx43_inverse_concat.o",
+    "lib/NitroSDK/src/fx/fx_mtx43_scale_apply.o",
+    "lib/NitroSDK/src/fx/fx_mtx44_concat.o",
+    "lib/NitroSDK/src/fx/fx_mtx44_ortho.o",
+    "lib/NitroSDK/src/fx/fx_mtx44_perspective.o",
+    "lib/NitroSDK/src/fx/fx_vec.o",
+    "lib/NitroSDK/src/fx/fx_vec_mult_add.o",
+    "lib/NitroSDK/src/fx/fx_vec_normalize.o",
+    "lib/NitroSDK/src/gx/g2.o",
+    "lib/NitroSDK/src/gx/g3_util.o",
+    "lib/NitroSDK/src/gx/g3imm.o",
+    "lib/NitroSDK/src/gx/g3x.o",
+    "lib/NitroSDK/src/gx/gx.o",
+    "lib/NitroSDK/src/gx/gx_bgcnt.o",
+    "lib/NitroSDK/src/gx/gx_load2d.o",
+    "lib/NitroSDK/src/gx/gx_load3d.o",
+    "lib/NitroSDK/src/gx/gx_vramcnt.o",
+    "lib/NitroSDK/src/gx/gxstate.o",
+    "lib/NitroSDK/src/math/MATH_crc.o",
+    "lib/NitroSDK/src/math/MATH_dgt.o",
+    "lib/NitroSDK/src/math/MATH_pop.o",
+    "lib/NitroSDK/src/mi/mi_dma.o",
+    "lib/NitroSDK/src/mi/mi_dma_gxcommand.o",
+    "lib/NitroSDK/src/mi/mi_init.o",
+    "lib/NitroSDK/src/mi/mi_wram.o",
+    "lib/NitroSDK/src/mic.o",
+    "lib/NitroSDK/src/os/os_alarm_before_handler.o",
+    "lib/NitroSDK/src/os/os_alloc.o",
+    "lib/NitroSDK/src/os/os_arena.o",
+    "lib/NitroSDK/src/os/os_emulator.o",
+    "lib/NitroSDK/src/os/os_entropy.o",
+    "lib/NitroSDK/src/os/os_exception_init.o",
+    "lib/NitroSDK/src/os/os_init_system.o",
+    "lib/NitroSDK/src/os/os_interrupt.o",
+    "lib/NitroSDK/src/os/os_irqTable.o",
+    "lib/NitroSDK/src/os/os_message.o",
+    "lib/NitroSDK/src/os/os_mutex.o",
+    "lib/NitroSDK/src/os/os_ownerInfo.o",
+    "lib/NitroSDK/src/os/os_printf.o",
+    "lib/NitroSDK/src/os/os_reset_core.o",
+    "lib/NitroSDK/src/os/os_spinLock.o",
+    "lib/NitroSDK/src/os/os_spin_lock_card.o",
+    "lib/NitroSDK/src/os/os_spin_lock_cartridge.o",
+    "lib/NitroSDK/src/os/os_spin_lock_word.o",
+    "lib/NitroSDK/src/os/os_terminate_arm9.o",
+    "lib/NitroSDK/src/os/os_thread.o",
+    "lib/NitroSDK/src/os/os_thread_available.o",
+    "lib/NitroSDK/src/os/os_tick.o",
+    "lib/NitroSDK/src/os/os_timer.o",
+    "lib/NitroSDK/src/os/os_vramExclusive.o",
+    "lib/NitroSDK/src/os/os_wait_irq.o",
+    "lib/NitroSDK/src/pm.o",
+    "lib/NitroSDK/src/pxi/PXI_fifo.o",
+    "lib/NitroSDK/src/pxi/PXI_init.o",
+    "lib/NitroSDK/src/rtc/rtc_api.o",
+    "lib/NitroSDK/src/rtc/rtc_convert_date_time_to_second.o",
+    "lib/NitroSDK/src/rtc/rtc_convert_post.o",
+    "lib/NitroSDK/src/rtc/rtc_convert_pre.o",
+    "lib/NitroSDK/src/rtc/rtc_internal.o",
+    "lib/NitroSDK/src/snd/snd_destroy_bank.o",
+    "lib/NitroSDK/src/snd/snd_flush_command.o",
+    "lib/NitroSDK/src/snd/snd_master_volume.o",
+    "lib/NitroSDK/src/snd/snd_next_inst_data.o",
+    "lib/NitroSDK/src/snd/snd_player_local_variable.o",
+    "lib/NitroSDK/src/snd/snd_player_tempo_ratio.o",
+    "lib/NitroSDK/src/snd/snd_read_channel_info.o",
+    "lib/NitroSDK/src/snd/snd_read_driver_info.o",
+    "lib/NitroSDK/src/snd/snd_read_track_info.o",
+    "lib/NitroSDK/src/std_sprintf.o",
+    "lib/NitroSDK/src/std_sprintf_writer.o",
+    "lib/NitroSDK/src/std_string.o",
+    "lib/NitroSDK/src/tp.o",
+    "lib/NitroSDK/src/wm_core.o",
+    "lib/NitroSDK/src/wm_data_sharing.o",
+    "lib/NitroSDK/src/wm_requests.o",
+    "lib/NitroSDK/src/wm_settings.o",
+    "lib/NitroSDK/src/wvr.o",
+    "lib/NitroSystem/src/fnd_allocator.o",
+    "lib/NitroSystem/src/fnd_expheap.o",
+    "lib/NitroSystem/src/fnd_frameheap.o",
+    "lib/NitroSystem/src/fnd_heapcommon.o",
+    "lib/NitroSystem/src/fnd_list.o",
+    "lib/NitroSystem/src/fnd_unitheap.o",
+    "lib/NitroSystem/src/g2d_animation.o",
+    "lib/NitroSystem/src/g2d_cell_animation.o",
+    "lib/NitroSystem/src/g2d_cell_transfer_manager.o",
+    "lib/NitroSystem/src/g2d_image.o",
+    "lib/NitroSystem/src/g2d_load.o",
+    "lib/NitroSystem/src/g2d_mc_animation.o",
+    "lib/NitroSystem/src/g2d_node.o",
+    "lib/NitroSystem/src/g2d_oam.o",
+    "lib/NitroSystem/src/g2d_oam_soft_emu.o",
+    "lib/NitroSystem/src/g2d_palette_table.o",
+    "lib/NitroSystem/src/g2d_renderer.o",
+    "lib/NitroSystem/src/g2d_renderer_core.o",
+    "lib/NitroSystem/src/g2d_renderer_identity.o",
+    "lib/NitroSystem/src/g2d_renderer_mtx_cache.o",
+    "lib/NitroSystem/src/g2d_renderer_mtx_stack.o",
+    "lib/NitroSystem/src/g2d_renderer_transform.o",
+    "lib/NitroSystem/src/g2d_softsprite.o",
+    "lib/NitroSystem/src/g2d_srt_control.o",
+    "lib/NitroSystem/src/g3d_draw.o",
+    "lib/NitroSystem/src/g3d_gecom.o",
+    "lib/NitroSystem/src/g3d_glb.o",
+    "lib/NitroSystem/src/g3d_glb_state.o",
+    "lib/NitroSystem/src/g3d_kernel.o",
+    "lib/NitroSystem/src/g3d_mdl_bind.o",
+    "lib/NitroSystem/src/g3d_res_struct_accessor.o",
+    "lib/NitroSystem/src/g3d_util.o",
+    "lib/NitroSystem/src/gfd_frame_pltt_vram_man.o",
+    "lib/NitroSystem/src/gfd_frame_tex_vram_man.o",
+    "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man.o",
+    "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man_reset.o",
+    "lib/NitroSystem/src/gfd_linked_list_tex_vram_man.o",
+    "lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.o",
+    "lib/NitroSystem/src/gfd_linked_list_vram_man.o",
+    "lib/NitroSystem/src/gfd_vram_transfer_manager.o",
+    "lib/NitroSystem/src/snd_arc.o",
+    "lib/NitroSystem/src/snd_arc_loader.o",
+    "lib/NitroSystem/src/snd_arc_loader_wave.o",
+    "lib/NitroSystem/src/snd_arc_player.o",
+    "lib/NitroSystem/src/snd_arc_strm.o",
+    "lib/NitroSystem/src/snd_capture.o",
+    "lib/NitroSystem/src/snd_fader.o",
+    "lib/NitroSystem/src/snd_heap.o",
+    "lib/NitroSystem/src/snd_player.o",
+    "lib/NitroSystem/src/snd_resource_mgr.o",
+    "lib/NitroSystem/src/snd_seqarc.o",
+    "lib/NitroSystem/src/snd_stream.o",
+    "lib/NitroSystem/src/snd_system.o",
+    "lib/NitroSystem/src/snd_waveout.o",
+    "lib/NitroWiFi/src/soc.o",
+    "lib/NitroWiFi/src/soc_gethostbyname.o",
+    "lib/NitroWiFi/src/soc_inet.o",
+    "lib/NitroWiFi/src/socl_close.o",
+    "lib/NitroWiFi/src/socl_command.o",
+    "lib/NitroWiFi/src/socl_list.o",
+    "lib/NitroWiFi/src/socl_read.o",
+    "lib/NitroWiFi/src/socl_resolver.o",
+    "lib/NitroWiFi/src/socl_socket.o",
+    "lib/NitroWiFi/src/socl_ssl.o",
+    "lib/NitroWiFi/src/socl_startup.o",
+    "lib/NitroWiFi/src/socl_status.o",
+    "lib/NitroWiFi/src/socl_write.o",
+    "lib/NitroWiFi/src/stubsmd5.o",
+    "lib/NitroWiFi/src/wcm.o",
+    "lib/NitroWiFi/src/wcm_aplist.o",
+    "lib/NitroWiFi/src/wcm_callback.o",
+    "lib/NitroWiFi/src/wcm_cpsif.o",
+    "lib/libCPS/src/cps_arp.o",
+    "lib/libCPS/src/cps_bignum.o",
+    "lib/libCPS/src/cps_bignum_char.o",
+    "lib/libCPS/src/cps_control.o",
+    "lib/libCPS/src/cps_dhcp.o",
+    "lib/libCPS/src/cps_dns.o",
+    "lib/libCPS/src/cps_ip.o",
+    "lib/libCPS/src/cps_ip_frag.o",
+    "lib/libCPS/src/cps_link.o",
+    "lib/libCPS/src/cps_md5.o",
+    "lib/libCPS/src/cps_ping.o",
+    "lib/libCPS/src/cps_rc4.o",
+    "lib/libCPS/src/cps_recv.o",
+    "lib/libCPS/src/cps_reset.o",
+    "lib/libCPS/src/cps_resolve.o",
+    "lib/libCPS/src/cps_scavenger.o",
+    "lib/libCPS/src/cps_send.o",
+    "lib/libCPS/src/cps_send_transport.o",
+    "lib/libCPS/src/cps_sha1.o",
+    "lib/libCPS/src/cps_socket.o",
+    "lib/libCPS/src/cps_ssl.o",
+    "lib/libCPS/src/cps_ssl_cert.o",
+    "lib/libCPS/src/cps_ssl_handshake.o",
+    "lib/libCPS/src/cps_ssl_hello.o",
+    "lib/libCPS/src/cps_ssl_keys.o",
+    "lib/libCPS/src/cps_ssl_random.o",
+    "lib/libCPS/src/cps_ssl_record.o",
+    "lib/libCPS/src/cps_ssl_session.o",
+    "lib/libCPS/src/cps_ssl_util.o",
+    "lib/libCPS/src/cps_startup.o",
+    "lib/libCPS/src/cps_tcp.o",
+    "lib/libCPS/src/cps_tcp_write.o",
+    "lib/libCPS/src/cps_udp.o",
+    "lib/libCPS/src/cps_util.o",
+    "lib/libVCT/src/vct_adpcm.o",
+    "lib/libVCT/src/vct_audio.o",
+    "lib/libVCT/src/vct_audio_queue.o",
+    "lib/libVCT/src/vct_audio_send.o",
+    "lib/libVCT/src/vct_codec.o",
+    "lib/libVCT/src/vct_decoder.o",
+    "lib/libVCT/src/vct_fir.o",
+    "lib/libVCT/src/vct_main.o",
+    "lib/libVCT/src/vct_mix.o",
+    "lib/libVCT/src/vct_packet_buffer.o",
+    "lib/libVCT/src/vct_ssp.o",
+    "lib/libVCT/src/vct_vad.o",
+    "lib/src/nitrocrypto_rc4_fast.o",
+    "lib/src/nitrocrypto_rc4_init.o",
+    "lib/src/spl_anim.o",
+    "lib/src/spl_draw.o",
+    "lib/src/spl_draw_ptcl.o",
+    "lib/src/spl_emitter.o",
+    "lib/src/spl_field.o",
+    "lib/src/spl_generate.o",
+    "lib/src/spl_list.o",
+    "lib/src/spl_manager.o",
+    "lib/src/spl_random.o",
+    "src/alph_checks.o",
+    "src/apricorn_box.o",
+    "src/apricorn_tree_sys.o",
+    "src/ascii_util.o",
+    "src/bag.o",
+    "src/bag_view.o",
+    "src/battle/battle_setup.o",
+    "src/battle_frontier_communication.o",
+    "src/battle_greeting_task.o",
+    "src/battle_intro_config.o",
+    "src/battle_record.o",
+    "src/battle_regulation.o",
+    "src/battle_transition_task.o",
+    "src/bg_cell_manager.o",
+    "src/bg_window.o",
+    "src/billboard_gfx_sequence.o",
+    "src/billboard_lists.o",
+    "src/blackout.o",
+    "src/brightness.o",
+    "src/camera.o",
+    "src/catching_show.o",
+    "src/char_tiles.o",
+    "src/choose_starter.o",
+    "src/code_entry.o",
+    "src/code_entry_gfx.o",
+    "src/code_entry_states.o",
+    "src/coins.o",
+    "src/colosseum.o",
+    "src/comm_player_manager.o",
+    "src/comm_player_sync.o",
+    "src/comm_state.o",
+    "src/comm_wireless.o",
+    "src/communication_club_link.o",
+    "src/communication_command.o",
+    "src/communication_core.o",
+    "src/communication_error.o",
+    "src/communication_player_state.o",
+    "src/daycare.o",
+    "src/dex_mon_measures.o",
+    "src/dialog_box.o",
+    "src/dpad_menu_box.o",
+    "src/drawing_session_link.o",
+    "src/easy_chat.o",
+    "src/encounter.o",
+    "src/error_message_reset.o",
+    "src/evolution_scene.o",
+    "src/field_bgm.o",
+    "src/field_comm_cmds.o",
+    "src/field_effects.o",
+    "src/field_interaction.o",
+    "src/field_misc_events.o",
+    "src/field_misc_util.o",
+    "src/field_move.o",
+    "src/field_move_environment.o",
+    "src/field_overworld_transition.o",
+    "src/field_roamer.o",
+    "src/field_system.o",
+    "src/field_system_rtc_weather.o",
+    "src/field_take_photo.o",
+    "src/field_terrain.o",
+    "src/field_time_events.o",
+    "src/field_transition_tasks.o",
+    "src/field_use_item.o",
+    "src/field_warp_state.o",
+    "src/field_warp_tasks.o",
+    "src/filesystem.o",
+    "src/follow_mon.o",
+    "src/font.o",
+    "src/font_data.o",
+    "src/font_sprite.o",
+    "src/friend_group.o",
+    "src/friend_roster.o",
+    "src/frontier_data.o",
+    "src/frontier_field_support.o",
+    "src/frontier_field_system.o",
+    "src/frontier_launch.o",
+    "src/frontier_opponents.o",
+    "src/frontier_runtime.o",
+    "src/frontier_save.o",
+    "src/frontier_stat_ids.o",
+    "src/frontier_state.o",
+    "src/g2d_cell_culling.o",
+    "src/game_clear.o",
+    "src/game_stats.o",
+    "src/gear_phone_ring_manager.o",
+    "src/geometry_math.o",
+    "src/get_egg.o",
+    "src/gf_3d_loader.o",
+    "src/gf_3d_render.o",
+    "src/gf_3d_vramman.o",
+    "src/gf_g2d_renderer.o",
+    "src/gf_gfx_loader.o",
+    "src/gf_gfx_planes.o",
+    "src/gf_rtc.o",
+    "src/global_terminal/global_terminal_app.o",
+    "src/graphics_object_manager.o",
+    "src/gymmick_collision.o",
+    "src/gymmick_init.o",
+    "src/hall_of_fame.o",
+    "src/hatch_egg_task.o",
+    "src/headbutt_tree.o",
+    "src/heap.o",
+    "src/igt.o",
+    "src/igt_counter.o",
+    "src/item.o",
+    "src/launch_application.o",
+    "src/legendary_cinematic_manager.o",
+    "src/legendary_cinematic_task.o",
+    "src/link_ruleset_data.o",
+    "src/link_synchronization.o",
+    "src/list_menu.o",
+    "src/list_menu_2d.o",
+    "src/list_menu_cursor.o",
+    "src/list_menu_items.o",
+    "src/location_backup.o",
+    "src/location_gmm_dat.o",
+    "src/magnet_train_ride.o",
+    "src/mail.o",
+    "src/mail_message.o",
+    "src/mail_misc.o",
+    "src/main.o",
+    "src/map_events.o",
+    "src/map_header.o",
+    "src/map_landmark_name.o",
+    "src/map_matrix.o",
+    "src/map_object.o",
+    "src/map_object_behavior.o",
+    "src/map_object_follow.o",
+    "src/map_object_movement_commands.o",
+    "src/map_object_movement_utilities.o",
+    "src/map_object_update.o",
+    "src/map_section.o",
+    "src/math_util.o",
+    "src/menu_input_state.o",
+    "src/message_format.o",
+    "src/message_printer.o",
+    "src/message_printer_number.o",
+    "src/metatile_behavior.o",
+    "src/mom_gift.o",
+    "src/move.o",
+    "src/move_relearner.o",
+    "src/msgdata.o",
+    "src/mystery_gift.o",
+    "src/naming_screen.o",
+    "src/network_overlay_loader.o",
+    "src/npc_trade_task.o",
+    "src/oam_manager.o",
+    "src/obj_char_transfer.o",
+    "src/obj_pltt_transfer.o",
+    "src/options.o",
+    "src/orbit_cursor.o",
+    "src/overlay_manager.o",
+    "src/palPark_migration.o",
+    "src/palette.o",
+    "src/palette_blink.o",
+    "src/palette_vram_addr.o",
+    "src/particle_scene.o",
+    "src/particle_system.o",
+    "src/party.o",
+    "src/party_context_menu.o",
+    "src/party_menu.o",
+    "src/party_menu_items.o",
+    "src/party_menu_list_items.o",
+    "src/party_menu_sprites.o",
+    "src/phone_rematch.o",
+    "src/phonebook_dat.o",
+    "src/photo_album.o",
+    "src/player_avatar.o",
+    "src/player_avatar_movement.o",
+    "src/player_data.o",
+    "src/pm_string.o",
+    "src/pm_version.o",
+    "src/poke_overlay.o",
+    "src/pokeathlon/pokeathlon_save.o",
+    "src/pokeathlon_course_task.o",
+    "src/pokedex.o",
+    "src/pokedex_language.o",
+    "src/pokedex_resume_state.o",
+    "src/pokedex_util.o",
+    "src/pokemon.o",
+    "src/pokemon_icon_idx.o",
+    "src/pokemon_mood.o",
+    "src/pokemon_storage_system.o",
+    "src/pokemon_summary.o",
+    "src/pokemon_summary_scene.o",
+    "src/pokemon_summary_text.o",
+    "src/pokepic.o",
+    "src/pokepic_anim.o",
+    "src/pokewalker.o",
+    "src/render_text.o",
+    "src/render_window.o",
+    "src/render_window_frame_icon.o",
+    "src/render_window_icons.o",
+    "src/ribbon.o",
+    "src/roamer.o",
+    "src/safari_zone.o",
+    "src/safari_zone_encounters.o",
+    "src/sav_chatot.o",
+    "src/sav_system_info.o",
+    "src/save.o",
+    "src/save_arrays.o",
+    "src/save_block_23.o",
+    "src/save_data_read_error.o",
+    "src/save_data_write_error.o",
+    "src/save_fashion.o",
+    "src/save_follow_mon.o",
+    "src/save_gts.o",
+    "src/save_gymmick.o",
+    "src/save_link_ruleset.o",
+    "src/save_local_field_data.o",
+    "src/save_misc.o",
+    "src/save_palpad.o",
+    "src/save_plaza_survey.o",
+    "src/save_pokegear.o",
+    "src/save_rankings.o",
+    "src/save_special_ribbons.o",
+    "src/save_trainer_card.o",
+    "src/save_trainer_house.o",
+    "src/save_vars_flags.o",
+    "src/save_wifi_history.o",
+    "src/save_wii_message.o",
+    "src/scrcmd_12.o",
+    "src/scrcmd_17.o",
+    "src/scrcmd_8.o",
+    "src/scrcmd_9.o",
+    "src/scrcmd_apricorn.o",
+    "src/scrcmd_battle.o",
+    "src/scrcmd_battle_arcade.o",
+    "src/scrcmd_battle_castle.o",
+    "src/scrcmd_battle_hall.o",
+    "src/scrcmd_c.o",
+    "src/scrcmd_daycare.o",
+    "src/scrcmd_dppl_prizes.o",
+    "src/scrcmd_items.o",
+    "src/scrcmd_link_sync.o",
+    "src/scrcmd_lottery.o",
+    "src/scrcmd_mart.o",
+    "src/scrcmd_money.o",
+    "src/scrcmd_move_relearner.o",
+    "src/scrcmd_mystery_gift.o",
+    "src/scrcmd_party.o",
+    "src/scrcmd_sound.o",
+    "src/scrcmd_strbuf.o",
+    "src/screen_fade.o",
+    "src/screen_fade_effects.o",
+    "src/screen_window_wipe.o",
+    "src/screen_wipe_effects.o",
+    "src/script.o",
+    "src/script_manager.o",
+    "src/script_pokemon_util.o",
+    "src/seal_case.o",
+    "src/seal_data.o",
+    "src/ship_voyage.o",
+    "src/sound.o",
+    "src/sound_chatot.o",
+    "src/sound_gb.o",
+    "src/sound_playback.o",
+    "src/sound_player_volume.o",
+    "src/sound_radio_sys.o",
+    "src/sound_system.o",
+    "src/spawn_warp.o",
+    "src/spin_trade_flow.o",
+    "src/spin_trade_link.o",
+    "src/sprite.o",
+    "src/sprite_resource.o",
+    "src/sprite_resource_header.o",
+    "src/sprite_system.o",
+    "src/sprite_transfer.o",
+    "src/start_menu.o",
+    "src/string_control_code.o",
+    "src/string_util.o",
+    "src/swap_3d_buffers.o",
+    "src/swarm.o",
+    "src/sys_flags.o",
+    "src/sys_task.o",
+    "src/sys_task_api.o",
+    "src/sys_vars.o",
+    "src/systask_environment.o",
+    "src/system.o",
+    "src/system_card.o",
+    "src/task.o",
+    "src/terrain_attributes.o",
+    "src/text.o",
+    "src/texture_animation.o",
+    "src/timer3.o",
+    "src/touch_hitbox_controller.o",
+    "src/touchpad.o",
+    "src/touchscreen.o",
+    "src/trainer_card_data.o",
+    "src/trainer_data.o",
+    "src/trainer_memo.o",
+    "src/type_icon_resources.o",
+    "src/ui_util.o",
+    "src/union_room.o",
+    "src/union_room_avatar.o",
+    "src/union_room_objects.o",
+    "src/union_room_talk.o",
+    "src/union_room_talk_data.o",
+    "src/update_dex_received.o",
+    "src/use_item_on_mon.o",
+    "src/view_rankings_task.o",
+    "src/vram_transfer_manager.o",
+    "src/vs_recorder_app.o",
+    "src/vs_recorder_menu_app.o",
+    "src/wfc_user_info_warning.o",
+    "src/wifi_club/wifi_club.o",
+    "src/wireless_manager.o",
+    "src/wireless_status_icon.o",
+    "src/yes_no_prompt.o"
+  ],
+  "hardware_members": {
+    "lib/NitroSDK/src/os/os_system.o": "context",
+    "lib/NitroSDK/src/os/os_cache.o": "cache"
+  },
+  "proof_ir_members": [
+    "lib/NitroSDK/src/fs/FS_archive_suffix.o",
+    "lib/NitroSDK/src/fs/FS_command_default.o",
+    "lib/NitroSDK/src/fs/FS_rom.o",
+    "lib/NitroSDK/src/gx/gx.o",
+    "lib/NitroSDK/src/gx/gxstate.o",
+    "lib/NitroSDK/src/os/os_alloc.o",
+    "lib/NitroSDK/src/os/os_irqTable.o",
+    "lib/NitroSDK/src/os/os_thread.o",
+    "lib/NitroSDK/src/os/os_tick.o",
+    "lib/NitroSystem/src/g3d_glb.o",
+    "lib/NitroSystem/src/gfd_linked_list_pltt_vram_man_reset.o",
+    "lib/NitroSystem/src/gfd_linked_list_tex_vram_man_reset.o",
+    "lib/NitroSystem/src/gfd_vram_transfer_manager.o",
+    "lib/NitroSystem/src/snd_arc_loader.o",
+    "lib/NitroWiFi/src/soc_gethostbyname.o",
+    "lib/libVCT/src/vct_audio.o",
+    "lib/libVCT/src/vct_fir.o",
+    "lib/libVCT/src/vct_vad.o",
+    "src/application/check_savedata.o",
+    "src/application/delete_savedata.o",
+    "src/battle_link_comm.o",
+    "src/battle_record.o",
+    "src/camera.o",
+    "src/code_entry.o",
+    "src/colosseum.o",
+    "src/comm_player_manager.o",
+    "src/comm_state.o",
+    "src/communication_club_link.o",
+    "src/field_comm_cmds.o",
+    "src/field_system.o",
+    "src/field_system_rtc_weather.o",
+    "src/filesystem.o",
+    "src/frontier_runtime.o",
+    "src/gf_rtc.o",
+    "src/launch_application.o",
+    "src/main.o",
+    "src/map_object_follow.o",
+    "src/map_object_update.o",
+    "src/math_util.o",
+    "src/naming_screen.o",
+    "src/network_overlay_loader.o",
+    "src/orbit_cursor.o",
+    "src/party_menu.o",
+    "src/pm_version.o",
+    "src/pokemon.o",
+    "src/save_arrays.o",
+    "src/scrcmd_battle_hall.o",
+    "src/scrcmd_c.o",
+    "src/scrcmd_mart.o",
+    "src/script_manager.o",
+    "src/sound.o",
+    "src/sound_radio_sys.o",
+    "src/sound_system.o",
+    "src/start_menu.o",
+    "src/system.o",
+    "src/timer3.o",
+    "src/touchpad.o",
+    "src/union_room_talk_data.o",
+    "src/vs_recorder_menu_app.o"
+  ]
+}

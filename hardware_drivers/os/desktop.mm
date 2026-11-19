@@ -14,6 +14,7 @@
 @interface HGScreen : NSView <NSWindowDelegate>
 @property NSBitmapImageRep *bitmap;
 @property unsigned short buttons;
+@property unsigned short pendingButtons;
 @property unsigned short touchX;
 @property unsigned short touchY;
 @property BOOL touching;
@@ -33,9 +34,13 @@ static unsigned short button(unsigned short key)
 - (BOOL)isFlipped { return YES; }
 - (BOOL)acceptsFirstResponder { return YES; }
 - (BOOL)acceptsFirstMouse:(NSEvent *)event { return YES; }
-- (void)keyDown:(NSEvent *)event { self.buttons |= button(event.keyCode); }
+- (void)keyDown:(NSEvent *)event {
+    unsigned short pressed=button(event.keyCode);
+    self.pendingButtons |= pressed & ~self.buttons;
+    self.buttons |= pressed;
+}
 - (void)keyUp:(NSEvent *)event { self.buttons &= ~button(event.keyCode); }
-- (void)windowDidResignKey:(NSNotification *)note { self.buttons=0;self.touching=NO; }
+- (void)windowDidResignKey:(NSNotification *)note { self.buttons=0;self.pendingButtons=0;self.touching=NO; }
 - (void)mouseDown:(NSEvent *)event { [self mouseDragged:event]; }
 - (void)mouseDragged:(NSEvent *)event {
     NSPoint p=[self convertPoint:event.locationInWindow fromView:nil];
@@ -144,7 +149,10 @@ extern "C" uint16_t HG_RuntimePollInput(uint16_t *x,uint16_t *y,int *touch)
         pump([NSDate distantPast]);
         if(!window.visible)exit(0);
         *x=screen.touchX;*y=screen.touchY;*touch=screen.touching;
-        return screen.buttons;
+        // Retain a short press even when down/up both arrive between frames.
+        uint16_t buttons=screen.buttons|screen.pendingButtons;
+        screen.pendingButtons=0;
+        return buttons;
     }
 }
 extern "C" void HG_RuntimePresent(const uint8_t *rgba)

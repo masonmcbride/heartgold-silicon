@@ -35,6 +35,93 @@ def expected_common_storage(relative, text):
 
 
 class NativeSourceAdaptations(unittest.TestCase):
+    def test_mailbox_icon_resources_match_archive_types(self):
+        text = native.adapt('src/application/mailbox_app_sprites.c',
+            (GAME/'src/application/mailbox_app_sprites.c').read_text(), GAME)
+        getters = (GAME/'src/pokemon_icon_idx.c').read_text()
+        icons = GAME/'files/poketool/icongra/poke_icon'
+        resources = {}
+        for kind, getter in re.findall(
+                r'SpriteSystem_Load(Cell|Anim)ResObjFromOpenNarc\('
+                r'data->spriteSystem, data->spriteManager, data->monIconNarc, '
+                r'(\w+)\(\), FALSE, 0x37F0\);', text):
+            index = int(re.search(r'u32 '+getter+r'\(void\)\s*\{\s*return (\d+);', getters)[1])
+            data = json.loads((icons/f'poke_icon_{index:08d}.json').read_text())
+            self.assertIn('cellCount' if kind=='Cell' else 'sequenceCount', data,
+                          f'{kind} loader selected member {index} with the wrong asset type')
+            resources[kind] = data
+        self.assertEqual(set(resources), {'Cell', 'Anim'})
+        # The animations must reference cells present in the selected bank.
+        for result in resources['Anim']['animationResults']:
+            self.assertLess(result['index'], resources['Cell']['cellCount'])
+
+    def test_options_teardown_releases_callback_before_resources(self):
+        original = (GAME / 'src/options_app.c').read_text()
+        adapted = native.adapt('src/options_app.c', original, GAME)
+        function = native.span(adapted,
+            'static BOOL OptionsApp_Free(OptionsApp_Data *data) {',
+            '\nstatic void OptionsApp_SetupBgConfig').removesuffix(
+                '\nstatic void OptionsApp_SetupBgConfig')
+        # Execute both original cleanup states and deliver a simulated frame
+        # between them. Resource destruction fails if its callback still owns it.
+        fixture = r'''
+#define CHECK(condition) do { if (!(condition)) __builtin_trap(); } while (0)
+#include <stddef.h>
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+#define MENU_ENTRY_COUNT 2
+#define GX_PLANEMASK_NONE 0
+typedef struct { int numStrings; void *strings[1]; } Entry;
+typedef struct { int setupAndFreeState; Entry menuEntries[2]; void *msgData; } OptionsApp_Data;
+static int registered=1, released, resources;
+static void Main_SetVBlankIntrCB(void *cb, void *arg) { CHECK(!cb && !arg); registered=0; }
+static void release(void) { CHECK(!registered); ++resources; }
+#define GF_DestroyVramTransferManager() release()
+#define OptionsApp_FreeWindows(x) release()
+#define String_Delete(x) release()
+#define DestroyMsgData(x) release()
+#define OptionsApp_FreeGraphicsDummy(x) release()
+#define OptionsApp_FreeBgConfig(x) do { release(); released=1; } while(0)
+#define OptionsApp_FreeSpriteRenderer(x) release()
+#define HBlankInterruptDisable() ((void)0)
+#define GfGfx_DisableEngineAPlanes() ((void)0)
+#define GfGfx_DisableEngineBPlanes() ((void)0)
+#define GX_SetVisiblePlane(x) ((void)0)
+#define GXS_SetVisiblePlane(x) ((void)0)
+'''
+        fixture += function + r'''
+int main(void) {
+    OptionsApp_Data data={0}; data.menuEntries[0].numStrings=1;
+    CHECK(!OptionsApp_Free(&data));
+    CHECK(released && resources==7 && data.setupAndFreeState==1);
+    CHECK(!registered); /* A frame here must not access released resources. */
+    CHECK(OptionsApp_Free(&data) && data.setupAndFreeState==0);
+    CHECK(resources==7);
+}
+'''
+        from audit_overlays import arguments
+        entries = json.loads((WORK / 'compile_commands.json').read_text())
+        entry = next(e for e in entries if e['file'].endswith('/src/intro_movie.c'))
+        flags = arguments(entry)
+        flags.remove('-fsyntax-only')
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'cleanup.c', Path(directory)/'cleanup'
+            source.write_text(fixture)
+            result = subprocess.run(flags + ['-UNDEBUG', str(source), '-o', str(exe)],
+                cwd=entry['directory'], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+        exit_code = native.span(adapted, 'BOOL OptionsMenu_Exit(', '\nBOOL OptionsMenu_Main(')
+        self.assertIn('enum HeapID heapID = data->heapID;', exit_code)
+        self.assertNotIn('Heap_Destroy(data->heapID)', exit_code)
+
+    def test_startup_queue_alignment_is_native(self):
+        original=(GAME/'src/system.c').read_text()
+        adapted=native.adapt('src/system.c',original,GAME)
+        calls=re.findall(r'SysTaskQueue_PlacementNew\((\d+), OS_AllocFromArenaLo\(OS_ARENA_MAIN, SysTaskQueue_GetArenaSize\(\1\), (_Alignof\(SysTaskQueue\))\)\)',adapted)
+        self.assertEqual([count for count,_ in calls],['160','32','32','4'])
+
     def test_explicit_compiler_arithmetic_operations(self):
         for relative, (_, declaration, old, new) in native.COMPILER_OPERATIONS.items():
             original = (GAME / relative).read_text()

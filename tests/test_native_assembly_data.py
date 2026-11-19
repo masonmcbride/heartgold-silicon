@@ -13,6 +13,17 @@ import native_assembly_data as assembly
 GAME=ROOT/'upstream/pokeheartgold'
 
 class NativeDataTests(unittest.TestCase):
+    def test_movement_callback_null_slot_preserves_follower_stride(self):
+        blocks=assembly.recipe(GAME,'asm/map_object_movement_tables.o')
+        table=next(b for b in blocks if b['symbol']=='gMapObjectMovementCallbacks')
+        layout,_=assembly.reviewed_layout([table])
+        data=layout['__const']
+        self.assertEqual(len(data['data']),57*8)
+        self.assertEqual(data['data'][47*8:48*8],bytes(8))
+        self.assertNotIn(47*8,data['relocations'])
+        self.assertEqual(data['relocations'][48*8],'_sFollowPlayer48MovementCallbacks')
+        self.assertEqual(sorted(data['relocations']),[i*8 for i in range(57) if i!=47])
+
     def test_every_complete_reviewed_member(self):
         with tempfile.TemporaryDirectory(dir=Path(os.environ.get('HEARTGOLD_TEST_BINARY_DIR',ROOT/'build'))) as directory:
             for original in assembly.REVIEWED_INPUTS:

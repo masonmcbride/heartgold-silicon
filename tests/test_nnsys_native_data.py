@@ -69,6 +69,24 @@ start=cell_source.index('typedef struct HGNativeCellWithBR')
 end=cell_source.index('\n#endif',start)
 owners.append(cell_source[start:end])
 (work/'palette_owner_under_test.h').write_text('\n'.join(owners)+'\n')
+tile_source=(build/'native/src/char_tiles.c').read_text()
+tile_functions=[]
+for signature in [
+    'static void CharTiles_CopyRows(const u8 *src, u8 *dest, int *pSrcOffset, int *pDestOffset, u32 destBlockSize, u32 srcBlockSize) {',
+    'void CharTiles_LoadRectFromNarc(NarcId narcId, s32 fileId, enum HeapID heapID, int x, int y, int width, int height, void *dest) {',
+]:
+    start=tile_source.index(signature)
+    end=tile_source.index('{',start)+1;depth=1
+    while depth:
+        depth+=(tile_source[end]=='{')-(tile_source[end]=='}');end+=1
+    tile_functions.append(tile_source[start:end])
+(work/'char_tiles_under_test.h').write_text('\n'.join(tile_functions)+'\n')
+signature='void *AllocAndLoadPltt16FromNarc(NarcId narcId, s32 fileId, enum HeapID heapID) {'
+start=tile_source.index(signature)
+end=tile_source.index('{',start)+1;depth=1
+while depth:
+    depth+=(tile_source[end]=='{')-(tile_source[end]=='}');end+=1
+(work/'portrait_palette_under_test.h').write_text(tile_source[start:end]+'\n')
 map_source=(build/'native/src/field/map_prop_render.c').read_text()
 map_functions=[]
 for signature in ['Field3dRenderObjManager *Field3dObjectList_New(',

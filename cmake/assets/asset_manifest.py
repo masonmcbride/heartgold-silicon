@@ -133,15 +133,19 @@ def plan(root, relative):
         raise ValueError("Original archive member inventory changed: " + relative)
     source = root / 'files' / relative
     steps = {}
+    flag_groups = {}
 
     def flags(name, variable):
-        found = []
-        for group, options in re.findall(r'^\$\(([^)]+)\): ' + variable + r' = ([^\n]*)', rules, re.M):
-            if group not in manifest.variables:
-                continue
-            paths = manifest.expand('$(' + group + ')').split()
-            if name in [Path(p).name for p in paths]:
-                found.append(options.split())
+        if variable not in flag_groups:
+            indexed = {}
+            for group, options in re.findall(r'^\$\(([^)]+)\): ' + variable + r' = ([^\n]*)', rules, re.M):
+                if group not in manifest.variables:
+                    continue
+                names = {Path(p).name for p in manifest.expand('$(' + group + ')').split()}
+                for member in names:
+                    indexed.setdefault(member, []).append(options.split())
+            flag_groups[variable] = indexed
+        found = flag_groups[variable].get(name, [])
         if len(found) > 1:
             raise ValueError('Ambiguous conversion flags: ' + name)
         return found[0] if found else (['-nopad'] if variable == 'LZ_FLAGS' else [])
@@ -182,8 +186,32 @@ def plan(root, relative):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', required=True, type=Path)
+    parser.add_argument('--cmake', type=Path)
     args = parser.parse_args()
-    print(json.dumps([plan(args.root.resolve(), relative) for relative in ARCHIVES]))
+    plans = [plan(args.root.resolve(), relative) for relative in ARCHIVES]
+    if args.cmake:
+        # CMake parses each small step once, instead of reparsing every step's
+        # entire archive for each array lookup. JSON remains the audit format.
+        def quote(value):
+            delimiter = '='
+            while ']' + delimiter + ']' in value:
+                delimiter += '='
+            return '[' + delimiter + '[' + value + ']' + delimiter + ']'
+        lines = ['# Generated original asset plan; no conversion happens here.',
+                 'set(hg_archive_count '+str(len(plans))+')']
+        for a, item in enumerate(plans):
+            header = {k:v for k,v in item.items() if k not in ('steps','members')}
+            lines.append('set(hg_manifest_header_'+str(a)+' '+quote(json.dumps(header))+')')
+            lines.append('set(hg_manifest_step_count_'+str(a)+' '+str(len(item['steps']))+')')
+            lines.append('set(hg_manifest_members_'+str(a)+' '+
+                         ' '.join(quote(name) for name in item['members'])+')')
+            for i, step in enumerate(item['steps']):
+                lines.append('set(hg_manifest_step_'+str(a)+'_'+str(i)+' '+quote(json.dumps(step))+')')
+        text = '\n'.join(lines)+'\n'
+        args.cmake.parent.mkdir(parents=True, exist_ok=True)
+        if not args.cmake.exists() or args.cmake.read_text() != text:
+            args.cmake.write_text(text)
+    print(json.dumps(plans))
 
 
 if __name__ == '__main__':

@@ -273,6 +273,61 @@ def plan(catalogs, previous=None):
     return result
 
 
+def extend(base, owner, original):
+    """Retain existing DS storage/identities; never guess assembly placement."""
+    # A caller's old-style declaration is not a new provider signature. Keep
+    # the existing actual definition; lower.cpp checks the actual call operands
+    # against it, including missing observable arguments. Never repin an ABI to
+    # the declaration seen in this newly participating caller.
+    from closure import merge_main_overlay_pins
+    request = copy.deepcopy(original)
+    known = {f['key']:f for f in base['codes']}
+    private={f['name'] for f in request['codes'] if f.get('private_inline')}
+    for f in base['codes']:
+        if f['name'] in private and not f['local'] and (f['definition'] or f.get('referenced',True)):
+            raise ValueError('unproved cross-image use of TU-private inline: '+f['name'])
+    request['codes'] = [f for f in request['codes'] if f['definition'] or f['key'] not in known]
+    for f in request['codes']:
+        old = known.get(f['key'])
+        if old and old.get('coalesce') and f['definition']:
+            origin = Path(f.get('origin',''))
+            if (origin.suffix == '.h' and
+                    all(old.get(k) == f.get(k) for k in ('origin','origin_line','body_hash','params','return')) and
+                    re.search(r'\binline\b', origin.read_text().splitlines()[f['origin_line']-1])):
+                f['coalesce'] = True
+    # Reuse the closure's definition-over-declaration rule. An unresolved old
+    # declaration never established a callable ABI; retain its handle while
+    # taking the actual original provider's signature. Actual call operands
+    # must still pass lowering. Established definitions cannot be refined.
+    refinements=[dict(f,address=known[f['key']]['address']) for f in request['codes']
+                 if f['definition'] and f['key'] in known and not known[f['key']]['definition']]
+    pins=dict(base,codes=list(merge_main_overlay_pins(base['codes'],refinements).values()))
+    extra = plan({owner: request}, pins)
+    result = copy.deepcopy(base)
+    codes = {f['key']:f for f in result['codes']}
+    for f in extra['codes']:
+        old = codes.get(f['key'])
+        if old and old['definition'] and f['definition']:
+            if not (old.get('coalesce') and f.get('coalesce') and
+                    all(old.get(k) == f.get(k) for k in ('origin','origin_line','body_hash','params','return'))):
+                raise ValueError('competing original code owners: '+f['key'])
+        if old:
+            if old['definition'] and any(old.get(k) != f.get(k) for k in ('params','return','varargs')):
+                raise ValueError('changed original call ABI: '+f['key'])
+            assert old['address'] == f['address']
+        if not old or f['definition']:
+            codes[f['key']] = f
+    for name, view in extra['globals'].items():
+        if name in result['globals']:
+            raise ValueError('competing original storage owners: '+name)
+        result['globals'][name] = view
+    result['codes'] = list(codes.values())
+    result['images'].update(extra['images'])
+    result['static_end'] = extra['static_end']
+    result['register_edges'] += [e for e in extra['register_edges'] if e not in result['register_edges']]
+    return result
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('game','build','out','llvm-bin','lowerer'):p.add_argument('--'+name,type=Path,required=True)

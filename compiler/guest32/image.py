@@ -8,12 +8,83 @@ import re
 from pathlib import Path
 import subprocess
 import sys
+import time
+import os
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_image_graph import parse_manifest,source_record
-from incremental import run as cached_run
+from incremental import run as run_incremental, snapshot_tools, verify_tools
 from original_layout import anchored_sections,verified_sections,overlay_id_constants,verify_recovery
+
+def compiler_catalog(catalog, *, direct_calls_only=False):
+    """Serialize Image::read's inputs without discovery-only proof metadata.
+
+    Keep every code identity and registration edge: this is a representation
+    change, not a reachability filter. The complete catalog remains authoritative
+    for planning, diagnostics, overlays and publication checks.
+    """
+    fields = ('address key name source native params return varargs local '
+        'sign_return address_taken definition coalesce returns_twice noreturn '
+        'executable overlay_owner return_hook return_arguments used_flat'.split())
+    if direct_calls_only:
+        # Only indirectDispatcher consumes this field. Its compiler guard
+        # rejects this view if an indirect call ever reaches lowering.
+        fields.remove('executable')
+    # Field names are shared by all rows. The presence mask distinguishes an
+    # absent optional field from an explicit null (which the reader may reject).
+    rows = [[sum(1 << i for i, key in enumerate(fields) if key in code),
+             *[code.get(key) for key in fields]] for code in catalog['codes']]
+    return json.dumps(dict(code_fields=fields, codes=rows,
+        direct_calls_only=direct_calls_only,
+        dispatch_owners=catalog.get('dispatch_owners',{}),dispatcher_image=catalog.get('dispatcher_image',''),
+        register_edges=catalog.get('register_edges', [])),
+        separators=(',', ':')) + '\n'
+
+def dispatch_type(t):
+    if t=='ptr':return 'i32'
+    if isinstance(t,str):return t
+    if 'array' in t:return '['+str(t['array'])+':'+dispatch_type(t['element'])+']'
+    if 'struct' in t:return '{'+','.join(map(dispatch_type,t['struct']))+'}'
+    raise ValueError('unsupported indirect dispatch type: '+repr(t))
+
+def dispatch_owners(members):
+    def flatten(t):
+        if isinstance(t,dict) and 'array' in t:
+            return [v for _ in range(t['array']) for v in flatten(t['element'])]
+        return [dispatch_type(t)]
+    owners={}
+    for member in members:
+        for call in member.get('description',{}).get('calls',[]):
+            if call['target'] or not shared_dispatch_call(call):continue
+            key='|'.join([dispatch_type(call['return']),'ptr',
+                          *[v for t in call['args'] for v in flatten(t)]])
+            owners.setdefault(key,call['source'])
+    return owners
+
+def shared_dispatch_call(call):
+    def scalar(t):
+        return isinstance(t,str) or ('array' in t and scalar(t['element']))
+    return isinstance(call['return'],str) and all(scalar(t) for t in call['args'])
+
+
+def build_overlays(game, build, out, llvm_bin, lowerer, catalog):
+    """Compile the two independently owned images within one CPU budget."""
+    jobs=min(12,os.cpu_count() or 1)
+    large=max(1,min(8,jobs-1))
+    small=max(1,jobs-large)
+    def compile_image(ident):
+        directory=Path(out)/f'OVY_{ident}'
+        subprocess.run(list(map(str,[sys.executable,'-B',Path(__file__),
+            '--game',game,'--build',build,'--out',directory,'--llvm-bin',llvm_bin,
+            '--lowerer',lowerer,'--shared-catalog',catalog,'--image',f'OVY_{ident}',
+            '--jobs',large if ident==0 else small])),check=True)
+        subprocess.run(list(map(str,[sys.executable,'-B',Path(__file__).with_name('archive.py'),
+            '--coverage',directory/'coverage.json','--image-dir',directory,
+            '--archive',directory/f'libheartgold_overlay_{ident}.a',
+            '--ar',Path(llvm_bin)/'llvm-ar','--image-name',f'OVY_{ident}'])),check=True)
+    with ThreadPoolExecutor(max_workers=min(2,jobs)) as pool:
+        list(pool.map(compile_image,(0,38)))
 
 def argument_liveness(functions):
     """Shared catalog argument observability, flattened into guest ABI slots."""
@@ -77,10 +148,30 @@ def main():
     p.add_argument('--lowerer',type=Path,required=True)
     p.add_argument('--report-only',action='store_true')
     p.add_argument('--plan-only',action='store_true',help='Describe original members and placements without emitting objects')
-    p.add_argument('--shared-catalog',type=Path,help='Use a jointly planned storage and code identity catalog')
+    catalog_options=p.add_mutually_exclusive_group()
+    catalog_options.add_argument('--shared-catalog',type=Path,help='Use a jointly planned storage and code identity catalog')
+    catalog_options.add_argument('--base-catalog',type=Path,help='Extend a base catalog from this image census, then compile it once')
     p.add_argument('--image',default='OVY_0',help='Original overlay name from main.lsf')
+    p.add_argument('--jobs',type=int,default=min(8,os.cpu_count() or 1))
     a=p.parse_args();a.game=a.game.resolve();a.build=a.build.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
+    if a.base_catalog:
+        if a.plan_only:p.error('--base-catalog already includes planning')
+        for name in ('plan.json','shared.json'):(a.out/name).unlink(missing_ok=True)
+    if a.jobs<1:p.error('--jobs must be positive')
+    started=time.perf_counter();phase_started=started;phases={};operations=[]
+    def checkpoint(name):
+        nonlocal phase_started
+        phases[name]=time.perf_counter()-phase_started;phase_started=time.perf_counter()
+    def observe(member,stage,result):
+        operations.append(dict(member=member,stage=stage,returncode=result.returncode,
+            cache_hit=result.cache_hit,wall_seconds=result.wall_seconds,
+            execution_seconds=result.execution_seconds,
+            validation_seconds=result.validation_seconds))
     a.lowerer=a.lowerer.resolve();a.llvm_bin=a.llvm_bin.resolve()
+    tools=snapshot_tools([a.lowerer,a.llvm_bin/'clang',a.llvm_bin/'clang++'])
+    input_snapshot={}
+    def cached_run(command,*args,**kwargs):
+        return run_incremental(command,*args,tool_snapshot=tools[str(command[0])],input_snapshot=input_snapshot,**kwargs)
     images=parse_manifest(a.game/'main.lsf')
     image=images[a.image]
     constants=overlay_id_constants(a.game,images)
@@ -100,7 +191,7 @@ def main():
                          represented=False,issues=[dict(kind='guest-data',source=str(source),line=0,llvm='',reason='shared guest image bytes, labels and relocation lowering required')])
             except ValueError as e:r.update(parsed=False,represented=False,issues=[dict(kind='guest-data',reason=str(e),source=str(source),line=0,llvm='')])
             return r
-        ir=work/'guest.ll'
+        ir=work/'guest.bc'
         from frontend import flags as frontend_flags
         flags=frontend_flags(a.game,a.build)+virtual_flags
         if r['kind']=='C++':
@@ -108,18 +199,20 @@ def main():
             # vtables and exception operations. Unsupported IR remains fatal.
             flags=[f for f in flags if f not in ('-std=gnu99','-fgnu89-inline')]
             flags+=cxx_flags(a.game,r['object'])
-        args=[str(a.llvm_bin/('clang++' if r['kind']=='C++' else 'clang')),*flags,'-S','-emit-llvm',str(source),'-o',str(ir),'-MD','-MF',str(ir)+'.d']
-        run=cached_run(args,[ir],inputs=[source,a.game/'Makefile',a.game/'common.mk'],depfile=str(ir)+'.d',virtual_files=virtual_files)
+        args=[str(a.llvm_bin/('clang++' if r['kind']=='C++' else 'clang')),*flags,'-c','-emit-llvm','-fno-discard-value-names',str(source),'-o',str(ir),'-MD','-MF',str(work/'guest.ll.d')]
+        run=cached_run(args,[ir],inputs=[source,a.game/'Makefile',a.game/'common.mk'],depfile=str(work/'guest.ll.d'),virtual_files=virtual_files)
+        observe(r['object'],'frontend',run)
         (work/'frontend.log').write_text(run.stdout+run.stderr);r.update(frontend=run.returncode==0,command=args)
         if run.returncode:
             r.update(compiled=False,issues=[dict(kind='frontend',source=str(source),line=0,llvm='',reason=run.stderr)]);return r
         diag=work/'operations.json'
-        run=cached_run([str(a.lowerer),str(ir),str(work/'native.ll'),'--diagnose',str(diag)], [diag], inputs=[ir])
+        run=cached_run([str(a.lowerer),str(ir),str(work/'native.ll'),'--diagnose',str(diag),'--source-ir',str(work/'guest.ll')], [diag,work/'guest.ll'], inputs=[ir])
+        observe(r['object'],'describe',run)
         if run.returncode:raise RuntimeError(run.stderr)
         r['issues']=json.loads(diag.read_text())['issues']
         r['description']=json.loads(diag.read_text());r['compiled']=False
         return r
-    with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(member,records))
+    with ThreadPoolExecutor(max_workers=a.jobs) as pool:members=list(pool.map(member,records))
     # Closed-image identity proof: source-file inlines with only local direct
     # uses may keep their own bodies. Any outside declaration use or nonprivate
     # definition preserves the ownership rejection instead of guessing an ODR.
@@ -128,12 +221,15 @@ def main():
         r['identity_args']=identity_args[r['object']]
         if not r['identity_args']:continue
         work=a.out/r['object'];diag=work/'operations.json'
-        run=cached_run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--diagnose',str(diag),*r['identity_args']],
-                       [diag],inputs=[work/'guest.ll',a.game/r['source']])
+        run=cached_run([str(a.lowerer),str(work/'guest.bc'),str(work/'native.ll'),'--diagnose',str(diag),*r['identity_args']],
+                       [diag],inputs=[work/'guest.bc',a.game/r['source']])
+        observe(r['object'],'inline_identity',run)
         if run.returncode:raise RuntimeError(run.stderr)
         r['description']=json.loads(diag.read_text());r['issues']=r['description']['issues']
     (a.out/'inline-identities.json').write_text(json.dumps(dict(unsafe_external_uses=sorted(unsafe),
         members={r['object']:r['identity_args'] for r in members if r['identity_args']}),indent=2)+'\n')
+    verify_tools(input_snapshot,kind='input')
+    checkpoint('frontend_and_descriptions')
     # Retain a complete original-member census even if code ownership or data
     # placement prevents creating a shared catalog later in this batch.
     (a.out/'frontend-coverage.json').write_text(json.dumps(dict(image=image,
@@ -304,8 +400,24 @@ def main():
         assert max(own_globals[k]['offset']+own_globals[k]['size'] for k in keys)==base+group['extent']
         for k,m in zip(keys,group['members']):own_globals[k]=dict(offset=base+m['offset'],size=m['view_size'])
         for name,off in group['aliases'].items():placements[name]=dict(offset=base+off,size=group['extent']-off)
-    if a.shared_catalog:
+    record=dict(codes=codes,register_edges=register_edges,static_end=position,
+                assembly_globals=placements,c_globals=own_globals,
+                original_assembly_globals=original_placements,
+                assembly_sections=section_plans)
+    record.update(dispatch_owners=dispatch_owners(members),dispatcher_image=image['name'])
+    shared=None
+    if a.base_catalog:
+        if image['name']=='OVY_0':
+            from ac_config import contract as ac_contract
+            record['ac_socket_config']=ac_contract(a.game,placements)
+        (a.out/'plan.json').write_text(json.dumps(record,separators=(',',':'))+'\n')
+        from shared import extend
+        shared=extend(json.loads(a.base_catalog.read_text()),image['name'],record)
+        a.shared_catalog=a.out/'shared.json'
+        a.shared_catalog.write_text(json.dumps(shared,separators=(',',':'))+'\n')
+    elif a.shared_catalog:
         shared=json.loads(a.shared_catalog.read_text())
+    if shared is not None:
         plan=shared['images'][image['name']]
         placements=plan['assembly_globals'];own_globals=plan['c_globals']
         codes=shared['codes'];position=shared['static_end']
@@ -313,15 +425,22 @@ def main():
         # including declarations whose defining member belongs to a peer image.
         code_values={f['name']:f['address'] for f in codes if not f['local']}
         register_edges=shared['register_edges']
-    record=dict(codes=codes,register_edges=register_edges,static_end=position,
-                assembly_globals=placements,c_globals=own_globals,
-                original_assembly_globals=original_placements,
-                assembly_sections=section_plans)
+        record.update(codes=codes,register_edges=register_edges,static_end=position,
+                      assembly_globals=placements,c_globals=own_globals)
     if image['name']=='OVY_0':
         from ac_config import contract as ac_contract
         record['ac_socket_config']=ac_contract(a.game,placements)
-    catalog=a.out/('plan.json' if a.plan_only else 'image.json');catalog.write_text(json.dumps(record,indent=2)+'\n')
-    if a.plan_only:return
+    catalog=a.out/('plan.json' if a.plan_only else 'image.json');catalog.write_text(json.dumps(record,separators=(',',':'))+'\n')
+    if a.plan_only:verify_tools(tools);verify_tools(input_snapshot,kind='input');return
+    compiler_image=a.out/'compiler-catalog.json';compiler_image.write_text(compiler_catalog(record))
+    # Validate all identities/types once before projecting consumer views.
+    # Each view keeps its own original functions; dispatcher owners additionally
+    # keep every addressable target. No target reachability assumption is used.
+    subprocess.run([str(a.lowerer),'--check-image',str(compiler_image)],check=True)
+    code_index={f['key']:f for f in record['codes']}
+    callbacks={f['key'] for f in record['codes'] if f['address_taken']}
+    owners=set(record['dispatch_owners'].values())
+    checkpoint('identity_and_storage_planning')
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
     def lower(r):
         if not r.get('frontend'):return r
@@ -332,18 +451,36 @@ def main():
             elif g['name'] in own_globals:globals[g['name']]=own_globals[g['name']]
         from original_layout import overlay_id_symbols
         abi=work/'abi.json';abi.write_text(json.dumps(dict(version=1,globals=globals,calls={},exports={},absolute_symbols=overlay_id_symbols(a.game,images))))
-        run=cached_run([str(a.lowerer),str(work/'guest.ll'),str(work/'native.ll'),'--abi',str(abi),'--native-ir',str(native),
-                            '--image',str(catalog),'--guest-externals','--prefix','guest32_',*r.get('identity_args',[])],[work/'native.ll'],inputs=[work/'guest.ll',abi,native,catalog,a.game/r['source']])
+        needed={f['key'] for f in r['description']['functions']}
+        if (r['description']['source'] in owners or
+            any(not c['target'] and not shared_dispatch_call(c) for c in r['description']['calls'])):
+            needed.update(callbacks)
+        view=dict(record,codes=[code_index[k] for k in sorted(needed) if k in code_index])
+        consumer_image=work/'compiler-catalog.json';consumer_image.write_text(compiler_catalog(view))
+        run=cached_run([str(a.lowerer),str(work/'guest.bc'),str(work/'native.ll'),'--abi',str(abi),'--native-ir',str(native),
+                            '--image',str(consumer_image),'--guest-externals','--prefix','guest32_',*r.get('identity_args',[])],
+                            [work/'native.ll'],inputs=[work/'guest.bc',abi,native,consumer_image,a.game/r['source']])
+        observe(r['object'],'lower',run)
         (work/'lower.log').write_text(run.stdout+run.stderr)
         r['blocking_diagnostic']=run.stderr
         if not run.returncode:
+            verify_started=time.perf_counter()
             verify=subprocess.run([str(a.llvm_bin/'opt'),'-passes=verify','-disable-output',str(work/'native.ll')],capture_output=True,text=True)
+            verify_seconds=time.perf_counter()-verify_started
+            operations.append(dict(member=r['object'],stage='verify',returncode=verify.returncode,
+                cache_hit=False,wall_seconds=verify_seconds,execution_seconds=verify_seconds,validation_seconds=0))
             if verify.returncode:raise RuntimeError(verify.stderr)
-            run=cached_run([str(a.llvm_bin/'clang'),'-O2','-c',str(work/'native.ll'),'-o',str(work/'native.o')],[work/'native.o'],inputs=[work/'native.ll'])
+            run=cached_run([str(a.llvm_bin/'clang'),'-O2','-c',str(work/'native.ll'),'-o',str(work/'native.o')],
+                           [work/'native.o'],inputs=[work/'native.ll'])
+            observe(r['object'],'codegen',run)
             (work/'object.log').write_text(run.stdout+run.stderr);r['compiled']=run.returncode==0
             r['blocking_diagnostic']=run.stderr if run.returncode else ''
         return r
-    with ThreadPoolExecutor(max_workers=4) as pool:members=list(pool.map(lower,members))
+    # Start expensive units first; retain the manifest's original member order.
+    scheduled=sorted(members,key=lambda r:(a.out/r['object']/'guest.ll').stat().st_size
+                     if r.get('frontend') else 0,reverse=True)
+    with ThreadPoolExecutor(max_workers=a.jobs) as pool:list(pool.map(lower,scheduled))
+    checkpoint('lowering_verification_and_codegen')
     known={n:v['offset'] for n,v in placements.items()};known.update(code_values);known.update({n:v['offset'] for n,v in own_globals.items() if '|' not in n})
     if a.shared_catalog:known.update({n:v['offset'] for n,v in shared['globals'].items()})
 
@@ -358,7 +495,7 @@ def main():
                 )
 
     definitions={}
-    for header in sorted((a.game/'include').rglob('*.h')):
+    for header in sorted((a.game/'include').rglob('*.h')) if import_tokens-set(known) else ():
         for number,line in enumerate(header.read_text(errors='replace').splitlines(),1):
             match=re.match(r'^\s*#define\s+([A-Za-z_]\w*)\s+(.+)$',line)
             if not match:
@@ -475,20 +612,23 @@ def main():
             body.append('{'+ctype+' v='+value+';memcpy(p+'+
                         str(ref['offset'])+',&v,'+str(width)+');}')
         lines.append(''.join(body)+'}')
-    for r in members:
-        if r['kind']!='assembly' or not r.get('parsed'):continue
+    def emit_data(r):
+        if r['kind']!='assembly' or not r.get('parsed'):return
         work=a.out/r['object'];source=work/'data.c'
         source.write_text('#include <stdint.h>\n#include <string.h>\nextern void *g32_resolve(void*,uint32_t,uint32_t,uint32_t);\n'+'\n'.join(data_sources[r['object']])+'\n')
         run=cached_run([str(a.llvm_bin/'clang'),'-arch','arm64','-O2','-c',str(source),'-o',str(work/'native.o'),'-MD','-MF',str(work/'data.d')],[work/'native.o'],inputs=[source],depfile=work/'data.d')
+        observe(r['object'],'data_codegen',run)
         (work/'object.log').write_text(run.stdout+run.stderr);r['represented']=run.returncode==0
         r['issues']=[] if r['represented'] else r['issues']
+    with ThreadPoolExecutor(max_workers=min(a.jobs,4)) as pool:list(pool.map(emit_data,members))
     (a.out/'data-relocations.json').write_text(json.dumps(dict(external_guest_coordinates=sorted(unresolved),sections=[{k:v for k,v in s.items() if k!='data'} for s in sections]),indent=2)+'\n')
     summary=dict(c_total=sum(r['kind'] in ('C','C++') for r in members),cpp_total=sum(r['kind']=='C++' for r in members),frontend=sum(r.get('frontend',False) for r in members),
                  compiled=sum(r.get('compiled',False) for r in members),data_total=sum(r['kind']=='assembly' for r in members),
                  data_represented=sum(r.get('represented',False) for r in members),
                  issues=dict(Counter(i['kind'] for r in members for i in r['issues'])))
     summary['complete_compilation']=summary['compiled']==summary['c_total'] and summary['data_represented']==summary['data_total'] and not constraints
-    (a.out/'coverage.json').write_text(json.dumps(dict(image=image,summary=summary,members=members),indent=2)+'\n')
+    verify_tools(input_snapshot,kind='input')
+    (a.out/'coverage.json').write_text(json.dumps(dict(image=image,summary=summary,members=members),separators=(',',':'))+'\n')
     # Root CMake must observe transitive frontend headers too; receipts only
     # help once this driver has actually been scheduled.
     dependencies = {Path(__file__).resolve(), Path(__file__).with_name('incremental.py').resolve()}
@@ -505,6 +645,7 @@ def main():
     dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
     if register_path.is_file():dependencies.add(register_path.resolve())
     if a.shared_catalog:dependencies.add(a.shared_catalog.resolve())
+    if a.base_catalog:dependencies.add(a.base_catalog.resolve())
     for receipt in a.out.rglob('*.receipt.json'):
         dependencies.update(Path(p) for p in json.loads(receipt.read_text())['inputs']
                             if not Path(p).is_relative_to(a.out))
@@ -513,7 +654,12 @@ def main():
     (a.out/'image.d').write_text(dep_escape(a.out/'complete.stamp')+': '+
                                ' '.join(dep_escape(p) for p in sorted(dependencies))+'\n')
     print(json.dumps(summary))
-    if summary['complete_compilation']:(a.out/'complete.stamp').write_text('manifest-complete guest compilation\n')
+    checkpoint('data_relocations_and_coverage')
+    (a.out/'compile-profile.json').write_text(json.dumps(dict(total_seconds=time.perf_counter()-started,
+        phases=phases,operations=sorted(operations,key=lambda row:row['wall_seconds'],reverse=True)),indent=2)+'\n')
+    if summary['complete_compilation']:
+        verify_tools(tools)
+        (a.out/'complete.stamp').write_text('manifest-complete guest compilation\n')
     if not summary['complete_compilation'] and not a.report_only:raise SystemExit(1)
 
 if __name__=='__main__':main()

@@ -47,14 +47,7 @@ foreach(instruction IN LISTS hg_other_lines)
         list(APPEND inputs "${input}.key")
     endif()
 
-    add_custom_command(
-        OUTPUT "${output}"
-        COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_other_build}"
-        COMMAND $<TARGET_FILE:hg_nitrogfx>
-            "${input}" "${output}" ${parts}
-        DEPENDS hg_nitrogfx ${inputs}
-        VERBATIM
-    )
+    hg_asset_gfx("${input}" "${output}" ${parts})
 
     list(APPEND hg_other_outputs "${output}")
 endforeach()

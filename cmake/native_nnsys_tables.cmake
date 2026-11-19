@@ -3,14 +3,7 @@ include_guard(GLOBAL)
 
 # Original producer + texture-matrix closure; no gecom transport or renderer.
 set(g3_probe_tables "${PROJECT_BINARY_DIR}/g3-probe/nnsys_tables.c")
-set(g3_probe_script "${CMAKE_CURRENT_LIST_DIR}/native_sources.py")
-add_custom_command(OUTPUT "${g3_probe_tables}"
-    COMMAND "${Python3_EXECUTABLE}" -B "${g3_probe_script}" --root "${game_source}"
-        --kind g3-probe-tables --input "${game_source}/lib/asm/nnsys_data.s"
-        --output "${g3_probe_tables}"
-    COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${g3_probe_tables}"
-    DEPENDS "${g3_probe_script}" "${CMAKE_CURRENT_LIST_DIR}/native_coordinated.py"
-        "${game_source}/lib/asm/nnsys_data.s" VERBATIM)
+native_generate(g3-probe-tables "${game_source}/lib/asm/nnsys_data.s" "${g3_probe_tables}")
 add_custom_target(heartgold_g3_probe_tables DEPENDS "${g3_probe_tables}")
 
 if(TARGET heartgold_runtime)

@@ -19,7 +19,7 @@
   "asm/map_object_behavior_data.o": "5c70a07c2678d56f18f7f920f966461ea2b14ee8dcba39de461ac8df16801a79",
   "asm/map_object_movement_command_steps.o": "01dfc297148aa315b7e15a627ca0ec5d911190d59f98ca99b1d904b9843e87b0",
   "asm/map_object_movement_commands_data.o": "44783d8fd41ef1165c7dcc056106ed0c2caaaaba127986463085a2c19fb3f550",
-  "asm/map_object_movement_tables.o": "d77b7d82782382e422c9c03c84ee3b06f3fd4e517826f8873bc94ac4e1c369af",
+  "asm/map_object_movement_tables.o": "f68edfbdab8e7ba9432842c635230d70248d4337c2014fa447ad56864c9b6118",
   "asm/overlay_01_sprite_data.o": "38daa21e82976900c6e898a797b9dedcd6bb1ab7375fb9edca10807346f87e44",
   "asm/palpad_data.o": "130c3f8cc1e876062cdbc4887b157eba1cd7e71beffa81e42feb2c0e2d19f499",
   "asm/pokeathlon_record_data.o": "297c04ad7fda46fca80ca791ff46514750fa66855ccd393603953a85ecf4bfef",

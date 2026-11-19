@@ -13,6 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'cmake'))
 from native_image_graph import parse_manifest, ownership
+from native_provider_registry import import_records
 
 
 def components(graph):
@@ -210,7 +211,7 @@ def main():
     result['provider_abi_obligations'] = dict(
         reference=result['provider_registry'] + '#/imports',
         statuses=dict(sorted(Counter(
-            r['status'] for r in registry['imports']).items())))
+            r['status'] for r in import_records(registry)).items())))
     result['compiler_coverage'] = read(closure / 'closure.json')['counts']
     # A current source mismatch invalidates discovery evidence, not merely its
     # cache. Preserve the exact member as an open obligation.

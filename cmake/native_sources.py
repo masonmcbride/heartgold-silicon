@@ -503,6 +503,41 @@ ARM_INLINE_OPERATIONS = {
 # Bounded explicit soft-float calls: positive exact integers plus 0.5, then truncation.
 # Both long-multiply operands originate as s32, so their product fits s64.
 COMPILER_BOUNDED_OPERATIONS = {
+    'src/application/mailbox_app_sprites.c': ('8e7d22e3947546171281ab3945d1eaec341296e2b938daa5b9f378250a052fa7', [
+        # Static icons use the same NCER/NANR pair as Nintendo's mail viewer.
+        # Member 4 is NCER geometry, not an animation bank.
+        ('data->monIconNarc, GetMonIconCell32KNaix(), FALSE, 0x37F0);',
+         'data->monIconNarc, GetMonIconStaticAnimNaix(), FALSE, 0x37F0);', 1),
+    ]),
+    'src/char_tiles.c': ('54a634a6e2a5442d07c0a6ec86695715f3bae34478f68e00c576097c2d21fd82', [
+        ('#include "pokepic.h"', '#include "pokepic.h"\n#include "gf_gfx_loader.h"', 1),
+        ('void *pNcgrFile = AllocAndReadWholeNarcMemberByIdPair(narcId, fileId, heapID);',
+         'void *pNcgrFile = GfGfxLoader_GetCharData(narcId, fileId, FALSE, &ppCharData, heapID);', 1),
+        ('GF_ASSERT(NNS_G2dGetUnpackedCharacterData(pNcgrFile, &ppCharData));',
+         'GF_ASSERT(ppCharData != NULL);', 1),
+        ('void *pNclrFile = AllocAndReadWholeNarcMemberByIdPair(narcId, fileId, heapID);\n    NNSG2dPaletteData *pPlttData;\n    GF_ASSERT(NNS_G2dGetUnpackedPaletteData(pNclrFile, &pPlttData) == TRUE);',
+         'NNSG2dPaletteData *pPlttData = NULL;\n    void *pNclrFile = GfGfxLoader_GetPlttData(narcId, fileId, &pPlttData, heapID);\n    GF_ASSERT(pNclrFile != NULL && pPlttData != NULL);', 1),
+        ('static void CharTiles_LoadUnpacked(', 'static void *CharTiles_LoadUnpacked(', 2),
+        ('    BOOL result;\n    void *pRaw = AllocAndReadWholeNarcMemberByIdPair(narcId, fileId, heapID);\n    GF_ASSERT(pRaw != NULL);\n    result = NNS_G2dGetUnpackedCharacterData(pRaw, pCharData);\n    GF_ASSERT(pCharData != NULL);\n    GF_ASSERT(result);\n    Heap_Free(pRaw);',
+         '    void *pRaw = GfGfxLoader_GetCharData(narcId, fileId, FALSE, pCharData, heapID);\n    GF_ASSERT(pRaw != NULL && *pCharData != NULL);\n    return pRaw;', 1),
+        ('    CharTiles_LoadUnpacked(narcId, fileId, heapID, &ppCharData);',
+         '    void *owner = CharTiles_LoadUnpacked(narcId, fileId, heapID, &ppCharData);', 1),
+        ('    CharTiles_CopyRect(x, y, width, height, ppCharData, dest);',
+         '    CharTiles_CopyRect(x, y, width, height, ppCharData, dest);\n    Heap_Free(owner);', 1),
+    ]),
+    'src/options_app.c': ('547f85c8827a9a733636de8a73e3bd0c226bfb70a589cffe95d5d0e003fd9954', [
+        # End callback ownership before releasing its graphics resources. The
+        # original two-frame cleanup otherwise calls VBlank on freed BgConfig.
+        ('    case 0:\n        GF_DestroyVramTransferManager();',
+         '    case 0:\n        Main_SetVBlankIntrCB(NULL, NULL);\n        GF_DestroyVramTransferManager();', 1),
+        # The overlay data itself owns heapID; retain it before freeing data.
+        ('    OverlayManager_FreeData(manager);\n    Heap_Destroy(data->heapID);',
+         '    enum HeapID heapID = data->heapID;\n    OverlayManager_FreeData(manager);\n    Heap_Destroy(heapID);', 1),
+    ]),
+    'src/heap.c': ('9657a0f8402d578286b681bb19cb7617f0ee13ac922c36177f7dbd4b32aadc28', [
+        ('            + totalNumHeaps,\n        4);',
+         '            + totalNumHeaps,\n        _Alignof(NNSFndHeapHandle));', 1),
+    ]),
     'src/render_window_icons.c': ('8bd441e5829ed3f4ebce219feed4043cd388fb5c141979f1a3b0a54a507bf575', [
         ('plttFile = AllocAndReadWholeNarcMemberByIdPair(NARC_a_0_3_6, 1, heapId);\n    NNS_G2dGetUnpackedPaletteData(plttFile, &pltt);',
          'plttFile = GfGfxLoader_GetPlttData(NARC_a_0_3_6, 1, &pltt, heapId);', 1),
@@ -1169,6 +1204,11 @@ def adapt(relative, text, root):
         char_new=char_new.replace('    native->fmt = (GXTexFmt)decoded.format;\n    native->bExtendedPlt = (BOOL)decoded.extended;',
             '    native->H = decoded.height;\n    native->W = decoded.width;\n    native->pixelFmt = (GXTexFmt)decoded.pixel_format;\n    native->mapingType = (GXOBJVRamModeChar)decoded.mapping;\n    native->characterFmt = decoded.character_format;')
         result=replace(result,char_old,char_new)
+    if relative == 'src/system.c':
+        for count,occurrences in [('160',1),('32',2),('4',1)]:
+            result=replace(result,
+                f'SysTaskQueue_GetArenaSize({count}), 4)',
+                f'SysTaskQueue_GetArenaSize({count}), _Alignof(SysTaskQueue))',count=occurrences)
     if relative == 'src/field/weather_manager.c':
         result=replace(result,
             'files.paletteFile = NARC_AllocAndReadWholeMember(weatherSystem->narc, weatherSystem->bgGfx[bgGfxId].paletteId, HEAP_ID_FIELD1);\n        NNS_G2dGetUnpackedPaletteData(files.paletteFile, &files.paletteData);',
@@ -2529,6 +2569,22 @@ def audit(root):
     return dict(records=records, failures=failures)
 
 
+def render(root, source, kind):
+    """Render one declared original without publishing or touching its output."""
+    root, source = root.resolve(), source.resolve()
+    relative = source.relative_to(root).as_posix()
+    original = source.read_text()
+    if kind == "native":
+        result = adapt(relative, original, root)
+    elif kind == 'guest32-frontend':
+        result = guest32_frontend(relative, original, root)
+    elif kind == "coordinated-msl":
+        result = coordinated.runtime_source(relative, original)
+    else:
+        result = asset_types(kind, original, source)
+    return f'#line 1 {json.dumps(str(source), ensure_ascii=False)}\n' + result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--audit", action="store_true")
@@ -2563,17 +2619,7 @@ def main():
     source.relative_to(root)  # Every adaptation must come from the original tree.
     if args.output.resolve().is_relative_to(root):
         raise ValueError("Native outputs must not overwrite original upstream files")
-    original = source.read_text()
-    if args.kind == "native":
-        relative = source.relative_to(root).as_posix()
-        result = adapt(relative, original, root)
-    elif args.kind == 'guest32-frontend':
-        result = guest32_frontend(source.relative_to(root).as_posix(), original, root)
-    elif args.kind == "coordinated-msl":
-        result = coordinated.runtime_source(source.relative_to(root).as_posix(), original)
-    else:
-        result = asset_types(args.kind, original, source)
-    write_if_changed(args.output, f'#line 1 {json.dumps(str(source), ensure_ascii=False)}\n' + result)
+    write_if_changed(args.output, render(root, source, args.kind))
 
 
 if __name__ == "__main__":

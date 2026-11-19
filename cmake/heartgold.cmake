@@ -4,7 +4,8 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${game_source}/m
     "${game_source}/global.inc" "${game_source}/heartgold.us/main.sha1"
     "${game_source}/soulsilver.us/main.sha1")
 set(hg_image_graph_script "${CMAKE_CURRENT_LIST_DIR}/native_image_graph.py")
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${hg_image_graph_script}")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${hg_image_graph_script}"
+    "${PROJECT_SOURCE_DIR}/compiler/guest32/main_provider_plan.json")
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_image_graph_script}"
     --game "${game_source}" --out "${PROJECT_BINARY_DIR}/native-graph"
     COMMAND_ERROR_IS_FATAL ANY)
@@ -15,15 +16,57 @@ include("${PROJECT_BINARY_DIR}/native-graph/sources.cmake")
 set(native_root "${PROJECT_BINARY_DIR}/native")
 set(native_script "${CMAKE_CURRENT_LIST_DIR}/native_sources.py")
 function(native_generate kind input output)
-    add_custom_command(OUTPUT "${output}"
-        COMMAND "${Python3_EXECUTABLE}" -B "${native_script}"
-            --root "${game_source}" --kind "${kind}"
-            --input "${input}" --output "${output}"
-        COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${output}"
-        DEPENDS "${native_script}" "${PROJECT_SOURCE_DIR}/cmake/native_coordinated.py"
-            "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json" "${input}" ${ARGN}
-        VERBATIM)
+    set(job "{}")
+    foreach(field IN ITEMS kind input output)
+        string(JSON job SET "${job}" "${field}" "\"${${field}}\"")
+    endforeach()
+    set(dependencies "[]")
+    set(index 0)
+    foreach(dependency IN LISTS ARGN)
+        string(JSON dependencies SET "${dependencies}" ${index} "\"${dependency}\"")
+        math(EXPR index "${index}+1")
+    endforeach()
+    string(JSON job SET "${job}" dependencies "${dependencies}")
+    set_property(GLOBAL APPEND PROPERTY HG_NATIVE_SOURCE_JOBS "${job}")
+    set_property(GLOBAL APPEND PROPERTY HG_NATIVE_SOURCE_OUTPUTS "${output}")
+    set_source_files_properties("${output}" PROPERTIES GENERATED TRUE)
 endfunction()
+
+function(native_finalize)
+    get_property(jobs GLOBAL PROPERTY HG_NATIVE_SOURCE_JOBS)
+    get_property(outputs GLOBAL PROPERTY HG_NATIVE_SOURCE_OUTPUTS)
+    list(JOIN jobs ",\n" records)
+    set(records "[${records}]")
+    # Recipe files are source inputs, never generated objects. New helpers
+    # invalidate the manifest; unchanged configuration preserves its timestamp.
+    file(GLOB recipes CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/cmake/*.py"
+        "${PROJECT_SOURCE_DIR}/cmake/*.json")
+    list(APPEND recipes "${PROJECT_SOURCE_DIR}/compiler/guest32/sdk_asm_adaptations.json")
+    set(recipe_json "[]")
+    set(index 0)
+    foreach(recipe IN LISTS recipes)
+        string(JSON recipe_json SET "${recipe_json}" ${index} "\"${recipe}\"")
+        math(EXPR index "${index}+1")
+    endforeach()
+    set(manifest "${PROJECT_BINARY_DIR}/native-source-batch/jobs.json")
+    file(GENERATE OUTPUT "${manifest}" CONTENT
+        "{\"root\":\"${game_source}\",\"binary\":\"${PROJECT_BINARY_DIR}\",\"recipes\":${recipe_json},\"jobs\":${records}}\n")
+    add_custom_target(heartgold_native_source_preparation
+        COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/native_source_batch.py"
+            --manifest "${manifest}"
+        BYPRODUCTS ${outputs}
+        COMMENT "Preparing declared native sources in one process"
+        VERBATIM)
+    # Every root target can consume these generated headers, including custom
+    # compilation commands. One owner completes before any consumer starts.
+    get_property(targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+    foreach(target IN LISTS targets)
+        if(NOT target STREQUAL "heartgold_native_source_preparation")
+            add_dependencies("${target}" heartgold_native_source_preparation)
+        endif()
+    endforeach()
+endfunction()
+cmake_language(DEFER CALL native_finalize)
 
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${native_script}" --list-main-sources
     OUTPUT_VARIABLE native_sources OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
@@ -451,14 +494,23 @@ add_test(NAME resident_wifi_constants COMMAND "${Python3_EXECUTABLE}" -B
     --object "$<TARGET_OBJECTS:heartgold_wifi_constants>"
     --compiler "${CMAKE_C_COMPILER}" --objcopy "${HG_ASSET_OBJCOPY}"
     --readelf "${HG_ASSET_READELF}")
-add_dependencies(heartgold_main ${heartgold_asset_targets})
-add_dependencies(heartgold_intro_title ${heartgold_asset_targets})
+add_dependencies(heartgold_main ${heartgold_compile_asset_targets})
+add_dependencies(heartgold_intro_title ${heartgold_compile_asset_targets})
 add_executable(heartgold "${PROJECT_SOURCE_DIR}/tests/start_game.c")
+# Payload completion remains required for the complete executable build, but
+# independent compiler work no longer waits for script/event payload bytes.
+add_dependencies(heartgold assets)
+target_compile_definitions(heartgold PRIVATE
+    HG_DEFAULT_FIRMWARE_PATH="${PROJECT_BINARY_DIR}/runtime-firmware.bin")
 target_link_libraries(heartgold PRIVATE heartgold_main nitro_sdk)
 add_test(NAME script_conversion COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_scripts.py" --work "${PROJECT_BINARY_DIR}")
+add_test(NAME asset_scheduling COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_asset_scheduling.py" --build "${PROJECT_BINARY_DIR}")
 add_test(NAME native_adaptations COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_sources.py" --work "${PROJECT_BINARY_DIR}")
+add_test(NAME native_source_batch COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_native_source_batch.py")
 add_executable(test_native_sound_files tests/test_native_sound_files.c)
 target_link_libraries(test_native_sound_files PRIVATE nitro_sdk)
 target_compile_options(test_native_sound_files PRIVATE -UNDEBUG)

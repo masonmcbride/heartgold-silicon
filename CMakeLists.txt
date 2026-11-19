@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(HEARTGOLD_URL https://github.com/ctrl-cheeb-del/pokeheartgold.git)
 set(HEARTGOLD_COMMIT 6d2947303134256e90144b6aaedc5c3cf6a593d2)
 set(LIBNTR_URL https://github.com/masonmcbride/libntr.git)
-set(LIBNTR_COMMIT 7e7f0b833f09556dce3cc6a9505cc337a96ea52d)
+set(LIBNTR_COMMIT 7660df9f51ad72ec80e6512d2a7bb5ac6ed96c88)
 
 # --- 2. Native Apple toolchain ------------------------------------------------
 if(NOT APPLE OR NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"
@@ -107,7 +107,7 @@ add_custom_command(OUTPUT "${fx_header}"
 add_custom_target(fx_constants DEPENDS "${fx_header}")
 
 # --- 6. Native host services --------------------------------------------------
-add_library(native_host STATIC hardware_drivers/cartridge.c hardware_drivers/os/os.c hardware_drivers/wireless/mb_native.c)
+add_library(native_host STATIC hardware_drivers/cartridge.c hardware_drivers/backup.c hardware_drivers/os/os.c hardware_drivers/wireless/mb_native.c)
 target_include_directories(native_host PUBLIC "${PROJECT_SOURCE_DIR}/hardware_drivers/wireless")
 target_include_directories(native_host PUBLIC "${ntr_source}/include")
 target_link_libraries(native_host PUBLIC "${COREFOUNDATION}")
@@ -243,6 +243,11 @@ target_compile_options(test_native_nvram_compact PRIVATE -UNDEBUG)
 add_test(NAME native_nvram_compact COMMAND test_native_nvram_compact)
 
 add_executable(test_native_cartridge_storage tests/test_native_cartridge_storage.c)
+add_executable(test_native_backup tests/test_native_backup.c)
+target_link_libraries(test_native_backup PRIVATE nitro_sdk)
+target_compile_options(test_native_backup PRIVATE -UNDEBUG)
+add_test(NAME native_backup COMMAND test_native_backup "${PROJECT_BINARY_DIR}")
+set_tests_properties(native_backup PROPERTIES TIMEOUT 20)
 target_link_libraries(test_native_cartridge_storage PRIVATE native_host)
 add_test(NAME native_cartridge_storage
     COMMAND test_native_cartridge_storage "${PROJECT_BINARY_DIR}")
@@ -260,6 +265,16 @@ target_link_libraries(test_qsort PRIVATE ntr_math)
 target_compile_options(test_qsort PRIVATE -UNDEBUG)
 add_test(NAME native_qsort COMMAND test_qsort)
 find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter)
+option(HEARTGOLD_TRACE_BUILD "Record individual Make rule wall intervals" OFF)
+add_test(NAME build_trace_observation COMMAND "${Python3_EXECUTABLE}" -B
+    "${PROJECT_SOURCE_DIR}/tests/test_build_trace.py" --build "${PROJECT_BINARY_DIR}/trace-tests")
+if(HEARTGOLD_TRACE_BUILD)
+    foreach(kind COMPILE LINK CUSTOM)
+        string(TOLOWER "${kind}" trace_kind)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_${kind}
+            "\"${Python3_EXECUTABLE}\" -B \"${PROJECT_SOURCE_DIR}/cmake/trace_build.py\" ${trace_kind}")
+    endforeach()
+endif()
 add_test(NAME native_qsort_adaptations COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_qsort.py")
 add_executable(test_os tests/test_os.c)
@@ -296,6 +311,11 @@ set_tests_properties(backward_decompression PROPERTIES TIMEOUT 20 ENVIRONMENT "A
 option(HEARTGOLD_NATIVE_OVERLAYS "Build the original native overlay integration" ON)
 
 # --- 9. Original HeartGold (default), with its native build adaptations --------
+function(heartgold_test_fixture fixture)
+    set_property(GLOBAL APPEND PROPERTY HG_TEST_FIXTURE_NAMES "${fixture}")
+    set_property(GLOBAL APPEND PROPERTY HG_TEST_FIXTURE_TARGETS ${ARGN})
+endfunction()
+
 option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
 if(HEARTGOLD_BUILD_GAME)
     if(NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
@@ -371,6 +391,25 @@ if(APPLE)
         message(FATAL_ERROR "Native tests require the configured macOS SDK: ${hg_test_sdk}")
     endif()
     file(REAL_PATH "${hg_test_sdk}" hg_test_sdk)
+    # Independent Make invocations must not regenerate or mutate this same
+    # production binary directory concurrently. Isolated fixture builds and
+    # read-only checks remain parallel.
+    get_property(hg_fixture_names GLOBAL PROPERTY HG_TEST_FIXTURE_NAMES)
+    get_property(hg_fixture_targets GLOBAL PROPERTY HG_TEST_FIXTURE_TARGETS)
+    list(REMOVE_DUPLICATES hg_fixture_names)
+    list(REMOVE_DUPLICATES hg_fixture_targets)
+    if(hg_fixture_targets)
+        add_custom_target(heartgold_test_fixtures DEPENDS ${hg_fixture_targets})
+        add_test(NAME native_test_fixtures_build COMMAND "${CMAKE_COMMAND}" --build
+            "${PROJECT_BINARY_DIR}" --target heartgold_test_fixtures -j8)
+        set_tests_properties(native_test_fixtures_build PROPERTIES FIXTURES_SETUP "${hg_fixture_names}")
+    endif()
+    foreach(hg_build_test IN ITEMS native_test_fixtures_build dwc_typed_data guest32_execution_boundary
+            global_terminal_native_images global_terminal_native_image40)
+        if(TEST ${hg_build_test})
+            set_property(TEST ${hg_build_test} APPEND PROPERTY RESOURCE_LOCK production_binary_tree)
+        endif()
+    endforeach()
     get_property(hg_native_tests DIRECTORY PROPERTY TESTS)
     set_property(TEST ${hg_native_tests} APPEND PROPERTY ENVIRONMENT "SDKROOT=${hg_test_sdk}")
 endif()

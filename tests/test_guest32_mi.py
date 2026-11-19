@@ -5,23 +5,28 @@ from pathlib import Path
 import subprocess
 import sys
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'cmake'))
+sys.path[:0]=[str(ROOT/'cmake'),str(ROOT/'compiler/guest32')]
 from native_mi import translate
 
+
+from incremental import snapshot_tools
+from provider_software_execution import compile_step
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--build',type=Path,required=True);p.add_argument('--llvm-bin',type=Path,required=True);p.add_argument('--lowerer',type=Path,required=True)
  a=p.parse_args();b=a.build.resolve();llvm=a.llvm_bin.resolve();out=b/'guest32-mi-tests';out.mkdir(exist_ok=True);game=ROOT/'upstream/pokeheartgold';commands=[]
+ tools=snapshot_tools([str(llvm/'clang'),str(a.lowerer.resolve())])
  def run(args,ok=True):
-  r=subprocess.run(list(map(str,args)),capture_output=True,text=True);commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
+  r=compile_step(args,tools) if ok else None
+  if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True)
+  commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
   (out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n');assert (r.returncode==0)==ok,r.stdout+r.stderr
   return r.stdout+r.stderr
  source=game/'lib/NitroSDK/src/mi/mi_memory.c';original=source.read_text()
  try:translate(original+'\n',source)
  except ValueError:pass
  else:raise AssertionError('changed original MI source accepted')
- run(['cmake','--build',b,'--target','heartgold_guest32_mi_manifest','-j8'])
  ir=out/'guest.ll';native=out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
  abi=out/'abi.json';abi.write_text(json.dumps(dict(version=1,globals={},calls={},exports={})))
  run([llvm/'clang','-target','armv5-apple-darwin','-ffreestanding','-fno-builtin','-DSDK_ARM9','-DSDK_CODE_ARM','-DSDK_FINALROM',

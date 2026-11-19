@@ -100,7 +100,6 @@ if a.images or a.image:
         return r.stdout
     # Require real dylibs, not an old timestamp or a fabricated .tbd export.
     for ident in ([a.image] if a.image else [39,40]):
-        run(['cmake','--build',str(build),'--target',f'heartgold_image_{ident}','-j8'])
         image=build/f'native-overlays/libheartgold_image_{ident}.dylib'
         header=image.read_bytes()[:32]
         assert header[:8]==bytes.fromhex('cffaedfe0c000001') and int.from_bytes(header[12:16],'little')==6

@@ -16,7 +16,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'compiler/guest32'), str(ROOT/'cmake')]
 from native_image_graph import parse_manifest, source_record
-from incremental import run as cached_run
+from incremental import run as cached_run, snapshot_tools, verify_tools
 
 
 def main():
@@ -26,6 +26,7 @@ def main():
     p.add_argument('--execute',action='store_true',help='Run the original software and data regressions after the translation census')
     a = p.parse_args()
     b, llvm, lowerer = a.build.resolve(), a.llvm_bin.resolve(), a.lowerer.resolve()
+    tools=snapshot_tools([str(llvm/'clang'),str(lowerer)])
     out = b/'provider-experiments'
     out.mkdir(parents=True, exist_ok=True)
     game = ROOT/'upstream/pokeheartgold'
@@ -46,7 +47,9 @@ def main():
              *['-I'+str(d) for d in (b/'include',game/'include',game/'include/library',game/'lib/include',game/'lib/NitroSDK/include',b/'generated/files')],
              '-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes']
     def run(args, outputs=(), inputs=(), depfile=None):
-        r = cached_run(list(map(str,args)),list(outputs),inputs=list(inputs),**({'depfile':depfile} if depfile else {}))
+        command=list(map(str,args))
+        r = cached_run(command,list(outputs),inputs=list(inputs),tool_snapshot=tools[command[0]],
+                       **({'depfile':depfile} if depfile else {}))
         return r
     def frontend(relative):
         assert relative in sources, relative
@@ -165,6 +168,7 @@ def main():
     (out/'census.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result['counts']))
     print('Members',len(members),'frontend',sum(m['frontend'] for m in members),'compiled',sum(m.get('compiled',False) for m in members))
+    verify_tools(tools)
     if a.execute:
         def execute(args):subprocess.run(list(map(str,args)),check=True)
         execute([sys.executable,'-B',ROOT/'compiler/guest32/data.py','--game',game,'--out',out/'main-data','--llvm-bin',llvm,'--owner','main',

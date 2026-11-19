@@ -1,12 +1,13 @@
 """Actual complete guest-image link attempts using the existing global linker."""
 import argparse
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 from pathlib import Path
 import re
 import subprocess
-from native_overlay_link import generate_contracts,interface,symbols
+from native_overlay_link import generate_contracts,interface,object_symbol_reader
 
 
 def hardware_identities(game, codes):
@@ -51,7 +52,8 @@ def hardware_identities(game, codes):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--build',type=Path,required=True);p.add_argument('--compiler',required=True)
     p.add_argument('--image-root',type=Path,help='Jointly planned image directories named OVY_<id>')
-    p.add_argument('--out',type=Path)
+    p.add_argument('--out',type=Path);p.add_argument('--lowerer',type=Path,required=True)
+    p.add_argument('--diagnostic-stages',action='store_true',help='Reproduce the historical incomplete-provider link experiments')
     p.add_argument('--provider-manifest',type=Path,action='append',default=[],help='Additional source-owned guest providers for measured link experiments')
     a=p.parse_args();b=a.build.resolve();out=(a.out or b/'guest32-closure').resolve();out.mkdir(parents=True,exist_ok=True)
     native_registry=json.loads((b/'native-overlays/provider-registry.json').read_text())
@@ -61,10 +63,11 @@ def main():
     std=b/'guest32-std/provider.a'
     archives=[(a.image_root/f'OVY_{i}' if a.image_root else b/f'guest32-ovy{i}-image')/f'libheartgold_overlay_{i}.a' for i in (0,38)]
     archives=[path.resolve() for path in archives]
+    image_catalogs={archive:json.loads((archive.parent/'image.json').read_text()) for archive in archives}
     if a.image_root:
         shared=json.loads((a.image_root/'shared.json').read_text())
         for ident,archive in zip((0,38),archives):
-            c=json.loads((archive.parent/'image.json').read_text())
+            c=image_catalogs[archive]
             assert c['codes']==shared['codes'] and c['static_end']==shared['static_end']
             assert all(c[k]==shared['images'][f'OVY_{ident}'][k] for k in ('assembly_globals','c_globals'))
     runtime=[]
@@ -79,28 +82,10 @@ def main():
     # frontier is neither a declared build input nor evidence for this build.
     game = Path(__file__).resolve().parents[1] / 'upstream/pokeheartgold'
     codes = [f for archive in archives
-             for f in json.loads((archive.parent / 'image.json').read_text())['codes']]
+             for f in image_catalogs[archive]['codes']]
     required = hardware_identities(game, codes)
-    demanded = set()
-    for archive in archives:
-        report = subprocess.run(['nm', '-u', str(archive)], capture_output=True,
-                                text=True, check=True).stdout
-        demanded.update(line.split()[-1] for line in report.splitlines() if line.split())
-    if not required <= demanded:
-        raise ValueError('hardware identities absent from current image imports')
-    exported={}
-    for archive in hardware:
-        result=subprocess.run(['nm','-gU',str(archive)],capture_output=True,text=True,check=True)
-        for line in result.stdout.splitlines():
-            fields=line.split()
-            if len(fields)>=3 and fields[-1] in required and fields[-2] in ('T','D','S'):
-                exported.setdefault(fields[-1],[]).append(str(archive))
-    for symbol in sorted(required):
-        if len(exported.get(symbol,[]))!=1:
-            raise ValueError('hardware export ownership violation: '+symbol+' '+str(exported.get(symbol,[])))
-    print('PASS source-verified hardware provider contract:',len(required),'unique identities')
     common=[str(b/'libheartgold_guest32_runtime.a'),str(b/'libheartgold_guest32_scalar_bridges.a'),str(b/'libheartgold_guest32_libc_memory.a')]
-    native_interface=out/'native-main.tbd';interface(native_interface,'@executable_path/heartgold',set().union(*(symbols(path) for path in native_paths)))
+    native_interface=out/'native-main.tbd'
     manifests=[b/'guest32-account/providers.json',b/'guest32-crc/providers.json',b/'guest32-std/providers.json',b/'guest32-mi/providers.json'];catalogs=[]
     additional=[]
     for path in a.provider_manifest:
@@ -111,13 +96,31 @@ def main():
             additional.append(Path(family['archive']).resolve())
     runtime.sort(key=lambda path: 'thread-entry' in path)
     runtime.extend(str(archive.resolve()) for archive in hardware)
+    coverages={archive:json.loads((archive.parent/'coverage.json').read_text()) for archive in archives}
+    scan_paths=[*native_paths,account,crc,mi,std,*hardware,*archives,*additional,
+                *map(Path,common),*map(Path,runtime)]
+    scan_paths.extend(archive.parent/m['object']/'native.o'
+                      for archive in archives for m in coverages[archive]['members'])
+    read_symbols,hardware_rows=object_symbol_reader(scan_paths,a.lowerer,out,required)
+    demanded=set().union(*(read_symbols(archive,True) for archive in archives))
+    if not required<=demanded:raise ValueError('hardware identities absent from current image imports')
+    exported={}
+    for archive in hardware:
+        for row in hardware_rows[archive]:
+            if row['name'] in required and row['kind'] in ('T','D','S'):
+                exported.setdefault(row['name'],[]).append(str(archive))
+    for symbol in sorted(required):
+        if len(exported.get(symbol,[]))!=1:
+            raise ValueError('hardware export ownership violation: '+symbol+' '+str(exported.get(symbol,[])))
+    print('PASS source-verified hardware provider contract:',len(required),'unique identities')
+    interface(native_interface,'@executable_path/heartgold',set().union(*(read_symbols(path) for path in native_paths)))
     for ident,archive in zip((0,38),archives):
-        directory=archive.parent;coverage=json.loads((directory/'coverage.json').read_text());catalog=json.loads((directory/'image.json').read_text());catalogs.append(catalog)
+        directory=archive.parent;coverage=coverages[archive];catalog=image_catalogs[archive];catalogs.append(catalog)
         assert coverage['summary']['complete_compilation'] and [m['object'] for m in coverage['members']]==coverage['image']['objects']
         owners={}
         for m in coverage['members']:
-            for symbol in symbols(directory/m['object']/'native.o'):owners[symbol]=m['object']
-        actual=symbols(archive);assert actual==owners.keys()
+            for symbol in read_symbols(directory/m['object']/'native.o'):owners[symbol]=m['object']
+        actual=read_symbols(archive);assert actual==owners.keys()
         names={'_'+f['native']:f['name'] for f in catalog['codes']}
         names.update({'_guest32_address_'+n:n for n in catalog['assembly_globals']})
         names.update({'_guest32_address_'+n:n for n in catalog['c_globals'] if '|' not in n})
@@ -149,19 +152,9 @@ def main():
 
     def hardware_definitions(paths):
         found={}
-        for archive in sorted({Path(path).resolve() for path in paths}):
-            if not archive.is_file():
-                continue
-            result=subprocess.run(
-                ['nm','-gU',str(archive)],
-                capture_output=True,text=True,check=True
-            )
-            for line in result.stdout.splitlines():
-                fields=line.split()
-                if len(fields)<3:
-                    continue
-                symbol=fields[-1]
-                kind=fields[-2]
+        for archive in sorted({Path(path).resolve() for path in paths if Path(path).is_file()}):
+            for row in hardware_rows[archive]:
+                symbol,kind=row['name'],row['kind']
                 if symbol in required and kind.upper() in ('T','D','S','B'):
                     found.setdefault(symbol,[]).append(str(archive))
         return found
@@ -196,10 +189,9 @@ def main():
     print('PASS global hardware provider uniqueness:',len(candidate_archives),'candidate artifacts')
     print('PASS duplicate-provider rejection:',len(required),'cases')
     contracts=out/'contracts'
-    generate_contracts([*native_paths,account,crc,mi,std,*additional,*hardware],archives,contracts,provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'})
     results={}
-    for phase in ('before','providers','admitted','source','global'):
-        for ident,archive in zip((0,38),archives):
+    def link(job):
+            phase,ident,archive=job
             destination=out/f'OVY_{ident}-{phase}.dylib'
             args=[a.compiler,'-dynamiclib','-Wl,-force_load,'+str(archive)]
             # Prefer the verified original guest providers before optional
@@ -220,19 +212,42 @@ def main():
             record=dict(command=args,returncode=r.returncode,unresolved=missing,log=str(log),
                         preflight='not run: image link failed' if r.returncode else 'not run by diagnostic driver')
             (out/f'OVY_{ident}-{phase}.json').write_text(json.dumps(record,indent=2)+'\n');results[(phase,ident)]=record
+    phases=('before','providers','admitted','source','global') if a.diagnostic_stages else ('global',)
+    jobs=[(phase,ident,archive) for phase in phases
+          for ident,archive in zip((0,38),archives)]
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures=[]
+        def ready():
+            read_symbols.validate()
+            futures.extend(pool.submit(link,job) for job in jobs)
+        generate_contracts([*native_paths,account,crc,mi,std,*additional,*hardware],archives,contracts,
+            provider_manifests=manifests,image_names={0:'OVY_0',38:'OVY_38'},
+            read_symbols=read_symbols,on_interfaces_ready=ready)
+        for future in futures:future.result()
+    read_symbols.validate()
+    if not a.diagnostic_stages:
+        summary={f'OVY_{ident}':dict(returncode=results['global',ident]['returncode'],
+                     unresolved=results['global',ident]['unresolved']) for ident in (0,38)}
+        (out/'summary.json').write_text(json.dumps(summary,sort_keys=True)+'\n')
+        if any(row['returncode'] or row['unresolved'] for row in summary.values()):
+            raise ValueError('complete original image link failed: '+str(out/'summary.json'))
+        print(json.dumps(summary,sort_keys=True));return
     # Group the measured baseline by actual original definitions, retaining
     # ambiguous alternatives rather than selecting a provider by prefix alone.
     model=json.loads((b/'shared-ds-links/global-report/provider-registry.json').read_text()) if (b/'shared-ds-links/global-report/provider-registry.json').exists() else native_registry
     definitions=defaultdict(list)
     for row in model['definitions']:definitions[row['original_identity']].append(row)
     groups=defaultdict(list)
+    declarations={}
+    for f in catalogs[0]['codes']:
+        if not f['local']:declarations.setdefault(f['name'],f)
     for exported in results[('before',0)]['unresolved']:
         identity=exported[len('_guest32_address_'):] if exported.startswith('_guest32_address_') else exported[len('_guest32_'):] if exported.startswith('_guest32_') else exported[1:]
         candidates=definitions[identity]
         original_members=sorted({row['original_member'] for row in candidates if row.get('original_member')})
         artifacts=sorted({Path(row['artifact']).name for row in candidates})
         key=' | '.join(original_members) or ('native provider archive: '+' | '.join(artifacts) if artifacts else 'provider ownership not yet established')
-        declaration=next((f for f in catalogs[0]['codes'] if f['name']==identity and not f['local']),None)
+        declaration=declarations.get(identity)
         if exported.startswith('_guest32_address_'):kind='guest data coordinates; native data address cannot substitute'
         elif not exported.startswith('_guest32_'):kind='native implementation required by existing scalar adapter'
         elif declaration and declaration.get('varargs'):kind='original guest variadic register/stack contract; typed formatting/scanning adapter required'

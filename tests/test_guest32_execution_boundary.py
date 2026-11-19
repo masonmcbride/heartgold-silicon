@@ -5,6 +5,7 @@ from pathlib import Path
 import shlex
 import subprocess
 import sys
+import tempfile
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'cmake'))
@@ -14,7 +15,7 @@ from guest32_state import prove, emit_bindings
 def main():
     p=argparse.ArgumentParser()
     for n in ('build','game','lowerer','llvm-bin'):p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();b=a.build.resolve();out=b/'execution-boundary';out.mkdir(exist_ok=True)
+    a=p.parse_args();b=a.build.resolve();out=b/'execution-boundary-tests';out.mkdir(exist_ok=True)
     log=[]
     def run(args,cwd=None,success=True):
         r=subprocess.run(list(map(str,args)),cwd=cwd,capture_output=True,text=True)
@@ -23,6 +24,28 @@ def main():
         assert (r.returncode==0)==success,r.stdout+r.stderr
         return r
     proof=prove(b,b/'provider-closure170',a.game.resolve(),a.lowerer.resolve(),out/'state')
+    registry=json.loads((b/'semantic-slots/registry.json').read_text())
+    approved={r['native_ir'] if r['transformed'] else r['ir'] for r in registry.values()}
+    sdk_records=json.loads((out/'state/sdk/providers.json').read_text())['providers']
+    approved.update(r['ir'] for r in sdk_records)
+    assert all(r['native_ir'] in approved for r in proof['rows'] if 'native_ir' in r), 'Unapproved/historical native IR used for storage proof'
+    # Compile-database output fields are only an index. A mismatch with the
+    # real command must be rejected before any SDK frontend can run.
+    from guest32_sdk_storage import recover
+    sdk=sdk_records[0]
+    database=json.loads((b/'compile_commands.json').read_text())
+    target=Path(sdk['artifact']).stem.removeprefix('lib')
+    row=next(r for r in database if Path(r['file']).resolve()==Path(sdk['source'])
+             and '/'+target+'.dir/' in '/'+r.get('output',''))
+    command=row.get('arguments') or shlex.split(row['command'])
+    command=command.copy();command[command.index('-o')+1]='CMakeFiles/wrong_owner.dir/wrong.c.o'
+    with tempfile.TemporaryDirectory(dir=out,prefix='sdk ownership ') as temporary:
+        fixture=Path(temporary);(fixture/'native-overlays').mkdir()
+        (fixture/'native-overlays/provider-registry.json').symlink_to(b/'native-overlays/provider-registry.json')
+        (fixture/'compile_commands.json').write_text(json.dumps([dict(row,arguments=command)]))
+        try:recover(fixture,{sdk['identities'][0]},fixture/'outputs')
+        except ValueError as error:assert 'command/output ownership differs' in str(error),error
+        else:raise AssertionError('SDK command/output ownership mismatch accepted')
     assert proof['conflicts']==206 and 0<proof['byte_compatible']<206
     assert not proof['admitted'] and any(r['name']=='gSystem' and r['status']=='blocked' for r in proof['rows'])
     family=[r for r in proof['rows'] if r['status']=='byte-compatible']

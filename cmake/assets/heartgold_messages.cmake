@@ -22,6 +22,8 @@ add_custom_command(
         "${CMAKE_CURRENT_LIST_DIR}/escape_gmm.cmake"
     VERBATIM)
 
+add_custom_target(hg_asset_trainer_gmm DEPENDS "${hg_trainer_gmm}")
+
 list(APPEND hg_gmms "${hg_trainer_gmm}")
 
 # Sort by message filename, not absolute source path.
@@ -56,18 +58,9 @@ foreach(gmm IN LISTS hg_gmms)
         list(APPEND key_args -k "${CMAKE_MATCH_1}")
     endif()
 
-    add_custom_command(
-        OUTPUT "${bin}" "${header}"
-        COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_msg_dir}"
-        COMMAND $<TARGET_FILE:hg_msgenc>
-            -e -c "${game_source}/charmap.txt"
-            --gmm -H "generated/files/msgdata/msg/${stem}.h" ${key_args}
-            "${gmm}" "${bin}"
-        DEPENDS hg_msgenc "${gmm}" "${game_source}/charmap.txt"
-            "${hg_msg_mk}"
-        # MSGENC derives a C guard from -H; keep this path relative and stable.
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-        VERBATIM)
+    hg_asset_host_job(messages message "${gmm};${game_source}/charmap.txt;${hg_msg_mk}" "${bin};${header}"
+        msgenc -e -c "${game_source}/charmap.txt" --gmm
+        -H "generated/files/msgdata/msg/${stem}.h" ${key_args} "${gmm}" "${bin}")
 
     list(APPEND hg_bins "${bin}")
     string(APPEND hg_archive_order "${stem}.bin\n")

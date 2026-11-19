@@ -22,11 +22,7 @@ function(hg_graphics_archive target relative_archive)
             list(APPEND inputs "${input}.key")
         endif()
         set(member "${output}/${output_name}")
-        add_custom_command(OUTPUT "${member}"
-            COMMAND "${CMAKE_COMMAND}" -E make_directory "${output}"
-            COMMAND $<TARGET_FILE:hg_nitrogfx> "${input}" "${member}" ${flags}
-            DEPENDS hg_nitrogfx ${inputs}
-            VERBATIM)
+        hg_asset_gfx("${input}" "${member}" ${flags})
         list(APPEND members "${member}")
     endforeach()
     hg_narc(${target} "${relative_archive}" "${output}" ${members})
@@ -106,16 +102,10 @@ foreach(input IN LISTS hg_namein_sources)
     get_filename_component(name "${input}" NAME)
     if(name MATCHES "\\.NCLR$")
         set(output "${hg_namein_output}/${name}")
-        add_custom_command(OUTPUT "${output}"
-            COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_namein_output}"
-            COMMAND "${CMAKE_COMMAND}" -E copy "${input}" "${output}"
-            DEPENDS "${input}" VERBATIM)
+        hg_asset_host_job(graphics copy "${input}" "${output}")
     else()
         set(output "${hg_namein_output}/${name}.lz")
-        add_custom_command(OUTPUT "${output}"
-            COMMAND "${CMAKE_COMMAND}" -E make_directory "${hg_namein_output}"
-            COMMAND $<TARGET_FILE:hg_nitrogfx> "${input}" "${output}"
-            DEPENDS hg_nitrogfx "${input}" VERBATIM)
+        hg_asset_gfx("${input}" "${output}")
     endif()
     list(APPEND hg_namein_members "${output}")
 endforeach()

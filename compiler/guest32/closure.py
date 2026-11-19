@@ -1,7 +1,7 @@
-"""Discover and retry the complete original main-provider dependency closure.
+"""Describe original sources and compile a declared main-provider dependency closure.
 
 Definitions come from verified frontend IR and manifest ownership, not lexical
-name hits. Each retry uses one shared code catalog and one guest storage plan.
+name hits. Compilation uses one declared code catalog and guest storage plan.
 Failed original members are retained in the inventory with their diagnostics.
 """
 import argparse
@@ -11,17 +11,26 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
-from incremental import run as cached_run
+import time
 from original_layout import annotated_sections, verified_sections, MAIN_BASE, MAIN_SIZE
-from image import argument_liveness
+from image import argument_liveness, compiler_catalog
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'cmake'))
 from native_image_graph import parse_manifest,source_record
 from native_data_ir import parse,raw_layout,integer
 from native_overlay_link import symbols as emitted_symbols
 
+
+def declared_execution_members(selected, descriptions, hardware, blocked):
+    """Compilation validates this plan; its results never choose the plan."""
+    required=set(selected)-set(hardware)-set(blocked)
+    missing=required-descriptions.keys()
+    if missing:
+        raise ValueError('Declared providers lack frontend descriptions: '+str(sorted(missing)))
+    return required
 
 
 def original_root_owners(descriptions, names):
@@ -84,14 +93,16 @@ def merge_main_overlay_pins(main_codes, overlay_codes):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    for n in ('game','build','out','llvm-bin','lowerer','image-root'):p.add_argument('--'+n,type=Path,required=True)
+    for n in ('game','build','out','llvm-bin','lowerer','codegen','image-root'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--discover-only',action='store_true')
+    p.add_argument('--refresh-abi',action='store_true',help='Developer-only generation; requires --discover-only')
+    p.add_argument('--plan-only',action='store_true',help='Write the declared execution/catalog plan without compiling')
+    p.add_argument('--provider-plan',type=Path,default=ROOT/'compiler/guest32/main_provider_plan.json')
     p.add_argument('--root-symbol',action='append',default=[])
     p.add_argument('--reuse-discovery',action='store_true',help='Refresh effective changed inputs in the existing census, retaining unaffected original discovery')
-    p.add_argument('--selection-floor',type=Path)
-    p.add_argument('--retry-blockers',action='store_true',help='Reattempt historical failures without publishing an incomplete generation')
     a=p.parse_args()
-    for n in ('game','build','out','llvm_bin','lowerer','image_root'):setattr(a,n,getattr(a,n).resolve())
+    if a.refresh_abi and not a.discover_only:p.error('--refresh-abi requires --discover-only')
+    for n in ('game','build','out','llvm_bin','lowerer','codegen','image_root'):setattr(a,n,getattr(a,n).resolve())
     from publication import publish
     def worker(stage):
         staged=argparse.Namespace(**vars(a));staged.out=stage
@@ -100,16 +111,30 @@ def main():
 
 
 def build(a):
+    from discovery import backend_workspace
+    with backend_workspace(a.build/'provider-compilation') as workspace:
+        return build_in_workspace(a,workspace)
+
+
+def build_in_workspace(a,workspace):
+    started=time.perf_counter();phase_started=started
+    phases={};operations=[]
+    def checkpoint(name):
+        nonlocal phase_started
+        phases[name]=time.perf_counter()-phase_started
+        phase_started=time.perf_counter()
+    def observe(member,stage,result):
+        operations.append(dict(member=member,stage=stage,returncode=result.returncode,
+            cache_hit=result.cache_hit,wall_seconds=result.wall_seconds,
+            execution_seconds=result.execution_seconds,
+            validation_seconds=result.validation_seconds,
+            receipt_seconds=max(0,result.wall_seconds-result.execution_seconds-result.validation_seconds)))
     a.out.mkdir(parents=True,exist_ok=True)
-    recovery_report=recovery_catalog=None
-    if a.selection_floor:
-        from recovery import load,verify_callbacks,historical_objects
-        recovery_report,recovery_catalog=load(a.selection_floor,a.out,a.game)
-        preserved={r['member'] for r in recovery_report['results'] if r['compiled']}
-        print('verified historical object callbacks:',
-              verify_callbacks(historical_objects(a.out,json.loads(a.selection_floor.read_text())['previous_compiled_objects_sha256']),preserved,recovery_catalog),flush=True)
     manifest=parse_manifest(a.game/'main.lsf');original=manifest['main']['objects']
     records=[source_record(a.game,m) for m in original]
+    from provider_plan import load as load_provider_plan, DEFAULT_PLAN
+    declared_plan,selected=load_provider_plan(getattr(a,'provider_plan',DEFAULT_PLAN),
+        a.game,records,a.root_symbol,ROOT/'CMakeLists.txt')
     # Keep approved frontend-only corrections in their existing owning layer.
     # VFS preserves canonical original source/debug identities and quoted includes.
     sys.path.insert(0,str(ROOT/'cmake'))
@@ -161,37 +186,46 @@ def build(a):
             'use-external-name':False,
         })
     overlay=a.out/'frontend.json';write_if_changed(overlay,json.dumps(dict(version=0,roots=adapted)))
-    virtual_files={entry['name']:entry['external-contents'] for entry in adapted}
-    previous={}
-    if a.reuse_discovery and (a.out/'discovery.json').exists():
-        previous={m['object']:m for m in json.loads((a.out/'discovery.json').read_text())['members']}
+    from discovery import stable_overlay, discover as discover_cached, compile_frontend, compile_backends
+    from incremental import snapshot_tools, verify_tools
+    discovery_root=a.build/'provider-discovery'
+    overlay,virtual_files=stable_overlay(discovery_root,adapted)
+    discovery_tools=snapshot_tools([a.llvm_bin/'clang',a.lowerer])
+    discovery_inputs={}
+    discovery_paths={}
     from frontend import flags as frontend_flags
     flags=frontend_flags(a.game,a.build)+['-ivfsoverlay',str(overlay)]
+    checkpoint("source_and_frontend_setup")
     def discover(r):
         r=dict(r)
         if r['kind']!='C':return r
-        source=a.game/r['source'];work=a.out/r['object'];work.mkdir(parents=True,exist_ok=True)
-        old=previous.get(r['object'])
-        if (old and not old.get('frontend') and not getattr(a,'retry_blockers',False) and str(source) not in virtual_files and
-                old.get('sha256')==hashlib.sha256(source.read_bytes()).hexdigest()):return old
-        ir=work/'guest.ll';desc=work/'description.json'
-        run=cached_run(list(map(str,[a.llvm_bin/'clang',*flags,'-S','-emit-llvm',source,'-o',ir,'-MD','-MF',str(ir)+'.d'])),[ir],inputs=[source],depfile=str(ir)+'.d',virtual_files=virtual_files)
-        (work/'frontend.log').write_text(run.stdout+run.stderr)
-        r.update(sha256=hashlib.sha256(source.read_bytes()).hexdigest(),frontend=not run.returncode,frontend_diagnostic=run.stderr)
-        if not run.returncode:
-            run=cached_run(list(map(str,[a.lowerer,ir,work/'unused.ll','--diagnose',desc])),[desc],inputs=[ir])
-            if not run.returncode:r['description']=json.loads(desc.read_text())
-            else:r['frontend_diagnostic']+=run.stderr
-        return r
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        pending={pool.submit(discover,r):r for r in records};members=[]
-        for task in as_completed(pending):
-            members.append(task.result())
-            if len(members)%100==0:print('described',len(members),'/',len(records),flush=True)
-    members.sort(key=lambda r:original.index(r['object']))
-    (a.out/'discovery.json').write_text(json.dumps(dict(members=members),indent=2)+'\n')
-    print('frontend',sum(m.get('frontend',False) for m in members),'/',sum(m['kind']=='C' for m in members),flush=True)
-    if a.discover_only:return
+        source=a.game/r['source']
+        r['sha256']=hashlib.sha256(source.read_bytes()).hexdigest()
+        return discover_cached(r,source,discovery_root/'members'/r['object'],a.out/r['object'],
+            a.llvm_bin/'clang',a.lowerer,flags,virtual_files,discovery_tools,discovery_inputs,observe,discovery_paths)
+    if getattr(a,'refresh_abi',False):
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            pending={pool.submit(discover,r):r for r in records};members=[]
+            for task in as_completed(pending):
+                members.append(task.result())
+                if len(members)%100==0:print('described',len(members),'/',len(records),flush=True)
+        verify_tools(discovery_tools)
+        verify_tools(discovery_inputs,kind='discovery input')
+        original_order={member:index for index,member in enumerate(original)}
+        members.sort(key=lambda r:original_order[r['object']])
+        (a.out/'discovery.json').write_text(json.dumps(dict(members=members),indent=2)+'\n')
+        print('frontend',sum(m.get('frontend',False) for m in members),'/',sum(m['kind']=='C' for m in members),flush=True)
+        checkpoint('developer_abi_generation')
+    else:
+        from provider_abi import load as load_declared_abi, DEFAULT_ABI
+        members=load_declared_abi(DEFAULT_ABI,a.game,a.build,records,adapted,
+            frontend_flags(a.game,a.build),a.llvm_bin/'clang',a.out/'discovery.json')
+        print('declared ABI descriptions:',sum('description' in m for m in members),flush=True)
+        checkpoint('declared_abi_load')
+    if a.discover_only:
+        (a.out/'discovery-profile.json').write_text(json.dumps(dict(
+            total_seconds=time.perf_counter()-started,phases=phases,operations=operations),indent=2)+'\n')
+        return
     shared=json.loads((a.image_root/'shared.json').read_text())
     functions={};definitions=defaultdict(list);data_definitions=defaultdict(list)
     descriptions={m['object']:m['description'] for m in members if 'description' in m}
@@ -202,24 +236,6 @@ def build(a):
             if g['definition']:data_definitions[g['key']].append((member,g))
     # Overlay definitions belong to their genuine original images, never main.
     # A merged main catalog must never be consumed as overlay input.
-    if a.selection_floor:
-        invalid=[]
-        for entry in shared['codes']:
-            if not entry.get('definition'):
-                continue
-            for member,definition in definitions.get(entry['key'],[]):
-                inline=(
-                    entry.get('coalesce')
-                    and Path(definition.get('origin','')).suffix=='.h'
-                    and all(entry.get(k)==definition.get(k)
-                            for k in ('params','return','body_hash'))
-                )
-                if not inline:
-                    invalid.append(entry['key'])
-        if invalid:
-            raise ValueError(
-                'image-root contains resident main definitions: '
-                +str(len(invalid))+' conflicts; '+str(invalid[:4]))
     overlay_definitions={f['key']:f for f in shared['codes'] if f['definition']}
     for f in shared['codes']:functions[f['key']]=dict(f)
     conflicts=[]
@@ -244,65 +260,19 @@ def build(a):
         raise ValueError('original provider ownership conflicts: '+str(conflicts[:8]))
     from code_ids import allocate as allocate_code_addresses
     old_catalog=a.out/'catalog.json'
-    earlier=(recovery_catalog['codes'] if recovery_catalog else
-             json.loads(old_catalog.read_text()).get('codes', [])
-             if old_catalog.is_file() else [])
+    earlier=json.loads(old_catalog.read_text()).get('codes', []) if old_catalog.is_file() else []
     pinned=merge_main_overlay_pins(earlier,shared['codes'])
     addresses=allocate_code_addresses(functions, pinned.values())
     for key,f in sorted(functions.items()):
         f['address']=addresses[key]
         if 'native' not in f:f['native']='guest32_'+(hashlib.sha256(key.encode()).hexdigest()[:16]+'_' if f['local'] else '')+f['name']
         f['coalesce']=f['definition'] and not f['local'] and Path(f.get('origin','')).suffix=='.h'
-    # Whole-member dependencies, including declarations referenced by inline
-    # helpers and original address-taken functions. No demand-count cutoff.
-    inv=json.loads((ROOT/'docs/provider-closure/provider-176.json').read_text())['unresolved_provider_demands']
-    selected={d['member'] for v in inv.values() for d in v['original_definitions'] if d['owner']=='main' and d['kind']=='C function definition text'}
-    selected.update(m for v in inv.values() for d in v['original_definitions'] for m in [d['member']] if d['owner']=='main' and m in descriptions)
-    extra_owners=original_root_owners(
-        descriptions, a.root_symbol
-    )
-    selected.update(extra_owners.values())
-    if a.selection_floor:
-        from script_callback_roots import original_owners
-        floor=set(recovery_report['selected_members'])
-        unknown=floor-{m['object'] for m in members}
-        if unknown:
-            raise ValueError('historical members absent: '+str(sorted(unknown)[:8]))
-        selected.update(floor)
-        print('verified historical selection floor:',
-              len(floor),'members; selected',len(selected),flush=True)
-    # Resident script-table function pointers are executable roots even
-    # without direct calls. Preserve original overlay ownership.
-    from script_callback_roots import resident_roots
-    script_members, script_functions = resident_roots(a.game, definitions)
-    newly_selected = script_members - selected
-    selected.update(script_members)
-    print("resident script callback roots:",
-          len(script_functions), "functions,",
-          len(script_members), "members,",
-          len(newly_selected), "new members",
-          sorted(newly_selected), flush=True)
-    if extra_owners:
-        print('additional original main providers:',
-              json.dumps(extra_owners,sort_keys=True),flush=True)
-    changed=True
-    while changed:
-        changed=False
-        for member in list(selected):
-            desc=descriptions.get(member)
-            if not desc:continue
-            for f in desc['functions']:
-                if f['definition'] or f['key'] in overlay_definitions:continue
-                candidates=definitions.get(f['key'],[])
-                # Header inlines may be represented by any member; retain their
-                # canonical original definition, without pulling unrelated owners.
-                if candidates and Path(candidates[0][1].get('origin','')).suffix=='.h':continue
-                for provider,g in candidates:
-                    if provider not in selected:selected.add(provider);changed=True
-            for g in desc['globals']:
-                if g['definition']:continue
-                for provider,d in data_definitions.get(g['key'],[]):
-                    if provider not in selected:selected.add(provider);changed=True
+    # Selection is source-owned input, never a compilation/search result.
+    for name,owner in declared_plan['entrypoints'].items():
+        if not any(f['name']==name and f['definition'] and not f['local']
+                   for f in descriptions.get(owner,{}).get('functions',[])):
+            raise ValueError('Declared entrypoint definition is absent: '+name+' in '+owner)
+    print('declared original main providers:',len(selected),flush=True)
     # Discovery is global; reachability is not. Only code values materialized
     # by these original members or the two complete consumer images belong to
     # this link's callback domain. Unrelated main-image callbacks must not turn
@@ -339,19 +309,12 @@ def build(a):
     # Any known assembly definition wins, including interior aliases.
     cursor=max([cursor,*[v['offset']+v['size'] for v in placements.values()]])
     c_globals={}
-    pinned_globals=recovery_catalog.get('c_globals',{}) if recovery_catalog else {}
-    cursor=max([cursor,*[v['offset']+v['size'] for v in pinned_globals.values()]])
     for member in sorted(selected):
         for g in descriptions.get(member,{}).get('globals',[]):
             if not g['definition'] or g['key'] in c_globals:continue
             if g['key'] in placements:
                 if g['size']>placements[g['key']]['size']:unplaced.append(dict(member=member,symbol=g['key'],reason='C object exceeds original section extent'));continue
                 c_globals[g['key']]=placements[g['key']];continue
-            if g['key'] in pinned_globals:
-                old=pinned_globals[g['key']]
-                if old['size']!=g['size'] or old['offset']%g['alignment']:
-                    raise ValueError('historical guest storage layout changed: '+g['key'])
-                c_globals[g['key']]=old;continue
             cursor=(cursor+g['alignment']-1)&~(g['alignment']-1)
             c_globals[g['key']]=dict(offset=cursor,size=g['size']);cursor+=g['size']
     if cursor>=MAIN_BASE+MAIN_SIZE:raise ValueError('whole-provider static guest storage exceeds DS RAM')
@@ -360,27 +323,42 @@ def build(a):
     # Source discovery is not executable admission. An unrelated unavailable
     # main callback must not synthesize imports into every overlay dispatch.
     # Keep its original identity and dependency evidence; calls fail closed.
-    prior_results=json.loads((a.out/'closure.json').read_text())['results'] if (a.out/'closure.json').exists() else []
-    if a.selection_floor:
-        prior_results=recovery_report['results']
-    prior_compiled={r['member'] for r in prior_results if r['compiled']}
-    def execution_domain(compiled):
-        available={key for key,defs in definitions.items() if any(member in compiled for member,f in defs)}
+    hardware_members={'lib/NitroSDK/src/os/os_system.o': ('context', ('OS_EnableInterrupts', 'OS_DisableInterrupts', 'OS_RestoreInterrupts', 'OS_DisableInterrupts_IrqAndFiq', 'OS_RestoreInterrupts_IrqAndFiq', 'OS_GetCpsrIrq', 'OS_GetProcMode', 'OS_SpinWait')), 'lib/NitroSDK/src/os/os_cache.o': ('cache', ('DC_InvalidateAll', 'DC_StoreAll', 'DC_FlushAll', 'DC_InvalidateRange', 'DC_StoreRange', 'DC_FlushRange', 'DC_WaitWriteBufferEmpty', 'IC_InvalidateAll', 'IC_InvalidateRange'))}
+    expected_compiled=declared_execution_members(selected,descriptions,hardware_members,{})
+    if expected_compiled!=set(declared_plan['compiled_members']):
+        raise ValueError('Executable domain differs from the declared provider plan')
+    if declared_plan['hardware_members']!={m:hardware_members[m][0] for m in selected & hardware_members.keys()}:
+        raise ValueError('Hardware ownership differs from the declared provider plan')
+    (a.out/'execution-plan.json').write_text(json.dumps(dict(
+        selected_members=sorted(selected),compiled_members=sorted(expected_compiled),
+        hardware_members=sorted(selected & hardware_members.keys()),
+        blocked_members=[]),indent=2)+'\n')
+    def execution_domain(declared_members):
+        available={key for key,defs in definitions.items() if any(member in declared_members for member,f in defs)}
         available.update(overlay_definitions)
         for key,f in functions.items():f['executable']=not f['definition'] or key in available
-    execution_domain(prior_compiled)
+    execution_domain(expected_compiled)
     catalog=a.out/'catalog.json';catalog.write_text(json.dumps(dict(codes=list(functions.values()),globals=placements,c_globals=c_globals,images=shared['images'],static_end=cursor,register_edges=shared.get('register_edges',[])),indent=2)+'\n')
+    compiler_image=a.out/'compiler-catalog.json'
+    compiler_image.write_text(compiler_catalog(json.loads(catalog.read_text())))
+    direct_image=a.out/'direct-catalog.json'
+    direct_image.write_text(compiler_catalog(json.loads(catalog.read_text()),direct_calls_only=True))
     native=a.out/'native-abi.ll';native.write_text('target datalayout = "e-p:64:64"\n')
+    # Stable command/input paths retain content-validated compilation receipts.
+    # Published artifacts remain independent files in the transaction directory.
+    backend_files=[]
+    for source in (compiler_image,direct_image,native):
+        target=workspace/source.name
+        write_if_changed(target,source.read_text())
+        backend_files.append(target)
+    backend_image,backend_direct,backend_native=backend_files
     conflict_keys={r['key'] for r in conflicts}
-    # Previously rejected members remain explicit blockers, not failing writes
-    # inside a successful recovery transaction. Required members all compile.
-    from recovery import deferred_blockers
+    # Every declared provider must compile or satisfy its hardware contract.
     from original_layout import overlay_id_symbols
     absolute_symbols=overlay_id_symbols(a.game,manifest)
-    known_blockers=deferred_blockers(recovery_report,getattr(a,'retry_blockers',False))
     discovered={r['object']:r for r in members}
     # Explicit hardware providers; never counted as original C compilation.
-    hardware_members={'lib/NitroSDK/src/os/os_system.o': ('context', ('OS_EnableInterrupts', 'OS_DisableInterrupts', 'OS_RestoreInterrupts', 'OS_DisableInterrupts_IrqAndFiq', 'OS_RestoreInterrupts_IrqAndFiq', 'OS_GetCpsrIrq', 'OS_GetProcMode', 'OS_SpinWait')), 'lib/NitroSDK/src/os/os_cache.o': ('cache', ('DC_InvalidateAll', 'DC_StoreAll', 'DC_FlushAll', 'DC_InvalidateRange', 'DC_StoreRange', 'DC_FlushRange', 'DC_WaitWriteBufferEmpty', 'IC_InvalidateAll', 'IC_InvalidateRange'))}
+
     def admit_hardware(member):
         import re
         family,names=hardware_members[member]
@@ -403,10 +381,12 @@ def build(a):
                     source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
                     archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
                     verified_exports=['_guest32_'+n for n in names])
+    checkpoint("closure_and_catalog_planning")
+    if getattr(a,'plan_only',False):
+        (a.out/'plan-profile.json').write_text(json.dumps(dict(
+            total_seconds=time.perf_counter()-started,phases=phases,operations=operations),indent=2)+'\n')
+        return
     def compile_member(member):
-        if member in known_blockers:
-            return dict(known_blockers[member],attempted=False,
-                        blocker_provenance='pinned historical closure')
         if member in hardware_members:
             return admit_hardware(member)
         desc=descriptions.get(member)
@@ -414,78 +394,79 @@ def build(a):
             reason='original frontend did not compile',
             frontend_diagnostic=discovered.get(member,{}).get('frontend_diagnostic',''))
         if any(f['definition'] and f['key'] in conflict_keys for f in desc['functions']):return dict(member=member,compiled=False,reason='unresolved canonical original code ownership')
-        work=a.out/member;abi=work/'abi.json';globals_=dict(placements)
+        work=a.out/member;work.mkdir(parents=True,exist_ok=True)
+        source=a.game/discovered[member]['source']
+        frontend=compile_frontend(source,discovery_root/'members'/member,work,
+            a.llvm_bin/'clang',flags,virtual_files,discovery_tools,discovery_inputs,discovery_paths)
+        observe(member,'frontend',frontend)
+        if frontend.returncode:
+            return dict(member=member,compiled=False,reason=frontend.stderr)
+        backend=workspace/member;backend.mkdir(parents=True,exist_ok=True)
+        abi=backend/'abi.json';globals_=dict(placements)
         for g in desc['globals']:
             if g['key'] in c_globals:globals_[g['name']]=c_globals[g['key']]
-        abi.write_text(json.dumps(dict(version=1,calls={},exports={},globals=globals_,absolute_symbols=absolute_symbols)))
-        run=cached_run(list(map(str,[a.lowerer,work/'guest.ll',work/'native.ll','--abi',abi,'--native-ir',native,'--image',catalog,'--guest-externals','--prefix','guest32_'])),[work/'native.ll'],inputs=[work/'guest.ll',abi,native,catalog])
-        (work/'lower.log').write_text(run.stdout+run.stderr)
-        if run.returncode:return dict(member=member,compiled=False,reason=run.stderr)
-        run=cached_run(list(map(str,[a.llvm_bin/'clang','-O2','-c',work/'native.ll','-o',work/'native.o'])),[work/'native.o'],inputs=[work/'native.ll'])
-        (work/'object.log').write_text(run.stdout+run.stderr)
-        return dict(member=member,compiled=not run.returncode,reason=run.stderr)
-    with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(compile_member,sorted(selected)))
+        write_if_changed(abi,json.dumps(dict(version=1,calls={},exports={},globals=globals_,absolute_symbols=absolute_symbols)))
+        image=backend_image if any(not call['target'] for call in desc['calls']) else backend_direct
+        source_ir=discovery_root/'members'/member/'guest.ll'
+        return dict(member=member,source_ir=source_ir,cache=backend,destination=work,
+            abi=abi,image=image,native=backend_native)
+    with ThreadPoolExecutor(max_workers=4) as pool:prepared=list(pool.map(compile_member,sorted(selected)))
+    jobs=[r for r in prepared if 'source_ir' in r]
+    emitted=compile_backends(jobs,workspace,a.lowerer,a.llvm_bin/'clang',
+        discovery_tools,discovery_inputs,observe,codegen=a.codegen)
+    shutil.copyfile(workspace/'backend-profile.json',a.out/'backend-profile.json')
+    by_member={r['member']:r for r in emitted}
+    results=[by_member[r['member']] if 'source_ir' in r else r for r in prepared]
     compiled={r['member'] for r in results if r['compiled']}
-    if compiled!=prior_compiled:
-        execution_domain(compiled)
-        data=json.loads(catalog.read_text());data['codes']=list(functions.values());catalog.write_text(json.dumps(data,indent=2)+'\n')
-        with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(compile_member,sorted(selected)))
-        if {r['member'] for r in results if r['compiled']}!=compiled:raise ValueError('executable provider domain did not converge')
+    verify_tools(discovery_tools)
+    verify_tools(discovery_inputs,kind='provider input')
+    checkpoint("main_provider_lowering_and_codegen")
+    # Storage verification consumes real ARM32 IR even for non-provider TUs.
+    # These are declared proof inputs, never additional executable providers.
+    for member in sorted(set(declared_plan['proof_ir_members'])-expected_compiled):
+        source=a.game/discovered[member]['source']
+        result=compile_frontend(source,discovery_root/'members'/member,a.out/member,
+            a.llvm_bin/'clang',flags,virtual_files,discovery_tools,discovery_inputs,discovery_paths)
+        observe(member,'proof_frontend',result)
+        if result.returncode:
+            raise ValueError('Declared storage proof IR failed: '+member+'\n'+result.stderr)
+    verify_tools(discovery_tools)
+    verify_tools(discovery_inputs,kind='proof input')
+    checkpoint('declared_storage_proof_ir')
     from publication import require_successful_compilations
-    # Persist actual retry results before the publication guard can reject the
+    # Persist actual compilation results before the publication guard can reject the
     # transaction. A copied historical closure.json is not fresh evidence.
     (a.out/'compilation-attempt.json').write_text(json.dumps(dict(
-        selected_members=sorted(selected), results=results,
-        retry_blockers=getattr(a,'retry_blockers',False)),indent=2)+'\n')
+        selected_members=sorted(selected), results=results),indent=2)+'\n')
     (a.out/'hardware-admission.json').write_text(json.dumps(
         dict(members=[r for r in results if r.get('hardware_adapted')]),
         indent=2)+'\n')
+    if compiled!=expected_compiled:
+        missing=sorted(expected_compiled-compiled)
+        unexpected=sorted(compiled-expected_compiled)
+        reasons={r['member']:r.get('reason','') for r in results if r['member'] in missing}
+        raise ValueError('Declared provider compilation failed; no retry: '+str(dict(
+            missing=missing,unexpected=unexpected,reasons=reasons)))
     require_successful_compilations(results)
-    # Do not publish a degraded recovery closure.
-    if a.selection_floor:
-        previous={r['member'] for r in recovery_report['results']
-                  if r['compiled']}
-        current={r['member'] for r in results if r['compiled']}
-        lost=previous-current
-        if lost:
-            raise ValueError(
-                'recovery rejected: lost original compiled members '
-                +str(sorted(lost)[:12]))
-        if 'src/scrcmd_battle.o' not in current:
-            raise ValueError(
-                'recovery rejected: battle provider not compiled')
-        known_blocked={r['member'] for r in recovery_report['results']
-                       if not r['compiled']} - {'src/scrcmd_battle.o'}
-        unexpected={r['member'] for r in results if not r['compiled']}-known_blocked
-        if unexpected:
-            raise ValueError('new compilation failures: '+str(sorted(unexpected)))
-        callback_count=verify_callbacks(a.out,current,json.loads(catalog.read_text()))
-        (a.out/'recovery-verification.json').write_text(json.dumps(dict(
-            historical_compiled=len(previous),compiled=len(current),
-            callback_constants_verified=callback_count,
-            known_blocked=sorted(known_blocked-current),execution_admitted=False),indent=2)+'\n')
-        print('recovery admission guard passed:',
-              len(previous),'previous providers preserved;',
-              len(current),'currently compiled',flush=True)
-    # Publish every translated member, while retaining all failed members and
-    # external imports as outstanding closure requirements in the report.
+    # Package each declared member with its actual emitted-symbol evidence.
+    from native_overlay_link import object_symbol_reader
+    compiled_results=[r for r in results if r['compiled']]
+    objects=[a.out/r['member']/'native.o' for r in compiled_results]
+    archive_outputs={obj:obj.with_name('provider.a') for obj in objects}
+    artifacts=a.out/'provider-artifacts';artifacts.mkdir(exist_ok=True)
+    # One LLVM invocation reads each object and writes its deterministic archive.
+    # This preserves per-member ownership without 595 nm/ar subprocess pairs.
+    read_symbols,_=object_symbol_reader(objects,a.lowerer,artifacts,set(),archive_outputs)
+    source_paths={a.game/discovered[r['member']]['source'] for r in compiled_results}
+    source_paths.update(Path(f['origin']) for r in compiled_results
+        for f in descriptions[r['member']]['functions']
+        if f['definition'] and not f['local'] and Path(f.get('origin','')).suffix=='.h')
+    source_evidence=snapshot_tools(sorted(source_paths))
     families={}
-    for r in results:
-        if not r['compiled']:continue
-        member=r['member'];work=a.out/member;desc=descriptions[member];source=a.game/source_record(a.game,member)['source']
+    for r in compiled_results:
+        member=r['member'];work=a.out/member;desc=descriptions[member];source=a.game/discovered[member]['source']
         archive=work/'provider.a'
-        object_file=work/'native.o'
-        object_hash=hashlib.sha256(object_file.read_bytes()).hexdigest()
-        stamp=work/'provider.a.object-sha256'
-        reusable=(archive.is_file() and stamp.is_file() and
-                  stamp.read_text().strip()==object_hash)
-        if not reusable:
-            subprocess.run(
-                [str(a.llvm_bin/'llvm-ar'),'rcsD',str(archive),str(object_file)],
-                check=True)
-            stamp.write_text(object_hash+'\n')
-
-        owners={s:member for s in emitted_symbols(work/'native.o',nm=str(a.llvm_bin/'llvm-nm'))}
+        owners={s:member for s in read_symbols(work/'native.o')}
         identities={'_'+functions[f['key']]['native']:f['name'] for f in desc['functions'] if f['definition']}
         identities.update({'_guest32_code_address_'+f['name']:f['name'] for f in desc['functions'] if f['definition'] and not f['local']})
         identities.update({'_guest32_address_'+g['name']:g['name'] for g in desc['globals'] if g['definition'] and not g['local']})
@@ -493,8 +474,8 @@ def build(a):
         imports.update({'_guest32_code_address_'+f['name']:f['name'] for f in desc['functions'] if not f['definition'] and f['address_taken']})
         imports.update({'_guest32_address_'+g['name']:g['name'] for g in desc['globals'] if not g['definition']})
         headers=[f for f in desc['functions'] if f['definition'] and not f['local'] and Path(f.get('origin','')).suffix=='.h']
-        families[member]=dict(archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),original_members={member:hashlib.sha256(source.read_bytes()).hexdigest()},symbols=owners,original_identities=identities,import_identities=imports,abi_representation='guest32',
-                             inline_definitions={f['name']:dict(origin=str(Path(f['origin']).relative_to(a.game)),line=f['origin_line'],body_hash=f['body_hash'],params=f['params'],result=f['return'],header_sha256=hashlib.sha256(Path(f['origin']).read_bytes()).hexdigest()) for f in headers})
+        families[member]=dict(archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),original_members={member:source_evidence[str(source)][1]},symbols=owners,original_identities=identities,import_identities=imports,abi_representation='guest32',
+                             inline_definitions={f['name']:dict(origin=str(Path(f['origin']).relative_to(a.game)),line=f['origin_line'],body_hash=f['body_hash'],params=f['params'],result=f['return'],header_sha256=source_evidence[str(Path(f['origin']))][1]) for f in headers})
     # Production bootstrap dispatch is derived from emitted, admitted main code,
     # never declaration-only or nonresident overlay coordinates.
     from runtime_contracts import dispatcher
@@ -511,7 +492,16 @@ def build(a):
         runtime_families[name]=dict(link_into_image=True,archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),symbols={n:owner for n in exports},original_identities={n:n.removeprefix('_guest32_') for n in exports},abi_representation='guest32')
     (a.out/'runtime-providers.json').write_text(json.dumps(dict(families=runtime_families),indent=2)+'\n')
     (a.out/'providers.json').write_text(json.dumps(dict(schema=1,families=families),indent=2)+'\n')
-    report=dict(roots=sorted(inv),selected_members=sorted(selected),results=results,conflicts=conflicts,unplaced_data=unplaced,static_end=cursor,counts=dict(discovered=len(members),frontend=sum(m.get('frontend',False) for m in members),selected=len(selected),compiled=sum(r['compiled'] for r in results)))
+    report=dict(roots=sorted(declared_plan['root_demands']),selected_members=sorted(selected),results=results,conflicts=conflicts,unplaced_data=unplaced,static_end=cursor,counts=dict(discovered=len(members),frontend=sum(m.get('frontend',False) for m in members),selected=len(selected),compiled=sum(r['compiled'] for r in results)))
     (a.out/'closure.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report['counts']),flush=True)
+    read_symbols.validate()
+    verify_tools(source_evidence,kind='provider source')
+    checkpoint('archives_dispatch_and_provider_manifests')
+    profile=dict(total_seconds=time.perf_counter()-started,phases=phases,
+        operations=sorted(operations,key=lambda r:r['wall_seconds'],reverse=True),
+        counts=report['counts'],workers=4)
+    (a.out/'provider-profile.json').write_text(json.dumps(profile,indent=2)+'\n')
+    print('Provider profile: '+json.dumps(phases),flush=True)
+
 
 if __name__=='__main__':main()

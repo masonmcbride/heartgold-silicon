@@ -16,6 +16,30 @@ def main():
     a = p.parse_args()
     out = a.build.resolve() / 'rule-model-tests'
     out.mkdir(parents=True, exist_ok=True)
+    # Bulk queries must be exactly equivalent to independent verified modules,
+    # and a bad member must not publish a partial result.
+    modules=[]
+    for bits in (32,64):
+        ir=out/f'storage {bits}.ll'
+        ir.write_text(f'target datalayout = "e-p:{bits}:{bits}"\n'
+                      '@counter = global i32 7\n@record = global { i8, i32 } { i8 2, i32 9 }\n'
+                      '@callbacks = global [2 x ptr] zeroinitializer\n')
+        modules.append(str(ir))
+    expected={}
+    for ir in modules:
+        result=out/'storage-single.json'
+        subprocess.run([str(a.lowerer),'--storage-contract',ir,str(result)],check=True)
+        expected[ir]=json.loads(result.read_text())
+    request=out/'storage-inputs.json';result=out/'storage-batch.json'
+    request.write_text(json.dumps(modules))
+    subprocess.run([str(a.lowerer),'--storage-contracts',str(request),str(result)],check=True)
+    assert json.loads(result.read_text())==expected
+    invalid=out/'storage-invalid.ll';invalid.write_text('not LLVM IR\n')
+    for entries in ([modules[0],modules[0]],[modules[0],str(invalid)],[3]):
+        rejected=out/'storage-rejected.json';rejected.unlink(missing_ok=True)
+        request.write_text(json.dumps(entries))
+        r=subprocess.run([str(a.lowerer),'--storage-contracts',str(request),str(rejected)],capture_output=True,text=True)
+        assert r.returncode and not rejected.exists(),r.stderr
     catalog = json.loads((ROOT/'compiler/guest32/rules.json').read_text())
     log = []
 

@@ -64,4 +64,5 @@ def flags(game, build):
             '-DSDK_FINALROM','-DHEARTGOLD','-DENGLISH',
             *['-I'+str(d) for d in (build/'include',game/'include',game/'include/library',
                                   game/'lib/include',game/'lib/NitroSDK/include',game/'files',build/'generated/files')],
+            '-fmacro-prefix-map='+str(game)+'=.',
             '-O0','-g','-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes']

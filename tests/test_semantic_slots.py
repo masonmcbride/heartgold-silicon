@@ -12,10 +12,39 @@ import re
 import shlex
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'compiler/guest32'))
-from semantic_slots import canonical, PRODUCTION_TARGET
+from semantic_slots import canonical, PRODUCTION_TARGET, lifetime_provider_sources, dependency_paths, identity, launch
+for depfile in ('unit.o: one.h two.h\n', 'unit.o: one.h \\\n two.h\n',
+                'unit.o: path\\ with\\ spaces.h\n',
+                'unit.o: "quoted header.h"\n', 'unit.o: unicode\u00a0name.h\n',
+                'unit.o: vertical\vtab.h\n', 'unit.o: form\ffeed.h\n',
+                'unit.o: record\x1eseparator.h\n'):
+    assert dependency_paths(depfile) == shlex.split(depfile.replace('\\\n', '').split(':', 1)[1])
+sys.path.insert(0, str(ROOT / 'cmake'))
+from native_sources import adapt
+
+# A provider remains in the census when CMake selects its native adaptation.
+# A same-named generated file alone must never establish original ownership.
+game = ROOT / 'upstream/pokeheartgold'
+heap = game / 'src/heap.c'
+with tempfile.TemporaryDirectory() as temporary:
+    binary = Path(temporary)
+    generated = binary / 'native/src/heap.c'
+    generated.parent.mkdir(parents=True)
+    assert lifetime_provider_sources(heap, binary, game) == {heap.resolve()}
+    generated.write_text('#line 1 ' + json.dumps(str(heap)) + '\n'
+                         + adapt('src/heap.c', heap.read_text(), game))
+    assert generated.resolve() in lifetime_provider_sources(heap, binary, game)
+    generated.write_text(generated.read_text() + '\n/* undeclared change */\n')
+    try:
+        lifetime_provider_sources(heap, binary, game)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('modified lifetime provider was admitted')
 
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
@@ -49,8 +78,12 @@ for row in registry.values():
     _, _, output = canonical(row['command'])
     obj = Path(row['directory']) / output
     dependencies = Path(str(obj) + '.d').read_text()
-    assert str(registry_path) in dependencies, obj
-    assert str(registry_path.with_name('plan.json')) in dependencies, obj
+    approval=Path(row['ir']).with_name('codegen.json')
+    assert str(approval) in dependencies, obj
+    assert str(registry_path) not in dependencies, obj
+    assert str(registry_path.with_name('plan.json')) not in dependencies, obj
+    effective_ir=row['native_ir'] if row['transformed'] else row['ir']
+    assert effective_ir in dependencies, obj
     if not row['transformed']:
         continue
     _, _, output = canonical(row['command'])
@@ -58,7 +91,7 @@ for row in registry.values():
     receipt = json.loads(Path(str(obj) + '.semantic-slot.json').read_text())
     assert receipt['object_sha256'] == hashlib.sha256(obj.read_bytes()).hexdigest(), obj
     assert receipt['native_sha256'] == row['native_sha256'], obj
-    assert receipt['registry_sha256'] == hashlib.sha256(registry_path.read_bytes()).hexdigest(), obj
+    assert receipt['approval_sha256'] == hashlib.sha256(approval.read_bytes()).hexdigest(), obj
 # Shared original heap sources must not inherit production-only plan edges.
 heap_rules = build / 'CMakeFiles/test_heap.dir'
 for rules in heap_rules.glob('*.make'):
@@ -79,7 +112,7 @@ def run(command):
 
 
 def original(name):
-    entry = next(e for e in db if e['file'].endswith('/src/' + name))
+    entry = next(e for e in participating if e['file'].endswith('/src/' + name))
     command = entry.get('arguments') or shlex.split(entry['command'])
     flags, source, _ = canonical(command)
     ir = out / (name + '.ll')
@@ -234,9 +267,9 @@ int main(void) {
 }
 ''')
 
-def emit(source):
-    ir = source.with_suffix('.ll')
-    run([*flags, '-ivfsoverlay', vfs, '-O0', '-g0', '-Xclang', '-disable-O0-optnone', '-Xclang', '-disable-llvm-passes', '-S', '-emit-llvm', source, '-o', ir])
+def emit(source, binary=False):
+    ir = source.with_suffix('.bc' if binary else '.ll')
+    run([*flags, '-ivfsoverlay', vfs, '-O0', '-g0', '-Xclang', '-disable-O0-optnone', '-Xclang', '-disable-llvm-passes', '-c' if binary else '-S', '-emit-llvm', source, '-o', ir])
     return ir
 
 fixture_ir, provider_ir = emit(fixture), emit(provider)
@@ -251,6 +284,22 @@ run([lowerer, '--semantic-slots', 'analyze', manifest, fixture_plan])
 assert has_task_slot(json.loads(fixture_plan.read_text()))
 fixture_native = out / 'slots.promoted.ll'
 run([lowerer, '--semantic-slots', 'apply', fixture_plan, fixture_ir, fixture_native])
+# Production census now transports Apple-emitted bitcode. Apply the same plan
+# through both readers and execute the bitcode-derived result below.
+fixture_bc = emit(fixture, binary=True)
+fixture_bc_native = out / 'slots.from-bitcode.ll'
+run([lowerer, '--semantic-slots', 'apply', fixture_plan, fixture_bc, fixture_bc_native])
+def without_module_id(path):
+    text = path.read_text()
+    # LLVM 23 upgrades Apple's older bitcode with explicit defaults for these
+    # nonnative address spaces. This fixture uses none of them. Require all
+    # other layout fields and every instruction to remain exactly equal.
+    assert not re.search(r'addrspace\((270|271|272)\)', text)
+    text = text.replace('-p270:32:32-p271:32:32-p272:64:64', '')
+    return '\n'.join(line for line in text.splitlines() if not line.startswith('; ModuleID ='))
+assert without_module_id(fixture_native) == without_module_id(fixture_bc_native)
+run([llvm / 'llvm-diff', fixture_native, fixture_bc_native])
+fixture_native = fixture_bc_native
 forged_provider = out / 'forged-provider.c'
 forged_provider.write_text('int forged_task(void) { return 7; }\n')
 forged_ir = emit(forged_provider)
@@ -261,6 +310,7 @@ for name, body in {
     'integer_observation': 'int observe(ScriptEnvironment *env) { return *(int *)FieldSysGetAttrAddrInternal(env, SCRIPTENV_ENGAGED_TRAINER_0_FIELD_18) + 1; }',
     'unknown_alias': 'extern void external_bytes(void *); void observe(ScriptEnvironment *env) { external_bytes(FieldSysGetAttrAddrInternal(env, SCRIPTENV_ENGAGED_TRAINER_0_FIELD_18)); }',
     'unknown_owner': 'extern void external_bytes(void *); void observe(ScriptEnvironment *env) { env->engagedTrainers[0].trainerId = 9; external_bytes(env); }',
+    'shared_subtype_owner': 'struct Pair { ScriptEnvironment first, second; }; struct Owner { struct Pair branches[2]; }; extern void external_bytes(void *); void observe(struct Owner *p) { p->branches[0].first.engagedTrainers[0].trainerId = 9; external_bytes(p); }',
     'integer_carried_owner': 'extern void external_bytes(void *); void observe(ScriptEnvironment *env) { env->engagedTrainers[0].trainerId = 9; __UINTPTR_TYPE__ address = (__UINTPTR_TYPE__)env; external_bytes((void *)(address + 4)); }',
     'partial_clear': 'void observe(ScriptEnvironment *env) { env->engagedTrainers[0].trainerId = 9; __builtin_memset(env, 0, sizeof(*env)-1); }',
     'nonzero_clear': 'void observe(ScriptEnvironment *env) { env->engagedTrainers[0].trainerId = 9; __builtin_memset(env, 255, sizeof(*env)); }',
@@ -314,3 +364,57 @@ for optimization in ('O0', 'O2'):
     results.append(dict(optimization=optimization, original_accessor=True, original_task_queue=True, task_lifetime=True, ds_layout_preserved=True))
 (out / 'results.json').write_text(json.dumps(dict(execution=results, rejected=negative_results), indent=2) + '\n')
 print('PASS: original accessor, both native pointer slots, real task queue/lifetime and DS layout at O0/O2')
+
+# The source frontend is shared with production codegen. Optimization-dependent
+# preprocessing, a native record passed by value, varargs and debug information
+# must survive that handoff; a changed bitcode receipt must reject codegen.
+handoff = out / 'frontend-handoff.c'
+handoff.write_text(r'''
+typedef struct Native { long integer; double real; void *pointer; } Native;
+static long payload=17;
+static __attribute__((noinline)) long evaluate(Native value, ...) {
+    __builtin_va_list args; __builtin_va_start(args,value);
+    long extra=__builtin_va_arg(args,long); __builtin_va_end(args);
+    return value.integer+(long)value.real+*(long *)value.pointer+extra;
+}
+int main(void) {
+    Native value={3,5.0,&payload};
+    if(evaluate(value,7L)!=32)return 1;
+#ifdef __OPTIMIZE__
+    return EXPECT_OPTIMIZED!=1;
+#else
+    return EXPECT_OPTIMIZED!=0;
+#endif
+}
+''')
+for level in ('O0', 'O2'):
+    common=[flags[0], '-'+level, '-g', '-fPIC', '-DEXPECT_OPTIMIZED='+str(int(level=='O2'))]
+    for option in ('-arch','-isysroot','-target'):
+        if option in flags:
+            index=flags.index(option);common+=flags[index:index+2]
+    source_object=out/('handoff.source.'+level+'.o')
+    ir_object=out/('handoff.ir.'+level+'.o')
+    bitcode=out/('handoff.'+level+'.bc')
+    run([*common,'-c',handoff,'-o',source_object])
+    run([*common,'-Xclang','-disable-O0-optnone','-Xclang','-disable-llvm-passes',
+         '-emit-llvm','-c',handoff,'-o',bitcode])
+    command=list(map(str,[*common,'-c',handoff,'-o',ir_object]))
+    receipt=out/('handoff.'+level+'.json')
+    receipt.write_text(json.dumps({identity(command):dict(source=str(handoff),
+        transformed=False,ir=str(bitcode),ir_sha256=hashlib.sha256(bitcode.read_bytes()).hexdigest())}))
+    assert launch(receipt,command)==0
+    for kind,obj in [('source',source_object),('ir',ir_object)]:
+        exe=out/('handoff.'+kind+'.'+level)
+        run([*common,obj,'-o',exe]);run([exe])
+    original=bitcode.read_bytes();object_hash=hashlib.sha256(ir_object.read_bytes()).hexdigest()
+    bitcode.write_bytes(original+b'changed')
+    try:
+        launch(receipt,command)
+    except RuntimeError as error:
+        assert 'IR receipt changed' in str(error)
+    else:
+        raise AssertionError('changed bitcode reached production codegen')
+    finally:
+        bitcode.write_bytes(original)
+    assert hashlib.sha256(ir_object.read_bytes()).hexdigest()==object_hash
+print('PASS: one native frontend, optimization macros, record/varargs ABI and corrupted-bitcode rejection')

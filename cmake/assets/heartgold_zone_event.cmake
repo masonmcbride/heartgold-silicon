@@ -41,44 +41,17 @@ endforeach()
 
 set(hg_zone_binaries)
 
+set(hg_asset_batch_dependencies hg_jsonproc "${hg_zone_template}")
+hg_native_asset_data("Map interactions" zone "${hg_zone_build}" "${hg_zone_build}" "${hg_zone_jsons}"
+    --template "${hg_zone_template}" --jsonproc "$<TARGET_FILE:hg_jsonproc>"
+    --clang "${CMAKE_C_COMPILER}" --objcopy "${HG_ASSET_OBJCOPY}" --readelf "${HG_ASSET_READELF}"
+    --game "${game_source}" --libntr "${ntr_source}")
 foreach(json IN LISTS hg_zone_jsons)
     get_filename_component(stem "${json}" NAME_WE)
-
-    set(bin "${hg_zone_build}/${stem}.bin")
-    set(dep "${hg_zone_build}/${stem}.d")
-
-    add_custom_command(
-        OUTPUT "${bin}"
-        BYPRODUCTS
-            "${hg_zone_build}/${stem}.s"
-            "${hg_zone_build}/${stem}.o"
-
-        COMMAND "${Python3_EXECUTABLE}"
-            "${CMAKE_CURRENT_LIST_DIR}/build_zone_event.py"
-            --source "${json}"
-            --template "${hg_zone_template}"
-            --output-dir "${hg_zone_build}"
-            --jsonproc "$<TARGET_FILE:hg_jsonproc>"
-            --clang "${CMAKE_C_COMPILER}"
-            --objcopy "${HG_ASSET_OBJCOPY}"
-            --readelf "${HG_ASSET_READELF}"
-            --game "${game_source}"
-            --libntr "${ntr_source}"
-
-        DEPENDS
-            hg_jsonproc
-            "${json}"
-            "${hg_zone_template}"
-            "${CMAKE_CURRENT_LIST_DIR}/build_zone_event.py"
-
-        DEPFILE "${dep}"
-        VERBATIM
-    )
-
-    list(APPEND hg_zone_binaries "${bin}")
+    list(APPEND hg_zone_binaries "${hg_zone_build}/${stem}.bin")
 endforeach()
 
-hg_narc(heartgold_zone_event_assets "fielddata/eventdata/zone_event"
+hg_ordered_archive(heartgold_zone_event_assets "fielddata/eventdata/zone_event"
     "${hg_zone_build}" ${hg_zone_binaries})
 
 message(STATUS

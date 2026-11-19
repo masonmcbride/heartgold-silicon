@@ -141,6 +141,8 @@ int main()
     G3_Normal(0,0,4088);assert(s_g3CurColor[0]==29&&s_g3CurColor[1]==0);G3_End();
     // Native VBlank calls the real registered SDK interrupt and updates state.
     OS_SetIrqFunction(OS_IE_V_BLANK,vblank_callback);
+    OS_EnableIrqMask(OS_IE_V_BLANK);
+    OS_EnableIrq();
     s_reg_GX_DISPSTAT|=8;
     u32 old_count=*(u32 *)HW_VBLANK_COUNT_BUF;
     SIM_PreRenderVBlank();assert(s_reg_GX_VCOUNT==192);

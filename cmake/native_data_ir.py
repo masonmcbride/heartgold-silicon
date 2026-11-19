@@ -29,6 +29,10 @@ class Block:
 
 def integer(value, names=None):
     value = value.strip()
+    # Literal data dominates original assembly. Avoid constructing an AST for
+    # each byte/word; expressions still use the same checked evaluator below.
+    if re.fullmatch(r'[+-]?(?:0[xX][0-9a-fA-F]+|[1-9][0-9]*|0+)', value):
+        return int(value, 0)
     import operator
     operators = {ast.Add:operator.add, ast.Sub:operator.sub, ast.Mult:operator.mul, ast.BitOr:operator.or_,
                  ast.BitAnd:operator.and_, ast.LShift:operator.lshift, ast.RShift:operator.rshift}
@@ -311,14 +315,15 @@ def resolve_policy(policy, data, relocations):
                 padding=padding, pointer_addends=policy.get('pointer_addends',{}))
 
 
-def native_blocks(source, layouts=None, text=None, constants=None):
+def native_blocks(source, layouts=None, text=None, constants=None, *, records=None):
     """Apply explicit record fields to parsed bytes, using the shared validator IR.
 
     A layout lists pointer offsets (including NULL), padding before source offsets,
     and optional zero-storage growth. No symbolic word is widened without a field.
     """
     layouts = layouts or {}
-    records = parse(source, text, constants)
+    if records is None:
+        records = parse(source, text, constants)
     unknown = layouts.keys() - {r.symbol for r in records}
     if unknown: raise ValueError(f'{source}: layout has unknown labels: {sorted(unknown)}')
     sections, labels, refs = raw_layout(records)

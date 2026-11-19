@@ -21,6 +21,9 @@ def build_ac(game,build,out,llvm,run,flags):
     # which includes the original unit and adds constant layout observations.
     for i,x in enumerate(command):
         if x==str(source) or (x.endswith('/ap_connect.c') and not x.startswith('-')):command[i]=str(out/'ac-layout.c')
+    # Production emits bitcode with -c. This fixture inspects LLVM assembly;
+    # request that representation explicitly, regardless of the output suffix.
+    command=['-S' if x=='-c' else x for x in command]
     command[command.index('-o')+1]=str(out/'ac-layout.ll');run(command)
     text=(out/'ac-layout.ll').read_text();line=next(l for l in text.splitlines() if l.startswith('@HG_AcLayout ='))
     layout=list(map(int,re.findall(r'i32 (\d+)',line)))

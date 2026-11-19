@@ -26,6 +26,7 @@ list(APPEND hg_overlay_select --select OVY_38)
 # Original GTS provider; gts_data.o validated with 119 relocations.
 list(APPEND hg_overlay_select --select OVY_70)
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${hg_overlay_manifest}"
+    --model "${PROJECT_BINARY_DIR}/native-graph/images.json"
     --game "${game_source}" --adapted-dir "${native_root}" --out "${overlay_link_dir}" ${hg_overlay_select}
     COMMAND_ERROR_IS_FATAL ANY)
 include("${overlay_link_dir}/selection.cmake")
@@ -88,7 +89,7 @@ foreach(id IN LISTS hg_selected_overlay_ids)
         target_include_directories(${target} PRIVATE "$<TARGET_PROPERTY:heartgold_main,INCLUDE_DIRECTORIES>")
         target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:heartgold_main,COMPILE_OPTIONS>>")
         target_link_libraries(${target} PRIVATE nitro_config)
-        add_dependencies(${target} heartgold_overlay_native_sources heartgold_native_headers fx_constants ${heartgold_asset_targets})
+        add_dependencies(${target} heartgold_overlay_native_sources heartgold_native_headers fx_constants ${heartgold_compile_asset_targets})
     endif()
     list(APPEND overlay_archives ${target})
     set(hg_overlay_${id}_archive ${target})
@@ -471,9 +472,7 @@ if(TARGET heartgold_guest32_provider_closure)
         DEPENDS heartgold_guest32_provider_closure heartgold_overlay_link_contract
             "${CMAKE_CURRENT_LIST_DIR}/guest32_admission.py"
         VERBATIM)
-    add_test(NAME guest32_network_admission_build COMMAND "${CMAKE_COMMAND}" --build "${PROJECT_BINARY_DIR}"
-        --target heartgold_guest32_provider_closure -j8)
-    set_tests_properties(guest32_network_admission_build PROPERTIES FIXTURES_SETUP guest32_network_admission)
+    heartgold_test_fixture(guest32_network_admission heartgold_guest32_provider_closure)
     add_test(NAME guest32_dwc_rule_integration COMMAND "${Python3_EXECUTABLE}" -B
         "${PROJECT_SOURCE_DIR}/tests/test_guest32_dwc_rules.py" --build "${PROJECT_BINARY_DIR}"
         --llvm-bin "${guest32_tools}" --lowerer $<TARGET_FILE:guest32-lower>)
@@ -692,6 +691,9 @@ set_tests_properties(global_terminal_native_images PROPERTIES TIMEOUT 120)
 
 add_test(NAME global_terminal_native_image40 COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_global_terminal_native.py" --build "${PROJECT_BINARY_DIR}" --image 40)
+heartgold_test_fixture(global_terminal_images heartgold_image_39 heartgold_image_40)
+set_tests_properties(global_terminal_native_images global_terminal_native_image40 PROPERTIES
+    FIXTURES_REQUIRED global_terminal_images)
 set_tests_properties(global_terminal_native_layout PROPERTIES TIMEOUT 15)
 
 add_custom_target(heartgold_image_report
@@ -708,7 +710,8 @@ set_tests_properties(native_data_ir native_image_graph PROPERTIES
     ENVIRONMENT "HEARTGOLD_TEST_BINARY_DIR=${PROJECT_BINARY_DIR}")
 
 add_test(NAME native_provider_registry COMMAND "${Python3_EXECUTABLE}" -B
-    "${PROJECT_SOURCE_DIR}/tests/test_native_provider_registry.py")
+    "${PROJECT_SOURCE_DIR}/tests/test_native_provider_registry.py"
+    --build "${PROJECT_BINARY_DIR}" --lowerer $<TARGET_FILE:guest32-lower>)
 
 add_test(NAME native_link_evidence COMMAND "${Python3_EXECUTABLE}" -B
     "${PROJECT_SOURCE_DIR}/tests/test_native_link_evidence.py")

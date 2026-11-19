@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstdio>
+#include <cstdint>
 extern "C" {
 #include "sys_task.h"
 void GF_AssertFail(void) { std::abort(); }
@@ -45,11 +46,24 @@ int main() {
     // NitroMain reads the clock before running the overlay manager.
     (void)OS_GetTick();(void)OS_GetTick();
     assert(!OS_GetCpsrIrq());
-    void *arena=std::calloc(1,SysTaskQueue_GetArenaSize(32));assert(arena);
+    OS_InitArena();
+    void *saved_lo=OS_GetArenaLo(OS_ARENA_MAIN), *saved_hi=OS_GetArenaHi(OS_ARENA_MAIN);
+    size_t arena_size=SysTaskQueue_GetArenaSize(32);
+    unsigned char *backing=(unsigned char *)std::calloc(1,arena_size+32);assert(backing);
+    // Reproduce the captured four-byte-aligned, eight-byte-misaligned arena.
+    OS_SetArenaHi(OS_ARENA_MAIN,backing+arena_size+32);
+    OS_SetArenaLo(OS_ARENA_MAIN,backing+4);
+    assert((uintptr_t)OS_GetArenaLo(OS_ARENA_MAIN)%_Alignof(SysTaskQueue)!=0);
+    void *arena=OS_AllocFromArenaLo(OS_ARENA_MAIN,arena_size,_Alignof(SysTaskQueue));
+    assert(arena && (uintptr_t)arena%_Alignof(SysTaskQueue)==0);
+    OS_SetArenaLo(OS_ARENA_MAIN,saved_lo);OS_SetArenaHi(OS_ARENA_MAIN,saved_hi);
     queue=SysTaskQueue_PlacementNew(32,arena);
     OS_SetIrqFunction(OS_IE_V_BLANK,vblank);
     OS_EnableIrqMask(OS_IE_V_BLANK);
-    OS_EnableIrq();
+    OS_DisableIrq();
+    assert(OS_EnableIrq()==FALSE);
+    assert(reg_OS_IME==OS_IME_ENABLE);
+    assert(OS_EnableIrq()==TRUE);
     GX_VBlankIntr(TRUE);
     G3Native_Reset();
     SIM_Render(nullptr); // Establish the actual SDK frame-thread owner.
@@ -79,6 +93,6 @@ int main() {
     unsigned before_wait=irq_count;
     OS_WaitIrq(TRUE,OS_IE_V_BLANK);
     assert(irq_count==before_wait+1 && !OS_GetCpsrIrq() && !irq_depth && !queue->activeCount);
-    std::free(arena);
+    std::free(backing);
     std::puts("Native loading VBlank: 76 tasks, clock-mask preservation, worker exclusion, recursion and single wait dispatch passed");
 }

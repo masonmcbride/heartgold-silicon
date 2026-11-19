@@ -1,5 +1,6 @@
 """Execute original heap, stream callback and independent scalar software paths."""
 import argparse
+import atexit
 import copy
 import hashlib
 import json
@@ -11,6 +12,45 @@ import time
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'compiler/guest32'),str(ROOT/'cmake')]
 from native_data_ir import parse,raw_layout
+from incremental import run as compile_command, snapshot_tools
+
+
+def compile_step(command, tools):
+    """Reuse successful fixture compilation, never execution or rejection checks."""
+    command=list(map(str,command));tool=command[0]
+    if tool not in tools:
+        return None
+    if Path(tool).name=='clang':
+        if '-o' not in command:
+            return None
+        output=Path(command[command.index('-o')+1]);depfile=None
+        if not any(flag in command for flag in ('-c','-emit-llvm')):
+            # Compile each fixture source with its own header depfile, then
+            # link the objects. A single multi-source depfile misses headers.
+            sources=[x for x in command[1:] if Path(x)!=output and Path(x).suffix in ('.c','.cpp')]
+            compile_flags=[];i=1
+            while i<len(command):
+                arg=command[i]
+                if arg=='-o':i+=2;continue
+                if arg not in sources and not Path(arg).is_file() and arg!='-dynamiclib' and not arg.startswith('-Wl,'):
+                    compile_flags.append(arg)
+                i+=1
+            for source in sources:
+                obj=output.with_name(output.name+'.'+hashlib.sha256(source.encode()).hexdigest()[:16]+'.o')
+                result=compile_step([tool,*compile_flags,'-c',source,'-o',str(obj)],tools)
+                if result.returncode:return result
+                command=[str(obj) if arg==source else arg for arg in command]
+        if any(Path(x).suffix in ('.c','.cpp') for x in command):
+            depfile=Path(str(output)+'.d')
+            command += ['-MD','-MF',str(depfile)]
+    else:
+        if '--diagnose' in command:
+            output=Path(command[command.index('--diagnose')+1])
+        else:
+            output=Path(command[2])
+        depfile=None
+    inputs=[Path(x) for x in command[1:] if Path(x) not in (output,depfile) and Path(x).is_file()]
+    return compile_command(command,[output],inputs,depfile,tool_snapshot=tools[tool])
 
 
 def main():
@@ -18,11 +58,13 @@ def main():
     for name in ('build','llvm-bin','lowerer'):p.add_argument('--'+name,type=Path,required=True)
     a=p.parse_args();b=a.build.resolve();llvm=a.llvm_bin.resolve();lowerer=a.lowerer.resolve()
     out=b/'provider-experiments';game=ROOT/'upstream/pokeheartgold';commands=[]
+    tools=snapshot_tools([str(llvm/'clang'),str(lowerer)])
+    atexit.register(lambda: (out/'execution-commands.json').write_text(json.dumps(commands,indent=2)+'\n'))
     def run(args,ok=True):
         started=time.monotonic()
-        r=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=30)
-        commands.append(dict(command=list(map(str,args)),elapsed_seconds=time.monotonic()-started,returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
-        (out/'execution-commands.json').write_text(json.dumps(commands,indent=2)+'\n')
+        r=compile_step(args,tools) if ok else None
+        if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=30)
+        commands.append(dict(command=list(map(str,args)),elapsed_seconds=time.monotonic()-started,returncode=r.returncode,cache_hit=getattr(r,'cache_hit',False),stdout=r.stdout,stderr=r.stderr))
         assert (r.returncode==0)==ok,r.stdout+r.stderr
         return r.stdout+r.stderr
     flags=['-target','armv5-apple-darwin','-ffreestanding','-fno-builtin','-fsigned-char','-fno-short-enums','-std=gnu89','-DSDK_ARM9','-DSDK_CODE_ARM','-DSDK_FINALROM',
@@ -106,16 +148,24 @@ def main():
     vct=[original('lib/libVCT/src/vct_audio.c',['VCT_SetCodec','VCT_EnableVAD','VCT_EnableEchoCancel']),original('lib/libVCT/src/vct_vad.c',['VCT_ResetVAD'])]
     vct.append(describe(ROOT/'tests/provider_vct_guest.c',out/'vct-fixture'))
     results=[]
+    runtime_objects={}
     for name,units,data_sources in [('sound-heap-execution',sound_heap,['lib/asm/nnsys_data.s','lib/asm/nnsys_g3d_snd_bss.s']),('heap-execution',heap,['lib/asm/nnsys_data.s']),('sound-execution',sound,['lib/asm/nnsys_g3d_snd_bss.s']),('scalar-execution',other,[]),('vct-execution',vct,['lib/asm/vct_data.s','lib/asm/vct_control_bss.s'])]:
         directory,catalog,cursor,data=prepare(name,units,data_sources)
         for opt in ('0','2'):
             for sanitized in (False,True):
                 tag='O'+opt+('.asan' if sanitized else '');san=['-fsanitize=address,undefined','-fno-sanitize-recover=all'] if sanitized else []
+                if tag not in runtime_objects:
+                    runtime_objects[tag]=out/('runtime.'+tag+'.o')
+                    run([llvm/'clang','-O'+opt,*san,'-c',ROOT/'hardware_drivers/guest32.c',
+                         '-o',runtime_objects[tag]])
                 objects=[];initializers=[]
                 for index,(work,desc,entries) in enumerate(units):
-                    lowered=directory/(str(index)+'.'+tag+'.ll');obj=lowered.with_suffix('.o')
-                    run([lowerer,work/'guest.ll',lowered,'--abi',work/'execution-abi.json','--native-ir',out/'native.ll','--image',catalog,'--guest-externals','--prefix','guest32_',*sum((['--entry',n] for n in entries or []),[]),*(['--asan'] if sanitized else [])])
-                    run([llvm/'opt','-passes=verify','-disable-output',lowered]);run([llvm/'clang','-O'+opt,*san,'-c',lowered,'-o',obj]);objects.append(obj)
+                    lowered=directory/(str(index)+('.asan' if sanitized else '')+'.ll')
+                    obj=directory/(str(index)+'.'+tag+'.o')
+                    if opt=='0':
+                        run([lowerer,work/'guest.ll',lowered,'--abi',work/'execution-abi.json','--native-ir',out/'native.ll','--image',catalog,'--guest-externals','--prefix','guest32_',*sum((['--entry',n] for n in entries or []),[]),*(['--asan'] if sanitized else [])])
+                        run([llvm/'opt','-passes=verify','-disable-output',lowered])
+                    run([llvm/'clang','-O'+opt,*san,'-c',lowered,'-o',obj]);objects.append(obj)
                     initializers.extend(re.findall(r'define void @(guest32_initialize_\d+)\(',lowered.read_text()))
                 declarations='\n'.join('extern void '+n+'(void*);' for n in initializers)
                 host=directory/('host.'+tag+'.c')
@@ -144,12 +194,12 @@ def main():
                     runtime=directory/('runtime.'+tag+'.dylib')
                     writer=directory/('writer.'+tag+'.dylib')
                     reader=directory/('reader.'+tag+'.dylib')
-                    run([llvm/'clang','-O'+opt,*san,'-dynamiclib',ROOT/'hardware_drivers/guest32.c','-o',runtime])
+                    run([llvm/'clang',*san,'-dynamiclib',runtime_objects[tag],'-o',runtime])
                     run([llvm/'clang',*san,'-dynamiclib',objects[-2],runtime,'-o',writer])
                     run([llvm/'clang',*san,'-dynamiclib',*objects[:-2],objects[-1],writer,runtime,'-Wl,-dead_strip','-o',reader])
                     run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,data,writer,reader,runtime,'-o',exe])
                 else:
-                    run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,ROOT/'hardware_drivers/guest32.c',data,*objects,*extra,'-Wl,-dead_strip','-o',exe])
+                    run([llvm/'clang','-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),host,runtime_objects[tag],data,*objects,*extra,'-Wl,-dead_strip','-o',exe])
                 run([exe])
                 if name=='sound-heap-execution':
                     run([exe,'native-buffer'])

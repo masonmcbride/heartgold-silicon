@@ -32,6 +32,25 @@ static void *read_palette(const char *path, u32 *size) {
     rewind(f);void *raw=palette_alloc(HEAP_ID_DEFAULT,(u32)n);CHECK(raw);
     CHECK(fread(raw,1,n,f)==(size_t)n);fclose(f);*size=(u32)n;return raw;
 }
+static const unsigned char *portrait_palette_fixture;
+static u32 portrait_palette_size;
+static void *portrait_palette_getter(NarcId narc, s32 member,
+                                      NNSG2dPaletteData **view, enum HeapID heap) {
+    CHECK(narc==0 && member==0);
+    void *raw=palette_alloc(heap,portrait_palette_size);CHECK(raw);
+    memcpy(raw,portrait_palette_fixture,portrait_palette_size);
+    return GfGfxLoader_GetPlttDataInternal(raw,portrait_palette_size,heap,view);
+}
+#define GfGfxLoader_GetPlttData portrait_palette_getter
+#define Heap_Alloc palette_alloc
+#define Heap_Free palette_free
+#undef GF_ASSERT
+#define GF_ASSERT CHECK
+#include "portrait_palette_under_test.h"
+#undef Heap_Free
+#undef Heap_Alloc
+#undef GfGfxLoader_GetPlttData
+
 void TestNativePalette(const char *first, const char *second) {
     palette_heap=NNS_FndCreateExpHeapEx(palette_arena,sizeof palette_arena,0);
     CHECK(palette_heap);
@@ -55,6 +74,13 @@ void TestNativePalette(const char *first, const char *second) {
     palette_free(owner2);
     CHECK(((const u16 *)palette1->pRawData)[12]==expected);
     palette_free(owner1);
+    portrait_palette_fixture=original;portrait_palette_size=size1;
+    u32 free_before=NNS_FndGetTotalFreeSizeForExpHeap(palette_heap);
+    void *portrait=AllocAndLoadPltt16FromNarc(0,0,HEAP_ID_DEFAULT);
+    CHECK(portrait && (uintptr_t)portrait>UINT32_MAX && decoded.size>=32);
+    CHECK(!memcmp(portrait,original+colors,32));
+    palette_free(portrait);
+    CHECK(NNS_FndGetTotalFreeSizeForExpHeap(palette_heap)==free_before);
     HG_NCLR_View bad;
     CHECK(!hg_nclr_decode(original,15,&bad) && !bad.colors);
     CHECK(!hg_nclr_decode(original,size1-1,&bad));
@@ -70,6 +96,33 @@ void TestNativePalette(const char *first, const char *second) {
     puts("Original retained-palette loader: Oak color lookup, >4GiB pointers, independent lifetimes and invalid offsets passed");
 }
 
+static const unsigned char *tile_fixture;
+static u32 tile_fixture_size;
+static void *tile_owner;
+static void *tile_getter(NarcId narc, s32 member, BOOL compressed,
+                         NNSG2dCharacterData **view, enum HeapID heap) {
+    CHECK(narc==0 && member==0 && !compressed);
+    void *raw=palette_alloc(heap,tile_fixture_size);CHECK(raw);
+    memcpy(raw,tile_fixture,tile_fixture_size);
+    tile_owner=GfGfxLoader_GetCharDataInternal(raw,tile_fixture_size,heap,view);
+    return tile_owner;
+}
+static void tile_unscan(u8 *pixels, NarcId narc) {
+    CHECK(narc==0 && tile_owner && pixels==(u8 *)tile_owner+48);
+    CHECK((uintptr_t)pixels>UINT32_MAX);
+    /* Check the unscan input boundary without changing the fixture's pixels;
+     * this regression covers pointer transport and the original tile copy. */
+}
+#define GfGfxLoader_GetCharData tile_getter
+#define UnscanPokepic tile_unscan
+#define Heap_Free palette_free
+#undef GF_ASSERT
+#define GF_ASSERT CHECK
+#include "char_tiles_under_test.h"
+#undef Heap_Free
+#undef UnscanPokepic
+#undef GfGfxLoader_GetCharData
+
 void TestNativeCharacter(const char *path) {
     u32 size;
     void *raw=read_palette(path,&size);
@@ -77,6 +130,13 @@ void TestNativeCharacter(const char *path) {
     unsigned char original[1600];memcpy(original,raw,size);
     palette_free(raw);
     u32 free_before=NNS_FndGetTotalFreeSizeForExpHeap(palette_heap);
+    tile_fixture=original;tile_fixture_size=size;
+    unsigned char tiles[3*32];
+    CharTiles_LoadRectFromNarc(0,0,HEAP_ID_DEFAULT,0,0,3,1,tiles);
+    for(unsigned tile=0;tile<3;++tile)
+        for(unsigned row=0;row<8;++row)
+            CHECK(!memcmp(tiles+tile*32+row*4,original+48+row*12+tile*4,4));
+    CHECK(NNS_FndGetTotalFreeSizeForExpHeap(palette_heap)==free_before);
     for (unsigned iteration=0;iteration<100;++iteration) {
         raw=palette_alloc(HEAP_ID_DEFAULT,size);CHECK(raw);
         memcpy(raw,original,size);

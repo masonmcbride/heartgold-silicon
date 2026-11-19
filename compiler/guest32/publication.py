@@ -53,12 +53,14 @@ def require_successful_compilations(results):
         raise ValueError('Failed compilations cannot be published: '+str(sorted(failed)))
 
 
-def publish(out, worker):
+def publish(out, worker, reuse=None, committed=None):
     """Run in an independent generation. Exceptions never change the published tree."""
     out = Path(out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
     with (out.parent / (out.name + '.publication.lock')).open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
+        if reuse is not None and reuse(out):
+            return
         stage = Path(tempfile.mkdtemp(prefix=out.name + '.pending-', dir=out.parent))
         try:
             if out.exists():
@@ -85,3 +87,5 @@ def publish(out, worker):
             }, indent=2) + '\n')
             print('Closure not published; diagnostics: ' + str(stage), file=sys.stderr)
             raise
+        if committed is not None:
+            committed()

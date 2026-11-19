@@ -41,6 +41,16 @@ def definitions(path):
 
 
 class AssetIndices(unittest.TestCase):
+    def test_cartridge_does_not_duplicate_resource_producers(self):
+        # The production Make graph must schedule resource owners rather than
+        # copying their conversion rules into a second target (a parallel race).
+        rules=(BUILD/'CMakeFiles/heartgold_cartridge.dir/build.make').read_text()
+        commands='\n'.join(line for line in rules.splitlines() if line.startswith('\t'))
+        self.assertIn('source_cartridge.py',commands)
+        duplicate=next((line for line in commands.splitlines() if re.search(
+            r'(?:^|[/ \"\t])(?:nitrogfx|nitroarc|jsonproc|msgenc)(?: |$)',line)),None)
+        self.assertIsNone(duplicate,'Resource producer duplicated in cartridge target: '+str(duplicate)[:240])
+
     def test_original_indices_records_and_reproducibility(self):
         for relative in manifest.ARCHIVES:
             with self.subTest(archive=relative):
@@ -184,6 +194,11 @@ add_dependencies(index_consumer heartgold_overlay_index_assets)
                                 [ 'cmake', '--build', str(directory / 'out'), '--target', 'index_consumer', '-j8' ]):
                     subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, check=True)
             self.assertEqual(len(re.findall(r'Generating [^\n]*zukan_hw_data_gold\.narc,', log.read_text())), 1)
+            for relative in manifest.ARCHIVES:
+                plan=manifest.plan(GAME,relative)
+                archive=plan.get('archive_relative',relative)+'.narc'
+                self.assertEqual((directory/'out/heartgold/generated/files'/archive).read_bytes(),
+                                 (BUILD/'generated/files'/archive).read_bytes(),archive)
             subprocess.run([str(directory / 'out/index_consumer')], check=True)
 
 

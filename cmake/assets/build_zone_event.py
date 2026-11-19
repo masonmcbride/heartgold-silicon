@@ -26,7 +26,7 @@ def run(argv, **kwargs):
     return result.stdout
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser()
     for name in (
         "source", "template", "output_dir",
@@ -35,7 +35,7 @@ def main():
     ):
         parser.add_argument("--" + name.replace("_", "-"), required=True)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     source = Path(args.source)
     template = Path(args.template)

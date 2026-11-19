@@ -17,6 +17,8 @@
 #include "llvm/Analysis/ValueTracking.h"
 #include <map>
 #include <functional>
+#include <optional>
+#include <chrono>
 using namespace llvm;
 
 [[noreturn]] static void reject(const Twine &S) {
@@ -42,16 +44,30 @@ static Type *valueType(Type *T) {
 #include "storage_contract.h"
 
 int semanticSlotsMain(int argc, char **argv);
-int main(int argc, char **argv) {
+int objectSymbolsMain(const char *Input,const char *Output);
+struct LowerTimes { double parse=0, catalog=0, transform=0, output=0; };
+static int lowerOne(int argc, char **argv, LLVMContext *SharedContext=nullptr,
+                    std::map<std::string,Image> *Images=nullptr, LowerTimes *Times=nullptr,
+                    raw_ostream *JobLog=nullptr) {
+  raw_ostream &Log=JobLog?*JobLog:outs();
+  auto Previous=std::chrono::steady_clock::now();
+  auto Mark=[&](double LowerTimes::*Field){
+    auto Now=std::chrono::steady_clock::now();
+    if(Times)Times->*Field=std::chrono::duration<double>(Now-Previous).count();
+    Previous=Now;
+  };
+  if(argc==4 && StringRef(argv[1])=="--object-symbols")return objectSymbolsMain(argv[2],argv[3]);
+  if(argc==3 && StringRef(argv[1])=="--check-image"){LLVMContext C;Image I;I.read(argv[2],C);return 0;}
   if(argc==3 && StringRef(argv[1])=="--check-rules") {
     auto B=MemoryBuffer::getFile(argv[2]);if(!B)reject("cannot read rule catalog");
     Rules Checked((*B)->getBuffer());return 0;
   }
   if(argc==4 && StringRef(argv[1])=="--storage-contract")return storageContract(argv[2],argv[3]);
+  if(argc==4 && StringRef(argv[1])=="--storage-contracts")return storageContracts(argv[2],argv[3]);
   if (argc > 1 && StringRef(argv[1]) == "--semantic-slots")
     return semanticSlotsMain(argc - 1, argv + 1);
   if (argc < 3) { errs() << "usage: guest32-lower input.ll output.ll [--asan] [--abi file --native-ir file] [--entry symbol] [--prefix text]\n"; return 2; }
-  bool Asan = false, GuestExternals=false, TypedState=false; std::string AbiPath, NativePath, Prefix, Report, ImagePath;
+  bool Asan = false, GuestExternals=false, TypedState=false; std::string AbiPath, NativePath, Prefix, Report, ImagePath, SourceDump;
   std::set<std::string> Entries,PrivateInlines;
   for (int I = 3; I < argc; ++I) {
     StringRef Flag(argv[I]);
@@ -66,13 +82,21 @@ int main(int argc, char **argv) {
     else if (Flag == "--prefix") Prefix = argv[I];
     else if (Flag == "--diagnose") Report = argv[I];
     else if (Flag == "--image") ImagePath = argv[I];
+    else if (Flag == "--source-ir") SourceDump = argv[I];
     else reject("unknown option " + Flag);
   }
   if (AbiPath.empty() != NativePath.empty()) reject("--abi and --native-ir are required together");
-  LLVMContext C; SMDiagnostic E;
+  LLVMContext OwnedContext; LLVMContext &C=SharedContext?*SharedContext:OwnedContext;
+  SMDiagnostic E;
   auto In = parseIRFile(argv[1], E, C);
   if (!In) { E.print(argv[0], errs()); return 1; }
   if (verifyModule(*In, &errs())) return 1;
+  Mark(&LowerTimes::parse);
+  if(!SourceDump.empty()){
+    std::error_code EC;raw_fd_ostream OS(SourceDump,EC);
+    if(EC){errs()<<EC.message()<<'\n';return 1;}
+    In->print(OS,nullptr);OS.close();if(OS.has_error())return 1;
+  }
   for(const auto &Name:PrivateInlines){
     Function *F=In->getFunction(Name);
     if(!F || !privateInlineEligible(*F))reject("unproved translation-unit inline identity: "+Name);
@@ -81,14 +105,12 @@ int main(int argc, char **argv) {
     F->setMetadata("guest32.private.inline",MDNode::get(C,{}));
   }
   ABI Interfaces;
-  Image Img;if(!ImagePath.empty())Img.read(ImagePath,C);
   if (!AbiPath.empty()) {
     auto Native = parseIRFile(NativePath, E, C);
     if (!Native) { E.print(argv[0], errs()); return 1; }
     if (verifyModule(*Native, &errs())) return 1;
     if (Native->getDataLayout().getPointerSizeInBits() != 64) reject("native ABI needs 64-bit pointers");
     Interfaces.read(AbiPath, *Native);
-    for(auto &Pair:Img.codes)Pair.second.nativeBoundary=Interfaces.calls.count(Pair.second.name);
     for (const auto &S : Interfaces.calls) if (Function *F = In->getFunction(S.first)) ABI::checkGuest(*F,S.second);
     for (const auto &S : Interfaces.exports) {
       Function *F = In->getFunction(S.first);
@@ -96,6 +118,26 @@ int main(int argc, char **argv) {
       ABI::checkGuest(*F,S.second);
     }
   }
+  Image LocalImage;Image *SelectedImage=&LocalImage;
+  if(!ImagePath.empty()){
+    if(Images){
+      auto Existing=Images->find(ImagePath);
+      if(Existing==Images->end()){
+        Image Loaded;Loaded.read(ImagePath,C);
+        Existing=Images->emplace(ImagePath,std::move(Loaded)).first;
+      }
+      // Pure guest providers read the validated worker catalog directly. Entry
+      // filtering or native boundary annotations require a private module view.
+      if(Entries.empty() && Interfaces.calls.empty())SelectedImage=&Existing->second;
+      else LocalImage=Existing->second;
+    }else LocalImage.read(ImagePath,C);
+  }
+  Image &Img=*SelectedImage;
+  // Entry-filtered fixtures retain their original TU-local dispatchers.
+  if(!Entries.empty())Img.dispatcherImage.clear();
+  if(!Interfaces.calls.empty())
+    for(auto &Pair:Img.codes)Pair.second.nativeBoundary=Interfaces.calls.count(Pair.second.name);
+  Mark(&LowerTimes::catalog);
   if (!Report.empty()) {
     for(Function &F:*In)if(!F.isDeclaration()){
       SmallVector<AllocaInst*> A;for(Instruction &I:F.getEntryBlock())if(auto *X=dyn_cast<AllocaInst>(&I))if(isAllocaPromotable(X))A.push_back(X);
@@ -253,14 +295,14 @@ int main(int argc, char **argv) {
       if(GuestExternals && G.hasInitializer() && !G.hasLocalLinkage())
         new GlobalVariable(Out,Type::getInt32Ty(C),true,GlobalValue::ExternalLinkage,
           ConstantInt::get(Type::getInt32Ty(C),Placement->second.offset),Prefix+"address_"+G.getName());
-      outs() << G.getName() << " " << Placement->second.offset << " " << Placement->second.size << '\n';
+      Log << G.getName() << " " << Placement->second.offset << " " << Placement->second.size << '\n';
       Next = std::max(Next,(uint64_t)Placement->second.offset + Placement->second.size);
       continue;
     }
     if (!Size) reject("zero-sized global");
     if (Next + Size > UINT32_MAX) reject("global address overflow");
     V[&G] = ConstantInt::get(Type::getInt32Ty(C), Next);
-    outs() << G.getName() << " " << Next << " " << Size << '\n';
+    Log << G.getName() << " " << Next << " " << Size << '\n';
     Next += Size;
   }
   for (Function &F : *In) {
@@ -668,7 +710,18 @@ int main(int argc, char **argv) {
   }
   Contracts.evidence(Out);
   if (verifyModule(Out, &errs())) return 1;
+  Mark(&LowerTimes::transform);
   std::error_code EC; raw_fd_ostream OS(argv[2], EC);
   if (EC) { errs() << EC.message() << '\n'; return 1; }
   Out.print(OS, nullptr);
+  OS.close();if(OS.has_error())return 1;
+  Mark(&LowerTimes::output);
+  return 0;
+}
+
+#include "lower_batch.h"
+
+int main(int argc,char **argv){
+  if(argc==4 && StringRef(argv[1])=="--lower-batch")return lowerBatch(argv[2],argv[3]);
+  return lowerOne(argc,argv);
 }

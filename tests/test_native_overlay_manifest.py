@@ -13,6 +13,25 @@ import native_overlay_manifest as manifest
 
 
 class ManifestTests(unittest.TestCase):
+    def test_current_model_matches_independent_selection_and_rejects_wrong_roots(self):
+        import copy
+        from native_image_graph import graph
+        game=ROOT/'upstream/pokeheartgold'
+        with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR', ROOT/'build')) as d:
+            binary=Path(d);out=binary/'native-overlays';adapted=binary/'native'
+            names=['OVY_36','intro_title','OVY_62','ds_protect']
+            model=graph(game,binary)
+            before=manifest.generate(game,out,names.copy(),adapted,supported=True)
+            outputs={p.name:p.read_bytes() for p in out.iterdir() if p.is_file()}
+            after=manifest.generate(game,out,names.copy(),adapted,supported=True,model=model)
+            self.assertEqual(before,after)
+            self.assertEqual(outputs,{p.name:p.read_bytes() for p in out.iterdir() if p.is_file()})
+            wrong=copy.deepcopy(model);wrong['images']['OVY_36']['after']=[]
+            with self.assertRaisesRegex(ValueError,'membership differs'):
+                manifest.generate(game,out,names.copy(),adapted,model=wrong)
+            with self.assertRaisesRegex(ValueError,'output roots differ'):
+                manifest.generate(game,binary/'wrong', ['OVY_72'],adapted,model=model)
+
     def test_original_membership_ids_and_after(self):
         game = ROOT / 'upstream/pokeheartgold'
         images = manifest.parse_manifest(game / 'main.lsf')

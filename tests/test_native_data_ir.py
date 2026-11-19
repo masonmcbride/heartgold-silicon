@@ -11,6 +11,18 @@ import subprocess
 
 
 class DataIRTests(unittest.TestCase):
+    def test_literal_and_expression_integer_semantics(self):
+        from native_data_ir import integer
+        import ast
+        for value in ('0', '000', '+0', '-0', '17', '-256', '+0XFF', '0xdeadBEEF',
+                      '1_000', '0b101', '0o17', '~7', '(4+8)<<2'):
+            self.assertEqual(integer(value), eval(compile(ast.parse(value, mode='eval'), '', 'eval'),
+                                                  {'__builtins__': {}}))
+        self.assertEqual(integer('LIMIT+2', {'LIMIT': 5}), 7)
+        for value in ('012', '١٢', '1.0', 'True', '0x', 'f()', '1/2'):
+            with self.assertRaises(ValueError):
+                integer(value)
+
     def test_original_space_product(self):
         from native_data_ir import integer
         self.assertEqual(integer('16 * 11'),176)

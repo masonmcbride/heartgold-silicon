@@ -61,6 +61,10 @@ int main(int argc,char **argv)
         assert(poll(&x,&y,&touch)==9);
         key(NSEventTypeKeyUp,36);assert(poll(&x,&y,&touch)==1);
         key(NSEventTypeKeyUp,6);assert(poll(&x,&y,&touch)==0);
+        // Both events may arrive during a slow frame or synchronous map load.
+        key(NSEventTypeKeyDown,1);key(NSEventTypeKeyUp,1); // S: DS X / menu
+        assert(poll(&x,&y,&touch)==1024);
+        assert(poll(&x,&y,&touch)==0);
         mouse(NSEventTypeLeftMouseDown,100,80);poll(&x,&y,&touch);assert(touch && x==100 && y==80);
         mouse(NSEventTypeLeftMouseDragged,255,191);poll(&x,&y,&touch);assert(touch && x==255 && y==191);
         mouse(NSEventTypeLeftMouseUp,255,191);poll(&x,&y,&touch);assert(!touch);

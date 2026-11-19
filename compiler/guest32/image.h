@@ -1,4 +1,5 @@
 // Symbol identity and constants in a relocatable guest image. MIT
+#include "llvm/ADT/StringMap.h"
 #include "llvm/IR/Operator.h"
 #include "llvm/IR/IntrinsicInst.h"
 #include "llvm/IR/Intrinsics.h"
@@ -80,18 +81,68 @@ struct RegisterEdge {
   std::string source,function,target,previous,mode; unsigned line,argument,offset,resultBytes;
   std::string global;
 };
+// A dictionary of field names plus fixed-width rows avoids reparsing identical
+// object keys for every code identity. Object catalogs retain their original
+// representation; both forms feed the same semantic validation below.
+struct CodeRecord {
+  const json::Object *object=nullptr;
+  const json::Array *row=nullptr;
+  const StringMap<unsigned> &fields;
+  uint64_t present=0;
+  CodeRecord(const json::Value &V,const StringMap<unsigned> &Fields)
+      : fields(Fields) {
+    if(fields.empty()){
+      object=V.getAsObject();if(!object)reject("image code record object");
+    }else{
+      row=V.getAsArray();
+      if(!row || row->size()!=fields.size()+1)reject("image code row width");
+      auto Mask=(*row)[0].getAsInteger();
+      if(!Mask || *Mask<0 || (uint64_t)*Mask>>fields.size())reject("image code row presence mask");
+      present=*Mask;
+    }
+  }
+  const json::Value *get(StringRef Key) const {
+    if(object)return object->get(Key);
+    auto Field=fields.find(Key);
+    if(Field==fields.end() || !(present&(uint64_t(1)<<Field->second)))return nullptr;
+    return &(*row)[Field->second+1];
+  }
+  std::optional<int64_t> getInteger(StringRef K) const {auto *V=get(K);return V?V->getAsInteger():std::nullopt;}
+  std::optional<bool> getBoolean(StringRef K) const {auto *V=get(K);return V?V->getAsBoolean():std::nullopt;}
+  std::optional<StringRef> getString(StringRef K) const {auto *V=get(K);return V?V->getAsString():std::nullopt;}
+  const json::Array *getArray(StringRef K) const {auto *V=get(K);return V?V->getAsArray():nullptr;}
+};
 struct Image {
+  bool directCallsOnly=false;
+  std::map<std::string,std::string> dispatchOwners;
+  std::string dispatcherImage;
   std::vector<RegisterEdge> registerEdges;
   std::map<std::string,CodeSymbol> codes;
   void read(StringRef Path,LLVMContext &C){
     auto B=MemoryBuffer::getFile(Path);if(!B)reject("image catalog file");
     auto J=json::parse((*B)->getBuffer());if(!J){consumeError(J.takeError());reject("image catalog JSON");}
+    directCallsOnly=J->getAsObject()->getBoolean("direct_calls_only").value_or(false);
+    dispatcherImage=J->getAsObject()->getString("dispatcher_image").value_or("").str();
+    if(auto *Owners=J->getAsObject()->getObject("dispatch_owners"))for(const auto &Pair:*Owners){
+      auto Owner=Pair.second.getAsString();
+      if(!Owner || dispatcherImage.empty())reject("indirect dispatch ownership contract");
+      dispatchOwners.emplace(Pair.first.str(),Owner->str());
+    }
     if(auto *E=J->getAsObject()->getArray("register_edges"))for(auto &V:*E){auto &O=*V.getAsObject();
       registerEdges.push_back({O.getString("source")->str(),O.getString("function")->str(),O.getString("target")->str(),O.getString("previous").value_or("").str(),O.getString("mode")->str(),(unsigned)*O.getInteger("line"),(unsigned)O.getInteger("argument").value_or(0),(unsigned)O.getInteger("offset").value_or(0),(unsigned)O.getInteger("result_bytes").value_or(0),O.getString("global").value_or("").str()});
     }
+    StringMap<unsigned> Fields;
+    if(auto *FieldValue=J->getAsObject()->get("code_fields")){
+      auto *Names=FieldValue->getAsArray();
+      if(!Names || Names->empty() || Names->size()>63)reject("image code field dictionary");
+      for(const auto &Name:*Names){
+        auto Key=Name.getAsString();
+        if(!Key || !Fields.try_emplace(*Key,Fields.size()).second)reject("image code field dictionary");
+      }
+    }
     auto *A=J->getAsObject()->getArray("codes");if(!A)reject("image code catalog");
     std::map<uint32_t,std::string> Addresses;
-    for(auto &V:*A){auto &O=*V.getAsObject();SmallVector<Type*> Args;
+    for(auto &V:*A){CodeRecord O(V,Fields);SmallVector<Type*> Args;
       auto Address=O.getInteger("address");
       if(!Address || *Address<0 || (uint64_t)*Address>UINT32_MAX)
         reject("guest code identity is not a 32-bit value");
@@ -244,12 +295,36 @@ static json::Object argumentUse(Argument &Arg){
   };Walk(&Arg);
   return json::Object{{"observed",Observed},{"dependencies",std::move(Dependencies)}};
 }
+static std::string dispatchType(Type *T){
+  if(auto *A=dyn_cast<ArrayType>(T))return "["+std::to_string(A->getNumElements())+":"+dispatchType(A->getElementType())+"]";
+  if(auto *S=dyn_cast<StructType>(T)){
+    std::string Result="{";for(unsigned I=0;I<S->getNumElements();++I){if(I)Result+=",";Result+=dispatchType(S->getElementType(I));}
+    return Result+"}";
+  }
+  return typeText(T);
+}
 static Function *indirectDispatcher(Module &Out,Image &Img,ABI &Interfaces,Module &Input,StringRef Prefix,FunctionType *Site,
     std::map<FunctionType*,Function*> &Cache){
+  if(Img.directCallsOnly)reject("indirect call requires executable code catalog");
   if(Cache.count(Site))return Cache.at(Site);
   LLVMContext &C=Out.getContext();SmallVector<Type*> A{PointerType::getUnqual(C),Type::getInt32Ty(C)};
   for(unsigned I=1;I<Site->getNumParams();++I)A.push_back(Site->getParamType(I));
-  auto *F=Function::Create(FunctionType::get(Site->getReturnType(),A,false),GlobalValue::InternalLinkage,"guest_indirect",Out);
+  auto Scalar=[](Type *T){return T->isIntegerTy() || T->isFloatingPointTy() || T->isPointerTy() || T->isVoidTy();};
+  bool Eligible=Scalar(Site->getReturnType());for(Type *T:Site->params())Eligible&=Scalar(T);
+  std::string Name="guest_indirect";bool Shared=!Img.dispatcherImage.empty() && Interfaces.calls.empty() && Eligible,Owner=true;
+  if(Shared){
+    std::string Key=dispatchType(Site->getReturnType());
+    for(Type *T:Site->params())Key+="|"+dispatchType(T);
+    auto Found=Img.dispatchOwners.find(Key);
+    if(Found==Img.dispatchOwners.end())reject("missing indirect dispatch owner: "+Key);
+    Owner=Found->second==Input.getSourceFileName();
+    Name="guest32_dispatch_"+Img.dispatcherImage+"_";
+    for(unsigned char Ch:Key){Name+="0123456789abcdef"[Ch>>4];Name+="0123456789abcdef"[Ch&15];}
+    if(Out.getNamedValue(Name))reject("indirect dispatch symbol collision");
+  }
+  auto *F=Function::Create(FunctionType::get(Site->getReturnType(),A,false),
+      Shared?GlobalValue::ExternalLinkage:GlobalValue::InternalLinkage,Name,Out);
+  if(Shared && !Owner){Cache[Site]=F;return F;}
   Cache[Site]=F;auto *Entry=BasicBlock::Create(C,"entry",F),*Bad=BasicBlock::Create(C,"bad_signature_or_identity",F);
   IRBuilder<> B(Entry);auto *S=B.CreateSwitch(F->getArg(1),Bad);
   SmallVector<Value*> Values{F->getArg(0)};for(unsigned I=2;I<F->arg_size();++I)Values.push_back(F->getArg(I));

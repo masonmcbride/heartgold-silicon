@@ -12,6 +12,9 @@ import io
 import sys
 from unittest.mock import patch
 
+# Match the module search path used when executing the production runner.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'cmake'))
+
 spec = importlib.util.spec_from_file_location(
     "converter", Path(__file__).resolve().parents[1] / "cmake/assets/build_heartgold_script.py"
 )
@@ -22,9 +25,103 @@ runner_spec = importlib.util.spec_from_file_location(
     'build_progress', Path(__file__).resolve().parents[1] / 'cmake/profile_build.py')
 progress = importlib.util.module_from_spec(runner_spec)
 runner_spec.loader.exec_module(progress)
+trace_spec = importlib.util.spec_from_file_location(
+    'build_trace', Path(__file__).resolve().parents[1] / 'cmake/trace_build.py')
+trace = importlib.util.module_from_spec(trace_spec)
+trace_spec.loader.exec_module(trace)
+
+
+class BuildTrace(unittest.TestCase):
+    def test_compile_category_uses_object_target_not_include_paths(self):
+        command = ['clang', '-I/tmp/heartgold_overlay_12/include', '-o',
+                   'CMakeFiles/heartgold_main.dir/main.c.o', '-c', 'main.c']
+        self.assertEqual(trace.group('compile', command), 'Native game object compilation')
+        command[3] = 'CMakeFiles/heartgold_overlay_12.dir/main.c.o'
+        self.assertEqual(trace.group('compile', command), 'Native overlay object compilation')
+
+    def test_overlaps_partition_wall_time_without_double_counting(self):
+        rows = [dict(start=1, end=5, group='A'), dict(start=3, end=7, group='B'),
+                dict(start=4, end=6, group='C')]
+        result = trace.distribution(rows, 0, 10)
+        self.assertEqual(sum(result.values()), 10)
+        self.assertEqual(result['A'], 2)
+        self.assertEqual(result['A + B'], 1)
+        self.assertEqual(result['A + B + C'], 1)
+        self.assertEqual(result['B + C'], 1)
+        self.assertEqual(result['B'], 1)
+        self.assertEqual(sum(v for k, v in result.items() if k.startswith('Make ')), 4)
+
+    def test_real_make_rules_preserve_compile_database_and_exit_status(self):
+        import json
+        import time
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work, prefix='rule trace ') as name:
+            source = Path(name)
+            build = source / 'binary'
+            records = source / 'records'
+            driver = Path(trace.__file__).resolve()
+            (source / 'main.c').write_text('int main(void){return 0;}\n')
+            (source / 'CMakeLists.txt').write_text('''cmake_minimum_required(VERSION 3.24)
+project(Trace C)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(trace_prefix [==["'''+sys.executable+'" -B "'+str(driver)+'''"]==])
+foreach(kind COMPILE LINK CUSTOM)
+ string(TOLOWER "${kind}" lower)
+ set_property(GLOBAL PROPERTY RULE_LAUNCH_${kind} "${trace_prefix} ${lower}")
+endforeach()
+add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/marker"
+ COMMAND "${CMAKE_COMMAND}" -E touch "${CMAKE_BINARY_DIR}/marker")
+add_custom_target(generate_marker ALL DEPENDS "${CMAKE_BINARY_DIR}/marker")
+add_executable(check main.c)
+''')
+            def run(command, **kwargs):
+                result = subprocess.run(list(map(str, command)), capture_output=True, text=True, **kwargs)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            run(['cmake', '-S', source, '-B', build, '-G', 'Unix Makefiles'])
+            commands = json.loads((build / 'compile_commands.json').read_text())
+            self.assertNotIn(str(driver), commands[0]['command'])
+            start = time.monotonic()
+            env = dict(os.environ, HEARTGOLD_COMMAND_TRACE=str(records))
+            run(['cmake', '--build', build, '-j2'], env=env)
+            end = time.monotonic()
+            run([build / 'check'])
+            report = trace.report(records, start, end)
+            self.assertEqual(report['commands'], 3)
+            self.assertAlmostEqual(sum(report['wall_partition'].values()), end-start)
+            result = subprocess.run([sys.executable, str(driver), 'custom', sys.executable,
+                '-c', 'raise SystemExit(7)'], env=env)
+            self.assertEqual(result.returncode, 7)
 
 
 class BuildProgress(unittest.TestCase):
+    def test_configuration_uses_cmake_dependencies_and_glob_checks(self):
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work, prefix='configure check ') as name:
+            source=Path(name);build=source/'binary'
+            (source/'settings.cmake').write_text('# initial\n')
+            (source/'CMakeLists.txt').write_text('''cmake_minimum_required(VERSION 3.24)
+project(Regeneration NONE)
+include("${CMAKE_SOURCE_DIR}/settings.cmake")
+file(GLOB inputs CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/*.input")
+file(APPEND "${CMAKE_BINARY_DIR}/visits" "configured\\n")
+''')
+            def run(command):
+                result=subprocess.run(command,capture_output=True,text=True)
+                self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            def command(tracing=False):
+                return progress.configuration_command(source,build,'/cc','/cxx',sys.executable,tracing)
+            run(command())
+            check=command()
+            self.assertEqual(check[-1],'cmake_check_build_system')
+            visits=build/'visits'
+            before=visits.read_text();run(check);self.assertEqual(visits.read_text(),before)
+            def older_configuration():
+                path=build/'CMakeFiles/Makefile.cmake';state=path.stat()
+                os.utime(path,ns=(state.st_atime_ns,state.st_mtime_ns-2_000_000_000))
+            older_configuration();(source/'settings.cmake').write_text('# changed\n')
+            run(check);self.assertEqual(visits.read_text(),before+'configured\n')
+            older_configuration();(source/'new.input').write_text('new inventory\n')
+            run(check);self.assertEqual(visits.read_text(),before+'configured\nconfigured\n')
+            self.assertIn('-DHEARTGOLD_TRACE_BUILD=ON',command(True))
+
     def test_production_cmake_rejects_partial_or_unverified_game_graphs(self):
         root = Path(__file__).resolve().parents[1]
         cc = subprocess.check_output(['xcrun', '--find', 'clang'], text=True).strip()
@@ -94,10 +191,27 @@ class BuildProgress(unittest.TestCase):
                     'print(' + repr('\n'.join(lines)) + ')'])
             text = output.getvalue()
             self.assertIn('graph 32%', text)
-            self.assertIn('CPU-heavy: provider compilation', text)
+            self.assertIn('CPU-heavy: provider pipeline', text)
+            self.assertNotIn('observed ', text)
             self.assertIn('described 100 / 836', text)
             self.assertIn('Executable linkage', text)
             self.assertNotIn('\x1b', text)
+
+    def test_measured_components_exclude_previous_build_profiles(self):
+        import json
+        with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
+            build = Path(directory)
+            assets = build/'asset-plans'; assets.mkdir()
+            stale = assets/'messages-profile.json'
+            stale.write_text(json.dumps(dict(seconds=12, jobs=829, executed=829)))
+            cutoff = stale.stat().st_mtime_ns+1
+            os.utime(stale, ns=(cutoff-100, cutoff-100))
+            fresh = assets/'graphics-profile.json'
+            fresh.write_text(json.dumps(dict(seconds=.7, jobs=3282, executed=0)))
+            os.utime(fresh, ns=(cutoff+100, cutoff+100))
+            values = progress.native_component_timings(build, cutoff)
+            self.assertNotIn('Text encoding', values)
+            self.assertEqual(values['Graphics/resource staging'], dict(seconds=.7, executed=0, jobs=3282))
 
     def test_terminal_bar_uses_make_percent(self):
         with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
@@ -108,7 +222,8 @@ class BuildProgress(unittest.TestCase):
                 runner.run('Native build', [sys.executable, '-c',
                     'import time; print("[ 37%] Building C object main.o", flush=True); time.sleep(0.2)'])
             self.assertIn('37%', output.getvalue())
-            self.assertIn('step ', output.getvalue())
+            self.assertIn('stage ', output.getvalue())
+            self.assertNotIn('step ', output.getvalue())
 
     def test_compact_terminal_keeps_recent_filenames_and_complete_log(self):
         with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:

@@ -65,14 +65,14 @@ def depfile_escape(path):
             .replace("#", "\\#").replace(" ", "\\ ").replace("\t", "\\\t"))
 
 
-def main():
+def main(argv=None):
     p = argparse.ArgumentParser()
     for name in (
         "source", "binary", "work-dir", "game", "libntr",
         "generated-files", "clang", "objcopy", "readelf"
     ):
         p.add_argument("--" + name, required=True)
-    a = p.parse_args()
+    a = p.parse_args(argv)
 
     source = Path(a.source).resolve()
     game = Path(a.game).resolve()

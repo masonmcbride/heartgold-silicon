@@ -2,6 +2,7 @@
 #include <nitro.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <ntr_host.h>
 #include "nvram.h"
 #include "../hardware_drivers/audio/native_audio.h"
@@ -28,13 +29,28 @@ int main(int argc, char **argv)
         perror("native cartridge startup (pass image path or HEARTGOLD_CARTRIDGE)");
         return 3;
     }
+    const char *save = getenv("HEARTGOLD_SAVE");
+    char *default_save = NULL;
+    if (!save || !*save) {
+        default_save = malloc(strlen(cartridge) + sizeof ".sav");
+        if (!default_save) { HG_CartridgeShutdown(); return 3; }
+        strcpy(default_save, cartridge); strcat(default_save, ".sav");
+        save = default_save;
+    }
+    /* Original HeartGold FLASH_4MBITS cartridge backup: 512 KiB. */
+    if (!HG_BackupOpen(save, 512 * 1024)) {
+        perror(save); free(default_save); HG_CartridgeShutdown(); return 3;
+    }
+    fprintf(stderr, "HeartGold save: %s\n", save);
+    free(default_save);
     *(vu32 *)HW_RED_RESERVED = HG_CartridgeIdentity();
     *(vu32 *)HW_BOOT_CHECK_INFO_BUF = HG_CartridgeIdentity();
     /* Original simulator transport, before original engine execution. */
     SIM_pxiInit();
     const char *firmware = getenv("HEARTGOLD_FIRMWARE");
+    if (!firmware || !*firmware) firmware = HG_DEFAULT_FIRMWARE_PATH;
     if (!HG_NVRAM_Initialize(firmware)) {
-        perror(firmware ? firmware : "heartgold-native-firmware.bin");
+        perror(firmware);
         HG_CartridgeShutdown();
         return 3;
     }
@@ -86,6 +102,8 @@ int main(int argc, char **argv)
 
     NitroMain();
     CARD_WaitRomAsync();
+    CARD_WaitBackupAsync();
+    HG_BackupClose();
     HG_NVRAM_Shutdown();
     HG_CartridgeShutdown();
     return 0;

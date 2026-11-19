@@ -57,6 +57,47 @@ the native-data fixture exercises the common decoded owners with real assets.
 
 ## Remaining limits
 
+### Main-loop follow-up
+
+Reviewed `NitroMain`'s overlay/task ordering, its two clock reads, RTC update,
+IGT update, buffer swap request, print queue, frame wait, brightness/fade update,
+registered frame callback, sound-update boundary and VWait queue. Additional
+source checks covered `system.c`, `sys_task.c`/`sys_task_api.c`, `gf_rtc.c`,
+`brightness.c`, `screen_fade.c`, `screen_fade_effects.c`,
+`swap_3d_buffers.c`, `igt_counter.c`, `timer3.c`, `heap.c`, SDK arena allocation
+and SDK interrupt/clock return paths. This is targeted review of state, storage,
+returns and ownership, not line-by-line proof of every downstream SDK service.
+
+New correction: all four `InitSystemForTheGame` task arenas now request
+`_Alignof(SysTaskQueue)` instead of 4. The heap's pointer-table reservation now
+requests `_Alignof(NNSFndHeapHandle)`. The previously captured VBlank arena
+address was four bytes off an eight-byte boundary. The SDK arena allocator
+honors the requested alignment; it did not repair the caller's DS assumption.
+The native loading regression now deliberately starts the arena misaligned and
+allocates the queue using its actual alignment. Source tests also cover the
+four production startup calls. These changes have not been built/tested here.
+
+Not widened: the async-save marker is genuinely one `u32`; the swap-request
+record contains numeric enum/BOOL fields; the RTC work contains numeric date/time
+records, not serialized native pointers. No game timing or input algorithm was
+replaced during this review.
+
+The latest user trace still passes NULL to `SysTask_Destroy` from
+`MapObjectRender_DestroyQueue` when leaving the room, even with the clock restore
+present in the inspected executable. Current queue/scheduling behavior therefore
+remains unresolved; the new alignment correction is not claimed to explain it.
+
+Rendering follow-up: `AreaDataManager` enables edge marking and sets the DS edge
+table, but `hardware_drivers/metal/g3_metal.mm` has no corresponding edge-table
+input or edge-marking pass. Missing outlines are a renderer feature gap. The
+intermittent clock line has not been attributed to one proven cause. Changing
+depth comparison, geometry or camera parameters without evidence would be a
+different kind of workaround and has not been done.
+
+See [NATIVE_RUNTIME_PATTERNS.md](NATIVE_RUNTIME_PATTERNS.md) for the chronological
+failure trail and the distinction between corrected, user-observed and unresolved
+cases.
+
 A later runtime capture found the VBlank queue at 32/32 during
 `Footprints_LoadModels`. The source-only entry review did not prove scheduling
 progress during synchronous loading. The SDK now includes cooperative due

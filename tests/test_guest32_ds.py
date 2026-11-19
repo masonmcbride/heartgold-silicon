@@ -13,6 +13,9 @@ from native_data_ir import parse,raw_layout,integer
 from original_layout import anchored_sections,verified_sections,MAIN_BASE,MAIN_SIZE
 
 
+from incremental import snapshot_tools
+from provider_software_execution import compile_step
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--build',type=Path,required=True)
@@ -21,8 +24,10 @@ def main():
     a=p.parse_args();build=a.build.resolve();llvm=a.llvm_bin.resolve();clang=llvm/'clang'
     out=build/'guest32-ds-tests';out.mkdir(parents=True,exist_ok=True)
     game=ROOT/'upstream/pokeheartgold';commands=[]
+    tools=snapshot_tools([str(llvm/'clang'),str(a.lowerer.resolve())])
     def run(args,ok=True):
-        r=subprocess.run(list(map(str,args)),text=True,capture_output=True)
+        r=compile_step(args,tools) if ok else None
+        if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True)
         commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
         (out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n')
         assert (r.returncode==0)==ok,r.stdout+r.stderr

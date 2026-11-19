@@ -149,6 +149,18 @@ class GraphTests(unittest.TestCase):
             configure(ROOT/'upstream/pokeheartgold',out)
             self.assertEqual(before,{p.name:(p.read_bytes(),p.stat().st_mtime_ns) for p in out.iterdir()})
             generated=(out/'main-data.cmake').read_text()
+            model=json.loads((out/'images.json').read_text())
+            cmake=(out/'sources.cmake').read_text()
+            import re
+            for name in ('main','OVY_0','OVY_38'):
+                objects=model['images'][name]['objects']
+                expected=dict(objects=objects,
+                    C_objects=[obj for obj in objects if model['members'][obj]['kind']=='C'],
+                    inputs=[str(ROOT/'upstream/pokeheartgold'/model['members'][obj]['source'])
+                            for obj in objects] if name!='main' else [])
+                for suffix,values in expected.items():
+                    body=re.search(r'set\(hg_original_image_'+name+'_'+suffix+r'\n(.*?)\)',cmake,re.S)[1]
+                    self.assertEqual(re.findall(r'^"([^"]+)"$',body,re.M),values)
             # Main adaptations must remain in the authoritative original inventory.
             from native_sources import MAIN_NATIVE_SOURCES
             sources=(out/'sources.cmake').read_text().split(')\n',1)[0]

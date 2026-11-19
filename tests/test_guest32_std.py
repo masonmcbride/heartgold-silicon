@@ -6,19 +6,24 @@ import subprocess
 import copy
 import sys
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'cmake'))
+sys.path[:0]=[str(ROOT/'cmake'),str(ROOT/'compiler/guest32')]
 from native_overlay_link import generate_contracts
 
+
+from incremental import snapshot_tools
+from provider_software_execution import compile_step
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--build',type=Path,required=True);p.add_argument('--llvm-bin',type=Path,required=True);p.add_argument('--lowerer',type=Path,required=True)
  a=p.parse_args();b=a.build.resolve();llvm=a.llvm_bin.resolve();out=b/'guest32-std-tests';out.mkdir(exist_ok=True);commands=[]
+ tools=snapshot_tools([str(llvm/'clang'),str(a.lowerer.resolve())])
  def run(args):
-  r=subprocess.run(list(map(str,args)),capture_output=True,text=True);commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
+  r=compile_step(args,tools)
+  if r is None:r=subprocess.run(list(map(str,args)),capture_output=True,text=True)
+  commands.append(dict(command=list(map(str,args)),returncode=r.returncode,stdout=r.stdout,stderr=r.stderr))
   (out/'commands.json').write_text(json.dumps(commands,indent=2)+'\n');assert not r.returncode,r.stdout+r.stderr
   return r.stdout+r.stderr
- run(['cmake','--build',b,'--target','heartgold_guest32_std_build','heartgold_guest32_account_build','-j8'])
  manifests=[b/'guest32-std/providers.json',b/'guest32-account/providers.json']
  bad=copy.deepcopy(json.loads(manifests[1].read_text()))
  family=next(iter(bad['families'].values()));assert family['inline_definitions']
