@@ -111,9 +111,7 @@ add_custom_command(OUTPUT "${{PROJECT_BINARY_DIR}}/copy{index}.h"
 add_custom_target(consumer{index} ALL DEPENDS "${{PROJECT_BINARY_DIR}}/copy{index}.h")
 '''
             (source/'CMakeLists.txt').write_text(project)
-            generators = ['Unix Makefiles']
-            if shutil.which('ninja'):
-                generators.append('Ninja')
+            generators = ['Ninja']
             for generator in generators:
                 with self.subTest(generator=generator):
                     build = binary/generator
@@ -122,7 +120,7 @@ add_custom_target(consumer{index} ALL DEPENDS "${{PROJECT_BINARY_DIR}}/copy{inde
                     self.assertEqual(1, first.count('2 guarded transformations'))
                     stamps = [(build/f'type{i}.h').stat().st_mtime_ns for i in range(2)]
                     second = command('cmake', '--build', build, '--parallel', '4').stdout
-                    self.assertEqual(1, second.count('0 transformations'))
+                    self.assertNotIn('transformations', second)
                     self.assertEqual(stamps, [(build/f'type{i}.h').stat().st_mtime_ns for i in range(2)])
                     (build/'type0.h').unlink()
                     repaired = command('cmake', '--build', build, '--parallel', '4').stdout

@@ -18,6 +18,22 @@ typedef struct HG_NANR_Sequence {
     HG_NANR_Frame *frames;
 } HG_NANR_Sequence;
 
+/* Native ABI mirrors g2d_Anim_data.h; block header immediately precedes bank. */
+typedef struct HG_NANR_FrameAttr { uint32_t *values; } HG_NANR_FrameAttr;
+typedef struct HG_NANR_SequenceAttr {
+    uint16_t frame_count, padding;
+    uint32_t *values;
+    HG_NANR_FrameAttr *frames;
+} HG_NANR_SequenceAttr;
+typedef struct HG_NANR_AttrBank {
+    uint16_t sequence_count, attribute_count;
+    HG_NANR_SequenceAttr *sequences;
+} HG_NANR_AttrBank;
+typedef struct HG_NANR_Extended {
+    uint32_t signature, size;
+    HG_NANR_AttrBank bank;
+} HG_NANR_Extended;
+
 typedef struct HG_NANR_Bank {
     uint16_t sequence_count;
     uint16_t total_frames;
@@ -45,7 +61,8 @@ typedef enum HG_NANR_Status {
  *
  * The payload must remain alive while the view is in use.
  * The caller supplies the validated payload length.
- * Extended attributes are not yet supported.
+ * TAAU attributes are converted into allocation-owned native records and values.
+ * Release a successful view before reusing it as a decode destination.
  */
 HG_NANR_Status hg_nanr_decode(
     const void *payload,

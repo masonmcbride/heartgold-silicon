@@ -121,15 +121,122 @@ def audit(executable):
                 dependencies={str(p): {k: str(v) for k, v in d.items()} for p, d in graph.items()})
 
 
+
+
+def closure_cache_fingerprint(dependencies):
+    """Verify contents of every application image and verifier dependency."""
+    import hashlib
+    import shutil
+
+    try:
+        dyld_info = subprocess.check_output(
+            ['xcrun', '-f', 'dyld_info'], text=True).strip()
+        nm = shutil.which('nm')
+        if not dyld_info or not nm:
+            return None
+
+        paths = set(dependencies)
+        paths.update((
+            str(Path(__file__).resolve()),
+            str(Path(__file__).with_name('native_overlay_bindings.py')),
+            dyld_info,
+            nm,
+        ))
+
+        result = {}
+        for name in sorted(paths):
+            path = Path(name)
+            if not path.is_file():
+                return None
+            h = hashlib.sha256()
+            with path.open('rb') as stream:
+                for block in iter(lambda: stream.read(1024 * 1024), b''):
+                    h.update(block)
+            result[name] = h.hexdigest()
+        return result
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
 def main():
+    import hashlib
+    import os
+    import tempfile
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable', type=Path)
     parser.add_argument('--report', required=True, type=Path)
     args = parser.parse_args()
+
+    executable = args.executable.resolve()
+    receipt_path = args.report.with_suffix(args.report.suffix + '.cache.json')
+
+    if args.report.is_file() and receipt_path.is_file():
+        try:
+            report_bytes = args.report.read_bytes()
+            previous = json.loads(report_bytes)
+            receipt = json.loads(receipt_path.read_text())
+
+            valid = (
+                previous.get('executable') == str(executable)
+                and previous.get('application_images', 0) > 0
+                and previous.get('missing') == []
+                and isinstance(previous.get('dependencies'), dict)
+                and len(previous['dependencies']) ==
+                    previous['application_images']
+                and str(executable) in previous['dependencies']
+                and receipt.get('report_sha256') ==
+                    hashlib.sha256(report_bytes).hexdigest()
+            )
+
+            if valid:
+                current = closure_cache_fingerprint(
+                    previous['dependencies'].keys())
+
+                if current is not None and current == receipt.get('inputs'):
+                    print(
+                        f"{previous['application_images']} images, "
+                        f"{previous['strong_application_imports']} "
+                        "strong application imports, 0 missing "
+                        "(content-verified cache hit)"
+                    )
+                    return
+        except (OSError, ValueError, TypeError, KeyError):
+            pass
+
+    # The original complete audit remains authoritative.
+    receipt_path.unlink(missing_ok=True)
     result = audit(args.executable)
+
     args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(json.dumps(result, indent=2)+'\n')
-    print(f"{result['application_images']} images, {result['strong_application_imports']} strong application imports, {len(result['missing'])} missing")
+    report_bytes = (json.dumps(result, indent=2) + '\n').encode()
+    args.report.write_bytes(report_bytes)
+
+    if not result['missing']:
+        inputs = closure_cache_fingerprint(result['dependencies'].keys())
+        if inputs is not None:
+            receipt = {
+                'report_sha256': hashlib.sha256(report_bytes).hexdigest(),
+                'inputs': inputs,
+            }
+
+            fd, temporary = tempfile.mkstemp(
+                prefix=receipt_path.name + '.',
+                dir=receipt_path.parent,
+            )
+            try:
+                with os.fdopen(fd, 'w') as stream:
+                    json.dump(receipt, stream, indent=2)
+                    stream.write('\n')
+                os.replace(temporary, receipt_path)
+            finally:
+                Path(temporary).unlink(missing_ok=True)
+
+    print(
+        f"{result['application_images']} images, "
+        f"{result['strong_application_imports']} "
+        f"strong application imports, {len(result['missing'])} missing"
+    )
     raise SystemExit(bool(result['missing']))
 
 

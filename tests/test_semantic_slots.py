@@ -74,10 +74,29 @@ assert not any(r['struct'] == 'struct.EngagedTrainer' for r in production['slots
 registry_path = build / 'semantic-slots/registry.json'
 registry = json.loads(registry_path.read_text())
 assert {row['source'] for row in registry.values()} == {e['file'] for e in participating}
+ninja_dependencies = None
 for row in registry.values():
     _, _, output = canonical(row['command'])
     obj = Path(row['directory']) / output
-    dependencies = Path(str(obj) + '.d').read_text()
+    depfile = Path(str(obj) + '.d')
+    if depfile.exists():
+        dependencies = dependency_paths(depfile.read_text())
+    else:
+        # Ninja consumes compiler depfiles into its persistent dependency log.
+        if ninja_dependencies is None:
+            ninja = re.search(r'^CMAKE_MAKE_PROGRAM:[^=]+=(.+)$',
+                              (build / 'CMakeCache.txt').read_text(), re.M)[1]
+            recorded = subprocess.check_output(
+                [ninja, '-C', str(build), '-t', 'deps'], text=True)
+            ninja_dependencies = {}
+            current = None
+            for line in recorded.splitlines():
+                if ': #deps ' in line:
+                    current = line.split(': #deps ', 1)[0]
+                    ninja_dependencies[current] = []
+                elif line.startswith('    ') and current is not None:
+                    ninja_dependencies[current].append(line[4:])
+        dependencies = ninja_dependencies[str(obj.relative_to(build))]
     approval=Path(row['ir']).with_name('codegen.json')
     assert str(approval) in dependencies, obj
     assert str(registry_path) not in dependencies, obj

@@ -188,12 +188,21 @@ def main():
           len(candidate_archives),'candidate artifacts')
     print('PASS global hardware provider uniqueness:',len(candidate_archives),'candidate artifacts')
     print('PASS duplicate-provider rejection:',len(required),'cases')
+    # Resolve the native Apple SDK explicitly. Guest32's generated Mach-O
+    # images must use the same system-library search root as the host build.
+    sdk = subprocess.run(
+        ['xcrun', '--sdk', 'macosx', '--show-sdk-path'],
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    if not sdk or not (Path(sdk) / 'usr/lib/libSystem.tbd').is_file():
+        raise RuntimeError('macOS SDK libSystem.tbd unavailable: ' + sdk)
+
     contracts=out/'contracts'
     results={}
     def link(job):
             phase,ident,archive=job
             destination=out/f'OVY_{ident}-{phase}.dylib'
-            args=[a.compiler,'-dynamiclib','-Wl,-force_load,'+str(archive)]
+            args=[a.compiler,'-isysroot',sdk,'-dynamiclib','-Wl,-force_load,'+str(archive)]
             # Prefer the verified original guest providers before optional
             # native scalar adapters; otherwise a pulled adapter object can
             # reintroduce native copies of state already owned by guest main.

@@ -177,33 +177,45 @@ def expand_response(tokens: list[str], cwd: Path, depth: int = 0) -> list[str]:
     return out
 
 
+def recorded_link_tokens(build: Path, target: str) -> list[str]:
+    """One authoritative Ninja link command, with no Make link.txt dependency.
+
+    Ninja emits the final link action last among a target's prerequisite rules.
+    Only a real link action with an output, not a compile/phony command, qualifies.
+    """
+    build = Path(build).resolve()
+    if not (build/'build.ninja').is_file():
+        raise FileNotFoundError('Expected configured Ninja build: '+str(build))
+    output = subprocess.run(['ninja', '-C', str(build), '-t', 'commands', target],
+                            capture_output=True, text=True, check=True).stdout
+    candidates = []
+    for line in output.splitlines():
+        tokens = shlex.split(line)
+        if tokens[:2] == [':', '&&']:
+            tokens = tokens[2:]
+        if '&&' in tokens:
+            tokens = tokens[:tokens.index('&&')]
+        if '-o' in tokens and '-c' not in tokens:
+            index = tokens.index('-o')
+            if index+1 < len(tokens):
+                candidates.append(tokens)
+    if not candidates:
+        raise ValueError('No Ninja linker invocation for '+target)
+    return candidates[-1]
+
+
 def parse_link_command(link: Path, build: Path) -> tuple[list[LinkInput], list[str]]:
     """Only models explicit .o/.a inputs, in command order.
 
     Framework/dylib/system library resolution is intentionally out of scope.
     """
     if link.is_file():
-        command = link.read_text(errors="replace")
-    elif (build / 'build.ninja').is_file():
-        target = link.parent.name.removesuffix('.dir')
-        commands = subprocess.run(['ninja', '-C', str(build), '-t', 'commands', target],
-                                  capture_output=True, text=True, check=True).stdout
-        candidates = []
-        for line in commands.splitlines():
-            parts = shlex.split(line)
-            if '-o' in parts and Path(parts[parts.index('-o') + 1]).name == target:
-                candidates.append(parts)
-        if len(candidates) != 1:
-            raise ValueError('Expected one recorded Ninja link command for ' + target)
-        tokens = candidates[0]
-        if tokens[:2] == [':', '&&']:
-            tokens = tokens[2:]
-        if '&&' in tokens:
-            tokens = tokens[:tokens.index('&&')]
-        command = shlex.join(tokens)
+        # Historical isolated Make fixture; production builds use Ninja.
+        tokens = shlex.split(link.read_text(errors='replace'))
     else:
-        raise FileNotFoundError(link)
-    tokens = expand_response(shlex.split(command), build)
+        target = link.parent.name.removesuffix('.dir')
+        tokens = recorded_link_tokens(build, target)
+    tokens = expand_response(tokens, build)
     result: list[LinkInput] = []
     missing: list[str] = []
     all_load = False
@@ -417,7 +429,7 @@ def run(args: argparse.Namespace) -> int:
     out = resolve_path(args.out, project)
     if not build.is_dir():
         raise FileNotFoundError(f"Build directory missing: {build}")
-    if not link.is_file():
+    if not link.is_file() and not (build/'build.ninja').is_file():
         raise FileNotFoundError(f"Actual link command missing: {link}")
     nm = args.nm or shutil.which("llvm-nm") or shutil.which("nm")
     if not nm:

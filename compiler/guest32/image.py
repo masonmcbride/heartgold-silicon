@@ -166,12 +166,17 @@ def main():
         operations.append(dict(member=member,stage=stage,returncode=result.returncode,
             cache_hit=result.cache_hit,wall_seconds=result.wall_seconds,
             execution_seconds=result.execution_seconds,
-            validation_seconds=result.validation_seconds))
+            validation_seconds=result.validation_seconds,
+            shared_frontend_hit=getattr(result,'shared_frontend_hit',False)))
     a.lowerer=a.lowerer.resolve();a.llvm_bin=a.llvm_bin.resolve()
     tools=snapshot_tools([a.lowerer,a.llvm_bin/'clang',a.llvm_bin/'clang++'])
     input_snapshot={}
+    # All members of this original image share canonical virtual-header paths.
+    # The receipt validator rechecks file identities before reusing resolutions.
+    resolved_paths={}
     def cached_run(command,*args,**kwargs):
-        return run_incremental(command,*args,tool_snapshot=tools[str(command[0])],input_snapshot=input_snapshot,**kwargs)
+        return run_incremental(command,*args,tool_snapshot=tools[str(command[0])],
+            input_snapshot=input_snapshot,resolved_paths=resolved_paths,**kwargs)
     images=parse_manifest(a.game/'main.lsf')
     image=images[a.image]
     constants=overlay_id_constants(a.game,images)
@@ -200,7 +205,10 @@ def main():
             flags=[f for f in flags if f not in ('-std=gnu99','-fgnu89-inline')]
             flags+=cxx_flags(a.game,r['object'])
         args=[str(a.llvm_bin/('clang++' if r['kind']=='C++' else 'clang')),*flags,'-c','-emit-llvm','-fno-discard-value-names',str(source),'-o',str(ir),'-MD','-MF',str(work/'guest.ll.d')]
-        run=cached_run(args,[ir],inputs=[source,a.game/'Makefile',a.game/'common.mk'],depfile=str(work/'guest.ll.d'),virtual_files=virtual_files)
+        from frontend_cache import compile_shared
+        run=compile_shared(args,ir,a.build,inputs=[source,a.game/'Makefile',a.game/'common.mk'],
+            depfile=str(work/'guest.ll.d'),virtual_files=virtual_files,
+            tool_snapshot=tools[args[0]],input_snapshot=input_snapshot,resolved_paths=resolved_paths)
         observe(r['object'],'frontend',run)
         (work/'frontend.log').write_text(run.stdout+run.stderr);r.update(frontend=run.returncode==0,command=args)
         if run.returncode:
@@ -642,6 +650,7 @@ def main():
     dependencies.update((a.game/'Makefile',a.game/'common.mk',ROOT/'cmake/native_sources.py'))
     dependencies.update(Path(s) for s in virtual_files)
     dependencies.add(Path(__file__).with_name('frontend.py').resolve())
+    dependencies.add(Path(__file__).with_name('frontend_cache.py').resolve())
     dependencies.add(Path(__file__).with_name('original_data_layouts.json').resolve())
     if register_path.is_file():dependencies.add(register_path.resolve())
     if a.shared_catalog:dependencies.add(a.shared_catalog.resolve())

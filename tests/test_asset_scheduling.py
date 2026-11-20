@@ -20,16 +20,27 @@ def run(command, **kwargs):
 
 class Scheduling(unittest.TestCase):
     def test_compilation_requires_indices_and_final_build_requires_payloads(self):
-        graph=(BUILD/'CMakeFiles/Makefile2').read_text()
+        # Inspect Ninja's real dependency graph, not a Makefile2 that the
+        # production generator intentionally no longer creates.
+        self.assertTrue((BUILD/'build.ninja').is_file())
+        def query(target):
+            result=run(['ninja','-C',BUILD,'-t','query',target])
+            self.assertEqual(result.returncode,0,result.stderr)
+            return result.stdout
         for target in ('heartgold_main','heartgold_semantic_slots'):
-            prerequisites=re.findall(r'^CMakeFiles/'+target+r'\.dir/all: (.*)$',graph,re.M)
-            self.assertIn('CMakeFiles/heartgold_scr_seq_assets_index.dir/all',prerequisites)
-            self.assertIn('CMakeFiles/heartgold_zone_event_assets_index.dir/all',prerequisites)
+            if target == 'heartgold_main':
+                graph=query('cmake_object_order_depends_target_heartgold_main')
+            else:
+                # Its producer is a custom command, not an object target.
+                graph=query('semantic-slots/complete.stamp')
+            for index in ('heartgold_scr_seq_assets_index','heartgold_zone_event_assets_index'):
+                self.assertIn(index,graph,(target,graph))
             for payload in ('heartgold_script_assets','heartgold_zone_event_assets','heartgold_sound_archive_assets'):
-                self.assertNotIn('CMakeFiles/'+payload+'.dir/all',prerequisites)
-        self.assertRegex(graph,r'(?m)^CMakeFiles/heartgold\.dir/all: CMakeFiles/assets\.dir/all$')
-        self.assertIn('CMakeFiles/heartgold_script_assets.dir/all',graph)
-        self.assertIn('CMakeFiles/heartgold_zone_event_assets.dir/all',graph)
+                self.assertNotIn('|| '+payload+'\n',graph,(target,graph))
+        game=query('heartgold')
+        self.assertIn('assets',game)
+        for payload in ('heartgold_script_assets','heartgold_zone_event_assets'):
+            self.assertEqual(run(['ninja','-C',BUILD,'-t','query',payload]).returncode,0)
 
     def test_original_index_writer_matches_original_full_packer(self):
         recipes=(('scr_seq','fielddata/script/scr_seq','scr_seq_archive'),

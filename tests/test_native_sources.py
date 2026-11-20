@@ -19,7 +19,7 @@ spec.loader.exec_module(native)
 
 def semantic_adapt(relative, original):
     result = native.adapt(relative, original, GAME)
-    for quoted, angled in native.coordinated.HEADER_ROUTES.get(relative, {}).get('edits', []):
+    for quoted, angled in native.coordinated.header_edits(relative, native.apply_pristine_compat(relative, original)):
         result = result.replace(angled, quoted)
     return result
 
@@ -35,6 +35,274 @@ def expected_common_storage(relative, text):
 
 
 class NativeSourceAdaptations(unittest.TestCase):
+    def test_bag_heap_reservation_tracks_native_pointer_width(self):
+        relative = 'src/application/bag/bag_app.c'
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        creation = re.search(r'Heap_Create\(HEAP_ID_3, HEAP_ID_6, ([^;]+)\);', adapted)[1]
+        self.assertEqual(creation, '0x42000 * (sizeof(void *) / sizeof(u32))')
+        fixture = '''typedef unsigned int u32;
+_Static_assert(EXPRESSION == EXPECTED, "Bag heap ABI budget");
+'''.replace('EXPRESSION', creation)
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source = Path(directory)/'budget.c'
+            for target, expected in [('arm64-apple-macos', 0x84000), ('armv5te-none-eabi', 0x42000)]:
+                source.write_text(fixture.replace('EXPECTED', str(expected)))
+                result = subprocess.run(['xcrun', 'clang', '-target', target, '-fsyntax-only', str(source)],
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_sound_attribute_slots_own_native_handles(self):
+        relative = 'src/sound.c'
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        self.assertIn(relative, native.MAIN_NATIVE_SOURCES)
+        record = re.search(r'struct SND_WORK \{.*?\n\};', adapted, re.S)[0]
+        getter = native.span(adapted, 'void *GF_SdatGetAttrPtr(u32 attr) {',
+                             '\nint GF_Snd_SaveState').removesuffix('\nint GF_Snd_SaveState')
+        fixture = '''#include <stdint.h>
+#include <stddef.h>
+#include <assert.h>
+typedef uint8_t u8; typedef uint16_t u16; typedef uint32_t u32;
+typedef struct { int unused; } NNSSndArc, NNSSndHandle, SOUND_CHATOT, SysTask;
+typedef void *NNSSndHeapHandle;
+typedef void *NNSSndWaveOutHandle;
+#define SND_HEAP_SIZE 0xBEAE0
+#define SND_HANDLE_MAX 9
+#define FALSE 0
+#define GF_ASSERT(x) assert(x)
+typedef struct SND_WORK SND_WORK;
+RECORD
+static SND_WORK data;
+static SND_WORK *GetSoundDataPointer(void) { return &data; }
+GETTER
+int main(void) {
+    SOUND_CHATOT chatot;
+    SysTask task;
+    assert((uintptr_t)&task > UINT32_MAX);
+    data.myChatot=&chatot;
+    SysTask **slot=GF_SdatGetAttrPtr(35);
+    assert(sizeof(data.cryStopTask)==sizeof(*slot));
+    assert((uintptr_t)slot % _Alignof(SysTask *)==0);
+    assert(*slot==NULL);
+    *slot=&task; assert(data.cryStopTask==&task); assert(data.myChatot==&chatot);
+    *slot=NULL; assert(data.myChatot==&chatot);
+    data.queuedBankInfo=0xabc;
+    NNSSndWaveOutHandle *first=GF_SdatGetAttrPtr(0), *second=GF_SdatGetAttrPtr(1);
+    assert(sizeof(data.waveOut14Handle)==sizeof(*first));
+    assert(sizeof(data.waveOut15Handle)==sizeof(*second));
+    *first=&task; *second=&chatot;
+    assert(data.waveOut14Handle==&task && data.waveOut15Handle==&chatot);
+    assert(data.queuedBankInfo==0xabc);
+}
+'''.replace('RECORD', record).replace('GETTER', getter)
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'sound.c', Path(directory)/'sound'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
+    def test_battle_owned_tasks_survive_native_teardown(self):
+        header = native.adapt('include/battle/battle.h',
+                              (GAME / 'include/battle/battle.h').read_text(), GAME)
+        adapted = native.adapt('src/battle/battle_main.c',
+                              (GAME / 'src/battle/battle_main.c').read_text(), GAME)
+        names = ('drawGraphicsTask', 'criticalHpMusicTask', 'scrollBgTask')
+        fields = '\n'.join(re.search(r'    SysTask \*' + name + ';', header)[0] for name in names)
+        assignments = '\n'.join(re.search(r'    battleSystem->' + name + r' = [^;]+;', adapted)[0] for name in names)
+        self.assertNotIn('(u32)', assignments)
+        cleanup = '\n'.join(re.search(r'    SysTask_Destroy\([^;]*battleSystem->' + name + r'\);', adapted)[0] for name in names[:2])
+        fixture = '''#include <stdint.h>
+#include <assert.h>
+typedef struct { int id; } SysTask;
+typedef struct { FIELDS } BattleSystem;
+#define Task_DrawBattleGraphics 0
+#define Task_UpdateCriticalHpMusic 0
+#define VBlankTask_ScrollBattleBackground 0
+static SysTask tasks[3]; static unsigned destroyed;
+static SysTask *SysTask_CreateOnMainQueue(int cb, BattleSystem *data, int priority) { (void)cb; (void)data; return &tasks[priority==60000 ? 0 : 1]; }
+static SysTask *SysTask_CreateOnVBlankQueue(int cb, BattleSystem *data, int priority) { (void)cb; (void)data; (void)priority; return &tasks[2]; }
+static void SysTask_Destroy(SysTask *p) { assert(p==&tasks[destroyed++]); }
+int main(void) { BattleSystem system={0}, *battleSystem=&system;
+    assert((uintptr_t)tasks>UINT32_MAX);
+ASSIGNMENTS
+    assert(system.scrollBgTask==&tasks[2]);
+CLEANUP
+    assert(destroyed==2);
+}
+'''.replace('FIELDS', fields).replace('ASSIGNMENTS', assignments).replace('CLEANUP', cleanup)
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'tasks.c', Path(directory)/'tasks'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
+    def test_font_oam_sprite_array_preserves_adjacent_heap_header(self):
+        relative = 'src/font_sprite.c'
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        self.assertIn(relative, native.MAIN_NATIVE_SOURCES)
+        self.assertNotIn('12 * count', adapted)
+        record = re.search(r'struct FontOAMSprite \{.*?\n\};', adapted, re.S)[0]
+        writer = native.span(adapted, 'static void TextOBJ_CreateSprites(const TextOBJTemplate *template, FontOAMCell *list, FontSpriteData *sprites, TextOBJ *object) {',
+                             '\nstatic void TextOBJ_DeleteSprites').removesuffix('\nstatic void TextOBJ_DeleteSprites')
+        allocation = re.search(r'object->sprites = Heap_Alloc\(template->heapID, [^;]+;', adapted)[0]
+        old_allocation = re.search(r'object->sprites = Heap_Alloc\(template->heapID, [^;]+;', original)[0]
+        fixture = '''#include <stdint.h>
+#include <assert.h>
+#include <string.h>
+typedef struct { int unused; } Sprite;
+typedef struct { int heapID; } TextOBJTemplate;
+typedef struct FontOAMCell { int x,y,index; struct FontOAMCell *prev,*next; } FontOAMCell;
+typedef struct { int unused; } FontSpriteData;
+typedef struct FontOAMSprite FontOAMSprite;
+RECORD
+typedef struct { FontOAMSprite *sprites; } TextOBJ;
+#define GF_ASSERT(x) assert(x)
+static _Alignas(8) unsigned char arena[1024];
+static unsigned extent;
+static void *Heap_Alloc(int heap, unsigned size) { (void)heap; extent=size; memset(arena,0xa5,sizeof arena); return arena; }
+static Sprite sprite;
+static Sprite *FontOAM_CreateCellSprite(const TextOBJTemplate *t, FontOAMCell *n, FontSpriteData *s) { (void)t; (void)n; (void)s; return &sprite; }
+WRITER
+int main(void) {
+    TextOBJ obj, *object=&obj; TextOBJTemplate tmpl={5}, *template=&tmpl;
+    FontOAMCell list={0}, nodes[2]={{0}}; FontSpriteData proxies[2];
+    int count=2;
+    list.prev=&nodes[0]; nodes[0].prev=&nodes[1]; nodes[1].prev=&list; nodes[1].x=4;
+    OLD_ALLOCATION
+    assert(extent==24 && sizeof(FontOAMSprite)==16);
+    TextOBJ_CreateSprites(template,&list,proxies,object);
+    unsigned damaged; memcpy(&damaged,arena+extent,4); assert(damaged==32);
+    ALLOCATION
+    assert(extent==sizeof(FontOAMSprite)*count);
+    TextOBJ_CreateSprites(template,&list,proxies,object);
+    assert(object->sprites[1].x==32 && object->sprites[1].sprite==&sprite);
+    for (unsigned i=extent;i<sizeof arena;i++) assert(arena[i]==0xa5);
+}
+'''.replace('RECORD', record).replace('WRITER', writer).replace('OLD_ALLOCATION', old_allocation).replace('ALLOCATION', allocation)
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'font.c', Path(directory)/'font'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
+    def test_battle_bag_page_number_window_keeps_pointer_width(self):
+        relative = 'src/battle/battle_bag_menu.c'
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        self.assertIn(relative, native.OVERLAY_NATIVE_SOURCES)
+        self.assertNotIn('(u32)(windows)', adapted)
+        macro = re.search(r'^#define PAGE_NUMBER_WINDOW.*$', adapted, re.M)[0]
+        fixture = '''#include <stdint.h>
+#include <assert.h>
+typedef struct { void *bg; unsigned char fields[8]; void *pixels; } Window;
+MACRO
+int main(void) {
+    Window windows[26]={0};
+    assert((uintptr_t)windows > UINT32_MAX);
+    assert(PAGE_NUMBER_WINDOW(windows) == &windows[25]);
+    PAGE_NUMBER_WINDOW(windows)->pixels = windows;
+    assert(windows[25].pixels == windows);
+}
+'''.replace('MACRO', macro)
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'bag.c', Path(directory)/'bag'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
+    def test_battle_input_callbacks_keep_native_function_pointers(self):
+        relative = 'src/battle/battle_controller_opponent.c'
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        self.assertIn(relative, native.OVERLAY_NATIVE_SOURCES)
+        self.assertNotRegex(adapted, r'inputTasks\[\d\] = \(u32\)')
+        header = native.adapt('include/battle/battle.h',
+                              (GAME / 'include/battle/battle.h').read_text(), GAME)
+        field = re.search(r'    SysTaskFunc inputTasks\[6\];', header)[0]
+        for relative in native.BATTLE_CALLBACK_HEADERS[1:]:
+            result = native.adapt(relative, (GAME / relative).read_text(), GAME)
+            self.assertIn('#include <battle/battle.h>', result)
+            self.assertNotIn('#include "battle.h"', result)
+        macros = adapted[adapted.index('#define SET_INPUT_TASKS('):
+                         adapted.index('\nvoid OpponentData_SetInputTasks(')]
+        groups = re.findall(r'#define (SET_\w+_INPUT_TASKS)\(opponentData\)\s+SET_INPUT_TASKS\(opponentData, ([^)]+)\)', macros)
+        self.assertEqual(len(groups), 4)
+        fixture = '''#include <stdint.h>
+#include <assert.h>
+typedef void (*SysTaskFunc)(void *, void *);
+typedef struct { FIELD unsigned marker; } OpponentData;
+static unsigned seen;
+'''.replace('FIELD', field)
+        for _, names in groups:
+            for index, name in enumerate(names.split(', ')):
+                fixture += f'static void {name}(void *task, void *data) {{ assert(task == data); seen={index + 1}; }}\n'
+        fixture += macros + '\nint main(void) { OpponentData data={0}; data.marker=0xabc;\n'
+        fixture += '_Static_assert(sizeof(data.inputTasks[0]) == sizeof(SysTaskFunc), "callback width");\n'
+        for group, names in groups:
+            fixture += f'{group}(&data);\n'
+            for index, name in enumerate(names.split(', ')):
+                fixture += f'assert((uintptr_t){name} > UINT32_MAX); assert(data.inputTasks[{index}] == {name});\n'
+                fixture += f'data.inputTasks[{index}](&data, &data); assert(seen == {index + 1});\n'
+        fixture += 'assert(data.marker == 0xabc); }\n'
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'callbacks.c', Path(directory)/'callbacks'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
+    def test_battle_hp_bar_vram_pointer_width(self):
+        relative = 'src/battle/battle_hp_bar.c'
+        self.assertIn(relative, native.OVERLAY_NATIVE_SOURCES)
+        original = (GAME / relative).read_text()
+        adapted = native.adapt(relative, original, GAME)
+        expected = '#include <stdint.h>\n' + original
+        for name, count in [('vramAddr', 27), ('vramBaseAddr', 6)]:
+            self.assertEqual(original.count('(u32)' + name), count)
+            expected = expected.replace('(u32)' + name, '(uintptr_t)' + name)
+        self.assertEqual(adapted, expected)
+        self.assertNotRegex(adapted, r'\(\s*u32\s*\)\s*vram(?:Base)?Addr\b')
+        # The adaptation must not apply to another source with identical text.
+        with self.assertRaisesRegex(ValueError, 'No native adaptation is registered'):
+            native.adapt_original('src/unrelated.c', original, GAME)
+        self.assertEqual((GAME / relative).read_text(), original)
+
+        # Execute every adapted VRAM address expression. Replace only external
+        # region-table and image-proxy inputs with controlled byte offsets.
+        expressions = re.findall(r'\(void \*\)\((\(uintptr_t\)vram(?:Base)?Addr[^;\n]*?baseAddrOfVram\[NNS_G2D_VRAM_TYPE_2DMAIN\])\)', adapted)
+        self.assertEqual(len(expressions), 33)
+        fixture = '#include <stdint.h>\n#include <assert.h>\nint main(void) {\n'
+        fixture += 'void *vramAddr, *vramBaseAddr; uintptr_t base;\n'
+        fixture += 'unsigned offset=0x20, imageOffset=0x1800, i=6, sizeTop=5;\n'
+        for base in ('0x1011cc600ULL', '0x011cc600ULL'):
+            fixture += f'base={base}; vramAddr=vramBaseAddr=(void *)base;\n'
+            for expression in expressions:
+                expression = re.sub(r'\b\w+(?:\[[^\]]+\])+\.offset', 'offset', expression)
+                expression = expression.replace(
+                    'imgProxy->vramLocation.baseAddrOfVram[NNS_G2D_VRAM_TYPE_2DMAIN]', 'imageOffset')
+                delta = re.sub(r'\(uintptr_t\)vram(?:Base)?Addr', '0', expression)
+                fixture += f'assert(({expression}) == base + ({delta}));\n'
+        # Exact LLDB reproducer: 0x011cde20 must retain the upper 32 bits.
+        fixture += 'assert((uintptr_t)(void *)0x1011cc600ULL + 0x1820 == 0x1011cde20ULL);\n}\n'
+        with tempfile.TemporaryDirectory(dir=WORK) as directory:
+            source, exe = Path(directory)/'hp_bar.c', Path(directory)/'hp_bar'
+            source.write_text(fixture)
+            result = subprocess.run(['xcrun', 'clang', '-std=c11', '-Wall', '-Werror',
+                                     str(source), '-o', str(exe)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            subprocess.run([str(exe)], check=True, capture_output=True)
+
     def test_mailbox_icon_resources_match_archive_types(self):
         text = native.adapt('src/application/mailbox_app_sprites.c',
             (GAME/'src/application/mailbox_app_sprites.c').read_text(), GAME)

@@ -3,7 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import shlex
+from build_evidence import compile_options
 import re
 import signal
 import subprocess
@@ -12,6 +12,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'compiler/guest32'))
 from frontend import flags
+sys.path.insert(0, str(ROOT/'cmake'))
+from native_link_evidence import recorded_link_tokens
 
 
 def main():
@@ -111,7 +113,7 @@ int main(int argc, char **argv) {
 }
 ''')
     for opt in ('0', '2'):
-        command = shlex.split((build/'CMakeFiles/test_wm_guest32_services.dir/link.txt').read_text())
+        command = recorded_link_tokens(build, 'test_wm_guest32_services')
         run([compiler, '-x', 'c', '-O'+opt, '-fsanitize=address,undefined',
              '-I'+str(ROOT/'hardware_drivers'), '-I'+str(src), '-c', host, '-o', out/'main.o'])
         command[command.index('CMakeFiles/test_wm_guest32_services.dir/tests/test_wm_guest32_services.c.o')] = str(out/'main.o')
@@ -131,12 +133,9 @@ int main(int argc, char **argv) {
     queue = out/'queue-gate.c'
     queue.write_text('#include <nitro.h>\n_Static_assert(sizeof(OSMessageQueue) == '+
                      str(queue_size)+', "WM guest queue cannot use native ABI");\n')
-    options = {}
-    for line in (build/'CMakeFiles/heartgold_wm_guest32_services.dir/flags.make').read_text().splitlines():
-        if ' = ' in line:
-            key, value = line.split(' = ',1); options[key] = shlex.split(value)
-    failure = run([compiler, '-x', 'c', *options['C_DEFINES'], *options['C_INCLUDES'],
-                   *options['C_FLAGS'], '-fsyntax-only', queue], expected=1)
+    options = compile_options(build, 'heartgold_wm_guest32_services')
+    failure = run([compiler, '-x', 'c', *options,
+                   '-fsyntax-only', queue], expected=1)
     assert 'WM guest queue cannot use native ABI' in failure
     (out/'queue-gate.json').write_text(json.dumps(dict(admitted=False, guest_size=queue_size,
         invariant='Native SDK OSMessageQueue is not the original 32-byte guest record'),indent=2)+'\n')

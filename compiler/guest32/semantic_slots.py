@@ -92,8 +92,11 @@ def publish_approvals(out,rows):
         text=approval_text(row)
         row_changed=not approval.exists() or approval.read_text()!=text
         write(approval,text)
-        if row_changed or (obj.exists() and
-                       (not depfile.exists() or make_escape(approval) not in depfile.read_text())):
+        # Ninja imports GCC depfiles into .ninja_deps and may remove the
+        # original .d file. Its absence does not invalidate a compiled object.
+        # Invalidate only when the approved codegen identity actually changes.
+        # The codegen launcher records approval and IR dependencies for Ninja.
+        if row_changed:
             if obj.exists():
                 invalidated_objects += 1
             obj.unlink(missing_ok=True)

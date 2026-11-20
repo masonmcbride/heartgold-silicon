@@ -86,6 +86,32 @@ static void particle_quad(void) {
     check(center[0]>=245 && center[1]==0 && center[2]==0);
     free(pixels);
 }
+static void software_sprite_quad(void) {
+    // Idle battlers use this original software-sprite path, without an attack
+    // or a particle renderer supplying substitute geometry.
+    G3Native_Reset();
+    NNS_G2dSetupSoftwareSpriteCamera();
+    s_reg_G3X_CLEAR_DEPTH=32767;s_reg_G3X_CLEAR_COLOR=31u<<16;
+    s_reg_G3X_DISP3DCNT=0;
+    unsigned char *pixels=malloc(256*192*4);check(pixels);
+    for (unsigned frame=0;frame<2;frame++) {
+        G3X_Reset();
+        G3_PushMtx();G3_Identity();
+        G3_PolygonAttr(0,GX_POLYGONMODE_MODULATE,GX_CULL_NONE,1,31,0);
+        G3_Color(GX_RGB(31,0,0));
+        NNS_G2dDrawSpriteFast(32,48,0,80,80,0,0,80,80);
+        G3_PopMtx(1);
+        G3_SwapBuffers(GX_SORTMODE_MANUAL,GX_BUFFERMODE_Z);
+        G3Native_RenderFrame();
+        check(HG_G3Readback(pixels,256*4));
+        unsigned char *inside=pixels+(70*256+50)*4;
+        unsigned char *outside=pixels+(20*256+20)*4;
+        check(inside[0]>=245 && inside[1]==0 && inside[2]==0);
+        check(outside[0]==0 && outside[1]==0 && outside[2]==0);
+    }
+    free(pixels);
+    puts("Original software sprite: translated/scaled quad visible across idle frames");
+}
 static void alias(const char *name, const void *owner) {
     check(dlsym(RTLD_DEFAULT, name) == owner);
 }
@@ -101,6 +127,8 @@ static BOOL record_transfer(NNS_GFD_DST_TYPE type, u32 dst, void *src, u32 size)
     return TRUE;
 }
 extern void TestNativePalette(const char *, const char *);
+extern void TestPartyMenuPalette(const char *);
+extern void TestNativeBagHeap(const char *);
 extern void TestNativeCharacter(const char *);
 extern void TestNativeCells(const char *, unsigned);
 extern void TestNativeMapProps(void);
@@ -136,16 +164,21 @@ static void timer3_register_read(void) {
     gTimer3Overflows=0;
     puts("Original Timer3 native register read, pending overflow correction and tick conversion passed");
 }
+void TestBattleParticleWorkspace(const char *);
 int main(int argc, char **argv) {
     timer3_register_read();
-    check(argc==8);particle_workspace(argv[1]);
+    check(argc==11);particle_workspace(argv[1]);
+    TestBattleParticleWorkspace(argv[8]);
     TestNativePalette(argv[2],argv[3]);
+    TestPartyMenuPalette(argv[9]);
+    TestNativeBagHeap(argv[10]);
     TestNativeCharacter(argv[4]);
     TestNativeCells(argv[5],0);
     TestNativeCells(argv[6],0);
     TestNativeCells(argv[7],1);
     TestNativeMapProps();
     particle_quad();
+    software_sprite_quad();
     /* Original animation initialization must preserve the adjacent image proxy.
      * On ARM64 its pointer-bearing records overflowed the old 29-word buffer. */
     Sprite sprite = {0};

@@ -184,7 +184,15 @@ def main():
             exe=out/('test.'+tag)
             run([clang,'-O'+opt,*san,'-I'+str(ROOT/'hardware_drivers'),'-I'+str(out),ROOT/'tests/guest32_image_host.c',
                  *objects,runtime,build/'libntr/libntr_os.a',build/'libntr/libntr_mi.a',build/'libntr/libntr_sim_state.a',
-                 build/'libnative_host.a','-lc++','-Wl,-dead_strip','-o',exe])
+                 build/'libnative_host.a',
+                 build/'libhg_g3_metal.a',
+                 build/'libhg_desktop.a',
+                 '-lc++',
+                 '-framework','Metal',
+                 '-framework','Foundation',
+                 '-framework','AppKit',
+                 '-framework','AudioToolbox',
+                 '-Wl,-dead_strip','-o',exe])
             results.append(run([exe]).strip())
             for name,message in [('wrong','incompatible indirect signature'),('escape','escaped pointer'),('stale','unmapped, freed')]:
                 diagnostic=run([exe,name],ok=False);assert message in diagnostic,diagnostic

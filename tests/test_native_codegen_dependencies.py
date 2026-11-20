@@ -1,4 +1,4 @@
-"""Real Make/Clang regression for per-unit native IR approvals. MIT."""
+"""Real production Ninja/Clang regression for per-unit native IR approvals. MIT."""
 import argparse
 import hashlib
 import json
@@ -79,13 +79,14 @@ set_property(TARGET heartgold_main PROPERTY C_COMPILER_LAUNCHER
             def run(command,success=True):
                 r=subprocess.run(list(map(str,command)),capture_output=True,text=True)
                 self.assertEqual(r.returncode==0,success,r.stdout+r.stderr);return r
-            run(['cmake','-S',source,'-B',build,'-G','Unix Makefiles'])
-            command=['cmake','--build',build,'-j2'];run(command);run([build/'check','3'])
+            run(['cmake','-S',source,'-B',build,'-G','Ninja'])
+            # Keep depfiles so the final assertions can inspect their contents;
+            # normal production Ninja imports them into its dependency database.
+            command=['cmake','--build',build,'-j2','--','-d','keepdepfile'];run(command);run([build/'check','3'])
             objects={name:build/f'CMakeFiles/heartgold_main.dir/{name}.c.o' for name in ('a','b')}
             old={name:path.stat().st_mtime_ns for name,path in objects.items()}
             stamp=build/'semantic-slots/complete.stamp';before=stamp.stat().st_mtime_ns
-            # Separate Make's whole-second timestamps deterministically, without
-            # waiting for wall time or introducing future-dated source files.
+            # Force the analysis pass without waiting or future-dating inputs.
             def older(path):
                 state=path.stat();os.utime(path,ns=(state.st_atime_ns,state.st_mtime_ns-2_000_000_000))
             older(stamp);set_spec(epoch=2);run(command)

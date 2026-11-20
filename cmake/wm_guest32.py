@@ -130,6 +130,14 @@ def main():
     run([a.llvm_bin/'clang', *flags(game, build), '-include', game/SOURCE,
          '-MD', '-MF', out/'wm.d', '-MT', out/'complete.stamp',
          '-S', '-emit-llvm', out/'assertions.c', '-o', out/'original.ll'])
+    # Clang records the generated assertions.c as an input.
+    # Remove only that internal edge, preserving the original headers.
+    depfile = out/'wm.d'
+    generated = str((out/'assertions.c').resolve())
+    deps = depfile.read_text()
+    if generated not in deps:
+        raise ValueError('Expected generated assertions source in WM depfile')
+    depfile.write_text(deps.replace(generated, '', 1))
     (out/'abi.json').write_text(json.dumps(dict(version=1, calls={}, exports={}, globals={})))
     (out/'native.ll').write_text('target datalayout = "e-p:64:64"\n')
     run([a.lowerer, out/'original.ll', out/'lowered.ll', '--guest-externals',

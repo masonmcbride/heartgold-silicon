@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Production Makefiles/CTest runner with complete logs and stage timings."""
+"""Production Ninja/CTest runner with complete logs and stage timings."""
 import argparse
 from collections import deque
 import json
@@ -79,16 +79,16 @@ def build_file(line):
 
 
 def configuration_command(root, build, compiler, cxx, python, tracing):
-    configure = ['cmake', '-S', str(root), '-B', str(build), '-G', 'Unix Makefiles',
+    configure = ['cmake', '-S', str(root), '-B', str(build), '-G', 'Ninja',
         '-DCMAKE_C_COMPILER=' + compiler, '-DCMAKE_CXX_COMPILER=' + cxx,
         '-DPython3_EXECUTABLE=' + python,
         '-DHEARTGOLD_TRACE_BUILD=' + ('ON' if tracing else 'OFF'),
         '-DHEARTGOLD_BUILD_GAME=ON', '-DHEARTGOLD_NATIVE_OVERLAYS=ON']
     cache = build / 'CMakeCache.txt'
-    if not cache.exists() or not (build / 'CMakeFiles/Makefile.cmake').exists():
+    if not cache.exists() or not (build / 'build.ninja').exists():
         return configure
     values = dict(re.findall(r'^([^#/:\n][^:\n]*):\w+=(.*)$', cache.read_text(), re.M))
-    expected = dict(CMAKE_HOME_DIRECTORY=str(root), CMAKE_GENERATOR='Unix Makefiles',
+    expected = dict(CMAKE_HOME_DIRECTORY=str(root), CMAKE_GENERATOR='Ninja',
         CMAKE_C_COMPILER=compiler, CMAKE_CXX_COMPILER=cxx,
         Python3_EXECUTABLE=python, HEARTGOLD_BUILD_GAME='ON', HEARTGOLD_NATIVE_OVERLAYS='ON',
         HEARTGOLD_TRACE_BUILD='ON' if tracing else 'OFF')
@@ -96,7 +96,7 @@ def configuration_command(root, build, compiler, cxx, python, tracing):
         return configure
     # Let CMake's own dependency and CONFIGURE_DEPENDS glob checks decide when
     # regeneration is necessary. Keep that work timed in the configure stage.
-    return ['cmake', '--build', str(build), '--target', 'cmake_check_build_system']
+    return ['cmake', '--build', str(build), '--target', 'build.ninja']
 
 
 class Runner:
@@ -304,13 +304,15 @@ class Runner:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--build', default='build/game')
+    parser.add_argument('--build', default=str(Path(__file__).resolve().parents[1] / 'build/game'))
     parser.add_argument('--compiler', required=True)
     parser.add_argument('--cxx', required=True)
     parser.add_argument('--verbose', type=int, choices=(0, 1), default=0)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     build = Path(args.build).resolve()
+    if build != (root / 'build/game').resolve():
+        parser.error('The canonical build directory is build/game; alternate production build directories are disabled')
     runner = Runner(build, args.verbose)
     bootstrap = float(os.environ.get('HEARTGOLD_BOOTSTRAP_SECONDS', '0'))
     runner.timings['Bootstrap'] = bootstrap
@@ -321,11 +323,11 @@ def main():
         configure += ['--profiling-format=google-trace', '--profiling-output=' + str(runner.trace/'configure.json')]
     runner.run('Dependencies and configure', configure)
     cache = (build / 'CMakeCache.txt').read_text()
-    for key, expected in (('CMAKE_HOME_DIRECTORY', str(root)), ('CMAKE_GENERATOR', 'Unix Makefiles'),
+    for key, expected in (('CMAKE_HOME_DIRECTORY', str(root)), ('CMAKE_GENERATOR', 'Ninja'),
                           ('CMAKE_C_COMPILER', args.compiler), ('CMAKE_CXX_COMPILER', args.cxx)):
         value = re.search(r'^' + key + r':\w+=(.*)$', cache, re.M)
         if not value or value[1] != expected:
-            raise SystemExit('Existing CMake cache differs: ' + key + '; use a separate binary directory')
+            raise SystemExit('Existing CMake cache differs: ' + key + '; clean build/game before rebuilding')
     selected = re.search(r'^Python3_EXECUTABLE:\w+=(.*)$', cache, re.M)
     if not selected or Path(selected[1]).resolve() != Path(sys.executable).resolve():
         raise SystemExit('CMake changed the selected Python interpreter')
@@ -354,10 +356,23 @@ def main():
     print(f"Bindings: {closure['application_images']} native images, {closure['strong_application_imports']} required application imports, 0 missing.", flush=True)
     runner.run('ARM64 executable', ['lipo', str(build / 'heartgold'), '-verify_arch', 'arm64'])
     print('Tests include a brief red/blue desktop window after compilation.', flush=True)
-    tests = ['ctest', '--test-dir', str(build), '--output-on-failure', '--parallel', '8']
-    if runner.trace:
-        tests += ['--output-junit', str(runner.trace/'tests.xml')]
-    runner.run('Testing', tests)
+    evidence = [sys.executable, '-B', str(root/'cmake/test_proofs.py'), '--build', str(build)]
+    # A source or artifact change invalidates the previous complete CTest proof.
+    # Traced builds always execute every test to retain current-run evidence.
+    reusable = False
+    if not runner.trace:
+        started = time.monotonic()
+        checked = subprocess.run([*evidence, '--check'], capture_output=True, text=True)
+        if checked.returncode == 0:
+            reusable = True
+            runner.timings['Testing evidence (reused; 0 freshly executed)'] = time.monotonic()-started
+            print(checked.stdout.strip(), flush=True)
+    if not reusable:
+        tests = ['ctest', '--test-dir', str(build), '--output-on-failure', '--parallel', '8']
+        if runner.trace:
+            tests += ['--output-junit', str(runner.trace/'tests.xml')]
+        runner.run('Testing', tests)
+        runner.run('CTest evidence', [*evidence, '--record'])
     if os.environ.get('HEARTGOLD_CARTRIDGE'):
         runner.run('Runtime diagnostic', [str(build / 'heartgold'),
             os.environ['HEARTGOLD_CARTRIDGE']], timeout=20)

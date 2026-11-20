@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'compiler/guest32'), str(ROOT/'cmake')]
 from frontend import flags
 from code_ids import allocate
+from native_link_evidence import recorded_link_tokens
 from native_image_graph import parse_manifest, source_record
 
 
@@ -186,7 +187,7 @@ g32_destroy(ram);puts("original cross-image SysTask callback/lifetime passed");r
         if not t.startswith('-fsanitize='):
             sdkflags.append(t)
         i += 1
-    link = shlex.split((b/'CMakeFiles/test_os.dir/link.txt').read_text())
+    link = recorded_link_tokens(b, 'test_os')
     libraries = link[link.index('libntr/libntr_os.a'):]
     libraries = [str(b/x) if x.endswith('.a') else x for x in libraries]
     results = []

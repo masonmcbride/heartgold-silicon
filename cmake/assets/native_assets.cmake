@@ -16,6 +16,7 @@ function(hg_asset_host_job group kind inputs outputs)
     set(job "{\"kind\":\"${kind}\",\"inputs\":${input_json},\"outputs\":${output_json},\"args\":${arguments}}")
     set_property(GLOBAL APPEND PROPERTY HG_ASSET_${group}_JOBS "${job}")
     set_property(GLOBAL APPEND PROPERTY HG_ASSET_${group}_OUTPUTS ${outputs})
+    set_property(GLOBAL APPEND PROPERTY HG_ASSET_${group}_INPUTS ${inputs})
     set_source_files_properties(${outputs} PROPERTIES GENERATED TRUE)
 endfunction()
 
@@ -36,6 +37,7 @@ function(hg_native_asset_data target kind work output_dir sources)
         hg_asset_json_string(output_json "${output}")
         set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_JOBS "{\"source\":${source_json},\"output\":${output_json}}")
         set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_OUTPUTS "${output}")
+    set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_INPUTS "${source}")
         set_source_files_properties("${output}" PROPERTIES GENERATED TRUE)
     endforeach()
 endfunction()
@@ -44,6 +46,13 @@ function(hg_native_assets_finalize)
     foreach(group messages graphics data)
         get_property(jobs GLOBAL PROPERTY HG_ASSET_${group}_JOBS)
         get_property(outputs GLOBAL PROPERTY HG_ASSET_${group}_OUTPUTS)
+        get_property(inputs GLOBAL PROPERTY HG_ASSET_${group}_INPUTS)
+        list(REMOVE_DUPLICATES outputs)
+        list(REMOVE_DUPLICATES inputs)
+        # Internal outputs are scheduled by the batch compiler itself.
+        # Ninja tracks only dependencies external to this batch.
+        set(external_inputs ${inputs})
+        list(REMOVE_ITEM external_inputs ${outputs})
         list(JOIN jobs ",\n" jobs)
         set(raw "${PROJECT_BINARY_DIR}/asset-plans/${group}.source.json")
         file(CONFIGURE OUTPUT "${raw}" CONTENT "{\"mode\":\"${group}\",\"jobs\":[${jobs}]}\n" @ONLY)
@@ -64,13 +73,18 @@ function(hg_native_assets_finalize)
         endif()
         file(GENERATE OUTPUT "${plan}" CONTENT
             "{\"mode\":\"${mode}\",\"binary\":\"${PROJECT_BINARY_DIR}\",\"game\":\"${game_source}\",\"ntr\":\"${ntr_source}\",\"generated\":\"${PROJECT_BINARY_DIR}/generated/files\",\"catalogue\":\"${PROJECT_SOURCE_DIR}/compiler/assets/constants.json\",\"receipt\":\"${receipt}\",\"workers\":4,\"common\":[\"$<TARGET_FILE:PNG::PNG>\",\"$<TARGET_FILE:ZLIB::ZLIB>\"],\"jobs\":${jobs}}\n")
-        add_custom_target(heartgold_asset_${group}
+        add_custom_command(
+            OUTPUT ${outputs}
             COMMAND $<TARGET_FILE:hg_asset_compiler> "${plan}" "${report}"
-            BYPRODUCTS ${outputs}
             DEPENDS hg_asset_compiler
+                $<TARGET_FILE:hg_asset_compiler>
+                "${plan}"
+                "${PROJECT_SOURCE_DIR}/compiler/assets/constants.json"
+                ${external_inputs}
             WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-            COMMENT "Generating declared ${group} assets in one native process"
+            COMMENT "Generating declared ${group} assets"
             VERBATIM)
+        add_custom_target(heartgold_asset_${group} DEPENDS ${outputs})
     endforeach()
     add_dependencies(heartgold_asset_messages hg_asset_trainer_gmm)
     add_dependencies(heartgold_msg_assets heartgold_asset_messages)
@@ -94,5 +108,6 @@ function(hg_native_asset_record source output)
     hg_asset_json_string(output_json "${output}")
     set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_JOBS "{\"source\":${source_json},\"output\":${output_json}}")
     set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_OUTPUTS "${output}")
+    set_property(GLOBAL APPEND PROPERTY HG_ASSET_data_INPUTS "${source}")
     set_source_files_properties("${output}" PROPERTIES GENERATED TRUE)
 endfunction()

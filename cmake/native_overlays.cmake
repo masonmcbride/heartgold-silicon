@@ -252,8 +252,7 @@ add_dependencies(hg_ovy0_wifi_code heartgold_overlay_native_sources heartgold_na
 
 
 # HG_CANONICAL_MAIN_PROVIDER_CLOSURE_V1
-set(HEARTGOLD_WIRELESS_SHADOW ON)
-include("${CMAKE_CURRENT_LIST_DIR}/wireless_shadow.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/native_wireless.cmake")
 
 get_target_property(overlay_sdk_targets nitro_sdk INTERFACE_LINK_LIBRARIES)
 set(overlay_main_targets heartgold_main heartgold_runtime heartgold_sound_storage native_host hg_dwc_main ${overlay_sdk_targets})
@@ -772,9 +771,26 @@ if(TARGET heartgold_overlay_45)
     )
 endif()
 
-# Isolated legacy inputs: this is an explicit migration boundary, not a
-# reproducible source-owned build. See docs/BUILD_GRAPH.md.
-include("${CMAKE_CURRENT_LIST_DIR}/native_legacy_archives.cmake")
+# Link the canonical wireless providers.
+target_link_libraries(heartgold PRIVATE
+    heartgold_wm_core_native_original
+    heartgold_wm_native_candidates
+    heartgold_wvr_original
+)
+
+# Preserve the existing native gWmWork owner.
+target_link_options(hg_wm_arm9 PRIVATE
+    "LINKER:-exported_symbol,_gWmWork")
+
+target_link_libraries(heartgold PRIVATE
+    heartgold_wm_original_work_storage
+    heartgold_wm_original_scalar_storage
+)
+
+target_link_libraries(heartgold PRIVATE
+    heartgold_dwc_original_typed_storage
+)
+
 
 # HG_PRODUCTION_NATIVE_RUNTIME_OWNERSHIP
 # Runtime providers are native host services, not original DS image members.

@@ -44,12 +44,18 @@ class AssetIndices(unittest.TestCase):
     def test_cartridge_does_not_duplicate_resource_producers(self):
         # The production Make graph must schedule resource owners rather than
         # copying their conversion rules into a second target (a parallel race).
-        rules=(BUILD/'CMakeFiles/heartgold_cartridge.dir/build.make').read_text()
-        commands='\n'.join(line for line in rules.splitlines() if line.startswith('\t'))
-        self.assertIn('source_cartridge.py',commands)
-        duplicate=next((line for line in commands.splitlines() if re.search(
-            r'(?:^|[/ \"\t])(?:nitrogfx|nitroarc|jsonproc|msgenc)(?: |$)',line)),None)
-        self.assertIsNone(duplicate,'Resource producer duplicated in cartridge target: '+str(duplicate)[:240])
+        # Ninja reports transitive prerequisites as well as this action.
+        # Inspect the cartridge's own packager, not dependency producers.
+        result = subprocess.run(
+            ['ninja', '-C', str(BUILD), '-t', 'commands', 'heartgold_cartridge'],
+            check=True, capture_output=True, text=True)
+        owned = [line for line in result.stdout.splitlines()
+                 if 'source_cartridge.py' in line]
+        self.assertEqual(len(owned), 1, 'Expected one cartridge packager')
+        duplicate = re.search(
+            r'(?:^|[/ "\t])(?:nitrogfx|nitroarc|jsonproc|msgenc)(?: |$)',
+            owned[0])
+        self.assertIsNone(duplicate, 'Duplicated resource conversion in cartridge action')
 
     def test_original_indices_records_and_reproducibility(self):
         for relative in manifest.ARCHIVES:
@@ -190,7 +196,7 @@ add_dependencies(index_consumer heartgold_overlay_index_assets)
 ''')
             log = BUILD / 'asset-index-clean-build.log'
             with log.open('w') as output:
-                for command in ([ 'cmake', '-S', str(directory), '-B', str(directory / 'out') ],
+                for command in ([ 'cmake', '-S', str(directory), '-B', str(directory / 'out'), '-G', 'Ninja' ],
                                 [ 'cmake', '--build', str(directory / 'out'), '--target', 'index_consumer', '-j8' ]):
                     subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, check=True)
             self.assertEqual(len(re.findall(r'Generating [^\n]*zukan_hw_data_gold\.narc,', log.read_text())), 1)

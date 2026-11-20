@@ -6,9 +6,8 @@ binary_dir="$source_dir/build/game"
 verbose=0
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --build-dir) binary_dir=${2:?--build-dir requires a path}; shift 2 ;;
         --verbose) verbose=1; shift ;;
-        --help) echo 'Usage: ./build.sh [--build-dir PATH] [--verbose]'; exit 0 ;;
+        --help) echo 'Usage: ./build.sh [--verbose] (output: build/game)'; exit 0 ;;
         *) echo "Unknown argument: $1" >&2; exit 2 ;;
     esac
 done
@@ -24,6 +23,9 @@ cxx=$(xcrun --find clang++ 2>/dev/null) || fail 'Install Xcode Command Line Tool
 "$cxx" --version >/dev/null || fail 'Apple Clang++ is unusable; run xcode-select --install.'
 export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
 [ -d "$SDKROOT" ] || fail 'The macOS SDK is unavailable; run xcode-select --install.'
+# CTest uses CMake's REAL_PATH SDK identity. Use that same path before
+# compiling, so an SDK symlink spelling cannot invalidate every IR receipt.
+export SDKROOT=$(cd -- "$SDKROOT" && pwd -P)
 echo "Toolchain: $("$cc" --version | head -1)"
 mkdir -p "$binary_dir"
 binary_dir=$(cd -- "$binary_dir" && pwd)
@@ -75,7 +77,8 @@ missing=()
 compatible cmake 3 30 || missing+=(cmake)
 if [ "${#missing[@]}" -gt 0 ]; then run 'Native tools' brew install "${missing[@]}"; fi
 compatible cmake 3 30 || fail 'CMake >=3.30 must be on PATH.'
-echo "Tools: $(cmake --version | head -1), Make $(xcrun --find make)"
+command -v ninja >/dev/null || fail 'Ninja is required.'
+echo "Tools: $(cmake --version | head -1), Ninja $(ninja --version)"
 # LLVM 23 supplies the required guest compiler libraries and asset utilities.
 # Apple Clang remains the native host compiler.
 llvm_prefix=$(brew --prefix llvm 2>/dev/null || :)

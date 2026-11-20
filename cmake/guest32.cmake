@@ -47,6 +47,7 @@ set(guest32_image_dir "${PROJECT_BINARY_DIR}/guest32-ovy0-image")
 set(guest32_driver "${PROJECT_SOURCE_DIR}/compiler/guest32/image.py")
 set(guest32_frontend_inputs
     "${PROJECT_SOURCE_DIR}/compiler/guest32/frontend.py"
+    "${PROJECT_SOURCE_DIR}/compiler/guest32/frontend_cache.py"
     "${PROJECT_SOURCE_DIR}/cmake/native_sources.py"
     "${PROJECT_SOURCE_DIR}/cmake/native_pristine_compat.json")
 add_custom_command(OUTPUT "${guest32_image_dir}/complete.stamp"
@@ -269,7 +270,7 @@ foreach(id IN ITEMS 0 38)
         list(GET objects ${i} obj)
         list(APPEND guest32_shared_outputs "${dir}/${obj}/native.o")
         if(obj IN_LIST hg_original_image_OVY_${id}_C_objects)
-            foreach(file IN ITEMS guest.ll guest.ll.d guest.ll.receipt.json frontend.log operations.json
+            foreach(file IN ITEMS guest.bc guest.bc.receipt.json guest.ll guest.ll.d frontend.log operations.json
                     abi.json compiler-catalog.json native.ll native.ll.receipt.json lower.log native.o.receipt.json object.log)
                 list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
             endforeach()
@@ -277,13 +278,8 @@ foreach(id IN ITEMS 0 38)
             foreach(file IN ITEMS data.c data.d native.o.receipt.json object.log)
                 list(APPEND guest32_shared_outputs "${dir}/${obj}/${file}")
             endforeach()
-            list(GET inputs ${i} input)
-            file(STRINGS "${input}" sections REGEX "^[ \t]*\\.(rodata|data|bss)[ \t]*$")
-            foreach(section IN LISTS sections)
-                string(STRIP "${section}" section)
-                string(SUBSTRING "${section}" 1 -1 section)
-                list(APPEND guest32_shared_outputs "${dir}/${obj}/${section}.bin")
-            endforeach()
+            # Section .bin dumps are diagnostics, not inputs to the emitted C
+            # or archive. Empty declared sections intentionally emit no dump.
         endif()
     endforeach()
 endforeach()
@@ -350,6 +346,13 @@ foreach(file IN ITEMS abi.json native.ll
     list(APPEND guest32_provider_outputs ${paths})
 endforeach()
 foreach(file IN LISTS guest32_shared_outputs)
+    # Publication invalidates stage-local command receipts when paths move.
+    # They are cache metadata, not published outputs of the closure generation.
+    if(file MATCHES "\\.receipt\\.json$" OR
+       file STREQUAL "${guest32_shared_dir}/shared.d" OR
+       file MATCHES "/OVY_[0-9]+/plan\\.json$")
+        continue()
+    endif()
     string(REPLACE "${guest32_shared_dir}" "${guest32_provider_dir}" file "${file}")
     list(APPEND guest32_provider_outputs "${file}")
 endforeach()

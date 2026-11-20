@@ -150,13 +150,8 @@ def main():
         if value in ('-o','-MF','-MT','-MQ'):skip=True;continue
         if value not in ('-c','-MD','-MMD',entry['file']):args.append(value)
     run([a.compiler,*args,'-c',out/'certificates.c','-o',out/'certificates-c.o'])
-    link=a.build/'CMakeFiles/test_coordinated.dir/link.txt'
-    if link.is_file():sdk=shlex.split(link.read_text())
-    else:
-        link_commands=run(['ninja','-C',a.build,'-t','commands','test_coordinated'])
-        sdk=next(shlex.split(line) for line in link_commands.splitlines() if ' -o test_coordinated ' in line)
-        if sdk[:2]==[':', '&&']:sdk=sdk[2:]
-        if '&&' in sdk:sdk=sdk[:sdk.index('&&')]
+    from native_link_evidence import recorded_link_tokens
+    sdk=recorded_link_tokens(a.build,'test_coordinated')
     sdk=[x for x in sdk if not x.endswith(('.c.o','.cpp.o')) and x!='libheartgold_wm_guest32_services.a']
     ix=sdk.index('-o');sdk[ix+1]=str(out/'certificates')
     sdk += [str(out/'certificates-c.o'),str(out/'certificates.o'),'libheartgold_main.a']

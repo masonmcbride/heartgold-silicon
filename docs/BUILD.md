@@ -4,20 +4,22 @@ On macOS ARM64, with Homebrew and Git installed:
 
 ```sh
 ./build.sh
-./build.sh --build-dir build/game-dev --verbose
+./build.sh --verbose
 ```
 
 The entrypoint verifies Apple Clang, Make and the SDK, installs missing CMake
 and asset utilities, and uses Astral uv with CPython 3.12.12. The standalone uv
 installer does not change shell profiles. Python, caches and logs stay in the
-selected binary directory (default `build/game`). Generators use only the
+canonical binary directory `build/game`. Alternate production build directories
+are disabled. Keep cartridge, save and firmware files in `local-runtime/`,
+outside disposable build outputs. Generators use only the
 Python standard library; no pip dependencies are needed. CMake owns the exact
 repository pins and refuses dirty managed checkouts. Existing user changes
 are preserved; use an isolated source checkout if your upstream tree is dirty.
 
 The build audits sources, compiles all default targets, checks ARM64 and
 121-image strong-symbol closure, then runs CTest. The production generator is
-Unix Makefiles; redirected output contains milestones without terminal escapes. Complete
+Ninja; redirected output contains milestones without terminal escapes. Complete
 diagnostics and timings are in `<binary>/logs/`. Failures retain their exit
 status and build state. Interactive builds show Make graph progress, elapsed
 activity/stage time, and labels for CPU-heavy ABI analysis and provider
@@ -39,7 +41,7 @@ See [BUILD_GRAPH.md](BUILD_GRAPH.md) for the current native link graph and
 its reproducibility boundary. Original-source compilation and local runtime
 checkpoints have progressed beyond the historical status in some older reports;
 those reports are not present-tense build instructions. Obsolete linker phase
-experiments are retained by Git history rather than stored in `museum/`.
+experiments are retained by Git history rather than stored in the working tree.
 
 Use native Apple Clang on Apple Silicon, CMake 3.30 or later, and Git. Game assets
 also require Python 3.9+, PNG, ZLIB, `llvm-objcopy`, and `llvm-readelf`. Expose LLVM
@@ -67,9 +69,8 @@ archives independently:
 cmake --build build --target assets -j8
 ```
 
-For explicit SDK-only development, configure a separate binary directory with
-`-DHEARTGOLD_BUILD_GAME=OFF`. This omits game sources, asset tools, their external
-dependencies, and game resource tests. Compare build sizes using the same options.
+Use `build/game` for production builds and cold-build traces. Do not create
+alternate build trees for profiling or development.
 
 ## Source ownership and generated files
 
@@ -193,8 +194,9 @@ path. Set `HEARTGOLD_SAVE` to an explicit path in an existing directory to keep
 your save elsewhere, including outside disposable build artifacts:
 
 ```sh
-HEARTGOLD_SAVE="$HOME/heartgold.sav" \
-HEARTGOLD_CARTRIDGE="$PWD/build/game/runtime-assets/source-cartridge.nds" \
+HEARTGOLD_SAVE="$PWD/local-runtime/source-cartridge.nds.sav" \
+HEARTGOLD_CARTRIDGE="$PWD/local-runtime/source-cartridge.nds" \
+HEARTGOLD_FIRMWARE="$PWD/local-runtime/runtime-firmware.bin" \
 ./build/game/heartgold
 ```
 

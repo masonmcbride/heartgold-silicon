@@ -29,12 +29,16 @@ function(native_generate kind input output)
     string(JSON job SET "${job}" dependencies "${dependencies}")
     set_property(GLOBAL APPEND PROPERTY HG_NATIVE_SOURCE_JOBS "${job}")
     set_property(GLOBAL APPEND PROPERTY HG_NATIVE_SOURCE_OUTPUTS "${output}")
+    set_property(GLOBAL APPEND PROPERTY HG_NATIVE_SOURCE_INPUTS "${input}" ${ARGN})
     set_source_files_properties("${output}" PROPERTIES GENERATED TRUE)
 endfunction()
 
 function(native_finalize)
     get_property(jobs GLOBAL PROPERTY HG_NATIVE_SOURCE_JOBS)
     get_property(outputs GLOBAL PROPERTY HG_NATIVE_SOURCE_OUTPUTS)
+    get_property(inputs GLOBAL PROPERTY HG_NATIVE_SOURCE_INPUTS)
+    list(REMOVE_DUPLICATES outputs)
+    list(REMOVE_DUPLICATES inputs)
     list(JOIN jobs ",\n" records)
     set(records "[${records}]")
     # Recipe files are source inputs, never generated objects. New helpers
@@ -51,12 +55,19 @@ function(native_finalize)
     set(manifest "${PROJECT_BINARY_DIR}/native-source-batch/jobs.json")
     file(GENERATE OUTPUT "${manifest}" CONTENT
         "{\"root\":\"${game_source}\",\"binary\":\"${PROJECT_BINARY_DIR}\",\"recipes\":${recipe_json},\"jobs\":${records}}\n")
-    add_custom_target(heartgold_native_source_preparation
+    # Ninja owns the generated files, not a permanently-dirty phony command.
+    # The depfile records auxiliary headers read by guarded transformations.
+    set(stamp "${PROJECT_BINARY_DIR}/native-source-batch/complete.stamp")
+    set(depfile "${PROJECT_BINARY_DIR}/native-source-batch/inputs.d")
+    add_custom_command(OUTPUT "${stamp}" ${outputs}
         COMMAND "${Python3_EXECUTABLE}" -B "${PROJECT_SOURCE_DIR}/cmake/native_source_batch.py"
-            --manifest "${manifest}"
-        BYPRODUCTS ${outputs}
-        COMMENT "Preparing declared native sources in one process"
+            --manifest "${manifest}" --stamp "${stamp}" --depfile "${depfile}"
+        DEPENDS "${manifest}" "${PROJECT_SOURCE_DIR}/cmake/native_source_batch.py"
+            ${recipes} ${inputs}
+        DEPFILE "${depfile}"
+        COMMENT "Preparing changed native sources"
         VERBATIM)
+    add_custom_target(heartgold_native_source_preparation DEPENDS "${stamp}" ${outputs})
     # Every root target can consume these generated headers, including custom
     # compilation commands. One owner completes before any consumer starts.
     get_property(targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
@@ -105,6 +116,11 @@ set(native_headers
     lib/include/nnsys/snd_arc_internal.h lib/include/nnsys/snd_arc_strm_internal.h
     lib/include/nnsys/g2d/g2d_CellTransferManager.h lib/NitroDWC/src/tree-iterator4.h)
 list(APPEND native_headers
+    include/battle/battle.h
+    include/battle/trainer_ai.h
+    include/battle/battle_pokepic_bob.h
+    include/battle/battle_terrain.h
+    include/battle/battle_022378C0.h
     lib/include/dwc/auth_internal.h
     lib/include/dwc/net_common_internal.h
     include/wifi_setup/wifi_setup_connection_screens.h

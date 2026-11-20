@@ -184,6 +184,47 @@ foreach(component os mi pxi ctrdg spi std card cp fx fs math dgt rtc gx snd)
     target_include_directories(ntr_${component} PRIVATE "${directory}/include")
     target_link_libraries(nitro_sdk INTERFACE ntr_${component})
 endforeach()
+
+# HG_NATIVE_FRAME_ADAPTATION_BEGIN
+set(HG_NATIVE_FRAME_INPUT
+    "${ntr_source}/libraries/sim/src/native/sim_frame.cpp")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${HG_NATIVE_FRAME_INPUT}")
+file(SHA256 "${HG_NATIVE_FRAME_INPUT}" HG_NATIVE_FRAME_SHA256)
+if(NOT HG_NATIVE_FRAME_SHA256 STREQUAL "4eb24d5c05325671f1fea802b33ea3d9b9ad6777abe45c55347e832e104165ba")
+    message(FATAL_ERROR "Native frame scheduler upstream drift")
+endif()
+file(READ "${HG_NATIVE_FRAME_INPUT}" HG_NATIVE_FRAME_TEXT)
+
+string(REPLACE [=[static bool dispatching_vblank;]=] [=[static bool dispatching_vblank;
+static bool rendering_frame;]=] HG_NATIVE_FRAME_TEXT "${HG_NATIVE_FRAME_TEXT}")
+
+string(REPLACE [=[if (dispatching_vblank || OS_GetCpsrIrq() || !next_vblank) return;]=] [=[if (dispatching_vblank || rendering_frame || OS_GetCpsrIrq() || !next_vblank) return;]=] HG_NATIVE_FRAME_TEXT "${HG_NATIVE_FRAME_TEXT}")
+
+string(REPLACE [=[if (monotonic_nanoseconds() >= next_vblank) dispatch_vblank();]=] [=[if (monotonic_nanoseconds() >= next_vblank) {
+        SIM_PreRenderVBlank();
+        SIM_Render(nullptr);
+        SIM_PostRenderVBlank();
+    }]=] HG_NATIVE_FRAME_TEXT "${HG_NATIVE_FRAME_TEXT}")
+
+string(REPLACE [=[extern "C" void *SIM_Render(void *arg)
+{]=] [=[extern "C" void *SIM_Render(void *arg)
+{
+    if (rendering_frame) return arg;
+    rendering_frame = true;]=] HG_NATIVE_FRAME_TEXT "${HG_NATIVE_FRAME_TEXT}")
+
+string(REPLACE [=[    dispatch_vblank();
+    return arg;
+}]=] [=[    dispatch_vblank();
+    rendering_frame = false;
+    return arg;
+}]=] HG_NATIVE_FRAME_TEXT "${HG_NATIVE_FRAME_TEXT}")
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/native")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/native/hg_sim_frame.cpp"
+    "${HG_NATIVE_FRAME_TEXT}")
+# HG_NATIVE_FRAME_ADAPTATION_END
+
 ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/sim_vars.c"
     "${ntr_source}/libraries/sim/src/sim_assert.c"
@@ -191,7 +232,7 @@ ntr_library(ntr_sim_state
     "${ntr_source}/libraries/sim/src/native/g3_math.c"
     "${ntr_source}/libraries/sim/src/native/g3_state.cpp"
     "${ntr_source}/libraries/sim/src/native/g3_commands.cpp"
-    "${ntr_source}/libraries/sim/src/native/sim_frame.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/native/hg_sim_frame.cpp"
     "${ntr_source}/libraries/sim/src/native/g2_frame.cpp"
     "${ntr_source}/libraries/sim/src/sim_g2.cpp"
     "${ntr_source}/libraries/sim/src/sim_audio.cpp"
@@ -318,8 +359,8 @@ endfunction()
 
 option(HEARTGOLD_BUILD_GAME "Build original HeartGold and its assets" ON)
 if(HEARTGOLD_BUILD_GAME)
-    if(NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-        message(FATAL_ERROR "The production game uses Unix Makefiles. Run ./build.sh with an empty build directory.")
+    if(NOT CMAKE_GENERATOR STREQUAL "Ninja")
+        message(FATAL_ERROR "The production game requires Ninja. Use a fresh Ninja build directory.")
     endif()
     if(NOT HEARTGOLD_NATIVE_OVERLAYS)
         message(FATAL_ERROR "heartgold requires the complete native image graph; HEARTGOLD_NATIVE_OVERLAYS must be ON")
@@ -354,9 +395,6 @@ if(HEARTGOLD_BUILD_GAME)
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/native_nnsys_tables.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/cmake/semantic_slots.cmake")
 endif()
-
-# Optional source-built wireless archive comparison; never linked into heartgold.
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/wireless_shadow.cmake")
 
 # Geometry arithmetic is independently sanitizer-tested without the renderer.
 add_executable(test_g3_native_math tests/test_g3_native_math.c
@@ -399,7 +437,10 @@ if(APPLE)
     list(REMOVE_DUPLICATES hg_fixture_names)
     list(REMOVE_DUPLICATES hg_fixture_targets)
     if(hg_fixture_targets)
-        add_custom_target(heartgold_test_fixtures DEPENDS ${hg_fixture_targets})
+        # Build test fixtures in the main Ninja graph, concurrently with the
+        # application. CTest's fixture setup becomes an up-to-date check,
+        # rather than a second, serialized compilation phase.
+        add_custom_target(heartgold_test_fixtures ALL DEPENDS ${hg_fixture_targets})
         add_test(NAME native_test_fixtures_build COMMAND "${CMAKE_COMMAND}" --build
             "${PROJECT_BINARY_DIR}" --target heartgold_test_fixtures -j8)
         set_tests_properties(native_test_fixtures_build PROPERTIES FIXTURES_SETUP "${hg_fixture_names}")

@@ -110,11 +110,11 @@ file(APPEND "${CMAKE_BINARY_DIR}/visits" "configured\\n")
                 return progress.configuration_command(source,build,'/cc','/cxx',sys.executable,tracing)
             run(command())
             check=command()
-            self.assertEqual(check[-1],'cmake_check_build_system')
+            self.assertEqual(check[-1],'build.ninja')
             visits=build/'visits'
             before=visits.read_text();run(check);self.assertEqual(visits.read_text(),before)
             def older_configuration():
-                path=build/'CMakeFiles/Makefile.cmake';state=path.stat()
+                path=build/'build.ninja';state=path.stat()
                 os.utime(path,ns=(state.st_atime_ns,state.st_mtime_ns-2_000_000_000))
             older_configuration();(source/'settings.cmake').write_text('# changed\n')
             run(check);self.assertEqual(visits.read_text(),before+'configured\n')
@@ -126,10 +126,9 @@ file(APPEND "${CMAKE_BINARY_DIR}/visits" "configured\\n")
         root = Path(__file__).resolve().parents[1]
         cc = subprocess.check_output(['xcrun', '--find', 'clang'], text=True).strip()
         cxx = subprocess.check_output(['xcrun', '--find', 'clang++'], text=True).strip()
-        cases = [('Unix Makefiles', ['-DHEARTGOLD_NATIVE_OVERLAYS=OFF'],
+        cases = [('Unix Makefiles', [], 'production game requires Ninja'),
+                 ('Ninja', ['-DHEARTGOLD_NATIVE_OVERLAYS=OFF'],
                   'requires the complete native image graph')]
-        if shutil.which('ninja'):
-            cases.append(('Ninja', [], 'production game uses Unix Makefiles'))
         for generator, options, diagnostic in cases:
             with self.subTest(generator=generator), tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
                 result = subprocess.run(['cmake', '-S', str(root), '-B', directory,
@@ -142,10 +141,11 @@ file(APPEND "${CMAKE_BINARY_DIR}/visits" "configured\\n")
     def test_entrypoint_configures_production_for_fresh_and_older_caches(self):
         for cached in (False, True):
             with self.subTest(cached=cached), tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:
-                build = Path(directory)
+                build = Path(directory) / 'build/game'
+                build.mkdir(parents=True)
                 if cached:
                     (build / 'CMakeCache.txt').write_text('HEARTGOLD_GUEST32_LLVM_DIR:PATH=\n')
-                with patch.object(progress, 'Runner') as runner, patch.object(sys, 'argv',
+                with patch.object(progress, '__file__', str(Path(directory)/'cmake/profile_build.py')), patch.object(progress, 'Runner') as runner, patch.object(sys, 'argv',
                         ['profile_build.py', '--build', str(build), '--compiler', '/cc', '--cxx', '/cxx']):
                     runner.return_value.run.side_effect = RuntimeError('configure reached')
                     with self.assertRaisesRegex(RuntimeError, 'configure reached'):
@@ -153,7 +153,15 @@ file(APPEND "${CMAKE_BINARY_DIR}/visits" "configured\\n")
                     command = runner.return_value.run.call_args.args[1]
                     self.assertIn('-DHEARTGOLD_BUILD_GAME=ON', command)
                     self.assertIn('-DHEARTGOLD_NATIVE_OVERLAYS=ON', command)
-                    self.assertEqual(command[command.index('-G') + 1], 'Unix Makefiles')
+                    self.assertEqual(command[command.index('-G') + 1], 'Ninja')
+
+    def test_entrypoint_rejects_alternate_build_before_creating_runner(self):
+        with patch.object(progress, 'Runner') as runner, patch.object(sys, 'argv',
+                ['profile_build.py', '--build', '/tmp/heartgold-alternate', '--compiler', '/cc', '--cxx', '/cxx']), contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as error:
+                progress.main()
+            self.assertEqual(error.exception.code, 2)
+            runner.assert_not_called()
 
     def test_pipe_failure_keeps_stderr_status_and_full_log(self):
         with tempfile.TemporaryDirectory(dir=DepfilePaths.work) as directory:

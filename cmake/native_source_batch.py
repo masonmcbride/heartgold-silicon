@@ -11,7 +11,27 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def run(manifest):
+def publish_dependencies(depfile, stamp, inputs):
+    """Publish the complete dynamic read set for Ninja and the output barrier."""
+    if depfile is None and stamp is None:
+        return
+    if depfile is None or stamp is None:
+        raise ValueError('stamp and depfile must be supplied together')
+    stamp, depfile = Path(stamp), Path(depfile)
+    stamp.parent.mkdir(parents=True, exist_ok=True)
+    depfile.parent.mkdir(parents=True, exist_ok=True)
+    def escape(path):
+        # Ninja depfile syntax is Make-style: escape path metacharacters.
+        return str(path).replace('\\', '\\\\').replace(' ', '\\ ').replace('#', '\\#').replace('$', '$$').replace(':', '\\:')
+    contents = escape(stamp) + ': ' + ' '.join(escape(p) for p in sorted(map(str, inputs))) + '\n'
+    # Write to a temporary file so a failure never publishes incomplete edges.
+    temp = depfile.with_name(depfile.name + '.tmp')
+    temp.write_text(contents)
+    temp.replace(depfile)
+    stamp.touch()
+
+
+def run(manifest, depfile=None, stamp=None):
     started = time.monotonic()
     manifest = Path(manifest).resolve()
     spec = json.loads(manifest.read_text())
@@ -36,6 +56,7 @@ def run(manifest):
                     for p, h in previous['inputs'].items())
             and all(Path(p).is_file() and digest(p) == h
                     for p, h in previous['outputs'].items())):
+        publish_dependencies(depfile, stamp, previous['inputs'])
         print(f'Native source preparation: {len(jobs)} outputs verified, 0 transformations '
               f'({time.monotonic()-started:.3f}s)')
         return
@@ -65,6 +86,7 @@ def run(manifest):
     temporary = receipt.with_suffix('.tmp')
     temporary.write_text(json.dumps(record, sort_keys=True) + '\n')
     temporary.replace(receipt)
+    publish_dependencies(depfile, stamp, inputs)
     print(f'Native source preparation: {len(jobs)} guarded transformations '
           f'({time.monotonic()-started:.3f}s)')
 
@@ -72,4 +94,7 @@ def run(manifest):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', required=True, type=Path)
-    run(parser.parse_args().manifest)
+    parser.add_argument('--depfile', type=Path)
+    parser.add_argument('--stamp', type=Path)
+    args = parser.parse_args()
+    run(args.manifest, args.depfile, args.stamp)

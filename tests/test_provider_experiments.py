@@ -115,12 +115,29 @@ def main():
                 (work/'object.log').write_text(r.stdout+r.stderr);m['compiled']=r.returncode==0
     # Also measure every remaining complete member in ordinary member mode.
     measured={m['source'] for m in members if 'lowered' in m}
-    for m in members:
-        if m['source'] in measured or not m['frontend']: continue
-        work=out/'members'/m['member']
-        r=subprocess.run([sys.executable,'-B',str(ROOT/'compiler/guest32/member.py'),'--game',str(game),'--build',str(b),'--out',str(work),'--llvm-bin',str(llvm),'--lowerer',str(lowerer),'--owner','main','--member',m['member']],capture_output=True,text=True)
-        (work/'member.log').write_text(r.stdout+r.stderr)
-        m['compiled']=r.returncode==0;m['blocking_diagnostic']=r.stderr
+    # Independent original members have separate output directories.
+    # Keep all real compiler executions and diagnostics, but remove the
+    # unnecessary serial process-launch dependency.
+    pending = [m for m in members
+               if m['source'] not in measured and m['frontend']]
+
+    def compile_remaining(m):
+        work = out/'members'/m['member']
+        r = subprocess.run(
+            [sys.executable, '-B', str(ROOT/'compiler/guest32/member.py'),
+             '--game', str(game), '--build', str(b), '--out', str(work),
+             '--llvm-bin', str(llvm), '--lowerer', str(lowerer),
+             '--owner', 'main', '--member', m['member']],
+            capture_output=True, text=True)
+        (work/'member.log').write_text(r.stdout + r.stderr)
+        return r.returncode == 0, r.stderr
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(compile_remaining, pending))
+
+    for m, (compiled, diagnostic) in zip(pending, results):
+        m['compiled'] = compiled
+        m['blocking_diagnostic'] = diagnostic
     demands={}
     by_source={m['source']:m for m in members}
     for n,v in inventory.items():

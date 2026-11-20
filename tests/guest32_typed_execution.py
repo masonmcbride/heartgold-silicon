@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import re
-import shlex
+from build_evidence import compile_options
 
 
 def build_typed(game,build,out,llvm,lowerer,run,flags,proof):
@@ -53,8 +53,7 @@ def build_typed(game,build,out,llvm,lowerer,run,flags,proof):
     c+='gMainOverlayState.mainOverlayId=4;gMainOverlayState.args.resetParameter=77;guest32_Main_ResetOverlayManager(ram);assert(gMainOverlayState.mainOverlayId==FS_OVERLAY_ID_NONE && !gMainOverlayState.overlayManager && !gMainOverlayState.queuedMainOverlayTemplate && gMainOverlayState.args.resetParameter==77);\n'
     c+='Main_ResetOverlayManager();assert(gMainOverlayState.queuedMainOverlayId==FS_OVERLAY_ID_NONE);gSystem.asyncSaveMarker=0;g32_release(ram,marker,4);}\n'
     (out/'typed-execution.c').write_text(c)
-    makeflags=(build/'CMakeFiles/heartgold_dwc_data_abi.dir/flags.make').read_text();production=[]
-    for key in ('C_DEFINES','C_INCLUDES','C_FLAGS'):production+=shlex.split(re.search('^'+key+' = (.*)$',makeflags,re.M)[1])
+    production=compile_options(build, 'heartgold_dwc_data_abi')
     for source in (out/'typed-execution.c',out/'state/typed-bindings.c'):
         obj=source.with_suffix('.o');run(['/usr/bin/cc',*production,*flags,'-c',source,'-o',obj]);objects.append(obj)
     return objects

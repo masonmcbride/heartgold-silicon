@@ -28,6 +28,40 @@ def run(cmd):
     if r.returncode:raise RuntimeError(r.stderr[-7000:])
     return r.stdout
 source=root/'tests/test_nnsys_native_data.c';objects=[]
+# Independently compile the pinned SPL declarations for ARM32. Only the SDK
+# scalar/vector types used by these declarations are supplied by this fixture.
+ds=work/'ds-layout';(ds/'nitro').mkdir(parents=True,exist_ok=True)
+(ds/'nitro.h').write_text("""#ifndef HG_TEST_NITRO
+#define HG_TEST_NITRO
+typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
+typedef signed char s8; typedef short s16; typedef int s32;
+typedef int fx32; typedef short fx16; typedef unsigned short GXRgb; typedef int BOOL;
+typedef struct { fx32 x,y,z; } VecFx32;
+typedef struct { fx16 x,y,z; } VecFx16;
+typedef struct { fx32 m[12]; } MtxFx43;
+#endif
+""")
+for header in ('fx.h','gx.h'):(ds/'nitro'/header).write_text('#include <nitro.h>\n')
+(ds/'layout.c').write_text('#include "library/spl.h"\n'+''.join(
+    f'_Static_assert(sizeof({name})=={size}, "DS {name}");\n'
+    for name,size in [('SPLManager',76),('SPLEmitter',156),('SPLParticle',68),
+                      ('SPLResource',32),('SPLTexture',20),('SPLField',8)]))
+run([args[0],'-target','armv5te-none-eabi','-I',str(ds),'-I',
+     str(root/'upstream/pokeheartgold/include'),'-fsyntax-only',str(ds/'layout.c')])
+
+battle=build/'native/src/overlay_06.c'
+battle_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
+                if e['file'].endswith('/src/overlay_06.c')]
+assert battle_entries and all(Path(e['file'])==battle for e in battle_entries)
+for capacity in ('HG_BATTLE_PARTICLE_WORK_BYTES','HG_BATTLE_PARTICLE_SMALL_WORK_BYTES'):
+    assert battle.read_text().count(capacity)==2
+slot_entry=next(e for e in json.loads((build/'compile_commands.json').read_text())
+                if e['file'].endswith('/src/particle_system.c'))
+slot_source=Path(slot_entry['file']).read_text()
+start=slot_source.index('#define DEFINE_SLOT_ALLOC(')
+end=slot_source.index('\nDEFINE_SLOT_ALLOC(ParticleSystem_AllocSlot1',start)
+(work/'particle_slot_under_test.h').write_text(slot_source[start:end]+'\n')
+
 timer_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
                if e['file'].endswith('/src/timer3.c')]
 assert timer_entries and all(Path(e['file'])==build/'native/src/timer3.c' for e in timer_entries)
@@ -44,7 +78,8 @@ draw_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
 assert draw_entries and all(Path(e['file'])==particle_draw for e in draw_entries)
 # Instrument actual original consumers. Data is the actual production archive,
 # preserving native relocations and aliases rather than reimplementing records.
-sources=[source,build/'native/lib/NitroSystem/src/g2d_cell_transfer_manager.c',
+sources=[source,root/'tests/test_battle_particle_workspace.c',build/'native/lib/NitroSystem/src/g2d_cell_transfer_manager.c',
+         root/'tests/test_native_bag_heap.c',
          build/'native/src/timer3.c',
          build/'native/lib/NitroSystem/src/g2d_load.c',
          root/'tests/test_native_palette.c',
@@ -55,6 +90,21 @@ sources=[source,build/'native/lib/NitroSystem/src/g2d_cell_transfer_manager.c',
 # Isolate the private production owner routine verbatim; the fixture supplies
 # a real SDK expanding heap without pulling the entire game startup graph.
 palette_source=(build/'native/src/gf_gfx_loader.c').read_text()
+bag_source=(build/'native/src/application/bag/bag_app.c').read_text()
+bag_budget=re.search(r'Heap_Create\(HEAP_ID_3, HEAP_ID_6, ([^;]+)\);',bag_source)[1]
+(work/'bag_heap_under_test.h').write_text('#define HG_BAG_HEAP_BYTES ('+bag_budget+')\n')
+party_source=build/'native/src/party_menu.c'
+party_entries=[e for e in json.loads((build/'compile_commands.json').read_text())
+               if e['file'].endswith('/src/party_menu.c')]
+assert party_entries and all(Path(e['file'])==party_source for e in party_entries)
+party_text=party_source.read_text()
+assert 'NNS_G2dGetUnpackedPaletteData(' not in party_text
+assert 'GfGfxLoader_GetPlttDataFromOpenNarc(narc, NARC_plist_gra_plist_gra_00000016_NCLR, &plttData, HEAP_ID_PARTY_MENU)' in party_text
+start=party_text.index('    NNSG2dPaletteData *plttData;',
+                       party_text.index('static void PartyMenu_LoadBgGraphics(PartyMenu *partyMenu, NARC *narc) {'))
+end=party_text.index('    Heap_Free(nclrFile);',start)+len('    Heap_Free(nclrFile);')
+(work/'party_palette_under_test.h').write_text(
+    'static void party_palette_under_test(PartyMenu *partyMenu, NARC *narc) {\n'+party_text[start:end]+'\n}\n')
 owners=[]
 for name,kind,param in [('Pltt','Palette','Pltt'),('Char','Character','Char')]:
     signature=f'GfGfxLoader_Get{name}DataInternal(data, dataSize, heapID, pp{param}Data)'
@@ -101,7 +151,7 @@ for signature in ['Field3dRenderObjManager *Field3dObjectList_New(',
 (work/'map_props_under_test.h').write_text('\n'.join(map_functions)+'\n')
 for i,path in enumerate(sources):
     obj=work/f'{i}.o'
-    extra=['-I',str(work),'-Werror=return-type'] if path.name=='test_native_palette.c' else []
+    extra=['-I',str(work),'-Werror=return-type'] if path.name in ('test_native_palette.c','test_battle_particle_workspace.c','test_native_bag_heap.c') else []
     run([args[0],*flags,*extra,'-O1','-g','-fsanitize=address,undefined','-fno-sanitize-recover=all','-c',str(path),'-o',str(obj)])
     objects.append(str(obj))
 sys.path.insert(0,str(root/'cmake'))
@@ -116,7 +166,7 @@ assert not missing_archives, missing_archives
 libraries=list(dict.fromkeys(i.file for i in inputs if i.file.endswith('.a')))
 # Carry the system frameworks declared by the production graph as well as its
 # archives. Native host objects must retain their real platform dependencies.
-production_link=shlex.split((build/'CMakeFiles/heartgold.dir/link.txt').read_text())
+production_link=lc.recorded_link_tokens(build,'heartgold')
 platform_flags=[]
 for i,token in enumerate(production_link[:-1]):
     if token in ('-framework','-weak_framework','-isysroot'):
@@ -133,7 +183,10 @@ print(run([str(work/'test'),str(root/'upstream/pokeheartgold/files/a/0/5/9'),
            str(root/'upstream/pokeheartgold/files/graphic/font/font_00000006.bin'),
            str(root/'upstream/pokeheartgold/files/data/namein/namein_00000012.NCER'),
            str(root/'upstream/pokeheartgold/files/data/namein/namein_00000013.NCER'),
-           str(root/'upstream/pokeheartgold/files/demo/intro/intro/intro_00000061.NCER')]),end='')
+           str(root/'upstream/pokeheartgold/files/demo/intro/intro/intro_00000061.NCER'),
+           str(root/'upstream/pokeheartgold/files/a/0/2/9'),
+           str(root/'upstream/pokeheartgold/files/graphic/plist_gra/plist_gra_00000016.NCLR'),
+           str(root/'upstream/pokeheartgold/files/a/0/1/5')]),end='')
 tables=build/'CMakeFiles/heartgold_runtime.dir/g3-probe/nnsys_tables.c.o'
 relocations=run(['otool','-rv',str(tables)])
 for name in ['_NNSi_G3dAnmObjInitNsBma','_NNSi_G3dAnmObjInitNsBtp',

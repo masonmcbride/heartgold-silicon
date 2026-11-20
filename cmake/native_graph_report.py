@@ -86,10 +86,11 @@ def report(game, build, out, supplemental=(), diagnostic=None, nm='nm', guest32_
     with ThreadPoolExecutor(max_workers=8) as pool:
         artifacts = dict(pool.map(inspect, paths))
     # Only actual main-link inputs authorize host/SDK provider evidence.
-    from native_link_evidence import parse_link_command
+    from native_link_evidence import parse_link_command, recorded_link_tokens
     main_link=build/'CMakeFiles/heartgold.dir/link.txt'
     main_inputs,_=parse_link_command(main_link,build)
-    main_command=shlex.split(main_link.read_text())
+    main_command=(shlex.split(main_link.read_text()) if main_link.is_file()
+                  else recorded_link_tokens(build,'heartgold'))
     executable=Path(main_command[main_command.index('-o')+1]) if '-o' in main_command else build/'heartgold'
     if not executable.is_absolute():executable=build/executable
     external=defaultdict(list)

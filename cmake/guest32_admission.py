@@ -1,5 +1,6 @@
 """Strict production network-image admission batch; no ABI aliases. MIT."""
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import copy
 import hashlib
 import json
@@ -14,6 +15,7 @@ sys.path[:0] = [str(ROOT/'cmake'), str(ROOT/'compiler/guest32')]
 from native_overlay_bindings import bindings
 from native_image_graph import parse_manifest, source_record
 from shared import extend
+from native_link_evidence import recorded_link_tokens
 
 
 
@@ -76,7 +78,7 @@ def main():
     storage = dict(base['globals'])
     storage.update({k:v for image in base['images'].values() for k,v in image['assembly_globals'].items()})
     for target in ('hg_dwc_status','hg_ovy0_wifi_subset'):
-        args = shlex.split((b/f'CMakeFiles/{target}.dir/link.txt').read_text())
+        args = recorded_link_tokens(b, target)
         args[args.index('-o')+1] = str(out/(target+'.dylib'))
         r = subprocess.run(args,cwd=b,capture_output=True,text=True)
         (out/(target+'-link.log')).write_text(r.stdout+r.stderr)
@@ -99,14 +101,29 @@ def main():
     # fabricated subset under those names.
     candidates = ['OVY_'+str(i) for i in (39,44,45,73,75,90,91,92,93)]
     candidates += ['OVY_70','intro_title']
+    # Compile independent original owners under one bounded worker budget.
+    # Publish diagnostics and admission results in original manifest order.
+    def compile_candidate(owner):
+        directory = out/owner
+        command = [sys.executable, '-B', ROOT/'compiler/guest32/image.py',
+                   *common, '--out', directory, '--image', owner,
+                   '--base-catalog', closure/'catalog.json', '--jobs', '2']
+        return subprocess.run(list(map(str, command)), capture_output=True, text=True)
+
+    schedule = sorted(candidates, key=lambda owner: (owner != 'OVY_45', candidates.index(owner)))
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {owner: pool.submit(compile_candidate, owner) for owner in schedule}
+        compiled = {owner: futures[owner].result() for owner in candidates}
+
     for owner in candidates:
         ident = manifest[owner]['id']
         directory = out/owner
         row = report['consumers'][owner] = dict(admitted=False)
         # Census, extend and codegen share the same checked original records.
         # Do not launch a second frontend/planning pass over identical members.
-        r = run([sys.executable,'-B',ROOT/'compiler/guest32/image.py',*common,'--out',directory,
-                 '--image',owner,'--base-catalog',closure/'catalog.json'],f'{owner}-compile.log')
+        r = compiled[owner]
+        (out/f'{owner}-compile.log').write_text(r.stdout+r.stderr)
         if r.returncode and not (directory/'shared.json').exists():
             row.update(cause='storage-or-ABI-proof' if (directory/'plan.json').exists()
                        else 'original-member-or-code-ownership',diagnostic=r.stderr)

@@ -22,7 +22,10 @@ foreach(target IN LISTS hg_slot_targets)
         endif()
     endforeach()
 endforeach()
-foreach(file original.bc original.d receipt.json frontend.log frontend-time-trace.json promoted.ll)
+# promoted.ll is conditional on the analysis selecting a transformation. Its
+# consumers track it through their per-object approvals and compiler depfiles.
+# Declaring it for unchanged modules makes every subsequent Ninja run dirty.
+foreach(file original.bc original.d receipt.json frontend.log frontend-time-trace.json)
     set(paths ${hg_slot_members})
     list(TRANSFORM paths APPEND "/${file}")
     list(APPEND hg_slot_outputs ${paths})

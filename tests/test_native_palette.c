@@ -5,6 +5,8 @@
 #include "gf_gfx_loader.h"
 #include "field/map_prop_render.h"
 #include "g2d/resource_decode.h"
+#include "party_menu.h"
+#include "graphic/plist_gra.naix"
 #include <nnsys/fnd.h>
 #include <nnsys/g2d_internal.h>
 #include <stdint.h>
@@ -31,6 +33,63 @@ static void *read_palette(const char *path, u32 *size) {
     CHECK(!fseek(f,0,SEEK_END));long n=ftell(f);CHECK(n>=16 && n<65536);
     rewind(f);void *raw=palette_alloc(HEAP_ID_DEFAULT,(u32)n);CHECK(raw);
     CHECK(fread(raw,1,n,f)==(size_t)n);fclose(f);*size=(u32)n;return raw;
+}
+static const void *party_fixture;
+static u32 party_fixture_size;
+static unsigned char party_uploaded[512];
+static unsigned party_uploads;
+static void *party_palette_getter(NARC *narc, s32 member,
+                                  NNSG2dPaletteData **view, enum HeapID heap) {
+    CHECK(!narc && member==NARC_plist_gra_plist_gra_00000016_NCLR);
+    CHECK(heap==HEAP_ID_PARTY_MENU);
+    void *raw=palette_alloc(HEAP_ID_DEFAULT,party_fixture_size);CHECK(raw);
+    memcpy(raw,party_fixture,party_fixture_size);
+    void *owner=GfGfxLoader_GetPlttDataInternal(raw,party_fixture_size,HEAP_ID_DEFAULT,view);
+    CHECK(owner && *view && (uintptr_t)(*view)->pRawData>UINT32_MAX);
+    return owner;
+}
+static void *party_alloc(enum HeapID heap, u32 size) {
+    CHECK(heap==HEAP_ID_PARTY_MENU);
+    return palette_alloc(HEAP_ID_DEFAULT,size);
+}
+static void party_upload(int location, const void *data, u32 size, u32 offset) {
+    CHECK(location==GF_PAL_LOCATION_MAIN_OBJEXT && size==sizeof party_uploaded && !offset);
+    memcpy(party_uploaded,data,size);party_uploads++;
+}
+#define GfGfxLoader_GetPlttDataFromOpenNarc party_palette_getter
+#define Heap_Alloc party_alloc
+#define Heap_Free palette_free
+#define BG_LoadPlttData party_upload
+#include "party_palette_under_test.h"
+#undef BG_LoadPlttData
+#undef Heap_Free
+#undef Heap_Alloc
+#undef GfGfxLoader_GetPlttDataFromOpenNarc
+
+void TestPartyMenuPalette(const char *path) {
+    u32 size;
+    void *raw=read_palette(path,&size);
+    HG_NCLR_View decoded;CHECK(hg_nclr_decode(raw,size,&decoded));
+    CHECK(decoded.size==512);
+    unsigned char original[512];memcpy(original,decoded.colors,sizeof original);
+    party_fixture=raw;party_fixture_size=size;
+    u32 free_before=NNS_FndGetTotalFreeSizeForExpHeap(palette_heap);
+    PartyMenu menu;
+    for(unsigned iteration=0;iteration<32;iteration++) {
+        memset(&menu,0xa5,sizeof menu);
+        party_palette_under_test(&menu,NULL);
+        CHECK(party_uploaded[0]==0 && party_uploaded[1]==0);
+        CHECK(!memcmp(party_uploaded+2,original+2,sizeof original-2));
+        CHECK(!memcmp(menu.hpBarPalettes,original+0x60,sizeof menu.hpBarPalettes));
+        for(size_t i=0;i<sizeof menu;i++)
+            if(i<offsetof(PartyMenu,hpBarPalettes) || i>=offsetof(PartyMenu,hpBarPalettes)+sizeof menu.hpBarPalettes)
+                CHECK(((unsigned char *)&menu)[i]==0xa5);
+        CHECK(!memcmp(decoded.colors,original,sizeof original));
+        CHECK(NNS_FndGetTotalFreeSizeForExpHeap(palette_heap)==free_before);
+    }
+    CHECK(party_uploads==32);
+    palette_free(raw);
+    puts("Original party palette: 512-byte upload, HP colors, >4GiB data and repeated owner cleanup passed");
 }
 static const unsigned char *portrait_palette_fixture;
 static u32 portrait_palette_size;

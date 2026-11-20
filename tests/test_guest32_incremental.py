@@ -10,6 +10,56 @@ from incremental import run
 
 
 class IncrementalTests(unittest.TestCase):
+    def test_shared_frontend_reuses_only_identical_validated_inputs(self):
+        import json
+        from concurrent.futures import ThreadPoolExecutor
+        from frontend_cache import compile_shared
+        compiler=subprocess.check_output(['xcrun','--find','clang'],text=True).strip()
+        root=Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(dir=os.environ.get('HEARTGOLD_TEST_BINARY_DIR',root/'build/game')) as name:
+            work=Path(name);source=work/'input.c';header=work/'value.h';base=work/'base.h'
+            source.write_text('#include "value.h"\nint value(void){return VALUE+BASE;}\n')
+            header.write_text('#error original header must be hidden\n')
+            base.write_text('#define BASE 3\n')
+            def compile_image(index,value=17,extra=()):
+                directory=work/str(index);directory.mkdir(exist_ok=True)
+                adapted=directory/'adapted.h'
+                adapted.write_text('#include "base.h"\n#define VALUE '+str(value)+'\n')
+                overlay=directory/'frontend.json'
+                overlay.write_text(json.dumps(dict(version=0,roots=[dict(type='file',name=str(header),
+                    **{'external-contents':str(adapted),'use-external-name':False})])))
+                output=directory/'guest.bc';dep=directory/'guest.d'
+                command=[compiler,'-ivfsoverlay',str(overlay),*extra,'-c','-emit-llvm',
+                    str(source),'-o',str(output),'-MD','-MF',str(dep)]
+                result=compile_shared(command,output,work,inputs=[source],depfile=dep,
+                    virtual_files={str(header):str(adapted)})
+                self.assertEqual(result.returncode,0,result.stderr)
+                receipt=json.loads(output.with_name('guest.bc.receipt.json').read_text())
+                self.assertEqual(receipt['command'],command)
+                self.assertIn(str(base),receipt['inputs'])
+                self.assertEqual(receipt['outputs'][str(output)],__import__('hashlib').sha256(output.read_bytes()).hexdigest())
+                return result,output.read_bytes()
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                results=list(pool.map(compile_image,(1,2)))
+            self.assertEqual(sum(r.shared_frontend_hit for r,_ in results),1)
+            self.assertEqual(results[0][1],results[1][1])
+            self.assertTrue(compile_image(3)[0].shared_frontend_hit)
+            base.write_text('#define BASE 4\n')
+            changed,changed_ir=compile_image(4)
+            self.assertFalse(changed.shared_frontend_hit)
+            self.assertNotEqual(changed_ir,results[0][1])
+            self.assertFalse(compile_image(5,value=18)[0].shared_frontend_hit)
+            self.assertFalse(compile_image(6,extra=('-DANOTHER_CONTRACT=1',))[0].shared_frontend_hit)
+            # Any damaged entry must be repaired before it can be consumed.
+            for file in (work/'guest32-frontend').glob('*/guest.bc'):
+                file.write_bytes(b'corrupt bitcode')
+            repaired,ir=compile_image(7)
+            self.assertFalse(repaired.shared_frontend_hit)
+            self.assertEqual(ir,changed_ir)
+            from unittest.mock import patch
+            with patch.dict(os.environ, {'CPATH':str(work)}):
+                self.assertFalse(compile_image(8)[0].shared_frontend_hit)
+
     def test_deferred_command_rejects_changed_declared_input(self):
         from incremental import prepare, Pending
         compiler=subprocess.check_output(['xcrun','--find','clang'],text=True).strip()

@@ -539,6 +539,11 @@ COMPILER_BOUNDED_OPERATIONS = {
          '            + totalNumHeaps,\n        _Alignof(NNSFndHeapHandle));', 1),
     ]),
     'src/render_window_icons.c': ('8bd441e5829ed3f4ebce219feed4043cd388fb5c141979f1a3b0a54a507bf575', [
+        # The original sign frame contains 18 tiles (0x240 bytes), while
+        # 0x3C0 includes the unused gap before the graphic at tile +30.
+        # Load the decoded extent; the bounded native loader rejects overreads.
+        ('baseTile, 0x3C0, FALSE, heapId);',
+         'baseTile, 0, FALSE, heapId);', 1),
         ('plttFile = AllocAndReadWholeNarcMemberByIdPair(NARC_a_0_3_6, 1, heapId);\n    NNS_G2dGetUnpackedPaletteData(plttFile, &pltt);',
          'plttFile = GfGfxLoader_GetPlttData(NARC_a_0_3_6, 1, &pltt, heapId);', 1),
     ]),
@@ -579,15 +584,33 @@ COMPILER_NATIVE_SOURCES = tuple(COMPILER_BOUNDED_OPERATIONS) + tuple(SINIT_CALLB
 # Compatibility edits are a validated first stage, including inputs which need
 # no later coordinated or compiler adaptation. Selection must include them.
 PRISTINE_COMPAT = json.loads(Path(__file__).with_name("native_pristine_compat.json").read_text())
+MAIN_NATIVE_SOURCES += ("src/wireless_status_icon.c",)
+MAIN_NATIVE_SOURCES += ("src/pokepic.c",)
 
 MAIN_NATIVE_SOURCES += ("lib/src/spl_draw_ptcl.c",)
+MAIN_NATIVE_SOURCES += ('src/font_sprite.c',)
+MAIN_NATIVE_SOURCES += ('src/sound.c',)
+MAIN_NATIVE_SOURCES += ('lib/NitroSystem/src/g2d_softsprite.c',)
 OVERLAY_NATIVE_SOURCES = ("src/global_terminal/global_terminal_socket.c",) + tuple(path for path in LIBC_DECLARATIONS if not path.endswith(".h")) + ("src/wifi_setup/wifi_setup_share.c",) + tuple(QSORT_DECLARATIONS) + ("lib/NitroDWC/src/http_engine_request.c", "src/voice_chat.c", "lib/libVCT/src/vct_packet_buffer.c") + tuple(PRIVATE_FUNCTIONS) + COMPILER_NATIVE_SOURCES
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.SOURCES if not p.endswith(".h"))))
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in coordinated.HEADER_ROUTES if not p.endswith(".h"))))
-OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c", "src/intro_movie_scene_4.c")))
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + ("src/application/ball_capsule_editor.c", "src/intro_movie_scene_4.c", "src/overlay_06.c")))
+OVERLAY_NATIVE_SOURCES += ('src/battle/battle_hp_bar.c',)
+OVERLAY_NATIVE_SOURCES += ('src/battle/battle_controller_opponent.c',)
+OVERLAY_NATIVE_SOURCES += ('src/battle/battle_bag_menu.c',)
+
+BATTLE_CALLBACK_HEADERS = (
+    'include/battle/battle.h', 'include/battle/trainer_ai.h',
+    'include/battle/battle_pokepic_bob.h', 'include/battle/battle_terrain.h',
+    'include/battle/battle_022378C0.h',
+)
 
 OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(OVERLAY_NATIVE_SOURCES + tuple(p for p in PRISTINE_COMPAT if not p.endswith(".h"))))
+
+OVERLAY_NATIVE_SOURCES = tuple(dict.fromkeys(
+    OVERLAY_NATIVE_SOURCES + ('src/battle/battle_system.c',)
+))
 
 def native_libc(relative, text):
     for declaration in LIBC_DECLARATIONS[relative]:
@@ -798,7 +821,26 @@ def replace_regex_native(text, pattern, replacement, expected=1):
         )
     return result
 
+def adapt_battle_background_vram(text):
+    # libntr's existing, renderer-visible VRAM storage.
+    # Never allocate another VRAM buffer or truncate native pointers.
+    text = replace(
+        text,
+        'MIi_CpuCopy32((void *)0x6010000, (u32 *)battleSystem->bgTiles, 0x10000);',
+        'MIi_CpuCopy32(s_HW_BG_VRAM + 0x10000, (u32 *)battleSystem->bgTiles, 0x10000);',
+    )
+    text = replace(
+        text,
+        'vram = (u8 *)0x6400000;',
+        'vram = s_HW_OBJ_VRAM;',
+        count=2,
+    )
+    return 'extern u8 s_HW_BG_VRAM[0x80000];\nextern u8 s_HW_OBJ_VRAM[0x40000];\n' + text
+
+
 def _adapt(relative, text, root):
+    if relative == 'src/battle/battle_system.c':
+        return adapt_battle_background_vram(text)
     if relative == 'lib/src/spl_draw_ptcl.c':
         if hashlib.sha256(text.encode()).hexdigest() != '751714974580317bbf57a9df491b5f531ed50adea59fa4bec580f44042ed8c5d':
             raise ValueError('Original SPL GX port source changed')
@@ -1148,6 +1190,22 @@ def adapt(relative, text, root):
         if not (record or relative in PRISTINE_COMPAT or relative in SINIT_CALLBACKS or operation or arm or bounded or relative in DWC_ABI_SOURCES or relative in DWC_ABI_HEADERS or relative == 'include/wifi_setup/wifi_setup_share.h') or str(error) != 'No native adaptation is registered for ' + relative:
             raise
         result = text
+    if relative == 'src/pokepic.c':
+        result = replace(
+            result,
+            '#include "palette.h"',
+            '#include "palette.h"\n#include "gf_gfx_loader.h"',
+        )
+        result = replace(
+            result,
+            'nclrFile = AllocAndReadWholeNarcMemberByIdPair((NarcId)pokepicManager->pics[i].template.narcID, pokepicManager->pics[i].template.palDataID, pokepicManager->heapID);\n            NNS_G2dGetUnpackedPaletteData(nclrFile, &plttData);',
+            'nclrFile = GfGfxLoader_GetPlttData((NarcId)pokepicManager->pics[i].template.narcID, pokepicManager->pics[i].template.palDataID, &plttData, pokepicManager->heapID);\n            GF_ASSERT(nclrFile != NULL && plttData != NULL);',
+        )
+        result = replace(
+            result,
+            'nclrFile = AllocAndReadWholeNarcMemberByIdPair(NARC_poketool_pokegra_otherpoke, NARC_otherpoke_260_NCLR, pokepicManager->heapID);\n                NNS_G2dGetUnpackedPaletteData(nclrFile, &plttData);',
+            'nclrFile = GfGfxLoader_GetPlttData(NARC_poketool_pokegra_otherpoke, NARC_otherpoke_260_NCLR, &plttData, pokepicManager->heapID);\n                GF_ASSERT(nclrFile != NULL && plttData != NULL);',
+        )
     if relative == 'src/gf_gfx_loader.c':
         result=replace(result, '#include "gf_gfx_loader.h"',
                        '#include "gf_gfx_loader.h"\n#include "g2d/resource_decode.h"')
@@ -1204,6 +1262,68 @@ def adapt(relative, text, root):
         char_new=char_new.replace('    native->fmt = (GXTexFmt)decoded.format;\n    native->bExtendedPlt = (BOOL)decoded.extended;',
             '    native->H = decoded.height;\n    native->W = decoded.width;\n    native->pixelFmt = (GXTexFmt)decoded.pixel_format;\n    native->mapingType = (GXOBJVRamModeChar)decoded.mapping;\n    native->characterFmt = decoded.character_format;')
         result=replace(result,char_old,char_new)
+        # FontSystem keeps only the returned owner and frees it with Heap_Free.
+        # Retain wire OAM bytes plus native bank/cells in that single owner,
+        # rather than running the DS in-place pointer unpacker over NCER bytes.
+        for loader,arg in [('Narc','narcId'),('OpenNarc','narc')]:
+            result=replace(result,
+                f'data = GfGfxLoader_LoadFrom{loader}({arg}, memberNo, isCompressed, heapID, FALSE);\n    return GfGfxLoader_GetCellBankInternal(data, ppCellBank);',
+                f'u32 dataSize = 0;\n    data = GfGfxLoader_LoadFrom{loader}_GetSizeOut({arg}, memberNo, isCompressed, heapID, FALSE, &dataSize);\n    return GfGfxLoader_GetCellBankInternal(data, dataSize, heapID, ppCellBank);')
+        for parameter in ['ppCellbank', 'ppCellBank']:
+            result=replace(result,
+                f'GfGfxLoader_GetCellBankInternal(void *data, NNSG2dCellDataBank **{parameter})',
+                f'GfGfxLoader_GetCellBankInternal(void *data, u32 dataSize, enum HeapID heapID, NNSG2dCellDataBank **{parameter})')
+        cell_old=old.replace('NNS_G2dGetUnpackedPaletteData','NNS_G2dGetUnpackedCellBank').replace('ppPlttData','ppCellBank')
+        cell_new='''    typedef struct { NNSG2dCellData cell; u8 bounds[8]; } NativeBoundedCell;
+    size_t payloadSize;
+    const u8 *p = hg_g2d_block(data, dataSize, "RECN", "KBEC", &payloadSize);
+    *ppCellBank = NULL;
+    if (!p || payloadSize < 24) goto invalid;
+    u32 count = hg_nclr_u16(p), attributes = hg_nclr_u16(p + 2);
+    size_t cellsOffset = hg_nclr_u32(p + 4);
+    size_t wireStride = (attributes & 1) ? 16 : 8;
+    size_t nativeStride = (attributes & 1) ? sizeof(NativeBoundedCell) : sizeof(NNSG2dCellData);
+    if (!count || (attributes & ~1u) || hg_nclr_u32(p + 12) ||
+        hg_nclr_u32(p + 16) || hg_nclr_u32(p + 20) ||
+        cellsOffset < 24 || cellsOffset > payloadSize ||
+        count > (payloadSize - cellsOffset) / wireStride) goto invalid;
+    size_t oamOffset = cellsOffset + count * wireStride;
+    for (u32 i = 0; i < count; ++i) {
+        const u8 *wire = p + cellsOffset + i * wireStride;
+        size_t offset = hg_nclr_u32(wire + 4);
+        if ((offset & 1) || offset > payloadSize - oamOffset ||
+            hg_nclr_u16(wire) > (payloadSize - oamOffset - offset) / 6) goto invalid;
+    }
+    const size_t alignment = _Alignof(NNSG2dCellDataBank);
+    size_t tail = ((size_t)dataSize + alignment - 1) & ~(alignment - 1);
+    size_t nativeSize = sizeof(NNSG2dCellDataBank) + count * nativeStride;
+    if (tail > UINT32_MAX - nativeSize) goto invalid;
+    u8 *owner = Heap_Alloc(heapID, (u32)(tail + nativeSize));
+    if (!owner) goto invalid;
+    memcpy(owner, data, dataSize);
+    NNSG2dCellDataBank *bank = (NNSG2dCellDataBank *)(owner + tail);
+    memset(bank, 0, nativeSize);
+    u8 *cells = (u8 *)(bank + 1);
+    size_t payloadOffset = p - (const u8 *)data;
+    for (u32 i = 0; i < count; ++i) {
+        const u8 *wire = p + cellsOffset + i * wireStride;
+        NNSG2dCellData *cell = (NNSG2dCellData *)(cells + i * nativeStride);
+        cell->numOAMAttrs = hg_nclr_u16(wire);
+        cell->cellAttr = hg_nclr_u16(wire + 2);
+        cell->pOamAttrArray = (NNSG2dCellOAMAttrData *)(owner + payloadOffset + oamOffset + hg_nclr_u32(wire + 4));
+        if (attributes & 1) memcpy(((NativeBoundedCell *)cell)->bounds, wire + 8, 8);
+    }
+    bank->numCells = (u16)count;
+    bank->cellBankAttr = (u16)attributes;
+    bank->mappingMode = (NNSG2dCharacterDataMapingType)hg_nclr_u32(p + 8);
+    bank->pCellDataArrayHead = (NNSG2dCellData *)cells;
+    Heap_Free(data);
+    *ppCellBank = bank;
+    return owner;
+invalid:
+    if (data) Heap_Free(data);
+    return NULL;'''
+        result=replace(result,cell_old,cell_new)
     if relative == 'src/system.c':
         for count,occurrences in [('160',1),('32',2),('4',1)]:
             result=replace(result,
@@ -1264,6 +1384,16 @@ def adapt(relative, text, root):
             count=result.count(old)
             if not count: raise ValueError('NCER adaptation source drift: ' + old)
             result=replace(result,old,new,count=count)
+    if relative == 'src/sprite_resource.c':
+        # HG_NATIVE_NCER_VIEW: native 64-bit cell/VRAM/attribute records.
+        view = Path(__file__).with_name("native_ncer_cell_view.inc")
+        verified = view.read_text()
+        if hashlib.sha256(verified.encode()).hexdigest() != "8758177945ab0bff18a2407e87dc9da955e27b30d8a5a57088059d41833b57bd":
+            raise ValueError("Native NCER decoder source drift")
+        begin = result.index(
+            "static NNSG2dCellDataBank *HGDecodeCellBank(")
+        end = result.index("\n#endif", begin)
+        result = result[:begin] + verified.rstrip() + result[end:]
     if relative in SINIT_CALLBACKS:
         callback = SINIT_CALLBACKS[relative]
         original = ('#pragma define_section SINIT ".sinit" abs32 RWX\n'
@@ -1283,7 +1413,7 @@ def adapt(relative, text, root):
         _, declaration, old, new = operation
         result = replace(drop(result, declaration), old, new)
     if record:
-        for old, new in record['edits']:
+        for old, new in coordinated.header_edits(relative, text):
             if old in result:
                 result = result.replace(old, new)
             elif new not in result:
@@ -1351,6 +1481,96 @@ def native_socket_state(text):
 
 
 def adapt_original(relative, text, root):
+    if relative == 'src/application/bag/bag_app.c':
+        # This heap owns native UI, sprite and animation records as well as
+        # unchanged cartridge bytes. Reserve native-width headroom locally;
+        # the original DS reservation remains the 32-bit case.
+        return replace(text, 'Heap_Create(HEAP_ID_3, HEAP_ID_6, 0x42000);',
+                       'Heap_Create(HEAP_ID_3, HEAP_ID_6, 0x42000 * (sizeof(void *) / sizeof(u32)));')
+    if relative == 'lib/NitroSystem/src/g2d_softsprite.c':
+        # The DS geometry ports consume every write. Native register backing
+        # alone cannot deliver that stream to the command receiver.
+        if hashlib.sha256(text.encode()).hexdigest() != '1f3adbc4bcde2c50a968a29895315c597d9fb1bb76b5b80cd8e44e671b502770':
+            raise ValueError('Original software sprite command stream changed')
+        first = text.index('    REGType32v *texCoord = &reg_G3_TEXCOORD;')
+        last = text.index('\n}', first)
+        text = text[:first] + '''    G3_Begin(GX_BEGIN_QUADS);
+    G3_Direct1(G3OP_TEXCOORD, s0 | ((u32)t1 << 16));
+    G3_Direct2(G3OP_VTX_16, 0x10000000, 0);
+    G3_Direct1(G3OP_TEXCOORD, s1 | ((u32)t1 << 16));
+    G3_Direct2(G3OP_VTX_16, 0x10001000, 0);
+    G3_Direct1(G3OP_TEXCOORD, s1 | ((u32)t0 << 16));
+    G3_Direct2(G3OP_VTX_16, 0x1000, 0);
+    G3_Direct1(G3OP_TEXCOORD, s0 | ((u32)t0 << 16));
+    G3_Direct2(G3OP_VTX_16, 0, 0);
+    G3_End();''' + text[last:]
+        text = replace(text, '    reg_G3_MTX_STORE = 0;', '    G3_StoreMtx(0);')
+        before = '''    reg_G3_MTX_TRANS = px << FX32_SHIFT;
+    reg_G3_MTX_TRANS = py << FX32_SHIFT;
+    reg_G3_MTX_TRANS = pz << FX32_SHIFT;
+    reg_G3_MTX_SCALE = sx << FX32_SHIFT;
+    reg_G3_MTX_SCALE = sy << FX32_SHIFT;
+    reg_G3_MTX_SCALE = FX32_ONE;'''
+        after = '''    G3_Translate((fx32)((u32)px << FX32_SHIFT),
+                 (fx32)((u32)py << FX32_SHIFT),
+                 (fx32)((u32)pz << FX32_SHIFT));
+    G3_Scale((fx32)((u32)sx << FX32_SHIFT),
+             (fx32)((u32)sy << FX32_SHIFT), FX32_ONE);'''
+        return replace(text, before, after)
+    if relative == 'src/sound.c':
+        # Attribute getters return addresses of these slots to pointer-typed
+        # callers. Each slot must own a complete native handle.
+        for name in ('waveOut14Handle', 'waveOut15Handle'):
+            text = replace(text, 'u32 ' + name + ';', 'NNSSndWaveOutHandle ' + name + ';')
+        text = replace(text, 'u32 cryStopTask;', 'SysTask *cryStopTask;')
+        return '#include "sys_task.h"\n' + text
+    if relative == 'src/font_sprite.c':
+        return replace(text,
+            'object->sprites = Heap_Alloc(template->heapID, 12 * count);',
+            'object->sprites = Heap_Alloc(template->heapID, sizeof(*object->sprites) * count);')
+    if relative == 'src/battle/battle_bag_menu.c':
+        return replace(text,
+            '#define PAGE_NUMBER_WINDOW(windows) ((Window *)((u32)(windows) + 25 * sizeof(Window)))',
+            '#define PAGE_NUMBER_WINDOW(windows) ((windows) + 25)')
+    if relative == 'include/battle/battle.h':
+        text = replace(text, '    u32 inputTasks[6];', '    SysTaskFunc inputTasks[6];')
+        for name in ('drawGraphicsTask', 'criticalHpMusicTask', 'scrollBgTask'):
+            text = replace(text, '    u32 ' + name + ';', '    SysTask *' + name + ';')
+        return text
+    if relative == 'src/battle/battle_main.c':
+        for name in ('drawGraphicsTask', 'criticalHpMusicTask', 'scrollBgTask'):
+            text = replace(text, 'battleSystem->' + name + ' = (u32)SysTask_',
+                           'battleSystem->' + name + ' = SysTask_')
+        return text
+    if relative in BATTLE_CALLBACK_HEADERS:
+        if relative == 'include/battle/battle_022378C0.h':
+            text = replace(text, '#include "battle_setup.h"', '#include <battle/battle_setup.h>')
+        return replace(text, '#include "battle.h"', '#include <battle/battle.h>')
+    if relative == 'src/battle/battle_controller_opponent.c':
+        for name in ('selectCommand', 'selectMove', 'selectTarget', 'selectItem',
+                     'showMonList', 'drawYesNoBox'):
+            text = replace(text, '(u32)(' + name + ')', '(' + name + ')')
+        return text
+    if relative == 'src/battle/battle_hp_bar.c':
+        # OBJ VRAM is a native pointer; keep its upper bits before adding
+        # the original DS byte offsets. Adapt only this pinned consumer.
+        for name, expected in [('vramAddr', 27), ('vramBaseAddr', 6)]:
+            old = '(u32)' + name
+            if text.count(old) != expected:
+                raise ValueError('Original battle HP bar VRAM casts changed: ' + name)
+            text = text.replace(old, '(uintptr_t)' + name)
+        return '#include <stdint.h>\n' + text
+    if relative == 'src/overlay_06.c':
+        # Both the owning allocation and the slot allocator's end pointer must
+        # describe the translated native SPL arena. Freeing remains unchanged.
+        text = replace(text, '#include "global.h"',
+                       '#include "global.h"\n#include "particle_capacity.h"')
+        for old, new in [('0x4800', 'HG_BATTLE_PARTICLE_WORK_BYTES'),
+                         ('0x4200', 'HG_BATTLE_PARTICLE_SMALL_WORK_BYTES')]:
+            if text.count(old) != 2:
+                raise ValueError('Original battle particle workspace changed: ' + old)
+            text = text.replace(old, new)
+        return text
     if relative == 'src/intro_movie_scene_4.c':
         if hashlib.sha256(text.encode()).hexdigest() != '3b35b82ba7a24d839848f1ff3742a52124fb6a52e8d38cd367a551293e41af3a':
             raise ValueError('Original Scene 4 particle workspace source changed')
@@ -1714,6 +1934,12 @@ _Static_assert(__builtin_offsetof(MainMenuUtilWork,vblankCallback)==4032,"OVY_74
                        "    if (action >= PARTY_MON_CONTEXT_MENU_MAX || !actions[action]) __builtin_trap();\n"
                        "    actions[action](menu, state);\n}\n")
     if relative == "src/party_menu.c":
+        text = replace(text,
+            '    void *nclrFile = NARC_AllocAndReadWholeMember(narc, NARC_plist_gra_plist_gra_00000016_NCLR, HEAP_ID_PARTY_MENU);\n'
+            '    NNSG2dPaletteData *plttData;\n'
+            '    NNS_G2dGetUnpackedPaletteData(nclrFile, &plttData);',
+            '    NNSG2dPaletteData *plttData;\n'
+            '    void *nclrFile = GfGfxLoader_GetPlttDataFromOpenNarc(narc, NARC_plist_gra_plist_gra_00000016_NCLR, &plttData, HEAP_ID_PARTY_MENU);')
         for arg in ("&result", "(int *)pState"):
             text = replace(text, f"((PartyMonContextMenuActionFunc)func)(partyMenu, {arg});",
                            f"HG_PartyMenu_InvokeAction(func, partyMenu, {arg});")
@@ -2554,7 +2780,7 @@ def adapt_dwc_nas_native_allocation(text):
 
 def audit(root):
     paths = (set(OVERLAY_NATIVE_SOURCES) | set(MAIN_NATIVE_SOURCES) | set(coordinated.SOURCES)
-             | set(coordinated.HEADER_ROUTES) | set(PRISTINE_COMPAT))
+             | set(coordinated.HEADER_ROUTES) | set(PRISTINE_COMPAT) | set(BATTLE_CALLBACK_HEADERS))
     records, failures = {}, {}
     for relative in sorted(paths):
         try:

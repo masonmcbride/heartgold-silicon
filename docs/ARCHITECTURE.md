@@ -1,56 +1,39 @@
-# HeartGold's native build machine
+# Build and runtime architecture
 
-The inputs are pinned original HeartGold and libntr sources. Ordinary CMake and
-Apple Clang compile native ARM64 objects; original image ownership is preserved
-when those objects are packaged and linked. The complete game does not yet link.
+`./build.sh` owns the production build in `build/game`. It selects Apple Clang,
+Ninja and Python, checks the pinned original repositories, builds the complete
+image graph and runs the maintained tests. See [BUILD.md](BUILD.md) for commands
+and [BUILD_GRAPH.md](BUILD_GRAPH.md) for build contracts.
 
-```text
-upstream/pokeheartgold/main.lsf
-    → cmake/native_image_graph.py       original images and members
-    → cmake/native_sources.py           guarded C/header adaptations
-      cmake/native_data_ir.py           assembly parsing
-      cmake/native_data_layouts.json    reviewed native ABI contracts
-    → Apple Clang                       actual ARM64 objects
-    → cmake/native_overlay_link.py      actual archive providers/interfaces
-    → cmake/native_overlays.cmake       uniform image links
-    → native_overlay_bindings.py        actual Mach-O fixup checks
-```
+The source pipeline has four owners:
 
-`cmake/heartgold.cmake` owns original-source compilation and declared adaptation
-outputs. `cmake/assets.cmake` owns original host tools and shared archive rules;
-`cmake/assets/` contains the distinct original resource-format recipes and their
-helpers. They are asset conversion, not separate game compilers. Generated inputs,
-resources, tools, objects and reports stay in the selected binary directory.
+- `cmake/heartgold.cmake` and `native_sources.py` compile guarded native
+  adaptations. `native_coordinated.py` admits pinned source hashes and applies
+  shared header routing, with explicit exceptions. Each original input has one
+  deterministic native representation; upstream sources stay pristine.
+- `compiler/guest32/` preserves DS-width semantics in LLVM IR and lowers original
+  code/data into native providers. Reviewed layout and callback contracts govern
+  the boundary between guest addresses and host pointers.
+- `cmake/assets.cmake`, `cmake/assets/` and `compiler/assets/` build original
+  resources and archives. Serialized formats retain their DS widths.
+- `native_image_graph.py` reads original `main.lsf` ownership; the native overlay
+  modules assemble each image, check imports and publish runtime bindings.
+  `native_wireless.cmake` declares the canonical WM/WVR/DWC source libraries.
 
-All reviewed data members use the same production recipe, emitter and object
-validator. Differences in widths, storage, visibility, segment and alignment are
-validated metadata. The Global Terminal oracle is test-only, in
-`tests/global_terminal_data_validation.py`; production has no special dispatch
-for it. No overlay-specific linker algorithm is needed to add another complete
-reviewed image.
+`hardware_drivers/` supplies the native OS, cartridge backup, graphics, audio,
+interrupt and image-lifecycle boundaries. `os/desktop.mm` presents the two screens
+and handles keyboard/touch input and sound output. `metal/` implements the native
+renderer; `g2d/` decodes fixed-width graphics resources into retained native views.
+Original engine tasks and overlays still govern gameplay.
 
-`hardware_drivers/` contains the native boundary:
+A successful build verifies 121 native images, required application imports and
+ARM64 executable linkage. This proves build integrity, not complete gameplay.
+Known runtime defects and user verification are recorded separately in
+[NATIVE_RUNTIME_PATTERNS.md](NATIVE_RUNTIME_PATTERNS.md).
 
-| Directory | Actual contents |
-| --- | --- |
-| `os/` | Host OS, resources, image lifecycle, runtime declarations and protection policy |
-| `metal/` | Existing Metal raster and G3 implementation |
-| `wireless/` | Existing multiboot adapter; incomplete network support |
-| `graphics/` | Original graphics callback storage and particle-system data |
-| `audio/` | Explicit status documentation; native sound output is not implemented |
-
-There is no separate native keyboard/controller driver yet. Original input and
-sound source remains in the engine/SDK; its existence does not establish native
-host input or audio output. Optional memory observers and demand generators live
-beside their scripts in `research/memory-pressure/`, outside the game drivers.
-
-`museum/` preserves obsolete phase linkers and conversion prototypes; production
-has no dependency on it. Tests for current data, ownership, ABI and binding
-contracts live in `tests/`.
-
-The invariants are original `main.lsf` ownership, one guarded representation per
-input, fixed serialized widths, real compiled providers and two-level bindings.
-Missing members, unknown imports and unproven consumer ABI layouts remain blockers;
-no incomplete image receives a fabricated complete interface. See
-[BUILD.md](BUILD.md) for commands and [SMALLEST_MACHINE.md](SMALLEST_MACHINE.md)
-for the actual tree, moves, validation and remaining closure inventory.
+Cartridge, save and firmware inputs belong in `local-runtime/`, outside disposable
+build outputs. Profiling and cold builds use the same `build/game` directory.
+Historical build snapshots, experimental benchmark drivers and superseded
+migration reports are available through Git history. Current regressions live
+in `tests/`; compiler-review evidence remains in `research/architecture/` and
+`docs/semantic-law-corpus/`.
